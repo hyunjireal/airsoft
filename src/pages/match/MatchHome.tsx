@@ -5,17 +5,25 @@ export function MatchHome() {
     <div className="page">
       <h1 className="page-title">매치</h1>
       <section className="section">
-        <Link className="card" to="/match/list">
-          <h2>개인 참가</h2>
-          <p>팀이 없어도 참여 가능한 경기를 찾아요.</p>
+        <Link className="card" to="/match/join">
+          <h2>참여하기</h2>
+          <p>개인, 팀, 게스트 방식으로 참가할 매치를 찾아요.</p>
         </Link>
-        <Link className="card" to="/match/filter">
-          <h2>일정으로 찾기</h2>
-          <p>날짜와 지역을 기준으로 참여 가능한 경기를 확인해요.</p>
+        <Link className="card" to="/match/create">
+          <h2>만들기</h2>
+          <p>팀 만들기, 용병 모집, 경기 생성을 시작해요.</p>
         </Link>
-        <Link className="card" to="/match/list?beginner=true">
-          <h2>초보 환영 경기</h2>
-          <p>처음 참여하는 사람도 부담 없는 경기를 모아봐요.</p>
+        <Link className="card" to="/tournament">
+          <h2>토너먼트</h2>
+          <p>대회 메뉴는 단일 메뉴로 이동해요.</p>
+        </Link>
+        <Link className="card" to="/match/manage">
+          <h2>관리하기</h2>
+          <p>개인 신청과 팀 신청 상태를 확인해요.</p>
+        </Link>
+        <Link className="card" to="/match/fields">
+          <h2>필드정보</h2>
+          <p>필드 규정과 이용 정보를 확인해요.</p>
         </Link>
       </section>
     </div>

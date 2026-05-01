@@ -7,10 +7,14 @@ import { ChatbotPage } from './pages/chat/ChatbotPage'
 import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
+import { BeginnerBoard } from './pages/community/BeginnerBoard'
 import { BoardList } from './pages/community/BoardList'
 import { CommunityHome } from './pages/community/CommunityHome'
 import { PostCreate } from './pages/community/PostCreate'
 import { PostDetail } from './pages/community/PostDetail'
+import { CreatorHome } from './pages/creator/CreatorHome'
+import { CreatorList } from './pages/creator/CreatorList'
+import { CreatorProfile } from './pages/creator/CreatorProfile'
 import { BeginnerHub } from './pages/guide/BeginnerHub'
 import { EtiquetteGuide } from './pages/guide/EtiquetteGuide'
 import { GearGuide } from './pages/guide/GearGuide'
@@ -22,10 +26,18 @@ import { TermGuide } from './pages/guide/TermGuide'
 import { Home } from './pages/home/Home'
 import { MatchApply } from './pages/match/MatchApply'
 import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
+import { FieldInfo } from './pages/match/FieldInfo'
+import { MatchCreateGame } from './pages/match/MatchCreateGame'
+import { MatchCreateHome } from './pages/match/MatchCreateHome'
 import { MatchDetail } from './pages/match/MatchDetail'
 import { MatchFilter } from './pages/match/MatchFilter'
 import { MatchHome } from './pages/match/MatchHome'
+import { MatchJoinHome } from './pages/match/MatchJoinHome'
 import { MatchList } from './pages/match/MatchList'
+import { MatchManageHome } from './pages/match/MatchManageHome'
+import { TeamMatchApply } from './pages/match/TeamMatchApply'
+import { TeamMatchDetail } from './pages/match/TeamMatchDetail'
+import { TeamMatchJoinList } from './pages/match/TeamMatchJoinList'
 import { MyApplications } from './pages/my/MyApplications'
 import { MyPage } from './pages/my/MyPage'
 import { MyPosts } from './pages/my/MyPosts'
@@ -80,6 +92,14 @@ export const router = createBrowserRouter([
       { path: '/question/ai-preview', element: <AiAnswerPreview /> },
       { path: '/question/complete', element: <QuestionComplete /> },
       { path: '/match', element: <MatchHome /> },
+      { path: '/match/join', element: <MatchJoinHome /> },
+      { path: '/match/join/team', element: <TeamMatchJoinList /> },
+      { path: '/match/join/team/:teamMatchId', element: <TeamMatchDetail /> },
+      { path: '/match/join/team/:teamMatchId/apply', element: <TeamMatchApply /> },
+      { path: '/match/create', element: <MatchCreateHome /> },
+      { path: '/match/create/game', element: <MatchCreateGame /> },
+      { path: '/match/manage', element: <MatchManageHome /> },
+      { path: '/match/fields', element: <FieldInfo /> },
       { path: '/match/list', element: <MatchList /> },
       { path: '/match/filter', element: <MatchFilter /> },
       { path: '/match/:id', element: <MatchDetail /> },
@@ -94,9 +114,13 @@ export const router = createBrowserRouter([
       { path: '/mercenary/create', element: <MercenaryCreate /> },
       { path: '/mercenary/:id', element: <MercenaryDetail /> },
       { path: '/community', element: <CommunityHome /> },
+      { path: '/community/beginner', element: <BeginnerBoard /> },
       { path: '/community/post/create', element: <PostCreate /> },
       { path: '/community/post/:id', element: <PostDetail /> },
       { path: '/community/:boardType', element: <BoardList /> },
+      { path: '/creator', element: <CreatorHome /> },
+      { path: '/creator/list', element: <CreatorList /> },
+      { path: '/creator/:creatorId', element: <CreatorProfile /> },
       { path: '/tournament', element: <TournamentHome /> },
       { path: '/tournament/highlights', element: <HighlightList /> },
       { path: '/tournament/highlights/:id', element: <HighlightDetail /> },

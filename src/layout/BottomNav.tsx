@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom'
 
 const items = [
   { to: '/home', label: '홈' },
-  { to: '/guide', label: '가이드' },
   { to: '/match', label: '매치' },
+  { to: '/creator', label: '크리에이터' },
   { to: '/community', label: '커뮤니티' },
-  { to: '/my', label: 'MY' },
+  { to: '/my', label: '마이' },
 ]
 
 export function BottomNav() {

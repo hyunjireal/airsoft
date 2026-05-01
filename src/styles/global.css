@@ -157,6 +157,67 @@ a {
   background: #ffffff;
 }
 
+.team-match-card {
+  background: #ffffff;
+}
+
+.safety-notice-card {
+  border-width: 2px;
+  background: #ffffff;
+}
+
+.creator-rank-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.creator-rank-item {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 76px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.creator-avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 2px solid #111111;
+  border-radius: 999px;
+  background: #ffffff;
+  font-weight: 800;
+}
+
+.creator-avatar.large {
+  width: 72px;
+  height: 72px;
+  font-size: 20px;
+}
+
+.creator-list-card,
+.creator-profile-card {
+  background: #ffffff;
+}
+
+.beginner-community-card,
+.beginner-board-hero,
+.ai-cta-card,
+.certified-guide-card,
+.beginner-post-card,
+.search-panel {
+  background: #ffffff;
+}
+
+.beginner-board-hero,
+.ai-cta-card {
+  border-width: 2px;
+}
+
 .status-text {
   font-weight: 800;
 }
@@ -194,6 +255,13 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.scroll-chip-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .chip {
