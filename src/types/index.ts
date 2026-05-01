@@ -1,12 +1,38 @@
+export type UserLevel = '입문자' | '초보' | '경험자'
+
 export interface User {
   id: string
   nickname: string
-  level: string
-  teamId?: string
-  badgeIds: string[]
-  playStyle: string
+  level: UserLevel
   region: string
-  beginnerGuideProgress: number
+  hasTeam: boolean
+  joinedMatchIds: string[]
+  savedPostIds: string[]
+}
+
+export interface GuideCard {
+  id: string
+  title: string
+  description: string
+  route: string
+  required: boolean
+}
+
+export interface MatchEvent {
+  id: string
+  title: string
+  date: string
+  time: string
+  region: string
+  fieldName: string
+  difficulty: string
+  beginnerFriendly: boolean
+  rentalAvailable: boolean
+  currentParticipants: number
+  maxParticipants: number
+  fee: string
+  tags: string[]
+  description: string
 }
 
 export interface Team {
@@ -14,70 +40,52 @@ export interface Team {
   name: string
   region: string
   memberCount: number
+  style: string
+  beginnerFriendly: boolean
   description: string
+  recruiting: boolean
 }
 
-export interface Badge {
+export interface MercenaryPost {
   id: string
-  label: string
-  description: string
-}
-
-export interface Match {
-  id: string
+  type: 'guestWanted' | 'lookingForTeam'
   title: string
   date: string
-  time: string
+  region: string
   fieldName: string
-  region: string
-  level: string
-  status: string
-  capacity: string
+  requiredLevel: string
+  currentCount: number
+  maxCount: number
   description: string
-}
-
-export interface RecruitPost {
-  id: string
-  title: string
-  matchId?: string
-  role: string
-  needed: number
-  region: string
-  status: string
-}
-
-export interface CommunityPost {
-  id: string
-  category: 'beginner' | 'team' | 'recruit' | 'reviews'
-  title: string
-  author: string
-  createdAt: string
-  commentCount: number
   tags: string[]
 }
 
-export interface CreatorContent {
+export interface BoardPost {
+  id: string
+  boardType: 'notice' | 'free' | 'review' | 'tip' | 'question'
+  title: string
+  content: string
+  author: string
+  createdAt: string
+  tags: string[]
+  commentsCount: number
+  isBeginnerQuestion: boolean
+}
+
+export interface Tournament {
   id: string
   title: string
-  creator: string
-  type: 'live' | 'video' | 'post'
-  status: '라이브 중' | '업로드됨' | '예정'
-  summary: string
-}
-
-export interface MvpCandidate {
-  id: string
-  name: string
-  team: string
-  voteRate: number
-  highlight: string
-}
-
-export interface ScheduleItem {
-  id: string
-  matchId: string
   date: string
-  time: string
-  fieldName: string
   status: string
+  description: string
+}
+
+export interface Highlight {
+  id: string
+  tournamentId: string
+  title: string
+  playerName: string
+  teamName: string
+  description: string
+  votes: number
 }
