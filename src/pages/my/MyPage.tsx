@@ -15,7 +15,7 @@ export function MyPage() {
       <div className="page">
         <section className="card">
           <h1>로그인이 필요한 메뉴예요</h1>
-          <button className="button primary-button" type="button" onClick={() => navigate('/login')}>로그인하기</button>
+          <button className="button primary_button" type="button" onClick={() => navigate('/login')}>로그인하기</button>
         </section>
       </div>
     )
@@ -23,7 +23,7 @@ export function MyPage() {
 
   return (
     <div className="page">
-      <h1 className="page-title">MY</h1>
+      <h1 className="page_title">MY</h1>
       <section className="section">
         <Link className="card" to="/my/profile">프로필 수정</Link>
         <Link className="card" to="/my/schedule">내 경기 일정</Link>

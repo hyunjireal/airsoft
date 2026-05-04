@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 export function MatchManageHome() {
   return (
     <div className="page">
-      <h1 className="page-title">관리하기</h1>
+      <h1 className="page_title">관리하기</h1>
       <section className="section">
         <Link className="card" to="/my/applications">
           <h2>개인</h2>

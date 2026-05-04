@@ -17,7 +17,7 @@ export function Signup() {
   }
 
   return (
-    <main className="mobile-frame standalone-page">
+    <main className="mobile_frame standalone_page">
       <h1>회원가입</h1>
       <label className="field">닉네임<input className="input" value={nickname} onChange={(event) => setNickname(event.target.value)} /></label>
       <label className="field">이메일<input className="input" type="email" /></label>
@@ -31,7 +31,7 @@ export function Signup() {
           <option>경험자</option>
         </select>
       </label>
-      <button className="button primary-button" type="button" onClick={signup}>가입하고 시작하기</button>
+      <button className="button primary_button" type="button" onClick={signup}>가입하고 시작하기</button>
     </main>
   )
 }

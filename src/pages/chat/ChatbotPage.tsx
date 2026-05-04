@@ -28,10 +28,10 @@ export function ChatbotPage() {
 
   return (
     <div className="page">
-      <h1 className="page-title">AI에게 물어보기</h1>
-      <p className="page-description">기초 질문, 경기 준비, 장비, 규칙을 편하게 물어보세요.</p>
+      <h1 className="page_title">AI에게 물어보기</h1>
+      <p className="page_description">기초 질문, 경기 준비, 장비, 규칙을 편하게 물어보세요.</p>
       <section className="section">
-        <div className="chip-row">{suggestions.map((question) => <button className="chip" key={question} type="button" onClick={() => send(question)}>{question}</button>)}</div>
+        <div className="chip_row">{suggestions.map((question) => <button className="chip" key={question} type="button" onClick={() => send(question)}>{question}</button>)}</div>
       </section>
       <section className="section">
         {messages.map((message, index) => (
@@ -43,7 +43,7 @@ export function ChatbotPage() {
       </section>
       <div className="list">
         <input className="input" value={input} onChange={(event) => setInput(event.target.value)} placeholder="메시지 입력" />
-        <button className="button primary-button" type="button" onClick={() => send()}>보내기</button>
+        <button className="button primary_button" type="button" onClick={() => send()}>보내기</button>
       </div>
     </div>
   )

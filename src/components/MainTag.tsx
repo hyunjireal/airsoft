@@ -15,6 +15,7 @@ const mainTagStyle: CSSProperties = {
   padding: '5px 10px',
   gap: 10,
   boxSizing: 'border-box',
+  borderRadius: '999px'
 }
 
 function MainTag({ children, className, style }: MainTagProps) {

@@ -11,12 +11,12 @@ export function Splash() {
   }, [navigate])
 
   return (
-    <main className="mobile-frame standalone-page">
+    <main className="mobile_frame standalone_page">
       <div className="list" style={{ textAlign: 'center' }}>
         <h1>{appName}</h1>
         <p className="muted">에어소프트건을 더 쉽게 시작하는 방법</p>
       </div>
-      <button className="button primary-button" type="button" onClick={() => navigate('/onboarding')}>
+      <button className="button primary_button" type="button" onClick={() => navigate('/onboarding')}>
         바로 시작하기
       </button>
     </main>

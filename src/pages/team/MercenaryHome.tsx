@@ -16,7 +16,7 @@ export function MercenaryHome() {
 
   return (
     <div className="page">
-      <h1 className="page-title">용병/게스트</h1>
+      <h1 className="page_title">용병/게스트</h1>
       <section className="section">
         <Link className="card" to="/mercenary/list?type=guestWanted"><h2>게스트를 모집해요</h2><p>우리 팀 경기에 함께할 인원을 모집해요.</p></Link>
         <Link className="card" to="/mercenary/list?type=lookingForTeam"><h2>용병 자리를 구해요</h2><p>혼자 참여 가능한 자리를 찾아요.</p></Link>

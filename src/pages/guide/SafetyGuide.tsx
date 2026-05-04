@@ -15,11 +15,11 @@ export function SafetyGuide() {
 function GuideArticle({ title, items, nextLabel, next }: { title: string; items: string[]; nextLabel: string; next: string }) {
   return (
     <div className="page">
-      <h1 className="page-title">{title}</h1>
+      <h1 className="page_title">{title}</h1>
       <section className="section">
         {items.map((item) => <article className="card" key={item}>{item}</article>)}
       </section>
-      <Link className="button primary-button" to={next}>{nextLabel}</Link>
+      <Link className="button primary_button" to={next}>{nextLabel}</Link>
     </div>
   )
 }

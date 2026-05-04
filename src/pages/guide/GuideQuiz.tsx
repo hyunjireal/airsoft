@@ -25,7 +25,7 @@ export function GuideQuiz() {
 
   return (
     <div className="page">
-      <h1 className="page-title">간단 퀴즈</h1>
+      <h1 className="page_title">간단 퀴즈</h1>
       <section className="section">
         {quizzes.map((quiz) => (
           <article className="card" key={quiz.question}>
@@ -39,7 +39,7 @@ export function GuideQuiz() {
           </article>
         ))}
       </section>
-      <button className="button primary-button" type="button" onClick={() => navigate('/guide/complete')}>가이드 완료</button>
+      <button className="button primary_button" type="button" onClick={() => navigate('/guide/complete')}>가이드 완료</button>
     </div>
   )
 }

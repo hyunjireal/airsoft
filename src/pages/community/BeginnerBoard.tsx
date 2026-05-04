@@ -60,11 +60,11 @@ export function BeginnerBoard() {
   return (
     <div className="page">
       <section className="section">
-        <article className="card beginner-board-hero">
+        <article className="card beginner_board_hero">
           <span className="badge">🌱 뉴비 전용</span>
-          <h1 className="page-title">🌱 초보 질문방 (뉴비 전용)</h1>
+          <h1 className="page_title">🌱 초보 질문방 (뉴비 전용)</h1>
           <p>눈치 보지 말고 마음껏 물어보세요! 입문자만 질문할 수 있고, 베테랑 멘토들이 다정하게 답해주는 안전한 공간이에요.</p>
-          <div className="chip-row">
+          <div className="chip_row">
             <span className="chip">현재 작성 권한: {userLevel}</span>
             <span className="chip">입문자 작성 가능</span>
             <span className="chip">숙련자 댓글 가능</span>
@@ -76,29 +76,29 @@ export function BeginnerBoard() {
         </button>
 
         {searchOpen ? (
-          <article className="card search-panel">
+          <article className="card search_panel">
             <label className="field">
               초보 질문방 검색
               <input className="input" placeholder="무엇이든 검색해보세요 (예: 입문용 전동건 추천)" />
             </label>
-            <div className="scroll-chip-row" aria-label="태그 필터">
+            <div className="scroll_chip_row" aria-label="태그 필터">
               <button className="chip" type="button">#법규/규정 🚨</button>
               <button className="chip" type="button">#장비추천 🔫</button>
               <button className="chip" type="button">#수리/튜닝 🛠️</button>
               <button className="chip" type="button">#필드매너 🤝</button>
             </div>
-            <button className="button primary-button" type="button">검색하기</button>
+            <button className="button primary_button" type="button">검색하기</button>
           </article>
         ) : null}
       </section>
 
       <section className="section">
-        <div className="card-row">
+        <div className="card_row">
           <span className="badge">인증됨</span>
-          <h2 className="section-title">초보자용 앱 공식 가이드</h2>
+          <h2 className="section_title">초보자용 앱 공식 가이드</h2>
         </div>
         {certifiedGuides.map((guide) => (
-          <article className="card certified-guide-card" key={guide.title}>
+          <article className="card certified_guide_card" key={guide.title}>
             <h3>{guide.title}</h3>
             <p>{guide.description}</p>
           </article>
@@ -106,17 +106,17 @@ export function BeginnerBoard() {
       </section>
 
       <section className="section">
-        <div className="card-row">
+        <div className="card_row">
           <span className="badge">Q&A</span>
-          <h2 className="section-title">뉴비 질문 모음</h2>
+          <h2 className="section_title">뉴비 질문 모음</h2>
         </div>
-        <button className="button primary-button" type="button" onClick={write}>입문자 질문 작성하기</button>
+        <button className="button primary_button" type="button" onClick={write}>입문자 질문 작성하기</button>
         {beginnerPosts.map((post) => (
-          <article className="card beginner-post-card" key={post.title}>
+          <article className="card beginner_post_card" key={post.title}>
             <span className="badge">{post.level}</span>
             <h3>{post.title}</h3>
             <p>{post.author} / 댓글 {post.comments}개 / {post.answeredBy}</p>
-            <div className="chip-row">
+            <div className="chip_row">
               {post.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}
             </div>
           </article>

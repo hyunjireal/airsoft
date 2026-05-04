@@ -10,7 +10,7 @@ const items = [
 
 export function BottomNav() {
   return (
-    <nav className="bottom-nav" aria-label="하단 내비게이션">
+    <nav className="bottom_nav" aria-label="하단 내비게이션">
       {items.map((item) => (
         <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : undefined)}>
           {item.label}

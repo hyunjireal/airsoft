@@ -8,8 +8,8 @@ export function QuestionCategory() {
 
   return (
     <div className="page">
-      <h1 className="page-title">질문 카테고리</h1>
-      <div className="chip-row">
+      <h1 className="page_title">질문 카테고리</h1>
+      <div className="chip_row">
         {categories.map((category) => (
           <button className="chip" key={category} type="button" onClick={() => setSelected(category)}>
             {selected === category ? '선택됨: ' : ''}{category}
@@ -17,7 +17,7 @@ export function QuestionCategory() {
         ))}
       </div>
       <section className="section">
-        <Link className="button primary-button" to="/question/write">다음</Link>
+        <Link className="button primary_button" to="/question/write">다음</Link>
       </section>
     </div>
   )

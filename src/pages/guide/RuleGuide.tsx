@@ -10,9 +10,9 @@ export function RuleGuide() {
 
   return (
     <div className="page">
-      <h1 className="page-title">기본 경기 규칙</h1>
+      <h1 className="page_title">기본 경기 규칙</h1>
       <section className="section">{items.map((item) => <article className="card" key={item}>{item}</article>)}</section>
-      <Link className="button primary-button" to="/guide/gear">다음: 장비 가이드</Link>
+      <Link className="button primary_button" to="/guide/gear">다음: 장비 가이드</Link>
     </div>
   )
 }

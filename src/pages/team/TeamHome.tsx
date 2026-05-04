@@ -16,7 +16,7 @@ export function TeamHome() {
 
   return (
     <div className="page">
-      <h1 className="page-title">팀/용병 찾기</h1>
+      <h1 className="page_title">팀/용병 찾기</h1>
       <section className="section">
         <Link className="card" to="/team/list"><h2>팀 찾기</h2><p>내 지역과 플레이 스타일에 맞는 팀을 찾아요.</p></Link>
         <button className="card" type="button" onClick={create}><h2>팀 만들기</h2><p>새로운 팀 모집 글을 작성해요.</p></button>

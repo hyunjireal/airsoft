@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export function Onboarding() {
   return (
-    <main className="mobile-frame standalone-page">
+    <main className="mobile_frame standalone_page">
       <section className="list">
         <div className="card">
           <h2>처음이어도 괜찮아요</h2>
@@ -17,7 +17,7 @@ export function Onboarding() {
           <p>기초 질문은 AI에게 먼저 묻고, 필요한 경우 커뮤니티 답변까지 이어갈 수 있어요.</p>
         </div>
       </section>
-      <Link className="button primary-button" to="/login">로그인하기</Link>
+      <Link className="button primary_button" to="/login">로그인하기</Link>
       <Link className="button" to="/signup">회원가입</Link>
       <Link className="button" to="/guest-start">비회원으로 둘러보기</Link>
     </main>

@@ -6,7 +6,7 @@ export function Ranking() {
 
   return (
     <div className="page">
-      <h1 className="page-title">랭킹 보기</h1>
+      <h1 className="page_title">랭킹 보기</h1>
       <section className="section">
         {ranking.map((item, index) => (
           <article className="card" key={item.id}>

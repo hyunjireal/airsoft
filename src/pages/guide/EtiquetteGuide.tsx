@@ -10,9 +10,9 @@ export function EtiquetteGuide() {
 
   return (
     <div className="page">
-      <h1 className="page-title">매너와 주의사항</h1>
+      <h1 className="page_title">매너와 주의사항</h1>
       <section className="section">{items.map((item) => <article className="card" key={item}>{item}</article>)}</section>
-      <Link className="button primary-button" to="/guide/quiz">퀴즈 풀기</Link>
+      <Link className="button primary_button" to="/guide/quiz">퀴즈 풀기</Link>
     </div>
   )
 }

@@ -1,0 +1,750 @@
+/* ============================================================
+   Home Page – Figma node 838-2008
+   Font: Pretendard Variable, KBL Jump TTF
+   ============================================================ */
+
+/* ---------- 공통 태그 ---------- */
+.home_page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  width: 393px;
+  padding-bottom: 60px;
+  background: #fff;
+}
+
+.home_tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.home_tag_red {
+  background: #FF3B30;
+  color: #fff;
+}
+.home_tag_green {
+  background: #2ECC71;
+  color: #fff;
+}
+.home_tag_lime {
+  background: #C6FF00;
+  color: #1A1A1A;
+}
+.home_tag_outline_white {
+  border: 1px solid rgba(255,255,255,0.6);
+  color: #fff;
+  background: transparent;
+}
+
+.home_kbl_title {
+  margin: 0;
+  font-family: 'KBL Jump TTF', sans-serif;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 130%;
+  color: #1A1A1A;
+}
+.home_kbl_title_white {
+  color: #fff;
+}
+
+/* ============================================================
+   ① 히어로 섹션
+   ============================================================ */
+.home_hero {
+  position: relative;
+  width: 100%;
+  background-size: cover;
+  background-position: center bottom 70px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.home_hero_inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 240px 24px 24px;
+}
+
+.home_hero_tit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.home_hero_tag_row {
+  display: flex;
+  gap: 6px;
+}
+
+.home_hero_tag {
+  background: #EE2106;
+  color: #fff;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.home_hero_txt {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 4px;
+}
+
+.home_hero_title {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #000;
+  line-height: 120%;
+  letter-spacing: -0.03em;
+}
+
+.home_hero_pagination {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #9F9F9F;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   ② 사용자 정보 + 경기 일정
+   ============================================================ */
+.home_userinfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding: 0 24px;
+}
+
+/* 프로필 행 */
+.home_userinfo_profile {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.home_userinfo_pic_wrap {
+  flex-shrink: 0;
+}
+
+.home_userinfo_pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+
+.home_userinfo_icons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.home_userinfo_user_icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 130%;
+  letter-spacing: -0.02em;
+  color: #1A1A1A;
+}
+
+.home_userinfo_symbol {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.home_userinfo_settings {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home_userinfo_settings_icon {
+  width: 20px;
+  height: 20px;
+}
+
+.home_userinfo_tit {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.home_userinfo_name {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 130%;
+  letter-spacing: -0.02em;
+}
+
+.home_userinfo_tag_list {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* 경기 일정 */
+.home_userinfo_match_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.home_userinfo_match_title {
+  margin: 0;
+  font-family: 'KBL Jump TTF', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 130%;
+  letter-spacing: 0;
+  color: #1A1A1A;
+}
+
+.home_match_scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.home_match_scroll::-webkit-scrollbar { display: none; }
+
+.home_match_card {
+  position: relative;
+  flex-shrink: 0;
+  width: 170px;
+  height: 170px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.home_match_card_top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.home_match_card_txt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home_match_card_notice {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.home_match_card_place {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.home_match_card_datetime {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* ============================================================
+   Banner
+   ============================================================ */
+.banner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0 24px;
+}
+
+.buddy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  background: #f4f4f4;
+}
+
+.txt {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.buddy_label {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #1A1A1A;
+}
+
+.name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #1A1A1A;
+}
+
+.name_symbol {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.buddy_desc {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #444;
+}
+
+.banner_char {
+  width: 84px;
+  height: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  width: 100%; 
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  width: 210px;
+  height: fit-content;
+  padding: 15px;
+  border-radius: 12px;
+  background: #1F2B45;
+  min-height: 96px;
+  flex-shrink: 0;
+}
+
+.bottom_label,
+.bottom_title,
+.bottom_desc {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.bottom_label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  color: rgba(255,255,255,0.75);
+}
+
+.bottom_title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: normal;
+  color: #fff;
+}
+
+.bottom_desc {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 130%;
+  color: rgba(255,255,255,0.85);
+}
+
+.right {
+  padding: 15px;
+  border-radius: 10px;
+  background: #E0E1DD;
+  flex-shrink: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: -0.02em;
+  color: #1A1A1A;
+}
+
+/* ============================================================
+   ⑤ 팀 추천 섹션
+   ============================================================ */
+.home_team {
+  width: 100%;
+}
+
+.home_team_inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #4A5240; /* 올리브 다크 그린 */
+  border-radius: 16px;
+  padding: 24px 20px 20px;
+  margin: 0 15px;
+  width: calc(100% - 30px);
+}
+
+.home_team_header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.home_team_tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.home_team_scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.home_team_scroll::-webkit-scrollbar { display: none; }
+
+.home_team_card {
+  flex-shrink: 0;
+  width: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.12);
+  text-decoration: none;
+}
+
+.home_team_card_logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home_team_card_logo_icon {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.home_team_card_name {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.home_team_card_region {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ============================================================
+   ⑥ 배너
+   ============================================================ */
+.home_banner {
+  width: 100%;
+  padding: 0 15px;
+}
+
+.home_banner_inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 20px;
+  border-radius: 16px;
+  background: #1A1A1A;
+  background-image: url('../../asset/images/main_img01.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.home_banner_inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+
+.home_banner_label {
+  position: relative;
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+.home_banner_title {
+  position: relative;
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   ⑦ 토너먼트 섹션
+   ============================================================ */
+.home_tournament {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: calc(100% - 30px);
+  margin: 0 15px;
+  padding: 28px 20px;
+  background: #10425D;
+  border-radius: 16px;
+}
+
+.home_tournament_title {
+  margin: 0;
+  font-family: 'KBL Jump TTF', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.66px;
+  line-height: 130%;
+  text-transform: uppercase;
+}
+
+.home_tournament_list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home_tournament_card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+.home_tournament_card_logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home_tournament_card_logo_inner {
+  font-size: 22px;
+}
+
+.home_tournament_card_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home_tournament_card_name {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.home_tournament_card_region {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+}
+
+.home_tournament_card_score {
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2px;
+}
+
+/* ============================================================
+   ⑧ 유튜브 / 크리에이터 하이라이트
+   ============================================================ */
+.home_youtube {
+  width: 100%;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home_youtube_header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home_youtube_label {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: #888;
+}
+
+.home_youtube_scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.home_youtube_scroll::-webkit-scrollbar { display: none; }
+
+.home_youtube_card {
+  flex-shrink: 0;
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.home_youtube_card_thumb {
+  width: 100%;
+  height: 110px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center;
+  background-color: #ddd;
+}
+
+.home_youtube_card_meta {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.home_youtube_card_avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.home_youtube_card_title {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A1A1A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.home_youtube_card_uploader {
+  margin: 0;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 12px;
+  color: #888;
+}

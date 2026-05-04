@@ -17,7 +17,7 @@ export function Search() {
 
   return (
     <div className="page">
-      <h1 className="page-title">검색</h1>
+      <h1 className="page_title">검색</h1>
       <input className="input" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="전체 검색" />
       <section className="section">
         <Result title="경기" items={results.matches.map((item) => [item.title, `/match/${item.id}`])} />

@@ -1,104 +1,227 @@
 import { Link } from 'react-router-dom'
+import CategoryTag from '../../components/CategoryTag'
+import KeywordTag from '../../components/KeywordTag'
+import MainTag from '../../components/MainTag'
+import More from '../../components/More'
+import settingsIcon from '../../asset/icons/settings.svg'
+import mainImg from '../../asset/images/main_img01.png'
+import heroImg from '../../asset/images/main_img02.png'
+import userAvatar from '../../asset/images/main_user01.png'
+import bannerChar from '../../asset/images/banner_char01.png'
+import symbol04 from '../../asset/images/symbol_05.png'
+import symbolBeginner from '../../asset/images/symbol_beginner.png'
+import './Home.css'
+
+const matchCards = [
+  {
+    id: 1,
+    dday: '경기 25일 전',
+    notice: '친환경 바이오 BB탄 필수 사용 구역',
+    place: '경기도 하남시 OO필드',
+    datetime: '2026.08.08 오후 06:30',
+    img: mainImg,
+  },{
+    id: 2,
+    dday: '경기 25일 전',
+    notice: '친환경 바이오 BB탄 필수 사용 구역',
+    place: '경기도 하남시 OO필드',
+    datetime: '2026.08.08 오후 06:30',
+    img: mainImg,
+  },{
+    id: 3,
+    dday: '경기 25일 전',
+    notice: '친환경 바이오 BB탄 필수 사용 구역',
+    place: '경기도 하남시 OO필드',
+    datetime: '2026.08.08 오후 06:30',
+    img: mainImg,
+  },{
+    id: 4,
+    dday: '경기 25일 전',
+    notice: '친환경 바이오 BB탄 필수 사용 구역',
+    place: '경기도 하남시 OO필드',
+    datetime: '2026.08.08 오후 06:30',
+    img: mainImg,
+  },
+  
+]
+
+const teamCards = [
+  { id: 1, name: '무적해병', region: '경기도 파주시' },
+  { id: 2, name: '무적해병', region: '경기도 파주시' },
+  { id: 3, name: '무적해병', region: '경기도 파주시' },
+]
+
+const tournamentCards = [
+  { id: 1, name: '팀 바주카', region: '서울 · 수도권', score: '8 7 8' },
+  { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', score: '7 9 9' },
+]
+
+const youtubeCards = [
+  { id: 1, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
+  { id: 2, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
+]
 
 export function Home() {
   return (
-    <div className="page">
-      <section className="home-summary">
-        <article className="card">
-          <span className="badge">입문자</span>
-          <h1 className="page-title">안전제일 뉴비 '삼삼오오'님, 오늘도 안전한 슈팅 하세요!</h1>
-          <div className="chip-row" aria-label="보유 뱃지">
-            <span className="chip">🔰 첫 AI 질문 완료</span>
-            <span className="chip">🌿 친환경 바이오탄 지식인</span>
+    <div className="home_page">
+      {/* ① 히어로 섹션 */}
+      <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
+        <div className="home_hero_inner">
+          <div className="home_hero_tit">
+            <div className="home_hero_tag_row">
+              <MainTag className="home_hero_tag">MVP 투표중</MainTag>
+            </div>
+            <div className="home_hero_txt">
+              <p className="home_hero_title">총알이 눈보다 빠르다<br />뭔가 멋잇는 말</p>
+              <span className="home_hero_pagination">1 / 4</span>
+            </div>
           </div>
-        </article>
-
-        <article className="card upcoming-match-card">
-          <div className="card-row">
-            <span className="badge">D-3</span>
-            <strong>다가오는 경기</strong>
-          </div>
-          <p>이번 주 토요일 오후 2시 / 하남 OOO 야외 필드 / 🚨 주의: 해당 필드는 친환경 바이오 BB탄 필수 사용 구역입니다.</p>
-          <Link className="button" to="/my/schedule">더보기</Link>
-        </article>
-      </section>
-
-      <section className="section">
-        <article className="card buddy-card">
-          <span className="badge">상태 B</span>
-          <p className="muted">버디 매칭 완료 (멘토 정보 노출 상태)</p>
-          <h2>나의 밀착 가이드 멘토</h2>
-          <strong>🏅 캡틴_서울 (숙련자 / 필드 경력 5년)</strong>
-          <p>"전동건(AEG) 렌탈 및 CQB 필드 가이드 전문입니다. 편하게 물어보세요!"</p>
-          <p className="status-text">이번 주 토요일 동행이 확정되었습니다.</p>
-          <Link className="button primary-button" to="/chat">버디와 채팅하기</Link>
-        </article>
-      </section>
-
-      <section className="section">
-        <div className="card-row">
-          <span className="badge">추천</span>
-          <h2 className="section-title">사용자에게 맞는 경기/모집공고</h2>
         </div>
-        <Link className="card recommendation-card" to="/match/match-003">
-          <span className="badge">뉴비/렌탈 환영</span>
-          <h2>[뉴비/렌탈 환영] 토요일 오전 실내 CQB 가벼운 교전 모임</h2>
-          <p>초보자와 렌탈 이용자를 우선 고려한 실내 CQB 추천 경기입니다.</p>
-          <span className="button">자세히 보러가기</span>
-        </Link>
-        <Link className="card recommendation-card" to="/mercenary/merc-003">
-          <span className="badge">밀심/하드코어</span>
-          <h2>[밀심/하드코어] 40시간 야외 전술 플레이, 장비 필수 지참팀 모집</h2>
-          <p>장비 지참과 긴 플레이 타임이 필요한 하드코어 팀 모집공고입니다.</p>
-          <span className="button">자세히 보러가기</span>
-        </Link>
       </section>
 
-      <section className="section">
-        <article className="card guide-quiz-card">
-          <span className="badge">상태 A</span>
-          <p className="muted">퀴즈 시작 전 (신규 유저)</p>
-          <h2>에어소프트건 안전 튜토리얼</h2>
-          <p>안전한 슈팅의 첫걸음! 5분 만에 끝내는 필수 안전 수칙 퀴즈 풀고 첫 뱃지를 획득해 보세요.</p>
-          <Link className="button primary-button" to="/guide/quiz">첫 퀴즈 시작하기</Link>
-        </article>
-      </section>
-
-      <section className="section">
-        <div className="card-row">
-          <span className="badge">Q&A</span>
-          <h2 className="section-title">인기 질문</h2>
-        </div>
-        <article className="card qna-card">
-          <h2>총열 끝에 주황색 칼라파트, 제가 직접 래커로 도색해도 불법 아닌가요?</h2>
-          <div className="chip-row">
-            <span className="chip">#AI가_답변완료</span>
-            <span className="chip">#뉴비필독</span>
+      {/* ② 사용자 정보 + 경기 일정 */}
+      <section className="home_userinfo">
+        <div className="home_userinfo_profile">
+          <div className="home_userinfo_pic_wrap">
+            <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
           </div>
-        </article>
-        <article className="card qna-card">
-          <h2>겨울철 야외에서 가스건(GBB) 쏠 때 탄창 온도는 어떻게 유지하나요?</h2>
-          <div className="chip-row">
-            <span className="chip">#AI가_답변완료</span>
-            <span className="chip">#뉴비필독</span>
+          <div className="home_userinfo_tit">
+            <div className="home_userinfo_icons">
+              <div className="home_userinfo_user_icon">
+                <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
+                <span>안전제일 뉴비</span>
+              </div>
+              <button className="home_userinfo_settings" type="button" aria-label="설정">
+                <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
+              </button>
+            </div>
+            <p className="home_userinfo_name">삼삼오오님<br />오늘도 안전한 슈팅 하세요!</p>
+            <div className="home_userinfo_tag_list">
+              <CategoryTag>첫 AI 질문 완료</CategoryTag>
+              <CategoryTag>친환경 바이오탄 지식인</CategoryTag>
+            </div>
           </div>
-        </article>
-        <Link className="button primary-button" to="/community/tip">팁 게시판으로 이동</Link>
+        </div>
+
+        <div className="home_userinfo_match">
+          <div className="home_userinfo_match_header">
+            <h2 className="home_userinfo_match_title">내 경기 일정</h2>
+            <More />
+          </div>
+          <div className="home_match_scroll">
+            {matchCards.map((card) => (
+              <Link key={card.id} to="/my/schedule" className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
+                <div className="home_match_card_top">
+                  <KeywordTag>{card.dday}</KeywordTag>
+                  <p className="home_match_card_notice">{card.notice}</p>
+                </div>
+                <div className="home_match_card_txt">
+                  <p className="home_match_card_place">{card.place}</p>
+                  <p className="home_match_card_datetime">{card.datetime}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
-      <section className="section">
-        <div className="card-row">
-          <span className="badge">미디어</span>
-          <h2 className="section-title">하이라이트 & MVP 투표</h2>
+      <section className="banner">
+        <div className="buddy">
+          <div className="txt">
+            <p className="buddy_label">나의 밀착 가이드 멘토</p>
+            <div className="name">
+              <img src={symbol04} alt="" className="name_symbol" />
+              <span>캡틴_서울</span>
+            </div>
+            <p className="buddy_desc">전동건(AEG) 렌탈 및 CQB 필드 가이드 전문입니다. 편하게 물어보세요!</p>
+          </div>
+          <img src={bannerChar} alt="" className="banner_char" />
         </div>
-        <Link className="card media-card" to="/tournament/highlights">
-          <div className="placeholder-image">영상/이미지 썸네일</div>
-          <h2>이번 주말 OOO 필드 치열했던 스피드소프트 하이라이트 모음.zip</h2>
-        </Link>
-        <article className="card media-card">
-          <p>가장 완벽한 엄폐물 핑(Ping)을 찍어준 이번 주 최고의 버디를 뽑아주세요! 🏆</p>
-          <Link className="button primary-button" to="/tournament/mvp-vote">투표하러 가기</Link>
-        </article>
+
+        <div className="bottom">
+          <div className="left">
+            <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
+            <p className="bottom_title">안전한 슈팅의 첫 걸음</p>
+            <p className="bottom_desc">필수 안전 수칙 퀴즈 풀고<br />첫 뱃지를 획득해보세요</p>
+          </div>
+          <div className="right">#AI가_답변완료<br />#뉴비필독</div>
+        </div>
+      </section>
+
+      {/* ⑤ 팀 추천 섹션 */}
+      <section className="home_team">
+        <div className="home_team_inner">
+          <div className="home_team_header">
+            <h2 className="home_kbl_title home_kbl_title_white">삼삼오오님과<br />딱 맞는 팀</h2>
+            <div className="home_team_tags">
+              <span className="home_tag home_tag_lime">스타터 팀</span>
+              <span className="home_tag home_tag_outline_white">입문자 환영</span>
+              <span className="home_tag home_tag_outline_white">즐겁고 가볍게</span>
+            </div>
+          </div>
+          <div className="home_team_scroll">
+            {teamCards.map((team) => (
+              <Link key={team.id} to="/team" className="home_team_card">
+                <div className="home_team_card_logo">
+                  <span className="home_team_card_logo_icon">S</span>
+                </div>
+                <p className="home_team_card_name">{team.name}</p>
+                <p className="home_team_card_region">{team.region}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ⑥ 오바워치 배너 */}
+      <section className="home_banner">
+        <div className="home_banner_inner">
+          <p className="home_banner_label">건앤 x 오바워치</p>
+          <h3 className="home_banner_title">초보자 퀴즈 풀고<br />오바워치 스킨 받자!</h3>
+        </div>
+      </section>
+
+      {/* ⑦ 토너먼트 섹션 */}
+      <section className="home_tournament">
+        <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
+        <div className="home_tournament_list">
+          {tournamentCards.map((tc) => (
+            <Link key={tc.id} to="/tournament" className="home_tournament_card">
+              <div className="home_tournament_card_logo">
+                <span className="home_tournament_card_logo_inner">🎯</span>
+              </div>
+              <div className="home_tournament_card_info">
+                <p className="home_tournament_card_name">{tc.name}</p>
+                <p className="home_tournament_card_region">{tc.region}</p>
+              </div>
+              <div className="home_tournament_card_score">
+                <span>{tc.score}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ⑧ 유튜브/크리에이터 하이라이트 */}
+      <section className="home_youtube">
+        <div className="home_youtube_header">
+          <p className="home_youtube_label">크리에이터 하이라이트</p>
+          <h2 className="home_kbl_title">이번주 최고의 버디는?</h2>
+        </div>
+        <div className="home_youtube_scroll">
+          {youtubeCards.map((yt) => (
+            <Link key={yt.id} to="/tournament/highlights" className="home_youtube_card">
+              <div className="home_youtube_card_thumb" style={{ backgroundImage: `url(${yt.img})` }} />
+              <div className="home_youtube_card_meta">
+                <img src={userAvatar} alt={yt.uploader} className="home_youtube_card_avatar" />
+                <div>
+                  <p className="home_youtube_card_title">{yt.title}</p>
+                  <p className="home_youtube_card_uploader">{yt.uploader} · {yt.ago}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
       </section>
     </div>
   )

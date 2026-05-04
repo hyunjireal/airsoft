@@ -4,7 +4,7 @@ import { teams } from '../../data/mockData'
 export function TeamList() {
   return (
     <div className="page">
-      <h1 className="page-title">팀 찾기</h1>
+      <h1 className="page_title">팀 찾기</h1>
       <section className="section">
         {teams.map((team) => (
           <Link className="card" key={team.id} to={`/team/${team.id}`}>

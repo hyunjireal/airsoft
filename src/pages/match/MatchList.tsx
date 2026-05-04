@@ -10,8 +10,8 @@ export function MatchList() {
 
   return (
     <div className="page">
-      <h1 className="page-title">경기 목록</h1>
-      <div className="chip-row">{filters.map((filter) => <span className="chip" key={filter}>{filter}</span>)}</div>
+      <h1 className="page_title">경기 목록</h1>
+      <div className="chip_row">{filters.map((filter) => <span className="chip" key={filter}>{filter}</span>)}</div>
       <section className="section">
         {list.map((match) => (
           <Link className="card" key={match.id} to={`/match/${match.id}`}>
@@ -22,7 +22,7 @@ export function MatchList() {
             <p>난이도: {match.difficulty}</p>
             <p>{match.currentParticipants} / {match.maxParticipants}명</p>
             <p>참가비: {match.fee}</p>
-            <div className="chip-row">{match.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}</div>
+            <div className="chip_row">{match.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}</div>
           </Link>
         ))}
       </section>

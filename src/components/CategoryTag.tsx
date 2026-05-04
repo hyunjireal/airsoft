@@ -11,14 +11,18 @@ const categoryTagStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   width: 'fit-content',
-  height: 30,
-  padding: '4px 10px',
+  height: 'auto',
+  padding: '3px 6px',
+  border: '1px solid #EE2106',
   gap: 10,
   boxSizing: 'border-box',
-  fontFamily: 'Pretendard, system-ui, sans-serif',
-  fontSize: 14,
+  fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
+  fontSize: 11,
+  fontWeight: 300,
   lineHeight: '130%',
   letterSpacing: '-0.02em',
+  color: '#EE2106',
+  borderRadius: '999px',
 }
 
 function CategoryTag({ children, className, style }: CategoryTagProps) {

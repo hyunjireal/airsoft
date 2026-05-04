@@ -10,7 +10,7 @@ export function MatchDetail() {
   const match = matches.find((item) => item.id === id)
 
   if (!match) {
-    return <div className="page"><h1 className="page-title">경기를 찾을 수 없어요</h1></div>
+    return <div className="page"><h1 className="page_title">경기를 찾을 수 없어요</h1></div>
   }
 
   const apply = () => {
@@ -23,7 +23,7 @@ export function MatchDetail() {
 
   return (
     <div className="page">
-      <h1 className="page-title">{match.title}</h1>
+      <h1 className="page_title">{match.title}</h1>
       <section className="section">
         <article className="card"><h2>경기 기본 정보</h2><p>{match.date} {match.time} / {match.region}</p></article>
         <article className="card"><h2>참여 조건</h2><p>{match.difficulty} / {match.currentParticipants}명 참여 중</p></article>
@@ -32,7 +32,7 @@ export function MatchDetail() {
         <article className="card"><h2>위치/필드 정보</h2><p>{match.fieldName}</p></article>
         <article className="card"><h2>참가 인원</h2><p>{match.currentParticipants} / {match.maxParticipants}</p></article>
       </section>
-      <button className="button primary-button" type="button" onClick={apply}>참가 신청하기</button>
+      <button className="button primary_button" type="button" onClick={apply}>참가 신청하기</button>
       <RequireLoginModal open={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   )

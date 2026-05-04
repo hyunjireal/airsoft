@@ -18,7 +18,7 @@ export function MvpVote() {
 
   return (
     <div className="page">
-      <h1 className="page-title">MVP 투표</h1>
+      <h1 className="page_title">MVP 투표</h1>
       <section className="section">
         {highlights.map((candidate) => (
           <article className="card" key={candidate.id}>
@@ -26,7 +26,7 @@ export function MvpVote() {
             <p>{candidate.teamName}</p>
             <p>{candidate.description}</p>
             <p>현재 투표수 {candidate.votes}</p>
-            <button className="button primary-button" type="button" onClick={() => vote(candidate.id)}>투표하기</button>
+            <button className="button primary_button" type="button" onClick={() => vote(candidate.id)}>투표하기</button>
           </article>
         ))}
       </section>

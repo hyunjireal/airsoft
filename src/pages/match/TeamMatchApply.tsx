@@ -16,8 +16,8 @@ export function TeamMatchApply() {
 
   return (
     <div className="page">
-      <h1 className="page-title">팀 참가신청</h1>
-      <p className="page-description">{event?.title ?? '선택한 팀 매치'} 신청 정보를 입력해요.</p>
+      <h1 className="page_title">팀 참가신청</h1>
+      <p className="page_description">{event?.title ?? '선택한 팀 매치'} 신청 정보를 입력해요.</p>
       <section className="section">
         <label className="field">
           팀의 총인원
@@ -36,7 +36,7 @@ export function TeamMatchApply() {
           <textarea className="textarea" placeholder="운영진에게 전달할 내용을 입력해 주세요." />
         </label>
       </section>
-      <button className="button primary-button" type="button" onClick={submit}>신청 정보 저장하기</button>
+      <button className="button primary_button" type="button" onClick={submit}>신청 정보 저장하기</button>
     </div>
   )
 }

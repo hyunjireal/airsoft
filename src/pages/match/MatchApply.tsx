@@ -23,7 +23,7 @@ export function MatchApply() {
 
   return (
     <div className="page">
-      <h1 className="page-title">참가 신청</h1>
+      <h1 className="page_title">참가 신청</h1>
       <section className="section">
         {checks.map((check) => (
           <label className="card" key={check}>
@@ -36,7 +36,7 @@ export function MatchApply() {
           </label>
         ))}
       </section>
-      <button className="button primary-button" type="button" onClick={complete}>신청 완료하기</button>
+      <button className="button primary_button" type="button" onClick={complete}>신청 완료하기</button>
     </div>
   )
 }

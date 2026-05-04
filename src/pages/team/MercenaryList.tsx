@@ -10,8 +10,8 @@ export function MercenaryList() {
 
   return (
     <div className="page">
-      <h1 className="page-title">용병/게스트 목록</h1>
-      <div className="chip-row">{filters.map((filter) => <span className="chip" key={filter}>{filter}</span>)}</div>
+      <h1 className="page_title">용병/게스트 목록</h1>
+      <div className="chip_row">{filters.map((filter) => <span className="chip" key={filter}>{filter}</span>)}</div>
       <section className="section">
         {list.map((post) => (
           <Link className="card" key={post.id} to={`/mercenary/${post.id}`}>

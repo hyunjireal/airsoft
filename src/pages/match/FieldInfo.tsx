@@ -1,7 +1,7 @@
 export function FieldInfo() {
   return (
     <div className="page">
-      <h1 className="page-title">필드정보</h1>
+      <h1 className="page_title">필드정보</h1>
       <section className="section">
         <article className="card">
           <h2>하남 OOO 에어소프트 파크</h2>

@@ -15,7 +15,7 @@ export function TeamMatchJoinList() {
 
   return (
     <div className="page">
-      <h1 className="page-title">우리 팀의 다음 격전지는? 팀 단위로 출격할 매치 찾기 🤝</h1>
+      <h1 className="page_title">우리 팀의 다음 격전지는? 팀 단위로 출격할 매치 찾기 🤝</h1>
 
       <section className="section">
         <article className="card">
@@ -49,7 +49,7 @@ export function TeamMatchJoinList() {
 
       <section className="section">
         {filteredEvents.map((event) => (
-          <Link className="card team-match-card" key={event.id} to={`/match/join/team/${event.id}`}>
+          <Link className="card team_match_card" key={event.id} to={`/match/join/team/${event.id}`}>
             <span className="badge">{event.status}</span>
             <h2>{event.title}</h2>
             <p>{event.date} / {event.region} / {event.difficulty}</p>

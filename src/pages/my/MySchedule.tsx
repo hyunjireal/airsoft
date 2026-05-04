@@ -7,7 +7,7 @@ export function MySchedule() {
 
   return (
     <div className="page">
-      <h1 className="page-title">내 경기 일정</h1>
+      <h1 className="page_title">내 경기 일정</h1>
       <section className="section">
         {list.length ? list.map((match) => (
           <Link className="card" key={match.id} to={`/match/${match.id}`}>

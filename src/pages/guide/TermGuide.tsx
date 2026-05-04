@@ -11,9 +11,9 @@ export function TermGuide() {
 
   return (
     <div className="page">
-      <h1 className="page-title">용어 가이드</h1>
+      <h1 className="page_title">용어 가이드</h1>
       <section className="section">{terms.map((term) => <article className="card" key={term}>{term}</article>)}</section>
-      <Link className="button primary-button" to="/guide/etiquette">다음: 매너와 주의사항</Link>
+      <Link className="button primary_button" to="/guide/etiquette">다음: 매너와 주의사항</Link>
     </div>
   )
 }
