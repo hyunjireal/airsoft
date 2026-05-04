@@ -8,6 +8,8 @@ import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
 import { BeginnerBoard } from './pages/community/BeginnerBoard'
+import { BeginnerQuestionDetail } from './pages/community/BeginnerQuestionDetail'
+import { BeginnerRecentQuestions } from './pages/community/BeginnerRecentQuestions'
 import { BoardList } from './pages/community/BoardList'
 import { CommunityHome } from './pages/community/CommunityHome'
 import { PostCreate } from './pages/community/PostCreate'
@@ -115,6 +117,8 @@ export const router = createBrowserRouter([
       { path: '/mercenary/:id', element: <MercenaryDetail /> },
       { path: '/community', element: <CommunityHome /> },
       { path: '/community/beginner', element: <BeginnerBoard /> },
+      { path: '/community/beginner/recent', element: <BeginnerRecentQuestions /> },
+      { path: '/community/beginner/recent/first', element: <BeginnerQuestionDetail /> },
       { path: '/community/post/create', element: <PostCreate /> },
       { path: '/community/post/:id', element: <PostDetail /> },
       { path: '/community/:boardType', element: <BoardList /> },
