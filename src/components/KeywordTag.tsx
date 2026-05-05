@@ -15,7 +15,7 @@ const keywordTagStyle: CSSProperties = {
   padding: '3px 6px',
   boxSizing: 'border-box',
   fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
-  fontSize: 14,
+  fontSize: 10,
   fontWeight: 500,
   lineHeight: '130%',
   letterSpacing: '-0.02em',

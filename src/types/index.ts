@@ -1,4 +1,4 @@
-export type UserLevel = '입문자' | '초보' | '경험자'
+export type UserLevel = '입문자' | '초보' | '경험자' | '숙련자'
 
 export interface User {
   id: string
