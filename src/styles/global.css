@@ -61,6 +61,10 @@ a {
   cursor: pointer;
 }
 
+.has_app_back_button > main {
+  padding-top: 44px;
+}
+
 .page {
   padding: 20px 16px 90px;
 }
@@ -125,6 +129,14 @@ a {
 .card h3,
 .card p {
   margin: 0;
+}
+
+.post_card_button {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .signup_flow {

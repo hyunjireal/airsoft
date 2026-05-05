@@ -17,7 +17,7 @@ export function AppShell() {
   }
 
   return (
-    <div className="mobile_frame">
+    <div className={`mobile_frame ${showBackButton ? 'has_app_back_button' : ''}`}>
       {showBackButton ? (
         <button className="app_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
           ‹

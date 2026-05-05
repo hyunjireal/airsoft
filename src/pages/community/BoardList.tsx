@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
@@ -43,6 +43,10 @@ export function BoardList() {
     setModalOpen(true)
   }
 
+  const openPost = () => {
+    navigate('/community/beginner/recent/first')
+  }
+
   return (
     <div className="page">
       <h1 className="page_title">{boardNames[typedBoard] ?? '게시판'}</h1>
@@ -68,12 +72,12 @@ export function BoardList() {
       </section>
       <section className="section">
         {posts.map((post) => (
-          <Link className="card" key={post.id} to={`/community/post/${post.id}`}>
+          <button className="card post_card_button" key={post.id} type="button" onClick={openPost}>
             <span className="badge">{getPostCategory(post)}</span>
             <h2>{post.title}</h2>
             <p>{post.author} / {post.createdAt} / 댓글 {post.commentsCount}</p>
             <div className="chip_row">{post.tags.map((tag) => <span className="chip" key={tag}>{tag}</span>)}</div>
-          </Link>
+          </button>
         ))}
       </section>
       <RequireLoginModal open={modalOpen} onClose={() => setModalOpen(false)} />
