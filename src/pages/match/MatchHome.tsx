@@ -30,7 +30,7 @@ export function MatchHome() {
             <p>확정된 경기 일정을 확인해요.</p>
           </Link>
         </div>
-        <Link className="button" to="/match/manage">일정 관리</Link>
+        <Link className="button" to="/my/matches">내 매치 페이지</Link>
       </section>
 
       <section className="section">

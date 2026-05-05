@@ -26,6 +26,7 @@ export function MyPage() {
       <h1 className="page_title">MY</h1>
       <section className="section">
         <Link className="card" to="/my/profile">프로필 수정</Link>
+        <Link className="card" to="/my/matches">내 매치</Link>
         <Link className="card" to="/my/schedule">내 경기 일정</Link>
         <Link className="card" to="/my/applications">신청 내역</Link>
         <Link className="card" to="/my/posts">내가 쓴 글</Link>

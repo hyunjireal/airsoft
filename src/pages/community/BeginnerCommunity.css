@@ -31,79 +31,100 @@
 .beginner_hero_content {
   position: relative;
   z-index: 1;
-  display: grid;
-  justify-items: center;
-  padding: 78px 23px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 77px 24px;
+}
+
+.beginner_hero_top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding-bottom: 10px;
 }
 
 .beginner_hero h1 {
-  margin: 0 0 12px;
-  color: #eeeeee;
-  font-size: 42px;
-  font-weight: 900;
-  line-height: 1.05;
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: center;
 }
 
 .beginner_hero_badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  gap: 6px;
   height: 27px;
-  padding: 0 13px;
-  border-radius: 999px;
-  background: rgba(43, 43, 43, 0.66);
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: 0;
+  text-align: center;
 }
 
-.beginner_hero_badge span {
-  display: grid;
-  place-items: center;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid #ffffff;
-  border-radius: 50%;
-  font-size: 9px;
-  line-height: 1;
+.beginner_hero_badge img {
+  width: 16px;
+  height: 16px;
+  filter: brightness(0) invert(1);
+}
+
+.beginner_hero_center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .beginner_speech_bubble {
   position: relative;
   width: min(100%, 314px);
-  margin-top: 22px;
-  padding: 13px 22px 19px;
-  border-radius: 17px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  min-height: 166px;
+  padding: 23px 22px;
   text-align: center;
-  backdrop-filter: blur(5px);
 }
 
-.beginner_speech_bubble::after {
-  content: '';
+.beginner_speech_bg {
   position: absolute;
-  right: 49px;
-  bottom: -22px;
-  width: 0;
-  height: 0;
-  border-right: 12px solid transparent;
-  border-left: 12px solid transparent;
-  border-top: 28px solid rgba(255, 255, 255, 0.78);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.beginner_speech_text {
+  position: relative;
+  z-index: 1;
 }
 
 .beginner_speech_bubble p {
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  line-height: 1.85;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: -0.04em;
 }
 
 .beginner_character {
   width: 220px;
-  margin-top: -7px;
+  margin-top: 0;
   margin-bottom: 10px;
   filter: drop-shadow(0 14px 15px rgba(0, 0, 0, 0.36));
+}
+
+.beginner_hero_bottom {
+  display: grid;
+  gap: 10px;
 }
 
 .beginner_search {
@@ -172,7 +193,6 @@
   display: flex;
   gap: 14px;
   width: 100%;
-  margin-top: 10px;
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: none;
@@ -183,67 +203,130 @@
   display: none;
 }
 
-.beginner_hashtags button {
+.beginner_hashtag {
   flex: 0 0 auto;
-  min-height: 29px;
-  padding: 0 13px;
-  border: 0;
-  border-radius: 999px;
-  background: #d7ff2f;
+  background: #DFFB55;
   color: #111111;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 13px;
-  font-weight: 900;
+  font-weight: 500;
+  text-align: center;
+}
+
+.beginner_body {
+  padding: 28px 24px 0;
 }
 
 .beginner_start_section,
 .beginner_questions_section {
-  padding: 28px 23px 0;
+  padding: 0;
 }
 
-.beginner_start_section h2,
+.beginner_start_title {
+  margin: 0;
+  padding: 0 6px;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 160%;
+  letter-spacing: 0;
+  text-align: left;
+}
+
 .beginner_questions_section h2 {
   margin: 0;
   font-size: 24px;
   line-height: 1.25;
 }
 
-.beginner_start_grid {
+.beginner_guide_inner {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  align-items: center;
+  gap: 5px;
   margin-top: 12px;
+  padding: 2px 0;
 }
 
 .beginner_start_card {
-  display: grid;
-  align-content: space-between;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
   min-height: 119px;
-  padding: 18px 15px 7px;
+  height: fit-content;
+  padding: 9px 16px;
   border: 1px solid #1f2635;
+  outline: 0;
   border-radius: 4px;
+  box-shadow: none;
 }
 
-.beginner_start_card h3 {
-  margin: 0 0 8px;
-  font-size: 15px;
-  line-height: 1.15;
+.beginner_start_text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
-.beginner_start_card p {
+.beginner_start_card h3,
+.beginner_start_card_light h3,
+.beginner_start_card_dark h3 {
   margin: 0;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 160%;
+  letter-spacing: 0;
+  text-align: left;
+  font-synthesis: none;
+}
+
+.beginner_start_card p,
+.beginner_start_card_light p,
+.beginner_start_card_dark p {
+  margin: 0;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 11px;
-  font-weight: 700;
-  line-height: 1.55;
+  font-weight: 500;
+  line-height: 160%;
+  letter-spacing: 0;
+  font-synthesis: none;
 }
 
 .beginner_start_card_light {
   background: #ffffff;
   color: #111111;
+  border-color: #1f2635;
 }
 
 .beginner_start_card_dark {
   background: #1c2742;
   color: #ffffff;
+  border-color: #1f2635;
+}
+
+.beginner_start_card_light h3,
+.beginner_start_card_light p {
+  color: #111111;
+}
+
+.beginner_start_card_dark h3,
+.beginner_start_card_dark p {
+  color: #ffffff;
+}
+
+.beginner_start_card_dark h3 {
+  font-weight: 500;
+}
+
+.beginner_start_card_dark p {
+  font-weight: 400;
 }
 
 .beginner_start_action {
@@ -251,38 +334,42 @@
   align-items: end;
   justify-content: space-between;
   gap: 7px;
+  flex-shrink: 0;
 }
 
-.beginner_start_action button {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  min-height: 23px;
-  padding: 0 8px;
+.beginner_tag_button {
+  margin-top: auto;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
-  background: #1d2844;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
+  background: transparent;
+  cursor: pointer;
+}
+
+.beginner_start_keyword {
+  gap: 2px;
+  flex-shrink: 0;
   white-space: nowrap;
 }
 
-.beginner_start_card_dark .beginner_start_action button {
-  background: #ffffff;
-  color: #1d2844;
+.beginner_start_keyword img {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
-.beginner_start_action button img {
-  width: 7px;
+.beginner_start_keyword_dark img {
   filter: brightness(0) invert(1);
 }
 
-.beginner_start_card_dark .beginner_start_action button img {
-  filter: none;
+.beginner_start_keyword_light img {
+  filter: brightness(0) saturate(100%) invert(13%) sepia(25%) saturate(1037%) hue-rotate(183deg) brightness(93%) contrast(91%);
 }
 
 .beginner_start_icon {
+  position: absolute;
+  right: 14px;
+  bottom: 9px;
   width: 44px;
   height: 44px;
   object-fit: contain;
@@ -293,48 +380,69 @@
 }
 
 .beginner_questions_section {
-  padding-top: 77px;
+  padding-top: 36px;
 }
 
-.beginner_section_head {
+.beginner_question_tit {
   display: flex;
   align-items: start;
   justify-content: space-between;
   gap: 16px;
 }
 
-.beginner_section_head p {
-  margin: 9px 0 0;
-  color: #9d9d9d;
-  font-size: 15px;
-  font-weight: 700;
+.beginner_question_m_tit h2 {
+  margin: 0;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 160%;
+  letter-spacing: 0;
+  text-align: left;
 }
 
-.beginner_section_head button {
+.beginner_question_m_tit p {
+  margin: 0;
+  color: #9d9d9d;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: 0;
+}
+
+.beginner_more_button {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 5px;
   margin-top: 2px;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #9d9d9d;
-  font-size: 13px;
-  font-weight: 800;
+  cursor: pointer;
 }
 
-.beginner_section_head button img {
-  width: 7px;
+.beginner_question_inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.beginner_tab_row {
+.beginner_question_tags {
   display: flex;
   gap: 10px;
-  margin: 15px -23px 10px 0;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 15px -24px 0 0;
   overflow-x: auto;
   padding-bottom: 2px;
   scrollbar-width: none;
+}
+
+.beginner_question_tag_button {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .beginner_tab_row button {
@@ -355,113 +463,141 @@
   color: #ffffff;
 }
 
-.beginner_question_list {
+.beginner_question_card_list {
   display: grid;
-  gap: 6px;
+  gap: 5px;
 }
 
 .beginner_question_card {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 47px;
-  min-height: 94px;
+  display: block;
+  min-height: 96px;
   overflow: hidden;
   border: 1px solid #8c927d;
   border-radius: 4px;
+  padding: 12px;
   background: #ffffff;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16);
 }
 
-.beginner_question_body {
+.beginner_question_card_content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: calc(100% - 44px);
   min-width: 0;
-  padding: 14px 10px 10px 13px;
 }
 
-.beginner_question_labels {
+.beginner_question_sub_tit {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 13px;
+  gap: 8px;
+  width: 100%;
 }
 
-.beginner_question_labels span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 21px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: #e9e9e9;
-  color: #111111;
+.beginner_recommend_tag {
+  gap: 1px;
+  border: 0;
+  background: #DFFB55;
+  color: #000000;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 500;
+}
+
+.beginner_recommend_tag img {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
 }
 
 .beginner_question_labels .recommend_label {
   background: #d7ff2f;
 }
 
-.beginner_question_card h3 {
+.beginner_question_card_tit {
   margin: 0;
+  width: 100%;
   overflow: hidden;
   color: #111111;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 13px;
-  font-weight: 900;
-  line-height: 1.35;
+  font-weight: 500;
+  line-height: 160%;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.beginner_question_meta {
+.beginner_question_info {
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 13px;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.beginner_question_info_right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   overflow: hidden;
   color: rgba(0, 0, 0, 0.35);
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 400;
+  line-height: 160%;
+  letter-spacing: 0;
   white-space: nowrap;
 }
 
-.beginner_question_meta span {
+.beginner_question_info_right span {
   display: inline-flex;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
+  flex-shrink: 0;
 }
 
-.beginner_question_meta img {
-  width: 12px;
-  height: 12px;
+.beginner_question_info_right img {
+  width: 10px;
+  height: 10px;
   object-fit: contain;
   opacity: 0.75;
 }
 
-.beginner_bookmark {
-  position: relative;
-  display: grid;
-  place-items: end center;
-  padding: 0 0 14px;
-  border: 0;
-  background: #626c7d;
-}
-
-.beginner_bookmark::before {
-  content: '';
+.beginner_question_info_left {
   position: absolute;
-  top: 0;
-  left: -26px;
-  width: 46px;
-  height: 100%;
-  background: #ffffff;
-  transform: skewX(-14deg);
-  transform-origin: top;
+  right: 11px;
+  bottom: 12px;
+  z-index: 2;
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
-.beginner_bookmark img {
-  position: relative;
-  z-index: 1;
+.beginner_question_info_left img {
   width: 12px;
   height: 16px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.beginner_question_card_acc {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 100%;
+  background: #1F2B45;
+  clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.beginner_question_card_acc img {
+  width: 12px;
+  height: 16px;
+  object-fit: contain;
+  margin-left: 10px;
 }
 
 .beginner_recent_page {
@@ -885,4 +1021,3 @@
     grid-template-columns: 1fr;
   }
 }
-
