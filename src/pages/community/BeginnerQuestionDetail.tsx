@@ -1,15 +1,22 @@
+import { useState } from 'react'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import userIcon from '../../asset/icons/com_user.svg'
 
+type Reply = {
+  author: string
+  time: string
+  body: string
+}
+
 const comments = [
   {
+    id: 'comment-1',
     author: '화가난병아리',
     badge: '베스트 댓글',
     mentor: '베테랑 멘토',
     time: '2시간 전',
     body: '가장 중요한 건 고글을 절대 벗지 않는 거예요. 경기장 안에서는 진행자의 안내를 먼저 듣고, 히트 선언은 크게 말해주세요. 처음이라면 시작 전에 안전거리와 탄속 규정을 꼭 확인하면 좋아요.',
     likes: 24,
-    replies: 1,
     repliesList: [
       {
         author: '화가난병아리',
@@ -19,33 +26,103 @@ const comments = [
     ],
   },
   {
+    id: 'comment-2',
     author: '새벽담벗',
     mentor: '운영 스태프',
     time: '45분 전',
     body: '장비를 사용할 때는 항상 상태를 점검하는 게 중요해요. 손잡이나 연결 부위가 느슨하지 않은지 꼭 확인하세요.',
     likes: 15,
+    repliesList: [],
   },
   {
+    id: 'comment-3',
     author: '바람의노래',
     time: '방금 전',
     body: '경기 중에는 항상 주변을 살피고, 다른 참가자와의 거리를 유지하는 것이 안전사고를 예방하는 데 도움이 돼요.',
     likes: 32,
+    repliesList: [],
   },
 ]
 
 export function BeginnerQuestionDetail() {
+  const [postReaction, setPostReaction] = useState<'like' | 'dislike' | null>(null)
+  const [postLikes, setPostLikes] = useState(12)
+  const [postDislikes, setPostDislikes] = useState(1)
+  const [commentLikes, setCommentLikes] = useState<Record<string, number>>(() =>
+    Object.fromEntries(comments.map((comment) => [comment.id, comment.likes])),
+  )
+  const [likedCommentIds, setLikedCommentIds] = useState<string[]>([])
+  const [openReplyIds, setOpenReplyIds] = useState<string[]>([])
+  const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
+  const [commentReplies, setCommentReplies] = useState<Record<string, Reply[]>>(() =>
+    Object.fromEntries(comments.map((comment) => [comment.id, comment.repliesList])),
+  )
+
+  const totalCommentCount = comments.length + Object.values(commentReplies).reduce((total, replies) => total + replies.length, 0)
+
+  const handlePostReaction = (nextReaction: 'like' | 'dislike') => {
+    if (postReaction === nextReaction) {
+      setPostReaction(null)
+      if (nextReaction === 'like') {
+        setPostLikes((count) => count - 1)
+      } else {
+        setPostDislikes((count) => count - 1)
+      }
+      return
+    }
+
+    if (postReaction === 'like') {
+      setPostLikes((count) => count - 1)
+    }
+    if (postReaction === 'dislike') {
+      setPostDislikes((count) => count - 1)
+    }
+
+    setPostReaction(nextReaction)
+    if (nextReaction === 'like') {
+      setPostLikes((count) => count + 1)
+    } else {
+      setPostDislikes((count) => count + 1)
+    }
+  }
+
+  const handleCommentLike = (commentId: string) => {
+    const isLiked = likedCommentIds.includes(commentId)
+    setLikedCommentIds((ids) => (isLiked ? ids.filter((id) => id !== commentId) : [...ids, commentId]))
+    setCommentLikes((likes) => ({
+      ...likes,
+      [commentId]: likes[commentId] + (isLiked ? -1 : 1),
+    }))
+  }
+
+  const toggleReplyInput = (commentId: string) => {
+    setOpenReplyIds((ids) => (ids.includes(commentId) ? ids.filter((id) => id !== commentId) : [...ids, commentId]))
+  }
+
+  const submitReply = (commentId: string) => {
+    const body = replyInputs[commentId]?.trim()
+    if (!body) {
+      return
+    }
+
+    setCommentReplies((replies) => ({
+      ...replies,
+      [commentId]: [
+        ...replies[commentId],
+        {
+          author: localStorage.getItem('nickname') || '삼삼오오 유저',
+          time: '방금 전',
+          body,
+        },
+      ],
+    }))
+    setReplyInputs((inputs) => ({ ...inputs, [commentId]: '' }))
+    setOpenReplyIds((ids) => (ids.includes(commentId) ? ids : [...ids, commentId]))
+  }
+
   return (
     <div className="beginner_detail_page">
       <article className="beginner_detail_post">
-        <div className="beginner_status_bar" aria-hidden="true">
-          <span>15:00</span>
-          <div className="beginner_status_icons">
-            <span className="cellular_icon" />
-            <span className="wifi_icon" />
-            <span className="battery_icon" />
-          </div>
-        </div>
-
         <div className="beginner_detail_post_content">
           <div className="beginner_question_labels beginner_detail_labels">
             <span className="recommend_label">★ 추천 질문</span>
@@ -76,23 +153,33 @@ export function BeginnerQuestionDetail() {
           </p>
 
           <div className="beginner_reaction_row">
-            <button type="button">
+            <button
+              className={postReaction === 'like' ? 'active' : undefined}
+              type="button"
+              aria-pressed={postReaction === 'like'}
+              onClick={() => handlePostReaction('like')}
+            >
               <span aria-hidden="true">♟</span>
-              좋아요 12
+              좋아요 {postLikes}
             </button>
-            <button type="button">
+            <button
+              className={postReaction === 'dislike' ? 'active' : undefined}
+              type="button"
+              aria-pressed={postReaction === 'dislike'}
+              onClick={() => handlePostReaction('dislike')}
+            >
               <span aria-hidden="true">♟</span>
-              싫어요 1
+              싫어요 {postDislikes}
             </button>
           </div>
         </div>
       </article>
 
       <section className="beginner_comments">
-        <h2>댓글 3</h2>
+        <h2>댓글 {totalCommentCount}</h2>
         <div className="beginner_comment_list">
-          {comments.map((comment, index) => (
-            <article className="beginner_comment" key={`${comment.author}-${index}`}>
+          {comments.map((comment) => (
+            <article className="beginner_comment" key={comment.id}>
               <div className="beginner_comment_head">
                 <span className="beginner_comment_author">
                   <img src={userIcon} alt="" />
@@ -105,31 +192,51 @@ export function BeginnerQuestionDetail() {
               <p>{comment.body}</p>
 
               <div className="beginner_comment_actions">
-                <button type="button">
+                <button
+                  className={likedCommentIds.includes(comment.id) ? 'active' : undefined}
+                  type="button"
+                  aria-pressed={likedCommentIds.includes(comment.id)}
+                  onClick={() => handleCommentLike(comment.id)}
+                >
                   <span aria-hidden="true">♥</span>
-                  좋아요 {comment.likes}
+                  좋아요 {commentLikes[comment.id]}
                 </button>
-                {comment.replies ? <button type="button">답글 {comment.replies}</button> : null}
+                <button type="button" onClick={() => toggleReplyInput(comment.id)}>
+                  답글 {commentReplies[comment.id].length}
+                </button>
               </div>
 
-              {comment.repliesList?.map((reply) => (
-                <div className="beginner_reply" key={`${reply.author}-${reply.body}`}>
-                  <div className="beginner_comment_head">
-                    <span className="beginner_comment_author">
-                      <img src={userIcon} alt="" />
-                      {reply.author}
-                    </span>
-                    <span className="beginner_comment_time">{reply.time}</span>
-                  </div>
-                  <p>{reply.body}</p>
-                </div>
-              ))}
+              {openReplyIds.includes(comment.id) ? (
+                <>
+                  {commentReplies[comment.id].map((reply) => (
+                    <div className="beginner_reply" key={`${reply.author}-${reply.time}-${reply.body}`}>
+                      <div className="beginner_comment_head">
+                        <span className="beginner_comment_author">
+                          <img src={userIcon} alt="" />
+                          {reply.author}
+                        </span>
+                        <span className="beginner_comment_time">{reply.time}</span>
+                      </div>
+                      <p>{reply.body}</p>
+                    </div>
+                  ))}
 
-              {index === 0 ? (
-                <div className="beginner_reply_input">
-                  <input placeholder="답글을 입력하세요" />
-                  <button type="button">답글 쓰기</button>
-                </div>
+                  <div className="beginner_reply_input">
+                    <input
+                      placeholder="답글을 입력하세요"
+                      value={replyInputs[comment.id] ?? ''}
+                      onChange={(event) => setReplyInputs((inputs) => ({ ...inputs, [comment.id]: event.target.value }))}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                          submitReply(comment.id)
+                        }
+                      }}
+                    />
+                    <button type="button" onClick={() => submitReply(comment.id)}>
+                      답글 쓰기
+                    </button>
+                  </div>
+                </>
               ) : null}
             </article>
           ))}

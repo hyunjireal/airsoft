@@ -41,6 +41,26 @@ a {
   background: #ffffff;
 }
 
+.app_back_button {
+  position: fixed;
+  top: 14px;
+  left: calc(50% - 196.5px + 14px);
+  z-index: 25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #111111;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111111;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .page {
   padding: 20px 16px 90px;
 }
@@ -278,6 +298,16 @@ a {
   font-size: 13px;
 }
 
+.chip_button {
+  cursor: pointer;
+}
+
+.chip_button.active {
+  border-color: #111111;
+  background: #111111;
+  color: #ffffff;
+}
+
 .badge {
   display: inline-flex;
   width: fit-content;
@@ -317,6 +347,33 @@ a {
 .textarea {
   min-height: 110px;
   resize: vertical;
+}
+
+.chat_page {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat_thread {
+  flex: 1;
+}
+
+.chat_message.user {
+  margin-left: 34px;
+  background: #ffffff;
+}
+
+.chat_message.assistant {
+  margin-right: 34px;
+}
+
+.chat_input_bar {
+  position: sticky;
+  bottom: 78px;
+  display: grid;
+  gap: 8px;
+  padding: 10px 0 0;
+  background: #ffffff;
 }
 
 .bottom_nav {
@@ -385,6 +442,10 @@ a {
 
   .floating_ai {
     right: 16px;
+  }
+
+  .app_back_button {
+    left: 14px;
   }
 }
 

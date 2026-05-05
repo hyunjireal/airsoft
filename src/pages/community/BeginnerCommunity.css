@@ -705,6 +705,17 @@
   font-weight: 900;
 }
 
+.beginner_reaction_row button.active,
+.beginner_comment_actions button.active {
+  background: #16213b;
+  color: #ffffff;
+}
+
+.beginner_reaction_row button.active span,
+.beginner_comment_actions button.active span {
+  color: #ffffff;
+}
+
 .beginner_reaction_row span {
   color: #000000;
   font-size: 13px;

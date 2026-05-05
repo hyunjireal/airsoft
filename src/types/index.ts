@@ -22,6 +22,7 @@ export interface MatchEvent {
   id: string
   title: string
   date: string
+  dateValue?: string
   time: string
   region: string
   fieldName: string
@@ -67,6 +68,7 @@ export interface BoardPost {
   content: string
   author: string
   createdAt: string
+  category?: string
   tags: string[]
   commentsCount: number
   isBeginnerQuestion: boolean

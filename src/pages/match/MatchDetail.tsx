@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { matches } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 
@@ -29,7 +29,11 @@ export function MatchDetail() {
         <article className="card"><h2>참여 조건</h2><p>{match.difficulty} / {match.currentParticipants}명 참여 중</p></article>
         <article className="card"><h2>준비물</h2><p>고글, 장갑, 편한 신발, 현장 규정 확인</p></article>
         <article className="card"><h2>초보자 확인사항</h2><p>{match.beginnerFriendly ? '초보자 참여 가능' : '경험자 중심 경기'}</p></article>
-        <article className="card"><h2>위치/필드 정보</h2><p>{match.fieldName}</p></article>
+        <article className="card">
+          <h2>위치/필드 정보</h2>
+          <p>{match.fieldName}</p>
+          <Link className="button" to="/match/fields">필드 정보 보기</Link>
+        </article>
         <article className="card"><h2>참가 인원</h2><p>{match.currentParticipants} / {match.maxParticipants}</p></article>
       </section>
       <button className="button primary_button" type="button" onClick={apply}>참가 신청하기</button>
