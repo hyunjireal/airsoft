@@ -10,6 +10,7 @@ export function MatchHome() {
   const [participationFilter, setParticipationFilter] = useState('전체')
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list')
   const [notifyTournament, setNotifyTournament] = useState(false)
+  const [createMenuOpen, setCreateMenuOpen] = useState(false)
 
   const schedulePreview = useMemo(() => matches.slice(0, 3), [])
 
@@ -112,25 +113,6 @@ export function MatchHome() {
       </section>
 
       <section className="section">
-        <h2 className="section_title">모집 만들기</h2>
-        <Link className="button primary_button" to="/match/create">+ 모집 만들기</Link>
-        <div className="grid_two">
-          <Link className="card" to="/match/create/game">
-            <h2>개인</h2>
-            <p>개인 참가자를 모집해요.</p>
-          </Link>
-          <Link className="card" to="/team/create">
-            <h2>팀</h2>
-            <p>팀 단위 모집을 시작해요.</p>
-          </Link>
-        </div>
-        <Link className="card" to="/mercenary/create">
-          <h2>용병</h2>
-          <p>게스트 또는 용병 모집 글을 만들어요.</p>
-        </Link>
-      </section>
-
-      <section className="section">
         <h2 className="section_title">공식 토너먼트</h2>
         <article className="card">
           <span className="badge">Coming Soon</span>
@@ -154,6 +136,25 @@ export function MatchHome() {
           <Link className="button" to="/match/fields">필드 정보 보기</Link>
         </article>
       </section>
+
+      <div className="match_create_floating">
+        {createMenuOpen ? (
+          <div className="match_create_menu" aria-label="모집 만들기 유형 선택">
+            <Link to="/match/create/game">개인</Link>
+            <Link to="/team/create">팀</Link>
+            <Link to="/mercenary/create">용병</Link>
+          </div>
+        ) : null}
+        <button
+          className="match_create_fab"
+          type="button"
+          aria-label="모집 만들기"
+          aria-expanded={createMenuOpen}
+          onClick={() => setCreateMenuOpen((open) => !open)}
+        >
+          +
+        </button>
+      </div>
     </div>
   )
 }

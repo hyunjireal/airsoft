@@ -1,16 +1,41 @@
 import { Link } from 'react-router-dom'
+import { guideChecklist } from '../../data/guideFlow'
 
 export function GuideComplete() {
   return (
-    <div className="page">
-      <section className="card">
-        <h1>가이드가 완료되었어요</h1>
-        <p>이제 질문을 정리하거나 초보 환영 경기를 찾아볼 수 있어요.</p>
+    <div className="page guide_complete_page">
+      <section className="card guide_complete_hero">
+        <span className="guide_complete_icon" aria-hidden="true">✓</span>
+        <h1>가이드 완료</h1>
+        <p>첫 게임 전 기본 규칙을 확인했어요. 이제 필드에서 더 안전하고 즐겁게 즐겨요!</p>
       </section>
-      <div className="list">
-        <Link className="button primary_button" to="/match/list?beginner=true">초보 환영 경기 보기</Link>
-        <Link className="button" to="/home">홈으로</Link>
-      </div>
+
+      <section className="section">
+        <h2 className="section_title">마지막 체크</h2>
+        <article className="card">
+          {guideChecklist.map((item) => (
+            <label className="guide_check_item" key={item}>
+              <input type="checkbox" />
+              <span>{item}</span>
+            </label>
+          ))}
+        </article>
+      </section>
+
+      <section className="section">
+        <Link className="card guide_next_card" to="/guide/quiz">
+          <h2>초보자 퀴즈 참여하기</h2>
+          <span aria-hidden="true">›</span>
+        </Link>
+        <Link className="card guide_next_card" to="/community/beginner">
+          <h2>초보 질문방으로 가기</h2>
+          <span aria-hidden="true">›</span>
+        </Link>
+        <Link className="card guide_next_card" to="/match/list?beginner=true">
+          <h2>매치 찾으러 가기</h2>
+          <span aria-hidden="true">›</span>
+        </Link>
+      </section>
     </div>
   )
 }

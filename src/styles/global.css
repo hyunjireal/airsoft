@@ -376,6 +376,91 @@ a {
   background: #ffffff;
 }
 
+.guide_hero_image {
+  height: 140px;
+  border-radius: 10px;
+}
+
+.guide_sticky_progress {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 8px 0 12px;
+  background: #ffffff;
+}
+
+.guide_toc_card,
+.guide_next_card {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.guide_scroll_card {
+  min-height: 72vh;
+  align-content: start;
+}
+
+.guide_scroll_card h3 {
+  margin: 0 0 8px;
+}
+
+.guide_step_header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  font-weight: 800;
+}
+
+.guide_progress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dddddd;
+}
+
+.guide_progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #111111;
+}
+
+.guide_list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.guide_complete_hero {
+  justify-items: center;
+  text-align: center;
+}
+
+.guide_complete_icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border: 2px solid #111111;
+  border-radius: 999px;
+  font-size: 42px;
+}
+
+.guide_check_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 38px;
+}
+
+.guide_check_item input {
+  width: 20px;
+  height: 20px;
+}
+
 .bottom_nav {
   position: fixed;
   right: 50%;
@@ -417,6 +502,56 @@ a {
   font-weight: 800;
 }
 
+.match_create_floating {
+  position: fixed;
+  right: calc(50% - 196.5px + 16px);
+  bottom: 138px;
+  z-index: 21;
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+
+.match_create_fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid #111111;
+  border-radius: 999px;
+  background: #111111;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.match_create_menu {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 2px solid #111111;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.match_create_menu a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 82px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #111111;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111111;
+  font-weight: 800;
+}
+
 .modal_backdrop {
   position: fixed;
   inset: 0;
@@ -441,6 +576,10 @@ a {
   }
 
   .floating_ai {
+    right: 16px;
+  }
+
+  .match_create_floating {
     right: 16px;
   }
 

@@ -19,13 +19,9 @@ import { CreatorHome } from './pages/creator/CreatorHome'
 import { CreatorList } from './pages/creator/CreatorList'
 import { CreatorProfile } from './pages/creator/CreatorProfile'
 import { BeginnerHub } from './pages/guide/BeginnerHub'
-import { EtiquetteGuide } from './pages/guide/EtiquetteGuide'
-import { GearGuide } from './pages/guide/GearGuide'
 import { GuideComplete } from './pages/guide/GuideComplete'
 import { GuideQuiz } from './pages/guide/GuideQuiz'
-import { RuleGuide } from './pages/guide/RuleGuide'
-import { SafetyGuide } from './pages/guide/SafetyGuide'
-import { TermGuide } from './pages/guide/TermGuide'
+import { GuideStepPage } from './pages/guide/GuideStepPage'
 import { Home } from './pages/home/Home'
 import { MatchApply } from './pages/match/MatchApply'
 import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
@@ -81,11 +77,13 @@ export const router = createBrowserRouter([
     children: [
       { path: '/home', element: <Home /> },
       { path: '/guide', element: <BeginnerHub /> },
-      { path: '/guide/safety', element: <SafetyGuide /> },
-      { path: '/guide/rules', element: <RuleGuide /> },
-      { path: '/guide/gear', element: <GearGuide /> },
-      { path: '/guide/terms', element: <TermGuide /> },
-      { path: '/guide/etiquette', element: <EtiquetteGuide /> },
+      { path: '/guide/safety', element: <GuideStepPage stepId="safety-gear" /> },
+      { path: '/guide/rules', element: <GuideStepPage stepId="safe-zone" /> },
+      { path: '/guide/gear', element: <GuideStepPage stepId="in-game" /> },
+      { path: '/guide/terms', element: <GuideStepPage stepId="danger" /> },
+      { path: '/guide/etiquette', element: <GuideStepPage stepId="law" /> },
+      { path: '/guide/manner', element: <GuideStepPage stepId="manner" /> },
+      { path: '/guide/checklist', element: <GuideStepPage stepId="checklist" /> },
       { path: '/guide/quiz', element: <GuideQuiz /> },
       { path: '/guide/complete', element: <GuideComplete /> },
       { path: '/question', element: <QuestionStart /> },
