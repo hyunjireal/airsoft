@@ -8,6 +8,7 @@ import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import userIcon from '../../asset/icons/com_user.svg'
 import beginnerCharacter from '../../asset/images/com_beginner_char01.png'
 import communityHero from '../../asset/images/com_main01.jpg'
+import SearchBar from '../../components/SearchBar'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 
 const categoryTabs = ['전체', '법규/규정', '장비추천', '수리/튜닝', '게임/전술']
@@ -83,10 +84,7 @@ export function BeginnerBoard() {
 
           <img className="beginner_character" src={beginnerCharacter} alt="초보 질문방 캐릭터" />
 
-          <label className="beginner_search" aria-label="검색">
-            <span className="beginner_search_icon" aria-hidden="true" />
-            <input type="search" placeholder="검색어를 입력하세요" />
-          </label>
+          <SearchBar className="beginner_search" />
 
           <div className="beginner_hashtags" aria-label="추천 태그">
             <button type="button">#법규/규정</button>
