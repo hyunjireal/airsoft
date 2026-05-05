@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './Guide.css'
 
 const items = [
   '고글은 게임장 안에서 절대 임의로 벗지 않아요.',

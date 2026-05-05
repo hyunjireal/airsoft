@@ -403,6 +403,27 @@
   flex-shrink: 0;
 }
 
+.safety_tutorial_card {
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.safety_tutorial_card::after {
+  content: '›';
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.safety_tutorial_card:active {
+  transform: translateY(1px);
+}
+
 .bottom_label,
 .bottom_title,
 .bottom_desc {

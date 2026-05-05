@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { guideChecklist } from '../../data/guideFlow'
+import './Guide.css'
 
 export function GuideComplete() {
   return (

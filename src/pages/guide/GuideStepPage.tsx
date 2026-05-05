@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { guideFlow } from '../../data/guideFlow'
+import './Guide.css'
 
 type GuideStepPageProps = {
   stepId: string

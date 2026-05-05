@@ -146,11 +146,11 @@ export function Home() {
         </div>
 
         <div className="bottom">
-          <div className="left">
+          <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
             <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
             <p className="bottom_title">안전한 슈팅의 첫 걸음</p>
             <p className="bottom_desc">필수 안전 수칙 퀴즈 풀고<br />첫 뱃지를 획득해보세요</p>
-          </div>
+          </Link>
           <div className="right">#AI가_답변완료<br />#뉴비필독</div>
         </div>
       </section>
