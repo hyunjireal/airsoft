@@ -10,6 +10,8 @@ import userAvatar from '../../asset/images/main_user01.png'
 import bannerChar from '../../asset/images/banner_char01.png'
 import symbol04 from '../../asset/images/symbol_05.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
+import mainTeam01 from '../../asset/images/main_team01.png'
+import mainTeam02 from '../../asset/images/main_team02.png'
 import './Home.css'
 
 const matchCards = [
@@ -49,11 +51,16 @@ const teamCards = [
   { id: 1, name: '무적해병', region: '경기도 파주시' },
   { id: 2, name: '무적해병', region: '경기도 파주시' },
   { id: 3, name: '무적해병', region: '경기도 파주시' },
+  { id: 4, name: '무적해병', region: '경기도 파주시' },
+  { id: 5, name: '무적해병', region: '경기도 파주시' },
+  { id: 6, name: '무적해병', region: '경기도 파주시' },
+  { id: 7, name: '무적해병', region: '경기도 파주시' },
+  { id: 8, name: '무적해병', region: '경기도 파주시' },
 ]
 
 const tournamentCards = [
-  { id: 1, name: '팀 바주카', region: '서울 · 수도권', score: '8 7 8' },
-  { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', score: '7 9 9' },
+  { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
+  { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
 ]
 
 const youtubeCards = [
@@ -153,22 +160,25 @@ export function Home() {
         <div className="home_team_inner">
           <div className="home_team_header">
             <h2 className="home_kbl_title home_kbl_title_white">삼삼오오님과<br />딱 맞는 팀</h2>
-            <div className="home_team_tags">
-              <span className="home_tag home_tag_lime">스타터 팀</span>
-              <span className="home_tag home_tag_outline_white">입문자 환영</span>
-              <span className="home_tag home_tag_outline_white">즐겁고 가볍게</span>
-            </div>
           </div>
-          <div className="home_team_scroll">
-            {teamCards.map((team) => (
-              <Link key={team.id} to="/team" className="home_team_card">
-                <div className="home_team_card_logo">
-                  <span className="home_team_card_logo_icon">S</span>
-                </div>
-                <p className="home_team_card_name">{team.name}</p>
-                <p className="home_team_card_region">{team.region}</p>
-              </Link>
-            ))}
+          <div className="home_team_con">
+            <div className="home_team_tags">
+              <KeywordTag>스타터팀</KeywordTag>
+              <KeywordTag>입문자 환영</KeywordTag>
+              <KeywordTag>즐겁고 가볍게</KeywordTag>
+              <KeywordTag>주말 경기</KeywordTag>
+            </div>
+            <div className="home_team_scroll">
+              {teamCards.map((team) => (
+                <Link key={team.id} to="/team" className="home_team_card">
+                  <div className="home_team_card_logo">
+                    <span className="home_team_card_logo_icon">S</span>
+                  </div>
+                  <p className="home_team_card_name">{team.name}</p>
+                  <p className="home_team_card_region">{team.region}</p>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -176,26 +186,49 @@ export function Home() {
       {/* ⑥ 오바워치 배너 */}
       <section className="home_banner">
         <div className="home_banner_inner">
-          <p className="home_banner_label">건앤 x 오바워치</p>
-          <h3 className="home_banner_title">초보자 퀴즈 풀고<br />오바워치 스킨 받자!</h3>
+          <div className="home_banner_txt">
+            <p className="home_banner_label">건잇 x 오버워치</p>
+            <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
+          </div>
+          <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
+        </div>
+        <div className="home_banner_inner">
+          <div className="home_banner_txt">
+            <p className="home_banner_label">건잇 x 오버워치</p>
+            <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
+          </div>
+          <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
         </div>
       </section>
 
       {/* ⑦ 토너먼트 섹션 */}
       <section className="home_tournament">
         <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
-        <div className="home_tournament_list">
+        <div className="home_tournament_team_info">
           {tournamentCards.map((tc) => (
-            <Link key={tc.id} to="/tournament" className="home_tournament_card">
-              <div className="home_tournament_card_logo">
-                <span className="home_tournament_card_logo_inner">🎯</span>
+            <Link key={tc.id} to="/tournament" className="home_tournament_team">
+              <div className="home_tournament_left">
+                <div className="home_tournament_team_logo">
+                  <img src={tc.logo} alt="" className="home_tournament_team_logo_img" />
+                </div>
+                <div className="home_tournament_team_text">
+                  <p className="home_tournament_team_name">{tc.name}</p>
+                  <p className="home_tournament_team_region">{tc.region}</p>
+                </div>
               </div>
-              <div className="home_tournament_card_info">
-                <p className="home_tournament_card_name">{tc.name}</p>
-                <p className="home_tournament_card_region">{tc.region}</p>
-              </div>
-              <div className="home_tournament_card_score">
-                <span>{tc.score}</span>
+              <div className="home_tournament_state">
+                <div className="home_tournament_stat">
+                  <span className="home_tournament_stat_label">ATK</span>
+                  <span className="home_tournament_stat_value">{tc.stats.atk}</span>
+                </div>
+                <div className="home_tournament_stat">
+                  <span className="home_tournament_stat_label">DEF</span>
+                  <span className="home_tournament_stat_value">{tc.stats.def}</span>
+                </div>
+                <div className="home_tournament_stat">
+                  <span className="home_tournament_stat_label">TAC</span>
+                  <span className="home_tournament_stat_value">{tc.stats.tac}</span>
+                </div>
               </div>
             </Link>
           ))}

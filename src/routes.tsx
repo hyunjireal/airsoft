@@ -8,6 +8,7 @@ import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
 import { BeginnerBoard } from './pages/community/BeginnerBoard'
+import { BeginnerCommunityLayout } from './pages/community/BeginnerCommunityLayout'
 import { BeginnerQuestionDetail } from './pages/community/BeginnerQuestionDetail'
 import { BeginnerRecentQuestions } from './pages/community/BeginnerRecentQuestions'
 import { BoardList } from './pages/community/BoardList'
@@ -116,9 +117,15 @@ export const router = createBrowserRouter([
       { path: '/mercenary/create', element: <MercenaryCreate /> },
       { path: '/mercenary/:id', element: <MercenaryDetail /> },
       { path: '/community', element: <CommunityHome /> },
-      { path: '/community/beginner', element: <BeginnerBoard /> },
-      { path: '/community/beginner/recent', element: <BeginnerRecentQuestions /> },
-      { path: '/community/beginner/recent/first', element: <BeginnerQuestionDetail /> },
+      {
+        path: '/community/beginner',
+        element: <BeginnerCommunityLayout />,
+        children: [
+          { index: true, element: <BeginnerBoard /> },
+          { path: 'recent', element: <BeginnerRecentQuestions /> },
+          { path: 'recent/first', element: <BeginnerQuestionDetail /> },
+        ],
+      },
       { path: '/community/post/create', element: <PostCreate /> },
       { path: '/community/post/:id', element: <PostDetail /> },
       { path: '/community/:boardType', element: <BoardList /> },
