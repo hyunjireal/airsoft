@@ -27,6 +27,8 @@ const liveRanking = [
   { rank: 10, name: '육조준', score: 557 },
 ]
 
+const tickerRanking = [...liveRanking, liveRanking[0]]
+
 const updates = [
   {
     title: '간지난는 에어소프트건',
@@ -66,7 +68,8 @@ const ChevronIcon = () => (
 export function CreatorHome() {
   const [rankingOpen, setRankingOpen] = useState(false)
   const [activeRankIndex, setActiveRankIndex] = useState(0)
-  const activeRanking = liveRanking[activeRankIndex]
+  const [tickerTransition, setTickerTransition] = useState(true)
+  const activeRanking = liveRanking[activeRankIndex % liveRanking.length]
 
   useEffect(() => {
     if (rankingOpen) {
@@ -74,11 +77,37 @@ export function CreatorHome() {
     }
 
     const timer = window.setInterval(() => {
-      setActiveRankIndex((current) => (current + 1) % liveRanking.length)
+      setTickerTransition(true)
+      setActiveRankIndex((current) => current + 1)
     }, 2200)
 
     return () => window.clearInterval(timer)
   }, [rankingOpen])
+
+  useEffect(() => {
+    if (activeRankIndex !== liveRanking.length) {
+      return undefined
+    }
+
+    const resetTimer = window.setTimeout(() => {
+      setTickerTransition(false)
+      setActiveRankIndex(0)
+    }, 420)
+
+    return () => window.clearTimeout(resetTimer)
+  }, [activeRankIndex])
+
+  useEffect(() => {
+    if (tickerTransition || activeRankIndex !== 0) {
+      return undefined
+    }
+
+    const transitionTimer = window.setTimeout(() => {
+      setTickerTransition(true)
+    }, 30)
+
+    return () => window.clearTimeout(transitionTimer)
+  }, [activeRankIndex, tickerTransition])
 
   return (
     <div className="creator_page">
@@ -108,7 +137,19 @@ export function CreatorHome() {
             aria-expanded={rankingOpen}
             onClick={() => setRankingOpen((open) => !open)}
           >
-            <span><TrophyIcon /> {activeRanking.rank} {activeRanking.name}</span>
+            <span className="creator_rank_ticker_icon"><TrophyIcon /></span>
+            <span className="creator_rank_ticker_window">
+              <span
+                className={`creator_rank_ticker_track ${tickerTransition ? '' : 'no_transition'}`}
+                style={{ transform: `translateY(-${activeRankIndex * 37}px)` }}
+              >
+                {tickerRanking.map((item, index) => (
+                  <span className="creator_rank_ticker_item" key={`${item.rank}-${index}`}>
+                    {item.rank} {item.name}
+                  </span>
+                ))}
+              </span>
+            </span>
             <ChevronIcon />
           </button>
           {rankingOpen ? (

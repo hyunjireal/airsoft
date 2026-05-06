@@ -58,9 +58,9 @@
 
 .guide_tutorial_page {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  align-content: start;
   min-height: calc(100vh - 64px);
-  padding: 28px 24px 36px;
+  padding: 28px 24px 128px;
   background: #ffffff;
   color: #1f2b45;
 }
@@ -214,7 +214,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 46px;
+  margin-top: 24px;
 }
 
 .guide_tutorial_actions a {

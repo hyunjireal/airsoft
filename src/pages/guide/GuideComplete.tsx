@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { guideChecklist } from '../../data/guideFlow'
 import './Guide.css'
 
 export function GuideComplete() {
@@ -9,18 +8,6 @@ export function GuideComplete() {
         <span className="guide_complete_icon" aria-hidden="true">✓</span>
         <h1>가이드 완료</h1>
         <p>첫 게임 전 기본 규칙을 확인했어요. 이제 필드에서 더 안전하고 즐겁게 즐겨요!</p>
-      </section>
-
-      <section className="section">
-        <h2 className="section_title">마지막 체크</h2>
-        <article className="card">
-          {guideChecklist.map((item) => (
-            <label className="guide_check_item" key={item}>
-              <input type="checkbox" />
-              <span>{item}</span>
-            </label>
-          ))}
-        </article>
       </section>
 
       <section className="section">

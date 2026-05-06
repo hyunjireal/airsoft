@@ -254,13 +254,21 @@ a {
   background: #ffffff;
 }
 
-.bottom_nav a {
+.bottom_nav a,
+.bottom_nav_disabled {
   display: grid;
   place-items: center;
   min-height: 64px;
   color: #666666;
   font-size: 13px;
   font-weight: 700;
+}
+
+.bottom_nav_disabled {
+  color: #b8b8b8;
+  filter: grayscale(1);
+  cursor: not-allowed;
+  user-select: none;
 }
 
 .bottom_nav a.active {

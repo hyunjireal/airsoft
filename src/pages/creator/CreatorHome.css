@@ -154,7 +154,8 @@
 .creator_rank_select {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 7px;
   width: 100%;
   min-height: 37px;
   padding: 0 12px;
@@ -173,13 +174,46 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-.creator_rank_select span {
+.creator_rank_ticker_icon {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  flex: 0 0 auto;
+}
+
+.creator_rank_ticker_window {
+  position: relative;
+  display: block;
+  flex: 1;
+  height: 37px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.creator_rank_ticker_track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  width: 100%;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.creator_rank_ticker_track.no_transition {
+  transition: none;
+}
+
+.creator_rank_ticker_item {
+  display: flex;
+  align-items: center;
+  height: 37px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .creator_rank_select svg:last-child {
+  flex: 0 0 auto;
   transition: transform 0.2s ease;
 }
 

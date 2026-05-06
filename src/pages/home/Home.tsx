@@ -1,3 +1,4 @@
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
@@ -47,17 +48,19 @@ const matchCards = [
   
 ]
 
-const teamCards = [
-  { id: 1, name: '무적해병', region: '경기도 파주시' },
-  { id: 2, name: '무적해병', region: '경기도 파주시' },
-  { id: 3, name: '무적해병', region: '경기도 파주시' },
-  { id: 4, name: '무적해병', region: '경기도 파주시' },
-  { id: 5, name: '무적해병', region: '경기도 파주시' },
-  { id: 6, name: '무적해병', region: '경기도 파주시' },
-  { id: 7, name: '무적해병', region: '경기도 파주시' },
-  { id: 8, name: '무적해병', region: '경기도 파주시' },
-]
+const teamFilters = ['스타터팀', '입문자 환영', '즐겁고 가볍게', '숙련자위주'] as const
+type TeamFilter = (typeof teamFilters)[number]
 
+const teamCards = [
+  { id: 1, name: '스타터 소대', region: '경기 · 파주권', tags: ['스타터팀', '입문자 환영'] },
+  { id: 2, name: '루키 아레나', region: '서울 · 강서권', tags: ['스타터팀', '즐겁고 가볍게'] },
+  { id: 3, name: '라이트 스쿼드', region: '경기 · 하남권', tags: ['입문자 환영', '즐겁고 가볍게'] },
+  { id: 4, name: '위켄드 크루', region: '인천 · 부평권', tags: ['즐겁고 가볍게'] },
+  { id: 5, name: '택티컬 블랙', region: '서울 · CQB', tags: ['숙련자위주'] },
+  { id: 6, name: '알파라인', region: '경기 · 북부권', tags: ['숙련자위주'] },
+  { id: 7, name: '초심자 연합', region: '경기 · 용인권', tags: ['스타터팀', '입문자 환영'] },
+  { id: 8, name: '프렌들리 팀', region: '서울 · 수도권', tags: ['입문자 환영', '즐겁고 가볍게'] },
+]
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
@@ -69,6 +72,9 @@ const youtubeCards = [
 ]
 
 export function Home() {
+  const [activeTeamFilter, setActiveTeamFilter] = useState<TeamFilter>('스타터팀')
+  const filteredTeams = teamCards.filter((team) => team.tags.includes(activeTeamFilter))
+
   return (
     <div className="home_page">
       {/* ① 히어로 섹션 */}
@@ -113,7 +119,9 @@ export function Home() {
         <div className="home_userinfo_match">
           <div className="home_userinfo_match_header">
             <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-            <More />
+            <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
+              <More />
+            </Link>
           </div>
           <div className="home_match_scroll">
             {matchCards.map((card) => (
@@ -163,13 +171,27 @@ export function Home() {
           </div>
           <div className="home_team_con">
             <div className="home_team_tags">
-              <KeywordTag>스타터팀</KeywordTag>
-              <KeywordTag>입문자 환영</KeywordTag>
-              <KeywordTag>즐겁고 가볍게</KeywordTag>
-              <KeywordTag>주말 경기</KeywordTag>
+              {teamFilters.map((filter) => (
+                <button
+                  className="home_team_filter_button"
+                  type="button"
+                  key={filter}
+                  onClick={() => setActiveTeamFilter(filter)}
+                  aria-pressed={activeTeamFilter === filter}
+                >
+                  <KeywordTag
+                    style={{
+                      background: activeTeamFilter === filter ? '#DFFB55' : '#F6FFBC',
+                      color: '#1A1A1A',
+                    }}
+                  >
+                    {filter}
+                  </KeywordTag>
+                </button>
+              ))}
             </div>
             <div className="home_team_scroll">
-              {teamCards.map((team) => (
+              {filteredTeams.map((team) => (
                 <Link key={team.id} to="/team" className="home_team_card">
                   <div className="home_team_card_logo">
                     <span className="home_team_card_logo_icon">S</span>
@@ -232,6 +254,9 @@ export function Home() {
               </div>
             </Link>
           ))}
+          <button className="home_tournament_join_button" type="button" disabled>
+            참여하기
+          </button>
         </div>
       </section>
 
@@ -259,3 +284,4 @@ export function Home() {
     </div>
   )
 }
+

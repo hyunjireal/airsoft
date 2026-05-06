@@ -1,5 +1,7 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { DayPicker } from 'react-day-picker'
+import { ko } from 'date-fns/locale'
 import gaiImage from '../../asset/images/gai.png'
 import matchOutdoorImage from '../../asset/images/main_img01.png'
 import matchIndoorImage from '../../asset/images/main_img02.png'
@@ -29,8 +31,6 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '팀', value: 'team' },
   { label: '용병', value: 'mercenary' },
 ]
-
-const weekDays = ['월', '화', '수', '목', '금', '토', '일']
 
 const calendarDays: Array<{ label: string; muted?: boolean; types?: MatchType[] }> = [
   { label: '27', muted: true },
@@ -261,13 +261,30 @@ function filterMatches(matches: MatchSchedule[], filter: MatchTypeFilter) {
   return matches.filter((match) => match.type === filter)
 }
 
+const matchDates = calendarDays
+  .filter((day) => !day.muted && day.types?.length)
+  .map((day) => new Date(2026, 4, Number(day.label)))
+
+function formatCalendarTitle(month: Date) {
+  return `${month.getFullYear()}. ${String(month.getMonth() + 1).padStart(2, '0')}`
+}
+
 export function MatchHome() {
   const navigate = useNavigate()
-  const [selectedDay, setSelectedDay] = useState('18')
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 4, 18))
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date(2026, 4, 1))
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [notifyTournament, setNotifyTournament] = useState(false)
-  const selectedDayMatches = matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay)
+  const selectedDay = String(selectedDate.getDate())
+  const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
+  const selectedDayMatches = isSelectedMatchMonth ? matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay) : []
   const selectedMatches = filterMatches(selectedDayMatches, matchTypeFilter)
+  const goPrevMonth = () => {
+    setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))
+  }
+  const goNextMonth = () => {
+    setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))
+  }
 
   return (
     <div className="page match_page">
@@ -318,45 +335,35 @@ export function MatchHome() {
         <div className="match_calendar_view">
           <article className="match_month_card">
             <div className="match_month_header">
-              <button type="button" aria-label="이전 달">&lt;</button>
-              <h3>2026. 05</h3>
-              <button type="button" aria-label="다음 달">&gt;</button>
+              <button type="button" aria-label="이전 달" onClick={goPrevMonth}>&lt;</button>
+              <h3>{formatCalendarTitle(calendarMonth)}</h3>
+              <button type="button" aria-label="다음 달" onClick={goNextMonth}>&gt;</button>
             </div>
 
-            <div className="match_weekdays">
-              {weekDays.map((day) => (
-                <span key={day}>{day}</span>
-              ))}
-            </div>
-
-            <div className="match_calendar_grid">
-              {calendarDays.map((day, index) => {
-                const hasSchedule = Boolean(day.types?.length)
-
-                return (
-                  <button
-                    className={`match_day_cell ${day.muted ? 'is_muted' : ''} ${selectedDay === day.label && !day.muted ? 'is_selected' : ''}`}
-                    type="button"
-                    key={`${day.label}-${index}`}
-                    aria-label={`${day.label}일 일정 보기`}
-                    onClick={() => {
-                      if (!day.muted) {
-                        setSelectedDay(day.label)
-                      }
-                    }}
-                  >
-                    <span>{day.label}</span>
-                    {hasSchedule ? <i className="match_day_indicator" aria-hidden="true" /> : null}
-                  </button>
-                )
-              })}
-            </div>
-
+            <DayPicker
+              className="match_day_picker"
+              mode="single"
+              month={calendarMonth}
+              onMonthChange={setCalendarMonth}
+              selected={selectedDate}
+              onSelect={(date) => {
+                if (date) {
+                  setSelectedDate(date)
+                }
+              }}
+              locale={ko}
+              weekStartsOn={0}
+              showOutsideDays
+              fixedWeeks
+              hideNavigation
+              modifiers={{ hasMatch: matchDates }}
+              modifiersClassNames={{ hasMatch: 'hasMatch' }}
+            />
             <p className="match_calendar_hint">점이 있는 날짜에는 선택한 조건에 맞는 일정이 있어요.</p>
           </article>
 
           <article className="match_selected_schedule">
-            <h3>5월 {selectedDay}일 일정 {selectedMatches.length}건</h3>
+            <h3>{selectedDate.getMonth() + 1}월 {selectedDay}일 일정 {selectedMatches.length}건</h3>
             {selectedMatches.length > 0 ? (
               <>
                 <div className="match_selected_list">
@@ -436,3 +443,4 @@ export function MatchHome() {
     </div>
   )
 }
+

@@ -234,6 +234,12 @@
   color: #1A1A1A;
 }
 
+.home_more_link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .home_match_scroll {
   display: flex;
   gap: 12px;
@@ -506,6 +512,17 @@
   flex-wrap: wrap;
 }
 
+.home_team_filter_button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home_team_filter_button[aria-pressed="true"] {
+  transform: translateY(-1px);
+}
+
 .home_team_scroll {
   display: flex;
   align-items: flex-start;
@@ -770,6 +787,24 @@
   line-height: 130%;
   letter-spacing: 0;
   color: #fff;
+}
+
+.home_tournament_join_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 92px;
+  padding: 12px 35px;
+  border: 0;
+  border-radius: 999px;
+  background: #d6d6d6;
+  color: #555555;
+  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  filter: grayscale(1);
+  cursor: not-allowed;
 }
 
 /* ============================================================
