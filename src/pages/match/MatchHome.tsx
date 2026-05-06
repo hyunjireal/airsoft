@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import gaiImage from '../../asset/images/gai.png'
+import matchOutdoorImage from '../../asset/images/main_img01.png'
+import matchIndoorImage from '../../asset/images/main_img02.png'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
@@ -15,6 +18,7 @@ type MatchSchedule = {
   currentParticipants: number
   maxParticipants: number
   action: string
+  imageSrc?: string
 }
 
 type MatchTypeFilter = 'all' | MatchType
@@ -76,6 +80,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 18,
     maxParticipants: 24,
     action: '상세 보기',
+    imageSrc: matchOutdoorImage,
   },
   team: {
     title: '팀 단위 전술 스크림',
@@ -86,6 +91,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 12,
     maxParticipants: 16,
     action: '상세 보기',
+    imageSrc: matchIndoorImage,
   },
   mercenary: {
     title: '용병 조인 야외전',
@@ -96,6 +102,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 8,
     maxParticipants: 10,
     action: '참가 신청',
+    imageSrc: matchIndoorImage,
   },
 }
 
@@ -112,6 +119,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 22,
       maxParticipants: 30,
       action: '상세 보기',
+      imageSrc: matchIndoorImage,
     },
     {
       id: 'match-002-team',
@@ -124,6 +132,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 10,
       maxParticipants: 14,
       action: '상세 보기',
+      imageSrc: matchIndoorImage,
     },
   ],
   '18': [
@@ -138,6 +147,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 14,
       maxParticipants: 16,
       action: '상세 보기',
+      imageSrc: matchOutdoorImage,
     },
     {
       id: 'match-002',
@@ -150,6 +160,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 22,
       maxParticipants: 30,
       action: '상세 보기',
+      imageSrc: matchIndoorImage,
     },
     {
       id: 'match-001',
@@ -162,6 +173,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 8,
       maxParticipants: 10,
       action: '참가 신청',
+      imageSrc: matchIndoorImage,
     },
   ],
   '23': [
@@ -249,14 +261,6 @@ function filterMatches(matches: MatchSchedule[], filter: MatchTypeFilter) {
   return matches.filter((match) => match.type === filter)
 }
 
-function hasVisibleSchedule(types: MatchType[] | undefined, filter: MatchTypeFilter) {
-  if (!types?.length) {
-    return false
-  }
-
-  return filter === 'all' || types.includes(filter)
-}
-
 export function MatchHome() {
   const navigate = useNavigate()
   const [selectedDay, setSelectedDay] = useState('18')
@@ -267,15 +271,11 @@ export function MatchHome() {
 
   return (
     <div className="page match_page">
-      <header className="match_header">
-        <Link className="match_back_button" to="/home" aria-label="이전으로">
-          &lt;
-        </Link>
-        <h1>매치</h1>
-      </header>
-
       <section className="match_section" aria-labelledby="match-status-title">
-        <h2 id="match-status-title" className="match_section_title">내 매치 현황</h2>
+        <div className="match_section_heading">
+          <h2 id="match-status-title" className="match_section_title">내 매치 현황</h2>
+          <Link className="match_more_link" to="/my/matches">더 보기 <span aria-hidden="true">&gt;</span></Link>
+        </div>
         <div className="match_status_grid">
           <Link className="match_status_card" to="/my/applications">
             <span className="match_status_icon match_status_icon_blue" aria-hidden="true">▣</span>
@@ -294,10 +294,6 @@ export function MatchHome() {
             <b>1건</b>
           </Link>
         </div>
-        <Link className="match_full_button match_dark_button" to="/my/matches">
-          내 매치 페이지
-          <span aria-hidden="true">&gt;</span>
-        </Link>
       </section>
 
       <section className="match_section match_schedule_section" aria-labelledby="match-schedule-title">
@@ -335,7 +331,7 @@ export function MatchHome() {
 
             <div className="match_calendar_grid">
               {calendarDays.map((day, index) => {
-                const visible = hasVisibleSchedule(day.types, matchTypeFilter)
+                const hasSchedule = Boolean(day.types?.length)
 
                 return (
                   <button
@@ -350,7 +346,7 @@ export function MatchHome() {
                     }}
                   >
                     <span>{day.label}</span>
-                    {visible ? <i className="match_day_indicator" aria-hidden="true" /> : null}
+                    {hasSchedule ? <i className="match_day_indicator" aria-hidden="true" /> : null}
                   </button>
                 )
               })}
@@ -366,27 +362,36 @@ export function MatchHome() {
                 <div className="match_selected_list">
                   {selectedMatches.map((match) => (
                     <div className="match_selected_item" key={match.id}>
-                      <span className="match_selected_thumb" aria-hidden="true" />
+                      <img className="match_selected_thumb" src={match.imageSrc ?? matchOutdoorImage} alt="" />
                       <div className="match_selected_body">
                         <div className="match_selected_topline">
-                          <strong>{match.title}</strong>
                           <em className={match.type === 'mercenary' ? 'is_mercenary' : ''}>{match.difficulty}</em>
+                          <strong>{match.title}</strong>
                         </div>
-                        <p>시간 {match.time} · 장소 {match.fieldName} ({match.region})</p>
-                        <p>{match.difficulty} · {match.currentParticipants} / {match.maxParticipants}명</p>
+                        <p><span>시간</span> {match.time}</p>
+                        <p><span>장소</span> {match.region} · {match.fieldName}</p>
+                        <p><span>인원</span> {match.currentParticipants} / {match.maxParticipants}명</p>
                       </div>
-                      <Link className="match_selected_button" to={`/match/${match.id}`}>{match.action}</Link>
+                      <Link className="match_selected_button" to={`/match/${match.id}`} aria-label={`${match.title} 상세 보기`}>
+                        <span aria-hidden="true">&gt;</span>
+                      </Link>
                     </div>
                   ))}
                 </div>
-                <Link className="match_full_button match_dark_button" to="/match/list">이 날짜 전체 보기</Link>
+                <Link className="match_full_button match_dark_button" to="/match/list">전체 보기</Link>
               </>
             ) : (
-              <div className="match_empty_inline">
-                <strong>선택한 조건에 맞는 일정이 없어요.</strong>
-                <p>다른 참가 방식이나 날짜를 선택하거나 전체 매치 목록에서 일정을 찾아보세요.</p>
-                <Link className="match_full_button" to="/match/list">전체 매치 보기</Link>
-              </div>
+              <article className="match_empty_recommend_card">
+                <div className="match_empty_recommend_copy">
+                  <h3>일정이 없나요?</h3>
+                  <p>다른 날짜를 보거나<br />AI가 추천하는<br />맞춤 일정을 찾아보세요.</p>
+                </div>
+                <img src={gaiImage} alt="" />
+                <div className="match_empty_recommend_actions">
+                  <Link to="/match/filter">다른 날짜 보기</Link>
+                  <button type="button" onClick={() => navigate('/match/create')}>AI에게 추천 받기</button>
+                </div>
+              </article>
             )}
           </article>
         </div>

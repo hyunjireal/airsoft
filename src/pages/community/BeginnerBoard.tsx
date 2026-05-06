@@ -7,17 +7,16 @@ import accIcon from '../../asset/icons/com_acc.svg'
 import chatIcon from '../../asset/icons/com_chat.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import eyesIcon from '../../asset/icons/com_eyes.svg'
+import aiIcon from '../../asset/icons/com_ai.svg'
 import qnaIcon from '../../asset/icons/com_qna.svg'
+import sendIcon from '../../asset/icons/com_send.svg'
 import starIcon from '../../asset/icons/com_star.svg'
 import userIcon from '../../asset/icons/com_user.svg'
-import beginnerCharacter from '../../asset/images/com_beginner_char01.png'
-import communityHero from '../../asset/images/com_main01.jpg'
-import qnaBubbleImage from '../../asset/images/com_mainQnat.png'
+import gaiImage from '../../asset/images/gai.png'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
-import SearchBar from '../../components/SearchBar'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 import './BeginnerCommunity.css'
 
@@ -75,8 +74,7 @@ export function BeginnerBoard() {
   return (
     <div className="beginner_board_page">
       <section className="beginner_hero" aria-label="초보 질문방 소개">
-        <img className="beginner_hero_bg" src={communityHero} alt="" />
-        <div className="beginner_hero_overlay" />
+        <img className="beginner_hero_gai" src={gaiImage} alt="" />
 
         <div className="beginner_hero_content">
           <div className="beginner_hero_top">
@@ -88,7 +86,8 @@ export function BeginnerBoard() {
                 border: '1px solid rgba(255, 255, 255, 0.12)',
                 color: '#ffffff',
                 padding: '12px 10px',
-                gap: '10px'
+                gap: '10px',
+                fontSize: 15
               }}
             >
               <img src={qnaIcon} alt="" />
@@ -97,26 +96,22 @@ export function BeginnerBoard() {
           </div>
 
           <div className="beginner_hero_center">
-            <div className="beginner_speech_bubble">
-              <img className="beginner_speech_bg" src={qnaBubbleImage} alt="" />
-              <div className="beginner_speech_text">
-                <p>눈치 보지 말고 마음껏 물어보세요!</p>
-                <p>입문자만 질문할 수 있고,</p>
-                <p>베테랑 멘토들이 다정하게</p>
-                <p>답해주는 안전한 공간이에요.</p>
-              </div>
-            </div>
-
-            <img className="beginner_character" src={beginnerCharacter} alt="초보 질문방 캐릭터" />
+            <label className="beginner_ai_search" aria-label="가이에게 질문하기">
+              <span className="beginner_ai_search_left">
+                <img src={aiIcon} alt="" />
+                <input type="search" placeholder="가이에게 물어보세요" />
+              </span>
+              <button className="beginner_ai_search_send" type="button" aria-label="질문 보내기">
+                <img src={sendIcon} alt="" />
+              </button>
+            </label>
           </div>
-
           <div className="beginner_hero_bottom">
-            <SearchBar className="beginner_search" />
-
-            <div className="beginner_hashtags" aria-label="추천 태그">
-              <MainTag className="beginner_hashtag">#법규/규정</MainTag>
-              <MainTag className="beginner_hashtag">#장비추천</MainTag>
-              <MainTag className="beginner_hashtag">#수리/튜닝</MainTag>
+            <p className="beginner_hero_prompt">많이 묻는 질문을 바로 물어보세요.</p>
+            <div className="beginner_hashtags chip_box" aria-label="추천 태그">
+              <MainTag className="beginner_hashtag">초보가 먼저 알아야 할 것</MainTag>
+              <MainTag className="beginner_hashtag">맞으면 어떻게 해?</MainTag>
+              <MainTag className="beginner_hashtag">필드 규칙 알려줘</MainTag>
             </div>
           </div>
         </div>
