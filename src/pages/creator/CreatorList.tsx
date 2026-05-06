@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { creators } from '../../data/creators'
-import './Creator.css'
 
 export function CreatorList() {
   return (
