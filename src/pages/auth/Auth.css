@@ -1,0 +1,22 @@
+.signup_flow {
+  align-content: start;
+}
+
+.signup_choice_card {
+  width: 100%;
+  color: #111111;
+  text-align: left;
+  cursor: pointer;
+}
+
+.signup_choice_card.selected {
+  border-color: #111111;
+  border-width: 2px;
+  background: #ffffff;
+}
+
+.signup_choice_card span,
+.signup_choice_card small {
+  display: block;
+  line-height: 1.4;
+}

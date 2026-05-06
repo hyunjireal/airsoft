@@ -1,3 +1,5 @@
+import './match.css'
+
 export function FieldInfo() {
   return (
     <div className="page">

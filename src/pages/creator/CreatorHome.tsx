@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { creators, mediaContents } from '../../data/creators'
+import './Creator.css'
 
 export function CreatorHome() {
   const rankedCreators = [...creators].sort((a, b) => a.rank - b.rank)

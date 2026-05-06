@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { matches } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
+import './match.css'
 
 export function MatchDetail() {
   const { id } = useParams()

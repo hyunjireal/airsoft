@@ -1,0 +1,26 @@
+.chat_page {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat_thread {
+  flex: 1;
+}
+
+.chat_message.user {
+  margin-left: 34px;
+  background: #ffffff;
+}
+
+.chat_message.assistant {
+  margin-right: 34px;
+}
+
+.chat_input_bar {
+  position: sticky;
+  bottom: 78px;
+  display: grid;
+  gap: 8px;
+  padding: 10px 0 0;
+  background: #ffffff;
+}

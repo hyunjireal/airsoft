@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { creators } from '../../data/creators'
+import './Creator.css'
 
 export function CreatorProfile() {
   const { creatorId } = useParams()

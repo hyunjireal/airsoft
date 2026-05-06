@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { teamMatchEvents } from '../../data/teamMatches'
+import './match.css'
 
 export function TeamMatchApply() {
   const { teamMatchId } = useParams()

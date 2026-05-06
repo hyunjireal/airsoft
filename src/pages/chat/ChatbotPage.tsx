@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { requestChatAnswer, type ChatMessage } from '../../services/chatApi'
+import './Chat.css'
 
 const suggestions = [
   '처음 경기장에 가면 뭘 준비해야 하나요?',

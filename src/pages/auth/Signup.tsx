@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { UserLevel } from '../../types'
+import './Auth.css'
 
 const skillOptions: Array<{
   level: Extract<UserLevel, '입문자' | '숙련자'>

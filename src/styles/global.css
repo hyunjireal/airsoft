@@ -99,12 +99,6 @@ a {
   margin: 20px 0;
 }
 
-.home_summary {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
 .list {
   display: grid;
   gap: 12px;
@@ -131,119 +125,10 @@ a {
   margin: 0;
 }
 
-.post_card_button {
-  width: 100%;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.signup_flow {
-  align-content: start;
-}
-
-.signup_choice_card {
-  width: 100%;
-  color: #111111;
-  text-align: left;
-  cursor: pointer;
-}
-
-.signup_choice_card.selected {
-  border-color: #111111;
-  border-width: 2px;
-  background: #ffffff;
-}
-
-.signup_choice_card span,
-.signup_choice_card small {
-  display: block;
-  line-height: 1.4;
-}
-
 .card_row {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.upcoming_match_card {
-  border-width: 2px;
-}
-
-.buddy_card {
-  border-width: 2px;
-}
-
-.recommendation_card {
-  background: #ffffff;
-}
-
-.qna_card,
-.media_card {
-  background: #ffffff;
-}
-
-.team_match_card {
-  background: #ffffff;
-}
-
-.safety_notice_card {
-  border-width: 2px;
-  background: #ffffff;
-}
-
-.creator_rank_row {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-.creator_rank_item {
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  min-width: 76px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.creator_avatar {
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border: 2px solid #111111;
-  border-radius: 999px;
-  background: #ffffff;
-  font-weight: 800;
-}
-
-.creator_avatar.large {
-  width: 72px;
-  height: 72px;
-  font-size: 20px;
-}
-
-.creator_list_card,
-.creator_profile_card {
-  background: #ffffff;
-}
-
-.beginner_community_card,
-.beginner_board_hero,
-.ai_cta_card,
-.certified_guide_card,
-.beginner_post_card,
-.search_panel {
-  background: #ffffff;
-}
-
-.beginner_board_hero,
-.ai_cta_card {
-  border-width: 2px;
 }
 
 .status_text {
@@ -356,33 +241,6 @@ a {
   resize: vertical;
 }
 
-.chat_page {
-  display: flex;
-  flex-direction: column;
-}
-
-.chat_thread {
-  flex: 1;
-}
-
-.chat_message.user {
-  margin-left: 34px;
-  background: #ffffff;
-}
-
-.chat_message.assistant {
-  margin-right: 34px;
-}
-
-.chat_input_bar {
-  position: sticky;
-  bottom: 78px;
-  display: grid;
-  gap: 8px;
-  padding: 10px 0 0;
-  background: #ffffff;
-}
-
 .bottom_nav {
   position: fixed;
   right: 50%;
@@ -424,56 +282,6 @@ a {
   font-weight: 800;
 }
 
-.match_create_floating {
-  position: fixed;
-  right: calc(50% - 196.5px + 16px);
-  bottom: 138px;
-  z-index: 21;
-  display: grid;
-  justify-items: end;
-  gap: 8px;
-}
-
-.match_create_fab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  padding: 0;
-  border: 2px solid #111111;
-  border-radius: 999px;
-  background: #111111;
-  color: #ffffff;
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.match_create_menu {
-  display: grid;
-  gap: 6px;
-  padding: 8px;
-  border: 2px solid #111111;
-  border-radius: 14px;
-  background: #ffffff;
-}
-
-.match_create_menu a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 82px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid #111111;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  font-weight: 800;
-}
-
 .modal_backdrop {
   position: fixed;
   inset: 0;
@@ -498,10 +306,6 @@ a {
   }
 
   .floating_ai {
-    right: 16px;
-  }
-
-  .match_create_floating {
     right: 16px;
   }
 

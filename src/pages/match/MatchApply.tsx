@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import './match.css'
 
 const checks = [
   '안전수칙을 확인했어요',

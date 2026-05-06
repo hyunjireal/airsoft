@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { matches } from '../../data/mockData'
+import './match.css'
 
 const keywordFilters = ['초보 환영', '장비 대여 가능', '실내전', '숙련자 전용', '마감 임박']
 

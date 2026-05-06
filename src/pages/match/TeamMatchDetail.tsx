@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { teamMatchEvents } from '../../data/teamMatches'
+import './match.css'
 
 export function TeamMatchDetail() {
   const { teamMatchId } = useParams()

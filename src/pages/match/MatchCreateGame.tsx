@@ -1,3 +1,5 @@
+import './match.css'
+
 export function MatchCreateGame() {
   return (
     <div className="page">

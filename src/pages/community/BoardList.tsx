@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Community.css'
 import { useNavigate, useParams } from 'react-router-dom'
 import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'

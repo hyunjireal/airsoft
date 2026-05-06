@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { teamMatchEvents } from '../../data/teamMatches'
+import './match.css'
 
 export function TeamMatchJoinList() {
   const [dateFilter, setDateFilter] = useState('전체')

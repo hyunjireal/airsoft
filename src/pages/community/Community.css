@@ -1,0 +1,11 @@
+.post_card_button {
+  width: 100%;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.beginner_community_card {
+  background: #ffffff;
+}

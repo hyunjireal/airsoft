@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import './Community.css'
 
 export function CommunityHome() {
   return (
