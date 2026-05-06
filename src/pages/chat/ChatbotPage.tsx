@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { requestChatAnswer, type ChatMessage } from '../../services/chatApi'
 import './Chat.css'
 
@@ -26,6 +27,8 @@ function createMessage(role: ChatMessage['role'], text: string): ChatMessage {
 }
 
 export function ChatbotPage() {
+  const [searchParams] = useSearchParams()
+  const initialQuestionSent = useRef(false)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<ChatMessage[]>([welcomeMessage])
   const [isSending, setIsSending] = useState(false)
@@ -51,6 +54,16 @@ export function ChatbotPage() {
     event.preventDefault()
     void send()
   }
+
+  useEffect(() => {
+    const question = searchParams.get('question')
+    if (!question || initialQuestionSent.current) {
+      return
+    }
+
+    initialQuestionSent.current = true
+    void send(question)
+  }, [searchParams])
 
   return (
     <div className="page chat_page">

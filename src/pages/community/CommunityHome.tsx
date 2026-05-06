@@ -6,11 +6,11 @@ export function CommunityHome() {
     <div className="community_page">
       <nav className="community_tabs" aria-label="커뮤니티 게시판">
         <NavLink to="/community" end>
-          초보 게시판
+          초보 질문방
         </NavLink>
-        <NavLink to="/community/free">
+        <button type="button" disabled>
           일반 게시판
-        </NavLink>
+        </button>
       </nav>
 
       <Outlet />

@@ -325,13 +325,13 @@
 
 .creator_update_card {
   display: grid;
-  grid-template-columns: 171px minmax(0, 1fr);
+  grid-template-columns: 118px minmax(0, 1fr);
   gap: 12px;
   align-items: start;
 }
 
 .creator_update_card > img {
-  width: 171px;
+  width: 100px;
   height: 100px;
   border-radius: 9px;
   object-fit: cover;
@@ -684,12 +684,12 @@
   }
 
   .creator_update_card {
-    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-columns: 108px minmax(0, 1fr);
   }
 
   .creator_update_card > img {
-    width: 132px;
-    height: 84px;
+    width: 108px;
+    height: 68px;
   }
 
   .creator_profile_grid {

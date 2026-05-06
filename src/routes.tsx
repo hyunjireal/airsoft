@@ -9,7 +9,6 @@ import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
 import { BeginnerBoard } from './pages/community/BeginnerBoard'
-import { BeginnerCommunityLayout } from './pages/community/BeginnerCommunityLayout'
 import { BeginnerQuestionDetail } from './pages/community/BeginnerQuestionDetail'
 import { BeginnerRecentQuestions } from './pages/community/BeginnerRecentQuestions'
 import { BoardList } from './pages/community/BoardList'
@@ -141,7 +140,6 @@ export const router = createBrowserRouter([
           },
           {
             path: '/community/beginner',
-            element: <BeginnerCommunityLayout />,
             children: [
               { index: true, element: <Navigate to="/community" replace /> },
               { path: 'recent', element: <BeginnerRecentQuestions /> },

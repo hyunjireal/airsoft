@@ -239,11 +239,8 @@ export function GuideQuiz() {
               )}
             </article>
           </div>
-          <button className="guide_quiz_primary" type="button" onClick={() => navigate('/my')}>
+          <button className="guide_quiz_primary" type="button" disabled>
             이벤트 아이템 받기
-          </button>
-          <button className="guide_quiz_secondary" type="button" onClick={restartQuiz}>
-            틀린 문제 다시 보기
           </button>
           <button className="guide_quiz_secondary" type="button" onClick={() => navigate('/community/beginner')}>
             초보 질문방으로 가기
@@ -251,9 +248,14 @@ export function GuideQuiz() {
           <button className="guide_quiz_secondary" type="button" onClick={() => navigate('/match')}>
             매치 찾으러 가기
           </button>
-          <button className="guide_quiz_link_button" type="button" onClick={restartQuiz}>
-            퀴즈 다시 풀기
-          </button>
+          <div className="guide_quiz_result_actions">
+            <button className="guide_quiz_link_button" type="button" onClick={restartQuiz}>
+              퀴즈 다시 풀기
+            </button>
+            <button className="guide_quiz_link_button" type="button" onClick={() => navigate('/home')}>
+              홈으로 가기
+            </button>
+          </div>
         </section>
       </div>
     )

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './CreatorHome.css'
 import list01 from '../../asset/images/creator_list01.png'
@@ -10,19 +11,32 @@ import list07 from '../../asset/images/creator_list07.png'
 import list08 from '../../asset/images/creator_list08.png'
 import list09 from '../../asset/images/creator_list09.png'
 
+type CreatorFilter = 'gear' | 'game'
+
 const creatorProfiles = [
-  { id: 'creator-001', name: '건오별', stat: '1743만명', avatar: list01 },
-  { id: 'creator-002', name: '영스윙', stat: '1743만명', avatar: list02 },
-  { id: 'creator-003', name: '바보링', stat: '1743만명', avatar: list03 },
-  { id: 'creator-004', name: '아쿠마', stat: '1743만명', avatar: list04 },
-  { id: 'creator-001', name: '이찬원', stat: '1743만명', avatar: list05 },
-  { id: 'creator-002', name: '외국인', stat: '1743만명', avatar: list06 },
-  { id: 'creator-003', name: '나르마치고', stat: '1743만명', avatar: list07 },
-  { id: 'creator-004', name: '빛나는꼬꼬', stat: '1743만명', avatar: list08 },
-  { id: 'creator-001', name: '깡나브리', stat: '1743만명', avatar: list09 },
-  { id: 'creator-002', name: '하나껌', stat: '1743만명', avatar: list07 },
-  { id: 'creator-003', name: '교회는처치', stat: '1743만명', avatar: list08 },
-  { id: 'creator-004', name: '곰발루이지', stat: '1743만명', avatar: list09 },
+  { id: 'creator-001', name: '캡틴_서울', stat: '12.4만명', avatar: list01, category: 'gear' },
+  { id: 'creator-002', name: '바이오탄 메이커', stat: '8.9만명', avatar: list02, category: 'gear' },
+  { id: 'creator-004', name: '필드노트', stat: '4.7만명', avatar: list04, category: 'gear' },
+  { id: 'creator-001', name: '장비분해소', stat: '3.8만명', avatar: list05, category: 'gear' },
+  { id: 'creator-002', name: '렌탈가이드', stat: '3.1만명', avatar: list06, category: 'gear' },
+  { id: 'creator-004', name: '고글체크', stat: '2.6만명', avatar: list08, category: 'gear' },
+  { id: 'creator-003', name: '스피드런 정후', stat: '6.1만명', avatar: list03, category: 'game' },
+  { id: 'creator-004', name: '포레스트 콜사인', stat: '5.3만명', avatar: list07, category: 'game' },
+  { id: 'creator-003', name: '하이라이트랩', stat: '4.9만명', avatar: list09, category: 'game' },
+  { id: 'creator-001', name: 'CQB 플레이북', stat: '4.2만명', avatar: list01, category: 'game' },
+  { id: 'creator-002', name: '팀매치 분석실', stat: '3.7만명', avatar: list06, category: 'game' },
+  { id: 'creator-003', name: 'MVP 리플레이', stat: '2.9만명', avatar: list03, category: 'game' },
+] satisfies Array<{
+  id: string
+  name: string
+  stat: string
+  avatar: string
+  category: CreatorFilter
+}>
+
+const creatorFilters: Array<{ label: string; value: CreatorFilter }> = [
+  { label: '장비', value: 'gear' },
+  { label: '게임', value: 'game' },
 ]
 
 const SearchIcon = () => (
@@ -33,6 +47,9 @@ const SearchIcon = () => (
 )
 
 export function CreatorList() {
+  const [activeFilter, setActiveFilter] = useState<CreatorFilter>('gear')
+  const filteredCreators = creatorProfiles.filter((creator) => creator.category === activeFilter)
+
   return (
     <div className="creator_list_page">
       <h1>크리에이터 리스트</h1>
@@ -43,12 +60,20 @@ export function CreatorList() {
       </label>
 
       <div className="creator_list_filters" aria-label="크리에이터 카테고리">
-        <button className="is_active" type="button">장비</button>
-        <button type="button">게임</button>
+        {creatorFilters.map((filter) => (
+          <button
+            className={activeFilter === filter.value ? 'is_active' : ''}
+            type="button"
+            key={filter.value}
+            onClick={() => setActiveFilter(filter.value)}
+          >
+            {filter.label}
+          </button>
+        ))}
       </div>
 
       <section className="creator_profile_grid" aria-label="크리에이터 프로필 목록">
-        {creatorProfiles.map((creator, index) => (
+        {filteredCreators.map((creator, index) => (
           <Link className="creator_profile_tile" key={`${creator.name}-${index}`} to={`/creator/${creator.id}`}>
             <img src={creator.avatar} alt="" />
             <strong>{creator.name}</strong>

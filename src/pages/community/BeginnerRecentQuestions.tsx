@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import './Community.css'
 import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import userIcon from '../../asset/icons/com_user.svg'

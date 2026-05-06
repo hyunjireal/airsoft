@@ -498,6 +498,13 @@
   text-decoration: underline;
 }
 
+.guide_quiz_result_actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
 .guide_quiz_text_link {
   display: inline-flex;
   justify-content: center;

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './Community.css'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import userIcon from '../../asset/icons/com_user.svg'
 

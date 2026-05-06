@@ -261,10 +261,6 @@ function filterMatches(matches: MatchSchedule[], filter: MatchTypeFilter) {
   return matches.filter((match) => match.type === filter)
 }
 
-const matchDates = calendarDays
-  .filter((day) => !day.muted && day.types?.length)
-  .map((day) => new Date(2026, 4, Number(day.label)))
-
 function formatCalendarTitle(month: Date) {
   return `${month.getFullYear()}. ${String(month.getMonth() + 1).padStart(2, '0')}`
 }
@@ -279,6 +275,14 @@ export function MatchHome() {
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
   const selectedDayMatches = isSelectedMatchMonth ? matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay) : []
   const selectedMatches = filterMatches(selectedDayMatches, matchTypeFilter)
+  const filteredMatchDates = calendarDays
+    .filter((day) => {
+      if (day.muted) return false
+
+      const dayMatches = matchesByDay[day.label] ?? createMatchesForDay(day.label)
+      return filterMatches(dayMatches, matchTypeFilter).length > 0
+    })
+    .map((day) => new Date(2026, 4, Number(day.label)))
   const goPrevMonth = () => {
     setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))
   }
@@ -356,7 +360,7 @@ export function MatchHome() {
               showOutsideDays
               fixedWeeks
               hideNavigation
-              modifiers={{ hasMatch: matchDates }}
+              modifiers={{ hasMatch: filteredMatchDates }}
               modifiersClassNames={{ hasMatch: 'hasMatch' }}
             />
             <p className="match_calendar_hint">점이 있는 날짜에는 선택한 조건에 맞는 일정이 있어요.</p>
