@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+﻿import { useRef, useState, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
@@ -86,8 +86,47 @@ const sortedMatchCards = [...matchCards].sort((a, b) => {
   return aDay - bDay
 })
 
+function useDragScroll() {
+  const dragState = useRef({
+    isDown: false,
+    startX: 0,
+    scrollLeft: 0,
+  })
+
+  const stopDrag = (event: PointerEvent<HTMLDivElement>) => {
+    dragState.current.isDown = false
+    event.currentTarget.classList.remove('is_dragging')
+  }
+
+  return {
+    onPointerDown: (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType === 'mouse' && event.button !== 0) return
+
+      dragState.current = {
+        isDown: true,
+        startX: event.clientX,
+        scrollLeft: event.currentTarget.scrollLeft,
+      }
+      event.currentTarget.classList.add('is_dragging')
+      event.currentTarget.setPointerCapture(event.pointerId)
+    },
+    onPointerMove: (event: PointerEvent<HTMLDivElement>) => {
+      if (!dragState.current.isDown) return
+
+      const distance = event.clientX - dragState.current.startX
+      event.currentTarget.scrollLeft = dragState.current.scrollLeft - distance
+      event.preventDefault()
+    },
+    onPointerUp: stopDrag,
+    onPointerCancel: stopDrag,
+    onPointerLeave: stopDrag,
+  }
+}
+
 export function Home() {
   const [activeTeamFilter, setActiveTeamFilter] = useState<TeamFilter>('스타터팀')
+  const matchDragScroll = useDragScroll()
+  const bannerDragScroll = useDragScroll()
   const filteredTeams = teamCards.filter((team) => team.tags.includes(activeTeamFilter))
 
   return (
@@ -138,9 +177,9 @@ export function Home() {
               <More />
             </Link>
           </div>
-          <div className="home_match_scroll">
+          <div className="home_match_scroll" {...matchDragScroll}>
             {sortedMatchCards.map((card) => (
-              <Link key={card.id} to="/my/schedule" className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
+              <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
                 <div className="home_match_card_top">
                   <KeywordTag>{card.dday}</KeywordTag>
                   <p className="home_match_card_notice">{card.notice}</p>
@@ -149,7 +188,7 @@ export function Home() {
                   <p className="home_match_card_place">{card.place}</p>
                   <p className="home_match_card_datetime">{card.datetime}</p>
                 </div>
-              </Link>
+              </article>
             ))}
           </div>
         </div>
@@ -222,7 +261,7 @@ export function Home() {
       </section>
 
       {/* ⑥ 오바워치 배너 */}
-      <section className="home_banner">
+      <section className="home_banner" {...bannerDragScroll}>
         <div className="home_banner_inner">
           <div className="home_banner_txt">
             <p className="home_banner_label">건잇 x 오버워치</p>

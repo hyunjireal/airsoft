@@ -326,7 +326,11 @@ export function BeginnerBoard() {
                         </div>
                       </div>
                     </div>
-                    <div className="beginner_question_card_acc" aria-hidden="true">
+                    <div
+                      className="beginner_question_card_acc"
+                      aria-hidden="true"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <img src={accIcon} alt="" />
                     </div>
                     <button

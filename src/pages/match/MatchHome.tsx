@@ -2,6 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
+import KeywordTag from '../../components/KeywordTag'
 import gaiImage from '../../asset/images/gai.png'
 import matchOutdoorImage from '../../asset/images/main_img01.png'
 import matchIndoorImage from '../../asset/images/main_img02.png'
@@ -331,7 +332,7 @@ export function MatchHome() {
               key={filter.value}
               onClick={() => setMatchTypeFilter(filter.value)}
             >
-              {filter.label}
+              <KeywordTag className="match_type_filter_tag">{filter.label}</KeywordTag>
             </button>
           ))}
         </div>

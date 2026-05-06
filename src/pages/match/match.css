@@ -1,7 +1,7 @@
 .match_page {
   display: grid;
   gap: 18px;
-  padding: 24px 16px 120px;
+  padding: 24px 16px 220px;
   background: #ffffff;
 }
 
@@ -140,7 +140,7 @@
   min-height: 34px;
   padding: 0 16px;
   border: 1px solid #d9d9d9;
-  border-radius: 999px;
+  border-radius: 4px 8px 4px 8px;
   background: #ffffff;
   color: #111111;
   font-size: 14px;
@@ -152,6 +152,16 @@
   border-color: #111111;
   background: #111111;
   color: #ffffff;
+}
+
+.match_type_filter_tag {
+  height: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: inherit;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
 }
 
 .match_calendar_view {
@@ -1004,7 +1014,7 @@
 /* Match home visual refresh. Kept local to the match folder, not global.css. */
 .match_page {
   gap: 28px;
-  padding: 32px 24px 120px;
+  padding: 32px 24px 220px;
   background: #ffffff;
 }
 

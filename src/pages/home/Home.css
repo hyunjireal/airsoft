@@ -10,7 +10,7 @@
   align-items: center;
   gap: 40px;
   width: 393px;
-  padding-bottom: 60px;
+  padding-bottom: 160px;
   background: #fff;
 }
 
@@ -247,8 +247,14 @@
   padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-x;
 }
 .home_match_scroll::-webkit-scrollbar { display: none; }
+.home_match_scroll.is_dragging {
+  cursor: grabbing;
+  user-select: none;
+}
 
 .home_match_card {
   position: relative;
@@ -264,6 +270,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding: 12px;
+  user-select: none;
 }
 
 .home_match_card::before {
@@ -608,8 +615,14 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-x;
 }
 .home_banner::-webkit-scrollbar { display: none; }
+.home_banner.is_dragging {
+  cursor: grabbing;
+  user-select: none;
+}
 
 .home_banner_inner {
   flex: 0 0 345px;
