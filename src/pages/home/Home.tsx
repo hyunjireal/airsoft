@@ -7,43 +7,51 @@ import More from '../../components/More'
 import settingsIcon from '../../asset/icons/settings.svg'
 import mainImg from '../../asset/images/main_img01.png'
 import heroImg from '../../asset/images/main_img02.png'
+import matchImg01 from '../../asset/images/main_img03.jpg'
+import matchImg02 from '../../asset/images/main_img04.jpg'
+import matchImg03 from '../../asset/images/main_img05.jpg'
+import matchImg04 from '../../asset/images/main_img06.jpg'
 import userAvatar from '../../asset/images/main_user01.png'
 import bannerChar from '../../asset/images/banner_char01.png'
 import symbol04 from '../../asset/images/symbol_05.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import mainTeam01 from '../../asset/images/main_team01.png'
 import mainTeam02 from '../../asset/images/main_team02.png'
+import mainTeamImg01 from '../../asset/images/main_teamImg01.png'
+import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
+import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
+import mainTeamImg04 from '../../asset/images/main_teamImg04.png'
 import './Home.css'
 
 const matchCards = [
   {
     id: 1,
     dday: '경기 25일 전',
-    notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 하남시 OO필드',
+    notice: '초보자 브리핑과 장비 점검이 함께 진행돼요',
+    place: '경기도 하남시 밀리터리 필드',
     datetime: '2026.08.08 오후 06:30',
-    img: mainImg,
+    img: matchImg01,
   },{
     id: 2,
-    dday: '경기 25일 전',
+    dday: '경기 18일 전',
     notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 하남시 OO필드',
-    datetime: '2026.08.08 오후 06:30',
-    img: mainImg,
+    place: '경기도 파주시 CQB 아레나',
+    datetime: '2026.08.15 오전 10:00',
+    img: matchImg02,
   },{
     id: 3,
-    dday: '경기 25일 전',
-    notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 하남시 OO필드',
-    datetime: '2026.08.08 오후 06:30',
-    img: mainImg,
+    dday: '경기 12일 전',
+    notice: '팀 밸런스 매칭 후 라운드가 배정돼요',
+    place: '서울 강서 실내 필드',
+    datetime: '2026.08.21 오후 02:00',
+    img: matchImg03,
   },{
     id: 4,
-    dday: '경기 25일 전',
-    notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 하남시 OO필드',
-    datetime: '2026.08.08 오후 06:30',
-    img: mainImg,
+    dday: '경기 5일 전',
+    notice: '야간전 참여 전 라이트 규정을 확인해주세요',
+    place: '인천 서구 야외 필드',
+    datetime: '2026.08.28 오후 07:30',
+    img: matchImg04,
   },
   
 ]
@@ -52,14 +60,14 @@ const teamFilters = ['스타터팀', '입문자 환영', '즐겁고 가볍게', 
 type TeamFilter = (typeof teamFilters)[number]
 
 const teamCards = [
-  { id: 1, name: '스타터 소대', region: '경기 · 파주권', tags: ['스타터팀', '입문자 환영'] },
-  { id: 2, name: '루키 아레나', region: '서울 · 강서권', tags: ['스타터팀', '즐겁고 가볍게'] },
-  { id: 3, name: '라이트 스쿼드', region: '경기 · 하남권', tags: ['입문자 환영', '즐겁고 가볍게'] },
-  { id: 4, name: '위켄드 크루', region: '인천 · 부평권', tags: ['즐겁고 가볍게'] },
-  { id: 5, name: '택티컬 블랙', region: '서울 · CQB', tags: ['숙련자위주'] },
-  { id: 6, name: '알파라인', region: '경기 · 북부권', tags: ['숙련자위주'] },
-  { id: 7, name: '초심자 연합', region: '경기 · 용인권', tags: ['스타터팀', '입문자 환영'] },
-  { id: 8, name: '프렌들리 팀', region: '서울 · 수도권', tags: ['입문자 환영', '즐겁고 가볍게'] },
+  { id: 1, name: '스타터 소대', region: '경기 · 파주권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg01 },
+  { id: 2, name: '루키 아레나', region: '서울 · 강서권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
+  { id: 3, name: '라이트 스쿼드', region: '경기 · 하남권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg03 },
+  { id: 4, name: '위켄드 크루', region: '인천 · 부평권', tags: ['즐겁고 가볍게'], logo: mainTeamImg04 },
+  { id: 5, name: '택티컬 블랙', region: '서울 · CQB', tags: ['숙련자위주'], logo: mainTeamImg01 },
+  { id: 6, name: '알파라인', region: '경기 · 북부권', tags: ['숙련자위주'], logo: mainTeamImg02 },
+  { id: 7, name: '초심자 연합', region: '경기 · 용인권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg03 },
+  { id: 8, name: '프렌들리 팀', region: '서울 · 수도권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg04 },
 ]
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
@@ -70,6 +78,13 @@ const youtubeCards = [
   { id: 1, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
   { id: 2, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
 ]
+
+const sortedMatchCards = [...matchCards].sort((a, b) => {
+  const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
+  const bDay = Number(b.dday.match(/\d+/)?.[0] ?? 0)
+
+  return aDay - bDay
+})
 
 export function Home() {
   const [activeTeamFilter, setActiveTeamFilter] = useState<TeamFilter>('스타터팀')
@@ -124,7 +139,7 @@ export function Home() {
             </Link>
           </div>
           <div className="home_match_scroll">
-            {matchCards.map((card) => (
+            {sortedMatchCards.map((card) => (
               <Link key={card.id} to="/my/schedule" className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
                 <div className="home_match_card_top">
                   <KeywordTag>{card.dday}</KeywordTag>
@@ -181,8 +196,9 @@ export function Home() {
                 >
                   <KeywordTag
                     style={{
-                      background: activeTeamFilter === filter ? '#DFFB55' : '#F6FFBC',
-                      color: '#1A1A1A',
+                      background: activeTeamFilter === filter ? '#DFFB55' : 'rgba(255,255,255,0.12)',
+                      border: activeTeamFilter === filter ? '1px solid transparent' : '1px solid rgba(255,255,255,0.12)',
+                      color: activeTeamFilter === filter ? '#1A1A1A' : '#fff',
                     }}
                   >
                     {filter}
@@ -194,7 +210,7 @@ export function Home() {
               {filteredTeams.map((team) => (
                 <Link key={team.id} to="/team" className="home_team_card">
                   <div className="home_team_card_logo">
-                    <span className="home_team_card_logo_icon">S</span>
+                    <img src={team.logo} alt="" className="home_team_card_logo_img" />
                   </div>
                   <p className="home_team_card_name">{team.name}</p>
                   <p className="home_team_card_region">{team.region}</p>
