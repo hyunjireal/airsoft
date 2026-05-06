@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { Navigate, createBrowserRouter } from 'react-router-dom'
 import { AppShell } from './layout/AppShell'
 import { GuestStart } from './pages/auth/GuestStart'
 import { Login } from './pages/auth/Login'
@@ -18,7 +18,6 @@ import { PostDetail } from './pages/community/PostDetail'
 import { CreatorHome } from './pages/creator/CreatorHome'
 import { CreatorList } from './pages/creator/CreatorList'
 import { CreatorProfile } from './pages/creator/CreatorProfile'
-import { BeginnerHub } from './pages/guide/BeginnerHub'
 import { GuideComplete } from './pages/guide/GuideComplete'
 import { GuideQuiz } from './pages/guide/GuideQuiz'
 import { GuideStepPage } from './pages/guide/GuideStepPage'
@@ -77,7 +76,7 @@ export const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { path: '/home', element: <Home /> },
-      { path: '/guide', element: <BeginnerHub /> },
+      { path: '/guide', element: <Navigate to="/guide/safety" replace /> },
       { path: '/guide/safety', element: <GuideStepPage stepId="safety-gear" /> },
       { path: '/guide/rules', element: <GuideStepPage stepId="safe-zone" /> },
       { path: '/guide/gear', element: <GuideStepPage stepId="in-game" /> },
@@ -115,12 +114,19 @@ export const router = createBrowserRouter([
       { path: '/mercenary/list', element: <MercenaryList /> },
       { path: '/mercenary/create', element: <MercenaryCreate /> },
       { path: '/mercenary/:id', element: <MercenaryDetail /> },
-      { path: '/community', element: <CommunityHome /> },
+      {
+        path: '/community',
+        element: <CommunityHome />,
+        children: [
+          { index: true, element: <BeginnerBoard /> },
+          { path: 'free', element: <BoardList /> },
+        ],
+      },
       {
         path: '/community/beginner',
         element: <BeginnerCommunityLayout />,
         children: [
-          { index: true, element: <BeginnerBoard /> },
+          { index: true, element: <Navigate to="/community" replace /> },
           { path: 'recent', element: <BeginnerRecentQuestions /> },
           { path: 'recent/first', element: <BeginnerQuestionDetail /> },
         ],

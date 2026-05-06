@@ -1,11 +1,51 @@
+.community_page {
+  min-height: 100vh;
+  padding: 28px 16px 90px;
+  background: #ffffff;
+}
+
+.community_tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 8px;
+  border: 1px solid #dddddd;
+  border-radius: 999px;
+  background: #ffffff;
+}
+
+.community_tabs a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: #555555;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.community_tabs a.active {
+  background: #111111;
+  color: #ffffff;
+}
+
+.community_page .beginner_board_page {
+  min-height: auto;
+  margin: 0 -16px;
+  padding-bottom: 0;
+}
+
+.community_page .beginner_hero {
+  border-radius: 0;
+}
+
 .post_card_button {
   width: 100%;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
-}
-
-.beginner_community_card {
-  background: #ffffff;
 }

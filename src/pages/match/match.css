@@ -141,24 +141,18 @@
   color: #ffffff;
 }
 
-.match_outline_button {
-  justify-content: center;
-  border-color: #999999;
-}
-
-.match_chip_row {
+.match_type_filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.match_chip {
+.match_type_filter {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
   min-height: 34px;
-  padding: 0 14px;
+  padding: 0 16px;
   border: 1px solid #d9d9d9;
   border-radius: 999px;
   background: #ffffff;
@@ -168,164 +162,10 @@
   cursor: pointer;
 }
 
-.match_chip.is_active {
+.match_type_filter.is_active {
   border-color: #111111;
   background: #111111;
   color: #ffffff;
-}
-
-.match_date_field {
-  display: grid;
-  gap: 6px;
-  color: #444444;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.match_date_field input {
-  min-height: 42px;
-  padding: 8px 10px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  background: #ffffff;
-}
-
-.match_view_switch {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  overflow: hidden;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-}
-
-.match_view_switch button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  border: 0;
-  background: #ffffff;
-  color: #111111;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.match_view_switch button + button {
-  border-left: 1px solid #cfcfcf;
-}
-
-.match_view_switch button.is_active {
-  background: #111111;
-  color: #ffffff;
-}
-
-.match_card_list {
-  display: grid;
-  gap: 10px;
-}
-
-.match_event_card {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 8px;
-  align-items: end;
-  padding: 10px 12px;
-  border: 1px solid #dedede;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.05);
-}
-
-.match_event_link {
-  display: grid;
-  grid-template-columns: 86px minmax(0, 1fr);
-  gap: 14px;
-  min-width: 0;
-}
-
-.match_event_thumb {
-  display: block;
-  width: 86px;
-  height: 86px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #d6d6d6, #eeeeee);
-}
-
-.match_event_body {
-  display: grid;
-  gap: 5px;
-  min-width: 0;
-}
-
-.match_event_topline {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.match_event_topline strong {
-  overflow-wrap: anywhere;
-  font-size: 18px;
-  line-height: 1.25;
-}
-
-.match_event_topline em {
-  flex: 0 0 auto;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: #eef3ff;
-  color: #2457d6;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 900;
-}
-
-.match_event_card:first-child .match_event_topline em {
-  background: #eef8ea;
-  color: #2f7d22;
-}
-
-.match_event_meta,
-.match_event_note {
-  color: #333333;
-  font-size: 13px;
-  line-height: 1.25;
-}
-
-.match_event_note {
-  color: #777777;
-}
-
-.match_detail_button {
-  align-self: end;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 78px;
-  min-height: 38px;
-  padding: 0 12px;
-  border: 1px solid #111111;
-  border-radius: 6px;
-  background: #ffffff;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.match_calendar_panel {
-  display: grid;
-  gap: 10px;
-  padding: 18px;
-  border: 1px solid #dedede;
-  border-radius: 10px;
-  background: #f8f8f8;
-}
-
-.match_calendar_panel h3,
-.match_calendar_panel p {
-  margin: 0;
 }
 
 .match_calendar_view {
@@ -416,7 +256,28 @@
   color: #ffffff;
 }
 
-.match_day_cell i,
+.match_day_indicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #111111;
+}
+
+.match_day_cell.is_selected .match_day_indicator {
+  background: #ffffff;
+}
+
+.match_calendar_hint {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #eeeeee;
+  color: #666666;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .match_calendar_legend span {
   display: inline-flex;
   align-items: center;
@@ -622,6 +483,26 @@
   cursor: pointer;
 }
 
+.match_empty_inline {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  background: #f8f8f8;
+}
+
+.match_empty_inline strong,
+.match_empty_inline p {
+  margin: 0;
+}
+
+.match_empty_inline p {
+  color: #666666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .match_tournament_card {
   display: grid;
   gap: 10px;
@@ -771,42 +652,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
+  width: auto;
+  min-width: 92px;
+  height: 48px;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 8px;
   background: #111111;
   color: #ffffff;
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
-  font-size: 36px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 900;
   line-height: 1;
   cursor: pointer;
-}
-
-.match_create_menu {
-  display: grid;
-  gap: 6px;
-  padding: 8px;
-  border: 1px solid #111111;
-  border-radius: 14px;
-  background: #ffffff;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
-}
-
-.match_create_menu a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 82px;
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid #111111;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  font-weight: 800;
 }
 
 @media (max-width: 393px) {
@@ -815,23 +673,352 @@
   }
 }
 
+.match_create_page {
+  min-height: calc(100vh - 64px);
+  padding: 72px 24px 40px;
+  background: #ffffff;
+  color: #111111;
+}
+
+.match_preference_page {
+  display: grid;
+  align-content: start;
+  gap: 28px;
+}
+
+.match_create_page h1 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 900;
+}
+
+.match_create_tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.match_create_tabs button {
+  min-height: 44px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #a0a0a0;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.match_create_tabs button.is_active {
+  border-bottom-color: #1f2b45;
+  color: #111111;
+}
+
+.match_preference_form {
+  display: grid;
+  gap: 20px;
+}
+
+.match_preference_form label {
+  display: grid;
+  gap: 10px;
+  color: #1f2b45;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.match_preference_form select {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid #1f2b45;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #777777;
+  font-size: 15px;
+}
+
+.match_create_primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 46px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 8px;
+  background: #1f2b45;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.match_ai_loading_page {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 28px;
+  text-align: center;
+}
+
+.match_ai_loading_page img {
+  width: 190px;
+  max-width: 80%;
+}
+
+.match_ai_progress_card {
+  display: grid;
+  gap: 18px;
+  width: 100%;
+  padding: 28px 36px;
+  border-radius: 16px;
+  background: #e5e8ee;
+  color: #111111;
+  text-align: left;
+}
+
+.match_ai_progress_card p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  font-size: 14px;
+}
+
+.match_ai_progress_card span {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #111111;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.match_spinner {
+  border-right-color: transparent !important;
+  animation: match-spin 0.8s linear infinite;
+}
+
+@keyframes match-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.match_recommend_page {
+  display: grid;
+  gap: 34px;
+  padding: 0 24px 40px;
+  background: #ffffff;
+}
+
+.match_recommend_hero {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  gap: 16px;
+  align-items: end;
+  min-height: 218px;
+  margin: 0 -24px;
+  padding: 112px 24px 24px;
+  border-radius: 0 0 54px 0;
+  background: #69705e;
+  color: #ffffff;
+}
+
+.match_recommend_hero img {
+  width: 72px;
+}
+
+.match_recommend_hero h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.match_recommend_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.match_recommend_tags span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 10px;
+  border: 1px solid #d8ff28;
+  border-radius: 999px;
+  color: #d8ff28;
+  font-size: 12px;
+}
+
+.match_recommend_section {
+  display: grid;
+  gap: 12px;
+}
+
+.match_recommend_section h2 {
+  margin: 0;
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.match_recommend_section h2 span {
+  margin-left: 12px;
+  font-weight: 500;
+}
+
+.match_recommend_section p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.match_member_row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.match_member {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 46px;
+  font-size: 11px;
+}
+
+.match_member img {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 999px;
+  background: #eeeeee;
+}
+
+.match_map_mock {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #b7b7b7;
+  border-radius: 4px;
+  background: #f4f1e5;
+  color: #2f3d21;
+}
+
+.match_map_mock strong {
+  text-align: center;
+  font-size: 17px;
+}
+
+.match_map_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  min-height: 180px;
+}
+
+.match_map_grid span {
+  display: grid;
+  place-items: center;
+  border: 1px solid #65715a;
+  background: rgba(105, 112, 94, 0.15);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.match_team_message {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  align-items: center;
+  gap: 14px;
+  min-height: 104px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #eef1f8;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.match_team_message img {
+  width: 54px;
+}
+
+.match_team_message div {
+  text-align: right;
+}
+
+.match_team_message time {
+  display: block;
+  margin-top: 8px;
+  color: #777777;
+  font-size: 12px;
+}
+
+.match_complete_flow_page {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 18px;
+  padding-top: 28px;
+  text-align: center;
+}
+
+.match_complete_flow_page > img {
+  width: 190px;
+}
+
+.match_complete_flow_page h1,
+.match_complete_flow_page p {
+  margin: 0;
+}
+
+.match_confirm_card {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  align-items: center;
+  width: 100%;
+  min-height: 132px;
+  margin-top: 36px;
+  background: #e7e7e7;
+  text-align: left;
+}
+
+.match_confirm_card > span {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: #667a3f;
+  font-size: 50px;
+}
+
+.match_confirm_card h2,
+.match_confirm_card p {
+  margin: 0;
+}
+
+.match_chat_title {
+  margin: 18px 0 0;
+  font-size: 20px;
+}
+
+.match_chat_entry {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: #e7e7e7;
+  text-align: left;
+  font-size: 16px;
+}
+
 @media (max-width: 360px) {
   .match_status_grid,
   .match_tournament_actions {
     grid-template-columns: 1fr;
-  }
-
-  .match_event_card,
-  .match_event_link {
-    grid-template-columns: 1fr;
-  }
-
-  .match_event_thumb {
-    width: 100%;
-  }
-
-  .match_detail_button {
-    width: 100%;
   }
 
   .match_selected_item {
@@ -849,6 +1036,10 @@
   }
 
   .match_calendar_legend p {
+    text-align: left;
+  }
+
+  .match_calendar_hint {
     text-align: left;
   }
 }

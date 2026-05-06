@@ -19,6 +19,7 @@ import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import SearchBar from '../../components/SearchBar'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
+import './BeginnerCommunity.css'
 
 const categoryTabs = ['전체', '법규/규정', '장비추천', '수리/튜닝', '게임/전술']
 

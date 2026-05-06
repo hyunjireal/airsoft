@@ -56,6 +56,179 @@
   padding-left: 18px;
 }
 
+.guide_tutorial_page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: calc(100vh - 64px);
+  padding: 28px 24px 36px;
+  background: #ffffff;
+  color: #1f2b45;
+}
+
+.guide_tutorial_header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 48px;
+}
+
+.guide_tutorial_header p {
+  margin: 0;
+  color: #888888;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.guide_tutorial_steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  gap: 0;
+}
+
+.guide_tutorial_steps span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  width: 32px;
+  height: 22px;
+  border: 1px solid #1f2b45;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f2b45;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.guide_tutorial_steps span:not(:last-child)::after {
+  position: absolute;
+  left: 31px;
+  top: 50%;
+  width: calc((100vw - 96px) / 5);
+  height: 1px;
+  background: #1f2b45;
+  transform: translateY(-50%);
+  content: "";
+}
+
+.guide_tutorial_steps span.is_active {
+  background: #1f2b45;
+  color: #ffffff;
+}
+
+.guide_tutorial_card {
+  display: grid;
+  align-content: start;
+  gap: 26px;
+  padding: 22px 16px 22px;
+  border-top: 1px solid #1f2b45;
+  border-bottom: 1px solid #1f2b45;
+  border-radius: 8px;
+}
+
+.guide_tutorial_badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guide_tutorial_badges strong {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 34px;
+  border: 1px solid #1f2b45;
+  border-radius: 6px;
+  background: #1f2b45;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.guide_tutorial_badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 18px;
+  padding: 2px 8px;
+  border: 1px solid #9db45a;
+  border-radius: 999px;
+  background: #e9f6b8;
+  color: #1f2b45;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.guide_tutorial_card h1 {
+  margin: 0;
+  white-space: pre-line;
+  color: #222222;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 900;
+}
+
+.guide_tutorial_summary {
+  margin: 0;
+  color: #1f2b45;
+  font-size: 14px;
+  line-height: 1.7;
+  font-weight: 700;
+}
+
+.guide_tutorial_point_box {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-height: 138px;
+  padding: 24px 18px;
+  border-radius: 12px;
+  background: #1f2b45;
+  color: #ffffff;
+}
+
+.guide_tutorial_shield {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 36px;
+  border: 3px solid #ffffff;
+  border-radius: 12px 12px 16px 16px;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+.guide_tutorial_point_box ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.guide_tutorial_actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 46px;
+}
+
+.guide_tutorial_actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  border-radius: 8px;
+  background: #1f2b45;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+}
+
 .guide_complete_hero {
   justify-items: center;
   text-align: center;

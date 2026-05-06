@@ -1,56 +1,120 @@
 import { Link } from 'react-router-dom'
-import { guideFlow } from '../../data/guideFlow'
 import './Guide.css'
+
+const tutorialSteps = [
+  {
+    id: 'safety-gear',
+    number: '01',
+    route: '/guide/safety',
+    title: '게임장에 들어가기 전,\n무엇을 준비해야 할까?',
+    summary: '게임장에 들어가기 전 기본 안전수칙을 이해하고 보호장비와 복장, 매너를 미리 준비해요.',
+    points: [
+      '게임 구역에서는 보안경을 반드시 착용해요.',
+      '고글에 김이 서리거나 불편해도 임의로 벗지 않아요.',
+      '장비에 문제가 생기면 손을 들고 운영자에게 알려요.',
+    ],
+  },
+  {
+    id: 'safe-zone',
+    number: '02',
+    route: '/guide/rules',
+    title: '세이프존에서는 총을 어떻게 다뤄야 할까?',
+    summary: '세이프존은 쉬는 공간이지만, 총을 안전하게 관리해야 하는 공간이기도 해요.',
+    points: [
+      '세이프존에 들어가기 전 탄창을 제거해요.',
+      '잔탄이 남아 있지 않은지 확인해요.',
+      '안전장치를 걸고 총구가 사람을 향하지 않게 해요.',
+    ],
+  },
+  {
+    id: 'in-game',
+    number: '03',
+    route: '/guide/gear',
+    title: '게임 중 맞았을 때는 어떻게 해야 할까?',
+    summary: '맞았는지 애매한 상황이라도, 안전하고 매너 있는 플레이를 위해 히트로 처리하는 것이 좋아요.',
+    points: [
+      '맞았다면 큰 소리로 “히트!”라고 말해요.',
+      '손을 들거나 히트 표시를 하고 이동해요.',
+      '리스트 지점까지 다른 플레이를 방해하지 않게 이동해요.',
+    ],
+  },
+  {
+    id: 'danger',
+    number: '04',
+    route: '/guide/terms',
+    title: '절대 하면 안 되는 위험 행동은 무엇일까?',
+    summary: '상대가 보이지 않는 상태에서 쏘거나, 가까운 거리에서 과하게 사격하는 행동은 매우 위험해요.',
+    points: [
+      '일부러 얼굴이나 머리를 조준하지 않아요.',
+      '너무 가까운 거리에서 연속 사격하지 않아요.',
+      '히트 선언한 사람에게 계속 사격하지 않아요.',
+    ],
+  },
+  {
+    id: 'law',
+    number: '05',
+    route: '/guide/etiquette',
+    title: '장비와 필드 매너에서 꼭 지켜야 할 것은?',
+    summary: '임의 개조, 기준을 넘는 세팅, 공공장소 노출은 안전 문제뿐 아니라 법적 문제로 이어질 수 있어요.',
+    points: [
+      '장비는 필드 규정에 맞게 사용해요.',
+      '이동할 때는 장비를 케이스에 넣고 노출하지 않아요.',
+      '게임 전 브리핑과 운영자 안내를 따라요.',
+    ],
+  },
+]
 
 type GuideStepPageProps = {
   stepId: string
 }
 
 export function GuideStepPage({ stepId }: GuideStepPageProps) {
-  const stepIndex = guideFlow.findIndex((guide) => guide.id === stepId)
-  const guide = guideFlow[stepIndex] ?? guideFlow[0]
-  const prevGuide = guideFlow[stepIndex - 1]
-  const nextGuide = guideFlow[stepIndex + 1]
-  const progress = ((stepIndex + 1) / guideFlow.length) * 100
+  const stepIndex = tutorialSteps.findIndex((step) => step.id === stepId)
+  const currentIndex = stepIndex >= 0 ? stepIndex : 0
+  const step = tutorialSteps[currentIndex]
+  const prevStep = tutorialSteps[currentIndex - 1]
+  const nextStep = tutorialSteps[currentIndex + 1]
 
   return (
-    <div className="page guide_step_page">
-      <div className="guide_step_header">
-        <span>{stepIndex + 1} / {guideFlow.length}</span>
-        <div className="guide_progress" aria-label={`가이드 진행률 ${stepIndex + 1} / ${guideFlow.length}`}>
-          <span style={{ width: `${progress}%` }} />
+    <div className="guide_tutorial_page">
+      <header className="guide_tutorial_header">
+        <p>AIRSOFT TUTORIAL CHECK</p>
+        <div className="guide_tutorial_steps" aria-label={`가이드 ${step.number}번 단계`}>
+          {tutorialSteps.map((item, index) => (
+            <span className={index === currentIndex ? 'is_active' : ''} key={item.id}>
+              {item.number}
+            </span>
+          ))}
         </div>
-      </div>
+      </header>
 
-      <h1 className="page_title">{guide.number} {guide.title}</h1>
-      <article className="placeholder_image guide_hero_image" aria-label={`${guide.title} 안내 이미지`}>
-        {guide.title}
-      </article>
+      <main className="guide_tutorial_card">
+        <div className="guide_tutorial_badges">
+          <strong>{step.number}</strong>
+          <span>필수 안전 체크</span>
+        </div>
 
-      <p className="page_description">{guide.summary}</p>
+        <h1>{step.title}</h1>
+        <p className="guide_tutorial_summary">{step.summary}</p>
 
-      <section className="section">
-        <article className="card">
-          <h2>꼭 기억해요</h2>
-          <ul className="guide_list">
-            {guide.remember.map((item) => <li key={item}>{item}</li>)}
+        <section className="guide_tutorial_point_box" aria-label="핵심 체크">
+          <span className="guide_tutorial_shield" aria-hidden="true">✓</span>
+          <ul>
+            {step.points.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
           </ul>
-        </article>
-        <article className="card">
-          <h2>이런 행동은 위험해요</h2>
-          <ul className="guide_list">
-            {guide.warning.map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </article>
-        <Link className="button" to="/community/beginner">초보 질문방에 물어보기</Link>
-      </section>
+        </section>
+      </main>
 
-      <div className="grid_two">
-        {prevGuide ? <Link className="button" to={prevGuide.route}>이전</Link> : <Link className="button" to="/guide">목차</Link>}
-        <Link className="button primary_button" to={nextGuide ? nextGuide.route : '/guide/complete'}>
-          {nextGuide ? '다음' : '완료'}
+      <nav className="guide_tutorial_actions" aria-label="가이드 이동">
+        <Link to={prevStep ? prevStep.route : '/community'}>
+          &lt; 이전
         </Link>
-      </div>
+        <Link to={nextStep ? nextStep.route : '/guide/complete'}>
+          {nextStep ? '다음 >' : '완료 >'}
+        </Link>
+      </nav>
     </div>
   )
 }
