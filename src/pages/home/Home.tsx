@@ -273,20 +273,20 @@ export function Home() {
 
       {/* ⑥ 오바워치 배너 */}
       <section className="home_banner" {...bannerDragScroll}>
-        <div className="home_banner_inner">
+        <Link className="home_banner_inner" to="/guide/quiz">
           <div className="home_banner_txt">
             <p className="home_banner_label">건잇 x 오버워치</p>
             <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
           </div>
           <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
-        </div>
-        <div className="home_banner_inner">
+        </Link>
+        <Link className="home_banner_inner" to="/guide/quiz">
           <div className="home_banner_txt">
             <p className="home_banner_label">건잇 x 오버워치</p>
             <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
           </div>
           <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
-        </div>
+        </Link>
       </section>
 
       {/* ⑦ 토너먼트 섹션 */}

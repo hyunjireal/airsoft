@@ -1147,13 +1147,15 @@
 
 .community_write_floating {
   position: fixed;
-  right: var(--app-edge-offset);
-  bottom: 134px;
+  left: var(--nav-my-center-x);
+  right: auto;
+  bottom: calc(var(--app-header-height) + var(--floating-header-gap) + var(--floating-stack-gap));
   z-index: 22;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
+  width: max-content;
   min-height: 44px;
   padding: 0 12px;
   border: 2px solid #111111;
@@ -1162,8 +1164,10 @@
   color: #111111;
   font-size: 13px;
   font-weight: 800;
+  white-space: nowrap;
   cursor: pointer;
   box-shadow: 0 7px 16px rgba(0, 0, 0, 0.14);
+  transform: translateX(-50%);
 }
 
 .community_write_floating img {

@@ -266,6 +266,12 @@ function formatCalendarTitle(month: Date) {
   return `${month.getFullYear()}. ${String(month.getMonth() + 1).padStart(2, '0')}`
 }
 
+function getMatchTypeLabel(match: MatchSchedule) {
+  if (match.type === 'personal') return '개인'
+
+  return match.difficulty
+}
+
 export function MatchHome() {
   const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 4, 18))
@@ -377,7 +383,7 @@ export function MatchHome() {
                       <img className="match_selected_thumb" src={match.imageSrc ?? matchOutdoorImage} alt="" />
                       <div className="match_selected_body">
                         <div className="match_selected_topline">
-                          <em className={match.type === 'mercenary' ? 'is_mercenary' : ''}>{match.difficulty}</em>
+                          <em className={match.type === 'mercenary' ? 'is_mercenary' : ''}>{getMatchTypeLabel(match)}</em>
                           <strong>{match.title}</strong>
                         </div>
                         <p><span>시간</span> {match.time}</p>
@@ -432,7 +438,6 @@ export function MatchHome() {
             <h3>필드 탐색</h3>
             <p>매치 카드와 상세에서 연결되는 필드 정보를 한 번에 확인해요.</p>
           </div>
-          <Link className="match_field_button" to="/match/fields">필드 정보 보기 <span aria-hidden="true">&gt;</span></Link>
         </article>
       </section>
 
