@@ -1,0 +1,409 @@
+/* ── 공용 아이콘 마스크 ── */
+.my_icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: #333333;
+  mask: var(--my-icon) center / contain no-repeat;
+  -webkit-mask: var(--my-icon) center / contain no-repeat;
+  flex-shrink: 0;
+}
+
+/* ── 수직 구분선 ── */
+.my_vdivider {
+  display: block;
+  width: 1px;
+  align-self: stretch;
+  background: #eeeeee;
+  flex-shrink: 0;
+}
+
+/* ── 화살표 ── */
+.my_arrow {
+  font-size: 20px;
+  color: #aaaaaa;
+  line-height: 1;
+}
+
+/* ── 페이지 ── */
+.my_page {
+  padding-top: 0;
+}
+
+/* ── 헤더 ── */
+.my_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 12px;
+}
+
+.my_page_title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.my_bell_btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+}
+
+/* ── 프로필 카드 ── */
+.my_profile_card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.my_profile_row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.my_avatar {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #cccccc;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.my_avatar .my_icon {
+  width: 36px;
+  height: 36px;
+  background: #999999;
+}
+
+.my_profile_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.my_name_row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.my_nickname {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.my_badge_icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.my_region {
+  margin: 0;
+  font-size: 13px;
+}
+
+.my_edit_btn {
+  flex-shrink: 0;
+  padding: 5px 12px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555555;
+}
+
+/* ── 빠른 메뉴 ── */
+.my_quick_menu {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  gap: 0;
+  min-height: 80px;
+}
+
+.my_quick_item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 8px;
+  color: #333333;
+}
+
+.my_quick_label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 위치 핀 대체 아이콘 (CSS로 구현) */
+.my_pin_icon {
+  position: relative;
+  width: 20px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.my_pin_icon::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid #333333;
+  border-radius: 50% 50% 50% 0;
+  transform: translateX(-50%) rotate(-45deg);
+}
+
+.my_pin_icon::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #333333;
+}
+
+/* ── 통계 ── */
+.my_stats_row {
+  display: flex;
+  align-items: center;
+  padding: 16px 8px;
+  gap: 0;
+}
+
+.my_stat_item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.my_stat_p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #333333;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  color: #333333;
+}
+
+.my_stat_badge_img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.my_stats_row .my_icon {
+  width: 28px;
+  height: 28px;
+}
+
+.my_stat_label {
+  font-size: 11px;
+  color: #888888;
+}
+
+.my_stat_value {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111111;
+}
+
+/* ── 내 매치 ── */
+.my_match_section {
+  margin: 20px 0;
+  border: 1px solid #dddddd;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.my_match_tabs {
+  display: flex;
+}
+
+.my_match_tab {
+  flex: 1;
+  padding: 13px 8px;
+  border: none;
+  border-radius: 0;
+  background: #f0f0f0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #888888;
+  cursor: pointer;
+  transition: background 150ms, color 150ms;
+}
+
+.my_match_tab.active {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.my_match_list {
+  display: flex;
+  flex-direction: column;
+}
+
+.my_match_card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-top: 1px solid #eeeeee;
+  color: #111111;
+}
+
+.my_match_thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 10px;
+  background: #dddddd;
+  flex-shrink: 0;
+}
+
+.my_match_info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.my_past_chip {
+  width: fit-content;
+  margin-bottom: 2px;
+  font-size: 11px;
+  padding: 2px 8px;
+  min-height: unset;
+}
+
+.my_match_title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.my_match_sub {
+  margin: 0;
+  font-size: 12px;
+}
+
+.my_match_right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.my_dday {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111111;
+}
+
+/* ── 커뮤니티 활동 ── */
+.my_community_section {
+  margin: 20px 0;
+}
+
+.my_comm_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.my_see_all {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888888;
+}
+
+.my_community_grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.my_community_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.my_comm_label {
+  font-size: 12px;
+}
+
+.my_comm_count {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111111;
+}
+
+/* ── 설정 ── */
+.my_settings_section {
+  margin: 20px 0;
+  padding: 16px;
+}
+
+.my_settings_section .section_title {
+  margin-bottom: 4px;
+}
+
+.my_settings_list {
+  display: flex;
+  flex-direction: column;
+}
+
+.my_settings_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-top: 1px solid #eeeeee;
+  font-size: 14px;
+  color: #111111;
+  background: transparent;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.my_logout_btn {
+  color: #888888;
+}

@@ -20,7 +20,7 @@ const keywordTagStyle: CSSProperties = {
   lineHeight: '130%',
   letterSpacing: '-0.02em',
   background: '#F6FFBC',
-  borderRadius: '4px 8px 4px 8px'
+  borderRadius: '4px'
 }
 
 function KeywordTag({ children, className, style }: KeywordTagProps) {

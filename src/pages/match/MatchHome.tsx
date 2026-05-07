@@ -402,12 +402,11 @@ export function MatchHome() {
               <article className="match_empty_recommend_card">
                 <div className="match_empty_recommend_copy">
                   <h3>일정이 없나요?</h3>
-                  <p>다른 날짜를 보거나<br />AI가 추천하는<br />맞춤 일정을 찾아보세요.</p>
+                  <p>직접 게임 일정을 올려서<br />멤버를 모집해보세요.</p>
                 </div>
                 <img src={gaiImage} alt="" />
                 <div className="match_empty_recommend_actions">
-                  <Link to="/match/filter">다른 날짜 보기</Link>
-                  <button type="button" onClick={() => navigate('/match/create')}>AI에게 추천 받기</button>
+                  <Link to="/match/create">일정 만들기</Link>
                 </div>
               </article>
             )}

@@ -11,7 +11,7 @@ const items = [
   { to: '/match', label: '매치', icon: headerMatchIcon },
   { to: '/creator', label: '미디어', icon: headerMediaIcon },
   { to: '/community', label: '커뮤니티', icon: headerComIcon },
-  { to: '/my', label: 'MY', icon: headerMyIcon, disabled: true },
+  { to: '/my', label: 'MY', icon: headerMyIcon },
 ]
 
 export function BottomNav() {
@@ -41,26 +41,17 @@ export function BottomNav() {
   return (
     <header className="app_header">
       <nav className="bottom_nav" aria-label="주요 내비게이션">
-        {items.map((item) =>
-          item.disabled ? (
-            <NavLink
-              className="bottom_nav_disabled"
-              key={item.to}
-              ref={myItemRef}
-              to={item.to}
-              aria-disabled="true"
-              onClick={(event) => event.preventDefault()}
-            >
-              <span className="bottom_nav_icon" style={{ '--nav-icon': `url(${item.icon})` } as CSSProperties} />
-              {item.label}
-            </NavLink>
-          ) : (
-            <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : undefined)}>
-              <span className="bottom_nav_icon" style={{ '--nav-icon': `url(${item.icon})` } as CSSProperties} />
-              {item.label}
-            </NavLink>
-          ),
-        )}
+        {items.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            ref={item.to === '/my' ? myItemRef : undefined}
+            className={({ isActive }) => (isActive ? 'active' : undefined)}
+          >
+            <span className="bottom_nav_icon" style={{ '--nav-icon': `url(${item.icon})` } as CSSProperties} />
+            {item.label}
+          </NavLink>
+        ))}
       </nav>
     </header>
   )

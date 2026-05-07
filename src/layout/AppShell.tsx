@@ -5,7 +5,7 @@ import { FloatingAiButton } from './FloatingAiButton'
 export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
-  const showBackButton = location.pathname !== '/home'
+  const showBackButton = location.pathname !== '/home' && location.pathname !== '/my'
 
   const goBack = () => {
     if (window.history.length > 1) {
