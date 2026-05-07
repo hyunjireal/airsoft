@@ -1009,6 +1009,200 @@
   font-size: 16px;
 }
 
+.match_flow_page {
+  display: grid;
+  gap: 18px;
+  padding: 24px 16px 120px;
+}
+
+.match_flow_page .button:disabled {
+  border-color: #d8d8d8;
+  background: #d8d8d8;
+  color: #777777;
+  cursor: not-allowed;
+}
+
+.match_detail_hero {
+  display: grid;
+  gap: 12px;
+  padding: 20px 16px;
+  border-radius: 8px;
+  background: #111111;
+  color: #ffffff;
+}
+
+.match_detail_hero h1,
+.match_detail_hero p {
+  margin: 0;
+}
+
+.match_detail_hero h1 {
+  font-size: 25px;
+  line-height: 1.25;
+}
+
+.match_detail_hero p {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.match_detail_hero .badge {
+  border-color: rgba(255, 255, 255, 0.48);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.match_info_grid {
+  display: grid;
+  gap: 10px;
+}
+
+.match_info_card,
+.match_notice_panel,
+.match_apply_summary,
+.match_apply_form,
+.match_checklist,
+.match_complete_panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.match_info_card span {
+  color: #767676;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.match_info_card strong {
+  color: #111111;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.match_info_card p,
+.match_notice_panel p,
+.match_apply_summary p,
+.match_complete_panel p {
+  margin: 0;
+  color: #555555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.match_inline_link {
+  width: fit-content;
+  color: #0d4f69;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.match_notice_panel h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.match_notice_panel ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.match_support_text {
+  padding-top: 10px;
+  border-top: 1px solid #eeeeee;
+  font-weight: 800;
+}
+
+.match_apply_summary {
+  background: #f4fde5;
+  box-shadow: none;
+}
+
+.match_apply_summary strong {
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.match_apply_form label {
+  display: grid;
+  gap: 7px;
+  color: #111111;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.match_checklist {
+  gap: 0;
+  padding: 4px 16px;
+}
+
+.match_check_item {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222222;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.match_check_item:last-child {
+  border-bottom: 0;
+}
+
+.match_check_item input {
+  width: 18px;
+  height: 18px;
+  accent-color: #111111;
+}
+
+.match_check_all {
+  font-weight: 900;
+}
+
+.match_complete_panel {
+  justify-items: center;
+  padding: 30px 18px;
+  background: #111111;
+  color: #ffffff;
+  text-align: center;
+}
+
+.match_complete_panel span {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #d9ff22;
+  color: #111111;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.match_complete_panel h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.28;
+}
+
+.match_complete_panel p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 /* Match home visual refresh. Kept local to the match folder, not global.css. */
 .match_page {
   gap: 28px;

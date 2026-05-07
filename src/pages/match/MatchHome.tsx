@@ -338,7 +338,6 @@ export function MatchHome() {
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
   )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
-  const [notifyTournament, setNotifyTournament] = useState(false)
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
   const selectedDay = String(selectedDate.getDate())
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
@@ -491,18 +490,11 @@ export function MatchHome() {
       </section>
 
       <section className="match_section" aria-labelledby="match-tournament-title">
-        <article className="match_tournament_card">
+        <Link className="match_tournament_card" to="/tournament">
           <span className="match_badge">Coming Soon</span>
           <h2 id="match-tournament-title">공식 토너먼트 준비 중</h2>
           <p>추후 하이라이트와 MVP 투표로 연결될 예정이에요.</p>
-          <div className="match_tournament_actions">
-            <button className="match_yellow_button" type="button" onClick={() => setNotifyTournament(true)}>
-              {notifyTournament ? '알림 신청 완료' : '알림 받기'}
-            </button>
-            <Link className="match_ghost_button" to="/tournament/highlights">▷ 하이라이트</Link>
-            <Link className="match_ghost_button" to="/tournament/mvp-vote">☆ MVP 투표</Link>
-          </div>
-        </article>
+        </Link>
       </section>
 
       <section className="match_section" aria-labelledby="match-field-title">

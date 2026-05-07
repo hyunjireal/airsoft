@@ -517,15 +517,24 @@ a {
   right: auto;
   bottom: calc(var(--app-header-height) + var(--floating-header-gap));
   z-index: 20;
-  width: max-content;
-  min-height: 44px;
-  padding: 0 12px;
-  border: 2px solid #111111;
+  display: grid;
+  place-items: center;
+  width: 180px;
+  height: 180px;
+  padding: 0;
+  border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  font-weight: 800;
-  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
   transform: translateX(-50%);
+}
+
+.floating_ai img {
+  display: block;
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.22));
 }
 
 .modal_backdrop {

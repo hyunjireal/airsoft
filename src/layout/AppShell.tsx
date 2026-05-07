@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { AiFloatingButton } from '../components/AiFloatingButton'
 import { BottomNav } from './BottomNav'
-import { FloatingAiButton } from './FloatingAiButton'
 
 export function AppShell() {
   const location = useLocation()
@@ -26,7 +26,7 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      <FloatingAiButton />
+      <AiFloatingButton />
       <BottomNav />
     </div>
   )

@@ -26,6 +26,7 @@ export interface MatchEvent {
   time: string
   region: string
   fieldName: string
+  fieldAddress?: string
   difficulty: string
   beginnerFriendly: boolean
   rentalAvailable: boolean
@@ -34,6 +35,10 @@ export interface MatchEvent {
   fee: string
   tags: string[]
   description: string
+  organizerName?: string
+  preparationItems?: string[]
+  skillGuide?: string
+  organizerNotice?: string
 }
 
 export interface Team {
