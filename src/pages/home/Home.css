@@ -9,7 +9,7 @@
   flex-direction: column;
   align-items: center;
   gap: 40px;
-  width: 393px;
+  width: 100%;
   padding-bottom: 160px;
   background: #fff;
 }
@@ -259,8 +259,8 @@
 .home_match_card {
   position: relative;
   flex-shrink: 0;
-  width: 170px;
-  height: 170px;
+  width: clamp(170px, 42vw, 240px);
+  height: clamp(170px, 42vw, 240px);
   border-radius: 12px;
   overflow: hidden;
   background-size: cover;
@@ -554,8 +554,14 @@
   padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-x;
 }
 .home_team_scroll::-webkit-scrollbar { display: none; }
+.home_team_scroll.is_dragging {
+  cursor: grabbing;
+  user-select: none;
+}
 
 .home_team_card {
   flex-shrink: 0;
@@ -570,6 +576,14 @@
   border-radius: 10px;
   background: #F9FBF1;
   text-decoration: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.home_team_card * {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .home_team_card_logo {
@@ -625,8 +639,8 @@
 }
 
 .home_banner_inner {
-  flex: 0 0 345px;
-  width: 345px;
+  flex: 0 0 min(100%, 520px);
+  width: min(100%, 520px);
   height: 100%;
   display: flex;
   align-items: flex-end;
@@ -832,7 +846,7 @@
   font-size: 18px;
   font-weight: 800;
   filter: grayscale(1);
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 /* ============================================================
@@ -871,7 +885,7 @@
 
 .home_youtube_card {
   flex-shrink: 0;
-  width: 170px;
+  width: clamp(170px, 42vw, 240px);
   display: flex;
   flex-direction: column;
   gap: 8px;

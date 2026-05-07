@@ -13,9 +13,15 @@ export function BottomNav() {
     <nav className="bottom_nav" aria-label="하단 내비게이션">
       {items.map((item) =>
         item.disabled ? (
-          <span className="bottom_nav_disabled" key={item.to} aria-disabled="true">
+          <NavLink
+            className="bottom_nav_disabled"
+            key={item.to}
+            to={item.to}
+            aria-disabled="true"
+            onClick={(event) => event.preventDefault()}
+          >
             {item.label}
-          </span>
+          </NavLink>
         ) : (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : undefined)}>
             {item.label}

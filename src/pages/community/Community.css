@@ -18,9 +18,11 @@
 .community_tabs a,
 .community_tabs button {
   display: inline-flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  min-width: 157px;
+  min-width: 0;
+  max-width: 220px;
   min-height: 56px;
   padding: 0 24px;
   border: 0;
@@ -36,9 +38,9 @@
   color: #1a1a1a;
 }
 
-.community_tabs button:disabled {
+.community_tabs button[aria-disabled="true"] {
   opacity: 1;
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 .community_page .beginner_board_page {
@@ -1145,7 +1147,7 @@
 
 .community_write_floating {
   position: fixed;
-  right: calc(50% - 196.5px + 16px);
+  right: var(--app-edge-offset);
   bottom: 134px;
   z-index: 22;
   display: inline-flex;
@@ -1215,12 +1217,6 @@
   border: 1px solid #dddddd;
   border-radius: 8px;
   background: #ffffff;
-}
-
-@media (max-width: 393px) {
-  .community_write_floating {
-    right: 16px;
-  }
 }
 
 @media (max-width: 360px) {

@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   font-family: system-ui, sans-serif;
   color: #111111;
   background: #ffffff;
@@ -6,6 +6,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --app-max-width: 768px;
+  --app-edge-offset: max(16px, calc((100vw - var(--app-max-width)) / 2 + 16px));
 }
 
 * {
@@ -32,8 +34,7 @@ a {
 
 .mobile_frame {
   position: relative;
-  width: 393px;
-  max-width: 100%;
+  width: min(100%, var(--app-max-width));
   min-height: 100vh;
   margin: 0 auto;
   border-right: 1px solid #dddddd;
@@ -44,7 +45,7 @@ a {
 .app_back_button {
   position: fixed;
   top: 14px;
-  left: calc(50% - 196.5px + 14px);
+  left: max(14px, calc((100vw - var(--app-max-width)) / 2 + 14px));
   z-index: 25;
   display: inline-flex;
   align-items: center;
@@ -248,7 +249,7 @@ a {
   z-index: 10;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  width: min(100%, 393px);
+  width: min(100%, var(--app-max-width));
   transform: translateX(50%);
   border-top: 1px solid #dddddd;
   background: #ffffff;
@@ -267,8 +268,7 @@ a {
 .bottom_nav_disabled {
   color: #b8b8b8;
   filter: grayscale(1);
-  cursor: not-allowed;
-  user-select: none;
+  cursor: pointer;
 }
 
 .bottom_nav a.active {
@@ -278,7 +278,7 @@ a {
 
 .floating_ai {
   position: fixed;
-  right: calc(50% - 196.5px + 16px);
+  right: var(--app-edge-offset);
   bottom: 82px;
   z-index: 20;
   width: auto;
@@ -311,14 +311,6 @@ a {
 @media (max-width: 393px) {
   .mobile_frame {
     border: 0;
-  }
-
-  .floating_ai {
-    right: 16px;
-  }
-
-  .app_back_button {
-    left: 14px;
   }
 }
 

@@ -8,7 +8,7 @@ export function CommunityHome() {
         <NavLink to="/community" end>
           초보 질문방
         </NavLink>
-        <button type="button" disabled>
+        <button type="button" aria-disabled="true">
           일반 게시판
         </button>
       </nav>

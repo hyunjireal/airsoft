@@ -68,6 +68,16 @@ const teamCards = [
   { id: 6, name: '알파라인', region: '경기 · 북부권', tags: ['숙련자위주'], logo: mainTeamImg02 },
   { id: 7, name: '초심자 연합', region: '경기 · 용인권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg03 },
   { id: 8, name: '프렌들리 팀', region: '서울 · 수도권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg04 },
+  { id: 9, name: '그린존 루키즈', region: '경기 · 고양권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg01 },
+  { id: 10, name: '세이프티 크루', region: '서울 · 노원권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
+  { id: 11, name: '브라보 입문반', region: '인천 · 서구권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg03 },
+  { id: 12, name: '느긋한 전우회', region: '경기 · 수원권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg04 },
+  { id: 13, name: '주말 사격회', region: '서울 · 마포권', tags: ['즐겁고 가볍게'], logo: mainTeamImg01 },
+  { id: 14, name: '필드메이트', region: '경기 · 성남권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg02 },
+  { id: 15, name: '스모크 라인', region: '경기 · 안양권', tags: ['숙련자위주'], logo: mainTeamImg03 },
+  { id: 16, name: 'CQB 베테랑즈', region: '서울 · 영등포권', tags: ['숙련자위주'], logo: mainTeamImg04 },
+  { id: 17, name: '델타 포지션', region: '인천 · 송도권', tags: ['즐겁고 가볍게'], logo: mainTeamImg01 },
+  { id: 18, name: '밸런스 스쿼드', region: '경기 · 광명권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
 ]
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
@@ -126,6 +136,7 @@ function useDragScroll() {
 export function Home() {
   const [activeTeamFilter, setActiveTeamFilter] = useState<TeamFilter>('스타터팀')
   const matchDragScroll = useDragScroll()
+  const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
   const filteredTeams = teamCards.filter((team) => team.tags.includes(activeTeamFilter))
 
@@ -245,15 +256,15 @@ export function Home() {
                 </button>
               ))}
             </div>
-            <div className="home_team_scroll">
+            <div className="home_team_scroll" {...teamDragScroll}>
               {filteredTeams.map((team) => (
-                <Link key={team.id} to="/team" className="home_team_card">
+                <article key={team.id} className="home_team_card">
                   <div className="home_team_card_logo">
-                    <img src={team.logo} alt="" className="home_team_card_logo_img" />
+                    <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
                   </div>
                   <p className="home_team_card_name">{team.name}</p>
                   <p className="home_team_card_region">{team.region}</p>
-                </Link>
+                </article>
               ))}
             </div>
           </div>
@@ -309,7 +320,7 @@ export function Home() {
               </div>
             </Link>
           ))}
-          <button className="home_tournament_join_button" type="button" disabled>
+          <button className="home_tournament_join_button" type="button" aria-disabled="true">
             참여하기
           </button>
         </div>
