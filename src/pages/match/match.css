@@ -712,7 +712,9 @@
   font-weight: 600;
 }
 
-.match_preference_form select {
+.match_preference_form select,
+.match_preference_form input,
+.match_preference_form textarea {
   width: 100%;
   min-height: 46px;
   padding: 0 14px;
@@ -722,6 +724,13 @@
   color: #777777;
   font-size: 16px;
   font-weight: 500;
+}
+
+.match_preference_form textarea {
+  min-height: 142px;
+  padding: 12px 14px;
+  line-height: 1.45;
+  resize: vertical;
 }
 
 .match_create_primary {
@@ -1382,6 +1391,15 @@
 .match_selected_body p span {
   margin-right: 8px;
   font-weight: 800;
+}
+
+.match_selected_body .match_selected_body_excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: 3px;
+  color: #666666;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .match_selected_button {

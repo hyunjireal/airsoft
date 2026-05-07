@@ -29,9 +29,10 @@ const skillOptions: Array<{
 export function Signup() {
   const navigate = useNavigate()
   const [step, setStep] = useState<'skill' | 'profile'>('skill')
-  const [nickname, setNickname] = useState('')
-  const [email, setEmail] = useState('')
-  const [region, setRegion] = useState('')
+  const [nickname, setNickname] = useState('에어소프트 루키')
+  const [email, setEmail] = useState('rookie@airsoft.test')
+  const [password, setPassword] = useState('airsoft1234')
+  const [region, setRegion] = useState('서울 마포구')
   const [level, setLevel] = useState<UserLevel>('입문자')
 
   const selectedSkill = skillOptions.find((option) => option.level === level) ?? skillOptions[0]
@@ -83,15 +84,15 @@ export function Signup() {
       </div>
       <label className="field">닉네임<input className="input" value={nickname} onChange={(event) => setNickname(event.target.value)} /></label>
       <label className="field">이메일<input className="input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-      <label className="field">비밀번호<input className="input" type="password" /></label>
+      <label className="field">비밀번호<input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label>
       <label className="field">활동 지역<input className="input" value={region} onChange={(event) => setRegion(event.target.value)} /></label>
       <article className="card">
         <h2 className="section_title">선택한 실력</h2>
         <p>{selectedSkill.label} ({selectedSkill.alias})</p>
         <p className="muted">{selectedSkill.homePreset} 위주로 홈 화면 세팅</p>
       </article>
-      <button className="button" type="button" onClick={() => setStep('skill')}>이전</button>
       <button className="button primary_button" type="button" onClick={signup}>가입하고 시작하기</button>
+      <button className="button" type="button" onClick={() => setStep('skill')}>이전</button>
     </main>
   )
 }

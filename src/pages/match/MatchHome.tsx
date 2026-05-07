@@ -21,10 +21,15 @@ type MatchSchedule = {
   currentParticipants: number
   maxParticipants: number
   action: string
+  body?: string
+  date?: string
   imageSrc?: string
 }
 
 type MatchTypeFilter = 'all' | MatchType
+
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
 
 const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '전체', value: 'all' },
@@ -268,21 +273,86 @@ function formatCalendarTitle(month: Date) {
 
 function getMatchTypeLabel(match: MatchSchedule) {
   if (match.type === 'personal') return '개인'
+  if (match.type === 'team') return '팀'
 
   return match.difficulty
 }
 
+function isMatchType(type: unknown): type is MatchType {
+  return type === 'personal' || type === 'team' || type === 'mercenary'
+}
+
+function readCreatedMatches() {
+  if (typeof window === 'undefined') {
+    return []
+  }
+
+  const savedMatches = (() => {
+    try {
+      return JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
+    } catch {
+      return []
+    }
+  })()
+
+  if (!Array.isArray(savedMatches)) {
+    return []
+  }
+
+  return savedMatches
+    .filter((match): match is MatchSchedule => {
+      return (
+        typeof match === 'object' &&
+        match !== null &&
+        'type' in match &&
+        isMatchType(match.type)
+      )
+    })
+    .map((match) => ({
+      ...match,
+      imageSrc: match.imageSrc ?? (match.type === 'team' ? matchIndoorImage : matchOutdoorImage),
+    }))
+}
+
+function readFocusedMatchDate() {
+  const defaultDate = new Date(2026, 4, 18)
+
+  if (typeof window === 'undefined') {
+    return defaultDate
+  }
+
+  const savedDate = localStorage.getItem(CREATED_MATCH_FOCUS_DATE_KEY)
+
+  if (!savedDate) {
+    return defaultDate
+  }
+
+  const date = new Date(`${savedDate}T00:00:00`)
+  return Number.isNaN(date.getTime()) ? defaultDate : date
+}
+
 export function MatchHome() {
   const navigate = useNavigate()
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 4, 18))
-  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date(2026, 4, 1))
+  const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
+  const [calendarMonth, setCalendarMonth] = useState<Date>(
+    () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
+  )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [notifyTournament, setNotifyTournament] = useState(false)
+  const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
   const selectedDay = String(selectedDate.getDate())
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
-  const selectedDayMatches = isSelectedMatchMonth ? matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay) : []
+  const selectedDateKey = [
+    selectedDate.getFullYear(),
+    String(selectedDate.getMonth() + 1).padStart(2, '0'),
+    String(selectedDate.getDate()).padStart(2, '0'),
+  ].join('-')
+  const selectedDayCreatedMatches = createdMatches.filter((match) => match.date === selectedDateKey)
+  const selectedDayMatches = isSelectedMatchMonth
+    ? [...(matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay)), ...selectedDayCreatedMatches]
+    : selectedDayCreatedMatches
   const selectedMatches = filterMatches(selectedDayMatches, matchTypeFilter)
-  const filteredMatchDates = calendarDays
+  const filteredDefaultMatchDates = calendarDays
     .filter((day) => {
       if (day.muted) return false
 
@@ -290,6 +360,11 @@ export function MatchHome() {
       return filterMatches(dayMatches, matchTypeFilter).length > 0
     })
     .map((day) => new Date(2026, 4, Number(day.label)))
+  const filteredCreatedMatchDates = createdMatches
+    .filter((match) => filterMatches([match], matchTypeFilter).length > 0 && match.date)
+    .map((match) => new Date(`${match.date}T00:00:00`))
+    .filter((date) => !Number.isNaN(date.getTime()))
+  const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
   const goPrevMonth = () => {
     setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))
   }
@@ -389,6 +464,7 @@ export function MatchHome() {
                         <p><span>시간</span> {match.time}</p>
                         <p><span>장소</span> {match.region} · {match.fieldName}</p>
                         <p><span>인원</span> {match.currentParticipants} / {match.maxParticipants}명</p>
+                        {match.body ? <p className="match_selected_body_excerpt">{match.body}</p> : null}
                       </div>
                       <Link className="match_selected_button" to={`/match/${match.id}`} aria-label={`${match.title} 상세 보기`}>
                         <span aria-hidden="true">&gt;</span>
