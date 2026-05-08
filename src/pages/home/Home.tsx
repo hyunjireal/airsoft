@@ -1,11 +1,10 @@
-﻿import { useRef, useState, type PointerEvent } from 'react'
+﻿import { useRef, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowR from '../../asset/icons/arrow_r.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
-import mainImg from '../../asset/images/main_img01.png'
 import heroImg from '../../asset/images/main_img02.png'
 import matchImg01 from '../../asset/images/main_img03.jpg'
 import matchImg02 from '../../asset/images/main_img04.jpg'
@@ -54,39 +53,31 @@ const matchCards = [
     img: matchImg04,
   },
   
-]
-
-const teamFilters = ['스타터팀', '입문자 환영', '즐겁고 가볍게', '숙련자위주'] as const
-type TeamFilter = (typeof teamFilters)[number]
+] 
 
 const teamCards = [
-  { id: 1, name: '스타터 소대', region: '경기 · 파주권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg01 },
-  { id: 2, name: '루키 아레나', region: '서울 · 강서권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
-  { id: 3, name: '라이트 스쿼드', region: '경기 · 하남권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg03 },
-  { id: 4, name: '위켄드 크루', region: '인천 · 부평권', tags: ['즐겁고 가볍게'], logo: mainTeamImg04 },
-  { id: 5, name: '택티컬 블랙', region: '서울 · CQB', tags: ['숙련자위주'], logo: mainTeamImg01 },
-  { id: 6, name: '알파라인', region: '경기 · 북부권', tags: ['숙련자위주'], logo: mainTeamImg02 },
-  { id: 7, name: '초심자 연합', region: '경기 · 용인권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg03 },
-  { id: 8, name: '프렌들리 팀', region: '서울 · 수도권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg04 },
-  { id: 9, name: '그린존 루키즈', region: '경기 · 고양권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg01 },
-  { id: 10, name: '세이프티 크루', region: '서울 · 노원권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
-  { id: 11, name: '브라보 입문반', region: '인천 · 서구권', tags: ['스타터팀', '입문자 환영'], logo: mainTeamImg03 },
-  { id: 12, name: '느긋한 전우회', region: '경기 · 수원권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg04 },
-  { id: 13, name: '주말 사격회', region: '서울 · 마포권', tags: ['즐겁고 가볍게'], logo: mainTeamImg01 },
-  { id: 14, name: '필드메이트', region: '경기 · 성남권', tags: ['입문자 환영', '즐겁고 가볍게'], logo: mainTeamImg02 },
-  { id: 15, name: '스모크 라인', region: '경기 · 안양권', tags: ['숙련자위주'], logo: mainTeamImg03 },
-  { id: 16, name: 'CQB 베테랑즈', region: '서울 · 영등포권', tags: ['숙련자위주'], logo: mainTeamImg04 },
-  { id: 17, name: '델타 포지션', region: '인천 · 송도권', tags: ['즐겁고 가볍게'], logo: mainTeamImg01 },
-  { id: 18, name: '밸런스 스쿼드', region: '경기 · 광명권', tags: ['스타터팀', '즐겁고 가볍게'], logo: mainTeamImg02 },
+  { id: 1, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
+  { id: 2, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '평일팀'], logo: mainTeamImg02 },
+  { id: 3, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
+  { id: 4, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
+  { id: 5, name: '택티컬 블랙', region: '서울 CQB', tags: ['숙련자팀', '주말팀'], logo: mainTeamImg01 },
+  { id: 6, name: '알파라인', region: '경기 북부권', tags: ['숙련자팀', '평일팀'], logo: mainTeamImg02 },
+  { id: 7, name: '초심자 연합', region: '경기 용인권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
+  { id: 8, name: '프렌들리 팀', region: '서울 수도권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
+  { id: 9, name: '그린존 루키즈', region: '경기 고양권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
+  { id: 10, name: '세이프티 크루', region: '서울 노원권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg02 },
+  { id: 11, name: '브라보 입문반', region: '인천 서구권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
+  { id: 12, name: '느긋한 전우회', region: '경기 수원권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
+  { id: 13, name: '주말 사격회', region: '서울 마포권', tags: ['주말팀'], logo: mainTeamImg01 },
+  { id: 14, name: '필드메이트', region: '경기 성남권', tags: ['평일팀'], logo: mainTeamImg02 },
+  { id: 15, name: '스모크 라인', region: '경기 안양권', tags: ['숙련자팀'], logo: mainTeamImg03 },
+  { id: 16, name: 'CQB 베테랑즈', region: '서울 영등포권', tags: ['숙련자팀'], logo: mainTeamImg04 },
+  { id: 17, name: '델타 포지션', region: '인천 송도권', tags: ['주말팀'], logo: mainTeamImg01 },
+  { id: 18, name: '밸런스 스쿼드', region: '경기 광명권', tags: ['평일팀'], logo: mainTeamImg02 },
 ]
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
-]
-
-const youtubeCards = [
-  { id: 1, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
-  { id: 2, title: '유튜브 제목~~...', uploader: '김유튜버', ago: '2일 전', img: mainImg },
 ]
 
 const sortedMatchCards = [...matchCards].sort((a, b) => {
@@ -134,11 +125,9 @@ function useDragScroll() {
 }
 
 export function Home() {
-  const [activeTeamFilter, setActiveTeamFilter] = useState<TeamFilter>('스타터팀')
   const matchDragScroll = useDragScroll()
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
-  const filteredTeams = teamCards.filter((team) => team.tags.includes(activeTeamFilter))
 
   return (
     <div className="home_page">
@@ -223,7 +212,7 @@ export function Home() {
             <img src={bannerChar} alt="" className="banner_char" />
           </div>
 
-          <div className="bottom">
+          <div className="banner_bottom">
             <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
               <div className="bottom_text_group">
                 <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
@@ -250,126 +239,86 @@ export function Home() {
         </section>
       </div>
 
-      {/* ⑤ 팀 추천 섹션 */}
-      <section className="home_team">
-        <div className="home_team_inner">
-          <div className="home_team_header">
-            <h2 className="home_kbl_title home_kbl_title_white">삼삼오오님과<br />딱 맞는 팀</h2>
-          </div>
-          <div className="home_team_con">
-            <div className="home_team_tags">
-              {teamFilters.map((filter) => (
-                <button
-                  className="home_team_filter_button"
-                  type="button"
-                  key={filter}
-                  onClick={() => setActiveTeamFilter(filter)}
-                  aria-pressed={activeTeamFilter === filter}
-                >
-                  <KeywordTag
-                    style={{
-                      background: activeTeamFilter === filter ? '#DFFB55' : 'rgba(255,255,255,0.12)',
-                      border: activeTeamFilter === filter ? '1px solid transparent' : '1px solid rgba(255,255,255,0.12)',
-                      color: activeTeamFilter === filter ? '#1A1A1A' : '#fff',
-                    }}
-                  >
-                    {filter}
-                  </KeywordTag>
-                </button>
-              ))}
+      <div className="bottom">
+        {/* ⑤ 팀 추천 섹션 */}
+        <section className="home_team">
+          <div className="home_team_content_box">
+            <div className="home_team_header">
+              <h2 className="home_team_title">
+                <span className="home_team_title_user">AI 맞춤 추천 팀</span>
+              </h2>
             </div>
-            <div className="home_team_scroll" {...teamDragScroll}>
-              {filteredTeams.map((team) => (
-                <article key={team.id} className="home_team_card">
-                  <div className="home_team_card_logo">
-                    <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
+            <div className="home_team_con">
+              <div className="home_team_scroll" {...teamDragScroll}>
+                {teamCards.map((team) => (
+                  <article key={team.id} className="home_team_card">
+                    <div className="home_team_card_logo">
+                      <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
+                    </div>
+                    <p className="home_team_card_name">{team.name}</p>
+                    <p className="home_team_card_region">{team.region}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ⑥ 오바워치 배너 */}
+        <section className="home_banner" {...bannerDragScroll}>
+          <Link className="home_banner_inner" to="/guide/quiz">
+            <div className="home_banner_txt">
+              <p className="home_banner_label">건잇 x 오버워치</p>
+              <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
+            </div>
+            <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
+          </Link>
+          <Link className="home_banner_inner home_banner_inner_second" to="/guide/quiz">
+            <div className="home_banner_txt">
+              <p className="home_banner_label">건잇 x 오버워치</p>
+              <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
+            </div>
+            <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
+          </Link>
+        </section>
+
+        {/* ⑦ 토너먼트 섹션 */}
+        <section className="home_tournament">
+          <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
+          <div className="home_tournament_team_info">
+            {tournamentCards.map((tc) => (
+              <Link key={tc.id} to="/tournament" className="home_tournament_team">
+                <div className="home_tournament_left">
+                  <div className="home_tournament_team_logo">
+                    <img src={tc.logo} alt="" className="home_tournament_team_logo_img" />
                   </div>
-                  <p className="home_team_card_name">{team.name}</p>
-                  <p className="home_team_card_region">{team.region}</p>
-                </article>
-              ))}
-            </div>
+                  <div className="home_tournament_team_text">
+                    <p className="home_tournament_team_name">{tc.name}</p>
+                    <p className="home_tournament_team_region">{tc.region}</p>
+                  </div>
+                </div>
+                <div className="home_tournament_state">
+                  <div className="home_tournament_stat">
+                    <span className="home_tournament_stat_label">ATK</span>
+                    <span className="home_tournament_stat_value">{tc.stats.atk}</span>
+                  </div>
+                  <div className="home_tournament_stat">
+                    <span className="home_tournament_stat_label">DEF</span>
+                    <span className="home_tournament_stat_value">{tc.stats.def}</span>
+                  </div>
+                  <div className="home_tournament_stat">
+                    <span className="home_tournament_stat_label">TAC</span>
+                    <span className="home_tournament_stat_value">{tc.stats.tac}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* ⑥ 오바워치 배너 */}
-      <section className="home_banner" {...bannerDragScroll}>
-        <Link className="home_banner_inner" to="/guide/quiz">
-          <div className="home_banner_txt">
-            <p className="home_banner_label">건잇 x 오버워치</p>
-            <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
-          </div>
-          <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
-        </Link>
-        <Link className="home_banner_inner" to="/guide/quiz">
-          <div className="home_banner_txt">
-            <p className="home_banner_label">건잇 x 오버워치</p>
-            <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
-          </div>
-          <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
-        </Link>
-      </section>
-
-      {/* ⑦ 토너먼트 섹션 */}
-      <section className="home_tournament">
-        <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
-        <div className="home_tournament_team_info">
-          {tournamentCards.map((tc) => (
-            <Link key={tc.id} to="/tournament" className="home_tournament_team">
-              <div className="home_tournament_left">
-                <div className="home_tournament_team_logo">
-                  <img src={tc.logo} alt="" className="home_tournament_team_logo_img" />
-                </div>
-                <div className="home_tournament_team_text">
-                  <p className="home_tournament_team_name">{tc.name}</p>
-                  <p className="home_tournament_team_region">{tc.region}</p>
-                </div>
-              </div>
-              <div className="home_tournament_state">
-                <div className="home_tournament_stat">
-                  <span className="home_tournament_stat_label">ATK</span>
-                  <span className="home_tournament_stat_value">{tc.stats.atk}</span>
-                </div>
-                <div className="home_tournament_stat">
-                  <span className="home_tournament_stat_label">DEF</span>
-                  <span className="home_tournament_stat_value">{tc.stats.def}</span>
-                </div>
-                <div className="home_tournament_stat">
-                  <span className="home_tournament_stat_label">TAC</span>
-                  <span className="home_tournament_stat_value">{tc.stats.tac}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
           <button className="home_tournament_join_button" type="button" aria-disabled="true">
-            참여하기
+            투표하러 가기 
           </button>
-        </div>
-      </section>
-
-      {/* ⑧ 유튜브/크리에이터 하이라이트 */}
-      <section className="home_youtube">
-        <div className="home_youtube_header">
-          <p className="home_youtube_label">크리에이터 하이라이트</p>
-          <h2 className="home_kbl_title">이번주 최고의 버디는?</h2>
-        </div>
-        <div className="home_youtube_scroll">
-          {youtubeCards.map((yt) => (
-            <Link key={yt.id} to="/tournament/highlights" className="home_youtube_card">
-              <div className="home_youtube_card_thumb" style={{ backgroundImage: `url(${yt.img})` }} />
-              <div className="home_youtube_card_meta">
-                <img src={userAvatar} alt={yt.uploader} className="home_youtube_card_avatar" />
-                <div>
-                  <p className="home_youtube_card_title">{yt.title}</p>
-                  <p className="home_youtube_card_uploader">{yt.uploader} · {yt.ago}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }
-

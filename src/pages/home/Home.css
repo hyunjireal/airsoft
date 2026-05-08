@@ -1,6 +1,6 @@
-/* ============================================================
+﻿/* ============================================================
    Home Page – Figma node 838-2008
-   Font: Pretendard Variable, KBL Jump TTF
+   Font: Pretendard Variable, KBL Jump
    ============================================================ */
 
 /* ---------- 공통 태그 ---------- */
@@ -51,7 +51,7 @@
 
 .home_kbl_title {
   margin: 0;
-  font-family: 'KBL Jump TTF', sans-serif;
+  font-family: var(--font-kbl-jump);
   font-size: 22px;
   font-weight: 400;
   line-height: 130%;
@@ -242,7 +242,7 @@
 
 .home_userinfo_match_title {
   margin: 0;
-  font-family: 'KBL Jump TTF', sans-serif;
+  font-family: var(--font-kbl-jump);
   font-size: 22px;
   font-weight: 700;
   line-height: 130%;
@@ -437,10 +437,18 @@
   right: 30px;
 }
 
-.bottom {
+.banner_bottom {
   display: flex;
   gap: 15px;
   width: 100%; 
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  width: 100%;
 }
 
 .left {
@@ -581,14 +589,15 @@
    ============================================================ */
 .home_team {
   width: 100%;
+  padding: 30px 0;
 }
 
-.home_team_inner {
+.home_team_content_box {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 24px;
   width: 100%;
-  padding: 24px;
+  padding: 30px 24px;
   background: #676B5D;
   border-radius: 50px 0 0 50px;
 }
@@ -598,34 +607,34 @@
   flex-direction: column;
 }
 
-.home_team_header .home_kbl_title {
-  font-size: 22px;
-  line-height: 130%;
+.home_team_title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-kbl-jump);
+  line-height: 110%;
   letter-spacing: 0;
+}
+
+.home_team_title_user {
+  font-family: var(--font-kbl-jump-b);
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  line-height: 110%;
+  letter-spacing: 0;
+}
+
+.home_team_title_main {
+  font-size: 34px;
+  font-weight: var(--font-weight-bold);
 }
 
 .home_team_con {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-}
-
-.home_team_tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.home_team_filter_button {
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  border-radius: 999px;
-}
-
-.home_team_filter_button[aria-pressed="true"] {
-  transform: translateY(-1px);
+  gap: 15px;
 }
 
 .home_team_scroll {
@@ -647,14 +656,14 @@
 
 .home_team_card {
   flex-shrink: 0;
-  width: fit-content;
-  height: fit-content;
+  width: 96px;
+  min-height: 138px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 13px;
-  padding: 12px 15px;
+  gap: 8px;
+  padding: 12px 8px;
   border-radius: 10px;
   background: #F9FBF1;
   text-decoration: none;
@@ -669,8 +678,8 @@
 }
 
 .home_team_card_logo {
-  width: 64px;
-  height: 64px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   display: flex;
@@ -687,16 +696,23 @@
 .home_team_card_name {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
+  line-height: 110%;
+  letter-spacing: 0;
   color: #1A1A1A;
+  white-space: nowrap;
 }
 
 .home_team_card_region {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 12px;
+  font-weight: 400;
+  line-height: 110%;
+  letter-spacing: 0;
   color: #676B5D;
+  white-space: nowrap;
 }
 
 /* ============================================================
@@ -739,6 +755,10 @@
   overflow: hidden;
 }
 
+.home_banner_inner_second {
+  background-image: url('../../asset/images/main_ow02.png');
+}
+
 .home_banner_txt {
   position: relative;
   display: flex;
@@ -759,7 +779,7 @@
 
 .home_banner_title {
   margin: 0;
-  font-family: 'KBL Jump TTF', sans-serif;
+  font-family: var(--font-kbl-jump);
   font-size: 14px;
   font-weight: 700;
   line-height: 130%;
@@ -791,7 +811,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
+  gap: 24px;
   width: 100%;
   padding: 24px 24px;
   background: transparent;
@@ -799,7 +819,7 @@
 
 .home_tournament_title {
   margin: 0;
-  font-family: 'KBL Jump TTF', sans-serif;
+  font-family: var(--font-kbl-jump-eb-extended);
   font-size: 22px;
   font-weight: 800;
   color: #1A1A1A;
@@ -812,7 +832,7 @@
 .home_tournament_team_info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
@@ -929,89 +949,4 @@
   font-weight: 800;
   filter: grayscale(1);
   cursor: pointer;
-}
-
-/* ============================================================
-   ⑧ 유튜브 / 크리에이터 하이라이트
-   ============================================================ */
-.home_youtube {
-  width: 100%;
-  padding: 0 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.home_youtube_header {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.home_youtube_label {
-  margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  color: #888;
-}
-
-.home_youtube_scroll {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.home_youtube_scroll::-webkit-scrollbar { display: none; }
-
-.home_youtube_card {
-  flex-shrink: 0;
-  width: clamp(170px, 42vw, 240px);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-decoration: none;
-}
-
-.home_youtube_card_thumb {
-  width: 100%;
-  height: 110px;
-  border-radius: 8px;
-  background-size: cover;
-  background-position: center;
-  background-color: #ddd;
-}
-
-.home_youtube_card_meta {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.home_youtube_card_avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.home_youtube_card_title {
-  margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  color: #1A1A1A;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-}
-
-.home_youtube_card_uploader {
-  margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  color: #888;
 }
