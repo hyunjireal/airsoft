@@ -1,0 +1,239 @@
+.onboarding_flow {
+  position: relative;
+  width: min(100%, 393px);
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  border-left: 0;
+  border-right: 0;
+  background: #1a1a1a;
+  color: #ffffff;
+  isolation: isolate;
+}
+
+.onboarding_intro {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #111111;
+}
+
+.onboarding_intro__video,
+.onboarding_intro__shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.onboarding_intro__video {
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.6) saturate(0.92);
+}
+
+.onboarding_intro__shade {
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0.08) 30%, rgba(0, 0, 0, 0.22) 70%, rgba(0, 0, 0, 0.52) 100%),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.08) 0%, rgba(17, 17, 17, 0.04) 46%, rgba(17, 17, 17, 0.34) 100%);
+  pointer-events: none;
+}
+
+.onboarding_intro__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 160px 24px 67px;
+}
+
+.onboarding_intro__hero {
+  max-width: 224px;
+}
+
+.onboarding_intro__logo {
+  display: block;
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.onboarding_intro__title,
+.onboarding_panel__title {
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.onboarding_intro__title {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.onboarding_intro__title_line,
+.onboarding_panel__title_line,
+.onboarding_panel__description_line {
+  display: block;
+}
+
+.onboarding_intro__title_line--accent {
+  color: #e2fd34;
+}
+
+.onboarding_intro__description {
+  margin: 24px 0 0;
+  color: #adadad;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.onboarding_intro__button_wrap,
+.onboarding_panel__actions {
+  width: 100%;
+}
+
+.onboarding_panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #1a1a1a;
+}
+
+.onboarding_panel__viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.onboarding_panel__track {
+  display: flex;
+  width: 100%;
+}
+
+.onboarding_panel__slide {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.onboarding_panel__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 50px;
+  min-height: 443px;
+  padding: 130px 24px 50px;
+}
+
+.onboarding_panel__logo {
+  display: block;
+  width: 123px;
+  height: auto;
+}
+
+.onboarding_panel__illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 161px;
+}
+
+.onboarding_panel__illustration img {
+  display: block;
+  object-fit: contain;
+}
+
+.onboarding_panel__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+  min-height: 213px;
+  padding: 0 24px 24px;
+  text-align: center;
+}
+
+.onboarding_panel__copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.onboarding_panel__indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.onboarding_panel__indicator_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.onboarding_panel__indicator_dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d9d9d9;
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+.onboarding_panel__indicator_button.is-active .onboarding_panel__indicator_dot {
+  width: 32px;
+  background: #e2fd34;
+}
+
+.onboarding_panel__title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #ffffff;
+}
+
+.onboarding_panel__description {
+  margin: 0;
+  color: #e9e9e9;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.onboarding_panel__actions {
+  display: grid;
+  gap: 12px;
+  padding: 0 24px 50px;
+  min-height: 196px;
+  margin-top: auto;
+  align-content: center;
+}
+
+@supports (min-height: 100svh) {
+  .onboarding_flow,
+  .onboarding_intro,
+  .onboarding_intro__content,
+  .onboarding_panel {
+    min-height: 100svh;
+  }
+}
+
+@media (max-width: 393px) {
+  .onboarding_intro__content {
+    padding-top: 140px;
+  }
+}
