@@ -7,7 +7,6 @@ import eyesIcon from "../../asset/icons/com_eyes.svg";
 import aiIcon from "../../asset/icons/com_ai.svg";
 import safetyIcon from "../../asset/icons/com_safety.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
-import starIcon from "../../asset/icons/com_star.svg";
 import writeIcon from "../../asset/icons/com_write.svg";
 import beginnerGuideBookImage from "../../asset/images/com_beginner_card_book.png";
 import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_question.png";
@@ -100,7 +99,9 @@ function chatQuestionUrl(question: string) {
 export function BeginnerBoard() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
-  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(new Set());
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(
+    () => new Set([recentQuestions[0]?.id].filter(Boolean)),
+  );
   const [aiQuestion, setAiQuestion] = useState("");
   const [aiFocused, setAiFocused] = useState(false);
 
@@ -312,15 +313,7 @@ export function BeginnerBoard() {
                   >
                     <div className="beginner_question_card_header">
                       <div className="beginner_question_labels">
-                        {question.recommended ? (
-                          <span className="beginner_recommend_tag">
-                            <img src={starIcon} alt="" />
-                            추천 질문
-                          </span>
-                        ) : null}
-                        <span
-                          className={`beginner_question_card_category ${questionCategoryToneClass[question.category]}`}
-                        >
+                        <span className="beginner_question_card_category">
                           {question.category}
                         </span>
                       </div>
@@ -349,19 +342,17 @@ export function BeginnerBoard() {
 
                       <div className="beginner_question_info">
                         <span className="beginner_question_author">
-                          <span
-                            className="beginner_question_avatar"
-                            aria-hidden="true"
-                          />
                           {question.author} · {question.time}
                         </span>
-                        <span>
-                          <img src={eyesIcon} alt="" />
-                          {question.views}
-                        </span>
-                        <span>
-                          <img src={chatSmallIcon} alt="" />
-                          {question.comments}
+                        <span className="beginner_question_stats">
+                          <span>
+                            <img src={eyesIcon} alt="" />
+                            {question.views}
+                          </span>
+                          <span>
+                            <img src={chatSmallIcon} alt="" />
+                            {question.comments}
+                          </span>
                         </span>
                       </div>
                     </div>
