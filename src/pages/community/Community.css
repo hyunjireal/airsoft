@@ -956,6 +956,44 @@
   font-weight: 900;
 }
 
+.beginner_comment_input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 14px;
+}
+
+.beginner_comment_input input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #8a8a8a;
+  border-radius: 8px;
+  outline: 0;
+  background: #ffffff;
+  color: #111111;
+  font-size: 14px;
+}
+
+.beginner_comment_input input::placeholder {
+  color: #9d9d9d;
+  font-weight: 700;
+}
+
+.beginner_comment_input button {
+  flex: 0 0 auto;
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid #17213c;
+  border-radius: 999px;
+  background: #17213c;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
 .beginner_comment_list {
   display: grid;
 }

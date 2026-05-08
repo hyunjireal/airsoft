@@ -9,7 +9,18 @@ type Reply = {
   body: string
 }
 
-const comments = [
+type BeginnerComment = {
+  id: string
+  author: string
+  badge?: string
+  mentor?: string
+  time: string
+  body: string
+  likes: number
+  repliesList: Reply[]
+}
+
+const comments: BeginnerComment[] = [
   {
     id: 'comment-1',
     author: '화가난병아리',
@@ -54,12 +65,15 @@ export function BeginnerQuestionDetail() {
   )
   const [likedCommentIds, setLikedCommentIds] = useState<string[]>([])
   const [openReplyIds, setOpenReplyIds] = useState<string[]>([])
+  const [commentInput, setCommentInput] = useState('')
+  const [userComments, setUserComments] = useState<BeginnerComment[]>([])
   const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
   const [commentReplies, setCommentReplies] = useState<Record<string, Reply[]>>(() =>
     Object.fromEntries(comments.map((comment) => [comment.id, comment.repliesList])),
   )
 
-  const totalCommentCount = comments.length + Object.values(commentReplies).reduce((total, replies) => total + replies.length, 0)
+  const allComments = [...comments, ...userComments]
+  const totalCommentCount = allComments.length + Object.values(commentReplies).reduce((total, replies) => total + replies.length, 0)
 
   const handlePostReaction = (nextReaction: 'like' | 'dislike') => {
     if (postReaction === nextReaction) {
@@ -98,6 +112,29 @@ export function BeginnerQuestionDetail() {
 
   const toggleReplyInput = (commentId: string) => {
     setOpenReplyIds((ids) => (ids.includes(commentId) ? ids.filter((id) => id !== commentId) : [...ids, commentId]))
+  }
+
+  const submitComment = () => {
+    const body = commentInput.trim()
+    if (!body) {
+      return
+    }
+
+    const id = `comment-user-${Date.now()}`
+    setUserComments((items) => [
+      ...items,
+      {
+        id,
+        author: localStorage.getItem('nickname') || '익명 사용자',
+        time: '방금 전',
+        body,
+        likes: 0,
+        repliesList: [],
+      },
+    ])
+    setCommentLikes((likes) => ({ ...likes, [id]: 0 }))
+    setCommentReplies((replies) => ({ ...replies, [id]: [] }))
+    setCommentInput('')
   }
 
   const submitReply = (commentId: string) => {
@@ -178,8 +215,22 @@ export function BeginnerQuestionDetail() {
 
       <section className="beginner_comments">
         <h2>댓글 {totalCommentCount}</h2>
+        <form
+          className="beginner_comment_input"
+          onSubmit={(event) => {
+            event.preventDefault()
+            submitComment()
+          }}
+        >
+          <input
+            value={commentInput}
+            placeholder="댓글을 입력하세요"
+            onChange={(event) => setCommentInput(event.target.value)}
+          />
+          <button type="submit">등록</button>
+        </form>
         <div className="beginner_comment_list">
-          {comments.map((comment) => (
+          {allComments.map((comment) => (
             <article className="beginner_comment" key={comment.id}>
               <div className="beginner_comment_head">
                 <span className="beginner_comment_author">

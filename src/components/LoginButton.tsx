@@ -50,7 +50,7 @@ export function LoginButton({
 }: LoginButtonProps) {
   return (
     <button {...props} type={type} style={{ ...loginButtonStyle, ...style }}>
-      <span style={{ color: '#1A1A1A', textDecoration: 'none' }}>{children}</span>
+      <span style={{ color: 'inherit', textDecoration: 'none' }}>{children}</span>
     </button>
   )
 }

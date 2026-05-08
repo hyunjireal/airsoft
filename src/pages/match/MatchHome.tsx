@@ -3,11 +3,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
 import KeywordTag from '../../components/KeywordTag'
+import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
-import gaiImage from '../../asset/images/gai.png'
-import matchOutdoorImage from '../../asset/images/main_img01.png'
-import matchIndoorImage from '../../asset/images/main_img02.png'
+import arrowRIcon from '../../asset/icons/arrow_r.svg'
+import matchNolistImage from '../../asset/images/match_nolist01.png'
+import matchList01 from '../../asset/images/match_list01.jpg'
+import matchList02 from '../../asset/images/match_list02.jpg'
+import matchList03 from '../../asset/images/match_list03.jpg'
+import matchList04 from '../../asset/images/match_list04.jpg'
+import matchList05 from '../../asset/images/match_list05.jpg'
+import { LoginButton } from '../../components/LoginButton'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
@@ -88,7 +94,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 18,
     maxParticipants: 24,
     action: '상세 보기',
-    imageSrc: matchOutdoorImage,
+    imageSrc: matchList01,
   },
   team: {
     title: '팀 단위 전술 스크림',
@@ -99,7 +105,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 12,
     maxParticipants: 16,
     action: '상세 보기',
-    imageSrc: matchIndoorImage,
+    imageSrc: matchList02,
   },
   mercenary: {
     title: '용병 조인 야외전',
@@ -110,7 +116,7 @@ const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> 
     currentParticipants: 8,
     maxParticipants: 10,
     action: '참가 신청',
-    imageSrc: matchIndoorImage,
+    imageSrc: matchList04,
   },
 }
 
@@ -127,7 +133,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 22,
       maxParticipants: 30,
       action: '상세 보기',
-      imageSrc: matchIndoorImage,
+      imageSrc: matchList03,
     },
     {
       id: 'match-002-team',
@@ -140,7 +146,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 10,
       maxParticipants: 14,
       action: '상세 보기',
-      imageSrc: matchIndoorImage,
+      imageSrc: matchList02,
     },
   ],
   '18': [
@@ -155,7 +161,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 14,
       maxParticipants: 16,
       action: '상세 보기',
-      imageSrc: matchOutdoorImage,
+      imageSrc: matchList05,
     },
     {
       id: 'match-002',
@@ -168,7 +174,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 22,
       maxParticipants: 30,
       action: '상세 보기',
-      imageSrc: matchIndoorImage,
+      imageSrc: matchList03,
     },
     {
       id: 'match-001',
@@ -181,7 +187,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 8,
       maxParticipants: 10,
       action: '참가 신청',
-      imageSrc: matchIndoorImage,
+      imageSrc: matchList04,
     },
   ],
   '23': [
@@ -196,6 +202,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 18,
       maxParticipants: 24,
       action: '상세 보기',
+      imageSrc: matchList01,
     },
     {
       id: 'match-023-team',
@@ -208,6 +215,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 12,
       maxParticipants: 18,
       action: '상세 보기',
+      imageSrc: matchList02,
     },
   ],
   '30': [
@@ -222,6 +230,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 12,
       maxParticipants: 16,
       action: '상세 보기',
+      imageSrc: matchList05,
     },
     {
       id: 'match-030-personal',
@@ -234,6 +243,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 9,
       maxParticipants: 16,
       action: '상세 보기',
+      imageSrc: matchList03,
     },
     {
       id: 'match-030-mercenary',
@@ -246,6 +256,7 @@ const matchesByDay: Record<string, MatchSchedule[]> = {
       currentParticipants: 6,
       maxParticipants: 10,
       action: '참가 신청',
+      imageSrc: matchList04,
     },
   ],
 }
@@ -280,6 +291,12 @@ function getMatchTypeLabel(match: MatchSchedule) {
   return match.difficulty
 }
 
+const matchTypeColor: Record<MatchType, string> = {
+  team: '#1f2b45',
+  personal: '#10425d',
+  mercenary: '#676b5d',
+}
+
 function isMatchType(type: unknown): type is MatchType {
   return type === 'personal' || type === 'team' || type === 'mercenary'
 }
@@ -312,7 +329,7 @@ function readCreatedMatches() {
     })
     .map((match) => ({
       ...match,
-      imageSrc: match.imageSrc ?? (match.type === 'team' ? matchIndoorImage : matchOutdoorImage),
+      imageSrc: match.imageSrc ?? (match.type === 'team' ? matchList02 : match.type === 'mercenary' ? matchList04 : matchList01),
     }))
 }
 
@@ -427,6 +444,7 @@ export function MatchHome() {
               className={`match_type_filter ${matchTypeFilter === filter.value ? 'is_active' : ''}`}
               type="button"
               key={filter.value}
+              data-type={filter.value}
               onClick={() => setMatchTypeFilter(filter.value)}
             >
               <KeywordTag className="match_type_filter_tag">{filter.label}</KeywordTag>
@@ -471,20 +489,34 @@ export function MatchHome() {
                 <div className="match_selected_list">
                   {selectedMatches.map((match) => (
                     <div className="match_selected_item" key={match.id}>
-                      <img className="match_selected_thumb" src={match.imageSrc ?? matchOutdoorImage} alt="" />
-                      <div className="match_selected_body">
-                        <div className="match_selected_topline">
-                          <em className={match.type === 'mercenary' ? 'is_mercenary' : ''}>{getMatchTypeLabel(match)}</em>
-                          <strong>{match.title}</strong>
+                      <MainTag className="match_item_tag" style={{ backgroundColor: matchTypeColor[match.type], color: '#ffffff' }}>
+                        {getMatchTypeLabel(match)}
+                      </MainTag>
+                      <div className="match_item_bottom">
+                        <div className="match_item_media">
+                          <img className="match_selected_thumb" src={match.imageSrc ?? matchList01} alt="" aria-hidden="true" />
+                          <div className="match_selected_info">
+                            <strong className="match_item_title">{match.title}</strong>
+                            <div className="match_item_meta">
+                              <p className="match_meta_row">
+                                <span className="match_meta_label">시간</span>
+                                <span className="match_meta_value">{match.time}</span>
+                              </p>
+                              <p className="match_meta_row">
+                                <span className="match_meta_label">장소</span>
+                                <span className="match_meta_value">{match.region} · {match.fieldName}</span>
+                              </p>
+                            </div>
+                            <p className="match_meta_row">
+                              <span className="match_meta_label">인원</span>
+                              <span className="match_meta_value">{match.currentParticipants}/{match.maxParticipants}명</span>
+                            </p>
+                          </div>
                         </div>
-                        <p><span>시간</span> {match.time}</p>
-                        <p><span>장소</span> {match.region} · {match.fieldName}</p>
-                        <p><span>인원</span> {match.currentParticipants} / {match.maxParticipants}명</p>
-                        {match.body ? <p className="match_selected_body_excerpt">{match.body}</p> : null}
+                        <Link className="match_item_arrow_link" to={`/match/${match.id}`} aria-label={`${match.title} 상세 보기`}>
+                          <img className="match_item_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
+                        </Link>
                       </div>
-                      <Link className="match_selected_button" to={`/match/${match.id}`} aria-label={`${match.title} 상세 보기`}>
-                        <span aria-hidden="true">&gt;</span>
-                      </Link>
                     </div>
                   ))}
                 </div>
@@ -494,11 +526,17 @@ export function MatchHome() {
               <article className="match_empty_recommend_card">
                 <div className="match_empty_recommend_copy">
                   <h3>일정이 없나요?</h3>
-                  <p>직접 게임 일정을 올려서<br />멤버를 모집해보세요.</p>
+                  <p>다른 날짜를 보거나<br />AI가 추천하는<br />맞춤 일정을 찾아보세요.</p>
                 </div>
-                <img src={gaiImage} alt="" />
+                <img className="match_empty_recommend_img" src={matchNolistImage} alt="" aria-hidden="true" />
                 <div className="match_empty_recommend_actions">
-                  <Link to="/match/create">일정 만들기</Link>
+                  <LoginButton
+                    className="match_empty_login_btn"
+                    style={{ background: 'rgba(0,0,0,0.55)', color: '#ffffff', fontSize: 16, fontWeight: 500 }}
+                    onClick={() => navigate('/match/create')}
+                  >
+                    일정 만들러 가기
+                  </LoginButton>
                 </div>
               </article>
             )}
@@ -512,17 +550,6 @@ export function MatchHome() {
           <h2 id="match-tournament-title">공식 토너먼트 준비 중</h2>
           <p>추후 하이라이트와 MVP 투표로 연결될 예정이에요.</p>
         </Link>
-      </section>
-
-      <section className="match_section" aria-labelledby="match-field-title">
-        <h2 id="match-field-title" className="match_section_title">필드 정보</h2>
-        <article className="match_field_card">
-          <span className="match_field_icon" aria-hidden="true">⌖</span>
-          <div>
-            <h3>필드 탐색</h3>
-            <p>매치 카드와 상세에서 연결되는 필드 정보를 한 번에 확인해요.</p>
-          </div>
-        </article>
       </section>
 
       <div className="match_create_floating">
