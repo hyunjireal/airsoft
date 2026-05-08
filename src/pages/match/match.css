@@ -1435,6 +1435,130 @@
   color: rgba(255, 255, 255, 0.82);
 }
 
+/* ── Match Type Sheet (bottom sheet) ─────────────────────────── */
+
+.mts_backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+}
+
+.mts_sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100%, 768px);
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  padding: 12px 20px 48px;
+  z-index: 51;
+  animation: mts_slide_up 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes mts_slide_up {
+  from { transform: translateX(-50%) translateY(100%); }
+  to   { transform: translateX(-50%) translateY(0); }
+}
+
+.mts_handle {
+  width: 36px;
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 99px;
+  margin: 0 auto 20px;
+}
+
+.mts_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mts_title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.mts_close {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f2f2f2;
+  border-radius: 50%;
+  font-size: 14px;
+  color: #555555;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mts_options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mts_option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 16px;
+  background: #f8f8f8;
+  border: 1px solid #ebebeb;
+  border-radius: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.mts_option:active {
+  background: #f0f0f0;
+}
+
+.mts_badge {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.mts_option_text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mts_option_label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.mts_option_desc {
+  font-size: 13px;
+  color: #777777;
+}
+
+.mts_option_arrow {
+  font-size: 20px;
+  color: #bbbbbb;
+  line-height: 1;
+}
+
 /* ── Media queries ────────────────────────────────────────────── */
 
 @media (max-width: 360px) {

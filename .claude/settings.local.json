@@ -3,7 +3,8 @@
     "allow": [
       "Bash(Get-ChildItem -Path \"c:\\\\장현지\\\\team3project\\\\airsoft\" -Force)",
       "Bash(Select-Object Name, FullName)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(xargs grep -l \"type MatchEvent\\\\|interface MatchEvent\")"
     ]
   }
 }

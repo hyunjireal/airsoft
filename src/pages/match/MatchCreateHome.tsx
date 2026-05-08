@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import './match.css'
 
 type MatchKind = 'personal' | 'team' | 'guest'
@@ -19,9 +19,15 @@ const submitLabels: Record<MatchKind, string> = {
   guest: '용병 태그 추가',
 }
 
+function resolveKind(raw: string | null): MatchKind {
+  if (raw === 'team' || raw === 'guest') return raw
+  return 'personal'
+}
+
 export function MatchCreateHome() {
   const navigate = useNavigate()
-  const [matchKind, setMatchKind] = useState<MatchKind>('personal')
+  const [searchParams] = useSearchParams()
+  const [matchKind, setMatchKind] = useState<MatchKind>(() => resolveKind(searchParams.get('kind')))
   const [region, setRegion] = useState('경기도')
   const [time, setTime] = useState('주말 오후')
   const [fieldName, setFieldName] = useState('실내 OOO 구장')

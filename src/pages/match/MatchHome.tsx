@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { MatchTypeSheet } from './MatchTypeSheet'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
 import KeywordTag from '../../components/KeywordTag'
@@ -398,6 +399,13 @@ export function MatchHome() {
     navigate('/home')
   }
 
+  const [showTypeSheet, setShowTypeSheet] = useState(false)
+
+  const handleTypeSelect = (kind: 'personal' | 'team' | 'guest') => {
+    setShowTypeSheet(false)
+    navigate(`/match/create?kind=${kind}`)
+  }
+
   return (
     <div className="match_page">
       <header className="match_page_header">
@@ -533,7 +541,7 @@ export function MatchHome() {
                   <LoginButton
                     className="match_empty_login_btn"
                     style={{ background: 'rgba(0,0,0,0.55)', color: '#ffffff', fontSize: 16, fontWeight: 500 }}
-                    onClick={() => navigate('/match/create')}
+                    onClick={() => setShowTypeSheet(true)}
                   >
                     일정 만들러 가기
                   </LoginButton>
@@ -556,11 +564,17 @@ export function MatchHome() {
         <button
           className="match_create_fab"
           type="button"
-          onClick={() => navigate('/match/create')}
+          onClick={() => setShowTypeSheet(true)}
         >
           만들기 +
         </button>
       </div>
+
+      <MatchTypeSheet
+        open={showTypeSheet}
+        onClose={() => setShowTypeSheet(false)}
+        onSelect={handleTypeSelect}
+      />
     </div>
   )
 }
