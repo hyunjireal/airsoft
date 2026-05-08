@@ -11,7 +11,7 @@ const mainTagStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   width: 'fit-content',
-  height: 24,
+  height: 'fit-content',
   padding: '5px 10px',
   gap: 10,
   boxSizing: 'border-box',

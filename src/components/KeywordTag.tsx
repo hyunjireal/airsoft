@@ -11,16 +11,10 @@ const keywordTagStyle: CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   width: 'fit-content',
-  height: 20,
-  padding: '3px 6px',
+  height: 'fit-content',
+  padding: '4px 10px',
   boxSizing: 'border-box',
-  fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
-  fontSize: 14,
-  fontWeight: 400,
-  lineHeight: '130%',
-  letterSpacing: '-0.02em',
-  background: '#F6FFBC',
-  borderRadius: '4px'
+  borderRadius: '555px'
 }
 
 function KeywordTag({ children, className, style }: KeywordTagProps) {

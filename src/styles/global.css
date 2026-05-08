@@ -98,19 +98,183 @@
 }
 
 :root {
-  font-family: 'Pretendard', system-ui, sans-serif;
+  font-family: var(--font-pretendard);
   color: #111111;
   background: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --font-pretendard: 'Pretendard', system-ui, sans-serif;
+  --font-kbl-jump: 'KBL Jump', 'Pretendard', system-ui, sans-serif;
+  --font-kbl-jump-extended: 'KBL Jump Extended', 'Pretendard', system-ui, sans-serif;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-size-14: 14px;
+  --font-size-16: 16px;
+  --font-size-18: 18px;
+  --font-size-20: 20px;
+  --font-size-22: 22px;
+  --font-size-24: 24px;
+  --font-size-26: 26px;
+  --font-size-28: 28px;
+  --font-size-30: 30px;
+  --font-size-32: 32px;
+  --line-height-130: 130%;
+  --letter-spacing-0: 0;
+  --letter-spacing-tight: -0.02em;
   --app-max-width: 768px;
   --app-edge-offset: max(16px, calc((100vw - var(--app-max-width)) / 2 + 16px));
   --app-header-height: 140px;
   --floating-header-gap: 12px;
   --floating-stack-gap: 52px;
   --nav-my-center-x: calc(100vw - var(--app-edge-offset) - 44px);
+}
+
+.sub_kr {
+  font-family: var(--font-kbl-jump);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-22);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.sub_en {
+  font-family: var(--font-kbl-jump-extended);
+  font-weight: var(--font-weight-extrabold);
+  font-size: var(--font-size-22);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-0);
+}
+
+.body_b_28,
+.body_b_26,
+.body_b_24,
+.body_b_22,
+.body_b_20,
+.body_b_18,
+.body_b_16,
+.body_b_14,
+.body_sb_32,
+.body_sb_30,
+.body_sb_28,
+.body_sb_26,
+.body_sb_24,
+.body_sb_22,
+.body_sb_20,
+.body_sb_18,
+.body_sb_16,
+.body_sb_14,
+.body_m_32,
+.body_m_30,
+.body_m_28,
+.body_m_26,
+.body_m_24,
+.body_m_22,
+.body_m_20,
+.body_m_18,
+.body_m_16,
+.body_m_14 {
+  font-family: var(--font-pretendard);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.body_b_28,
+.body_b_26,
+.body_b_24,
+.body_b_22,
+.body_b_20,
+.body_b_18,
+.body_b_16,
+.body_b_14 {
+  font-weight: var(--font-weight-bold);
+}
+
+.body_sb_32,
+.body_sb_30,
+.body_sb_28,
+.body_sb_26,
+.body_sb_24,
+.body_sb_22,
+.body_sb_20,
+.body_sb_18,
+.body_sb_16,
+.body_sb_14 {
+  font-weight: var(--font-weight-semibold);
+}
+
+.body_m_32,
+.body_m_30,
+.body_m_28,
+.body_m_26,
+.body_m_24,
+.body_m_22,
+.body_m_20,
+.body_m_18,
+.body_m_16,
+.body_m_14 {
+  font-weight: var(--font-weight-medium);
+}
+
+.body_sb_32,
+.body_m_32 {
+  font-size: var(--font-size-32);
+}
+
+.body_sb_30,
+.body_m_30 {
+  font-size: var(--font-size-30);
+}
+
+.body_b_28,
+.body_sb_28,
+.body_m_28 {
+  font-size: var(--font-size-28);
+}
+
+.body_b_26,
+.body_sb_26,
+.body_m_26 {
+  font-size: var(--font-size-26);
+}
+
+.body_b_24,
+.body_sb_24,
+.body_m_24 {
+  font-size: var(--font-size-24);
+}
+
+.body_b_22,
+.body_sb_22,
+.body_m_22 {
+  font-size: var(--font-size-22);
+}
+
+.body_b_20,
+.body_sb_20,
+.body_m_20 {
+  font-size: var(--font-size-20);
+}
+
+.body_b_18,
+.body_sb_18,
+.body_m_18 {
+  font-size: var(--font-size-18);
+}
+
+.body_b_16,
+.body_sb_16,
+.body_m_16 {
+  font-size: var(--font-size-16);
+}
+
+.body_b_14,
+.body_sb_14,
+.body_m_14 {
+  font-size: var(--font-size-14);
 }
 
 * {
