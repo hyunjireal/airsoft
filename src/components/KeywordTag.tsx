@@ -14,7 +14,7 @@ const keywordTagStyle: CSSProperties = {
   height: 'fit-content',
   padding: '4px 10px',
   boxSizing: 'border-box',
-  borderRadius: '555px'
+  borderRadius: '5px'
 }
 
 function KeywordTag({ children, className, style }: KeywordTagProps) {

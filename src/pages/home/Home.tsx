@@ -1,9 +1,9 @@
 ﻿import { useRef, useState, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
-import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
+import arrowR from '../../asset/icons/arrow_r.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
 import mainImg from '../../asset/images/main_img01.png'
 import heroImg from '../../asset/images/main_img02.png'
@@ -142,91 +142,113 @@ export function Home() {
 
   return (
     <div className="home_page">
-      {/* ① 히어로 섹션 */}
-      <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
-        <div className="home_hero_inner">
-          <div className="home_hero_tit">
-            <div className="home_hero_tag_row">
-              <MainTag className="home_hero_tag">MVP 투표중</MainTag>
-            </div>
-            <div className="home_hero_txt">
-              <p className="home_hero_title">총알이 눈보다 빠르다<br />뭔가 멋잇는 말</p>
-              <span className="home_hero_pagination">1 / 4</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ② 사용자 정보 + 경기 일정 */}
-      <section className="home_userinfo">
-        <div className="home_userinfo_profile">
-          <div className="home_userinfo_pic_wrap">
-            <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
-          </div>
-          <div className="home_userinfo_tit">
-            <div className="home_userinfo_icons">
-              <div className="home_userinfo_user_icon">
-                <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
-                <span>안전제일 뉴비</span>
+      <div className="top">
+        {/* ① 히어로 섹션 */}
+        <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
+          <div className="home_hero_inner">
+            <div className="home_hero_tit">
+              <div className="home_hero_tag_row">
+                <MainTag className="home_hero_tag">MVP 투표중</MainTag>
               </div>
-              <button className="home_userinfo_settings" type="button" aria-label="설정">
-                <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
-              </button>
-            </div>
-            <p className="home_userinfo_name">삼삼오오님<br />오늘도 안전한 슈팅 하세요!</p>
-            <div className="home_userinfo_tag_list">
-              <CategoryTag>첫 AI 질문 완료</CategoryTag>
-              <CategoryTag>친환경 바이오탄 지식인</CategoryTag>
+              <div className="home_hero_txt">
+                <p className="home_hero_title">총알이 눈보다 빠르다<br />뭔가 멋잇는 말</p>
+                <span className="home_hero_pagination">1 / 4</span>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="home_userinfo_match">
-          <div className="home_userinfo_match_header">
-            <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-            <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
-              <More />
+        {/* ② 사용자 정보 + 경기 일정 */}
+        <section className="home_userinfo">
+          <div className="home_userinfo_profile">
+            <div className="home_userinfo_pic_wrap">
+              <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
+            </div>
+            <div className="home_userinfo_tit">
+              <div className="home_userinfo_icons">
+                <div className="home_userinfo_user_icon">
+                  <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
+                  <span className="body_m_14">안전제일 뉴비</span>
+                </div>
+                <button className="home_userinfo_settings" type="button" aria-label="설정">
+                  <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
+                </button>
+              </div>
+              <p className="home_userinfo_name">
+                <span className="home_userinfo_name_user">삼삼오오</span>님
+                <br />
+                오늘도 안전한 슈팅 하세요!
+              </p>
+              <div className="home_userinfo_tag_list">
+                <MainTag className="home_userinfo_tag">첫 AI 질문 완료</MainTag>
+                <MainTag className="home_userinfo_tag">친환경 바이오탄 지식인</MainTag>
+              </div>
+            </div>
+          </div>
+
+          <div className="home_userinfo_match">
+            <div className="home_userinfo_match_header">
+              <h2 className="home_userinfo_match_title">내 경기 일정</h2>
+              <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
+                <More />
+              </Link>
+            </div>
+            <div className="home_match_scroll" {...matchDragScroll}>
+              {sortedMatchCards.map((card) => (
+                <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
+                  <div className="home_match_card_top">
+                    <MainTag className="home_match_dday_tag">{card.dday}</MainTag>
+                    <p className="home_match_card_notice">{card.notice}</p>
+                  </div>
+                  <div className="home_match_card_txt">
+                    <p className="home_match_card_place">{card.place}</p>
+                    <p className="home_match_card_datetime">{card.datetime}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="banner">
+          <div className="buddy">
+            <div className="txt">
+              <p className="buddy_label">나의 밀착 가이드 멘토</p>
+              <div className="name">
+                <img src={symbol04} alt="" className="name_symbol" />
+                <span>캡틴_서울</span>
+              </div>
+              <p className="buddy_desc">전동건(AEG) 렌탈 및 CQB 필드 가이드 전문입니다. 편하게 물어보세요!</p>
+            </div>
+            <img src={bannerChar} alt="" className="banner_char" />
+          </div>
+
+          <div className="bottom">
+            <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
+              <div className="bottom_text_group">
+                <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
+                <p className="bottom_title">
+                  <span className="bottom_title_semibold">안전한 슈팅의</span> 첫 걸음
+                </p>
+              </div>
+              <KeywordTag className="bottom_quiz_tag">
+                <span>퀴즈 풀기</span>
+                <img src={arrowR} alt="" className="bottom_quiz_tag_icon" aria-hidden="true" />
+              </KeywordTag>
             </Link>
-          </div>
-          <div className="home_match_scroll" {...matchDragScroll}>
-            {sortedMatchCards.map((card) => (
-              <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
-                <div className="home_match_card_top">
-                  <KeywordTag>{card.dday}</KeywordTag>
-                  <p className="home_match_card_notice">{card.notice}</p>
-                </div>
-                <div className="home_match_card_txt">
-                  <p className="home_match_card_place">{card.place}</p>
-                  <p className="home_match_card_datetime">{card.datetime}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="banner">
-        <div className="buddy">
-          <div className="txt">
-            <p className="buddy_label">나의 밀착 가이드 멘토</p>
-            <div className="name">
-              <img src={symbol04} alt="" className="name_symbol" />
-              <span>캡틴_서울</span>
+            <div className="right">
+              <div className="right_title_group">
+                <p className="right_brand">GUNIT</p>
+                <p className="right_title">인기 질문&amp;팁</p>
+              </div>
+              <div className="right_tag_group">
+                <p>#뉴비필독</p>
+                <p>#AI가_답변완료</p>
+              </div>
             </div>
-            <p className="buddy_desc">전동건(AEG) 렌탈 및 CQB 필드 가이드 전문입니다. 편하게 물어보세요!</p>
           </div>
-          <img src={bannerChar} alt="" className="banner_char" />
-        </div>
-
-        <div className="bottom">
-          <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
-            <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
-            <p className="bottom_title">안전한 슈팅의 첫 걸음</p>
-            <p className="bottom_desc">필수 안전 수칙 퀴즈 풀고<br />첫 뱃지를 획득해보세요</p>
-          </Link>
-          <div className="right">#AI가_답변완료<br />#뉴비필독</div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       {/* ⑤ 팀 추천 섹션 */}
       <section className="home_team">

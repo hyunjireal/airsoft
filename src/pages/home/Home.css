@@ -42,6 +42,13 @@
   background: transparent;
 }
 
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+}
+
 .home_kbl_title {
   margin: 0;
   font-family: 'KBL Jump TTF', sans-serif;
@@ -70,13 +77,13 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 240px 24px 24px;
+  padding: 223px 24px 0 24px;
 }
 
 .home_hero_tit {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 13px;
 }
 
 .home_hero_tag_row {
@@ -97,7 +104,6 @@
   justify-content: space-between;
   flex-direction: column;
   gap: 8px;
-  padding-left: 4px;
 }
 
 .home_hero_title {
@@ -124,7 +130,7 @@
 .home_userinfo {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 45px;
   width: 100%;
   padding: 0 24px;
 }
@@ -160,11 +166,6 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 130%;
-  letter-spacing: -0.02em;
   color: #1A1A1A;
 }
 
@@ -201,19 +202,34 @@
 
 .home_userinfo_name {
   margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-pretendard);
+  font-size: 20px;
+  font-weight: var(--font-weight-medium);
   color: #1A1A1A;
-  line-height: 130%;
-  letter-spacing: -0.02em;
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.home_userinfo_name_user {
+  font-weight: var(--font-weight-bold);
 }
 
 .home_userinfo_tag_list {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
+}
+
+.home_userinfo_tag {
+  border: 1px solid #EE2106;
+  background: #fff;
+  color: #EE2106;
+  font-family: var(--font-pretendard);
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 /* 경기 일정 */
@@ -221,7 +237,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 28px;
 }
 
 .home_userinfo_match_title {
@@ -259,8 +275,8 @@
 .home_match_card {
   position: relative;
   flex-shrink: 0;
-  width: clamp(170px, 42vw, 240px);
-  height: clamp(170px, 42vw, 240px);
+  width: clamp(190px, 42vw, 240px);
+  height: clamp(190px, 42vw, 240px);
   border-radius: 12px;
   overflow: hidden;
   background-size: cover;
@@ -304,30 +320,41 @@
 .home_match_card_notice {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 300;
   line-height: normal;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: #d0d0d0;
+}
+
+.home_match_dday_tag {
+  padding: 3px 7px;
+  background: #F6FFBC;
+  color: #1A1A1A;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 .home_match_card_place {
   margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: normal;
-  letter-spacing: -0.02em;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
   color: #fff;
 }
 
 .home_match_card_datetime {
   margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.02em;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
   color: #fff;
 }
 
@@ -419,15 +446,19 @@
 .left {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  width: 210px;
-  height: fit-content;
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
   padding: 15px;
   border-radius: 12px;
-  background: #1F2B45;
+  background-image: url('../../asset/images/main_quizImg01.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   min-height: 96px;
-  flex-shrink: 0;
 }
 
 .safety_tutorial_card {
@@ -437,61 +468,112 @@
   cursor: pointer;
 }
 
-.safety_tutorial_card::after {
-  content: '›';
-  position: absolute;
-  right: 14px;
-  bottom: 12px;
-  color: #fff;
-  font-size: 24px;
-  line-height: 1;
-}
-
 .safety_tutorial_card:active {
   transform: translateY(1px);
 }
 
 .bottom_label,
-.bottom_title,
-.bottom_desc {
+.bottom_title {
   margin: 0;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   letter-spacing: -0.02em;
+}
+
+.bottom_text_group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .bottom_label {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: normal;
-  color: rgba(255,255,255,0.75);
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  color: #617AB1;
 }
 
 .bottom_title {
-  font-size: 15px;
-  font-weight: 700;
-  line-height: normal;
-  color: #fff;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-130);
+  color: #1F2B45;
 }
 
-.bottom_desc {
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 130%;
-  color: rgba(255,255,255,0.85);
+.bottom_title_semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.bottom_quiz_tag {
+  gap: 3px;
+  background: #1F2B45;
+  color: #fff;
+  font-family: var(--font-pretendard);
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.bottom_quiz_tag_icon {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  filter: brightness(0) invert(1);
 }
 
 .right {
-  flex: 1 1 auto;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 45px;
+  flex: 0 0 130px;
+  width: 130px;
   padding: 15px;
   border-radius: 10px;
-  background: #E0E1DD;
-  font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
+  background-image: url('../../asset/images/main_qna01.png');
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.right_title_group,
+.right_tag_group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.right_title_group p,
+.right_tag_group p {
+  margin: 0;
+}
+
+.right_brand,
+.right_title {
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-bold);
+  line-height: 110%;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.right_brand {
+  color: #5C5C46;
+}
+
+.right_title {
+  color: #000;
+}
+
+.right_tag_group {
+  font-family: var(--font-pretendard);
+  font-size: 10px;
+  font-weight: 400;
   line-height: normal;
-  letter-spacing: -0.02em;
-  color: #1A1A1A;
+  letter-spacing: var(--letter-spacing-tight);
+  color: #000;
 }
 
 /* ============================================================
