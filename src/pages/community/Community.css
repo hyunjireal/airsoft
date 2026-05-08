@@ -267,10 +267,10 @@
   width: 211.666px;
   height: 153.381px;
   aspect-ratio: 69 / 50;
-  overflow: hidden;
+  overflow: visible;
   pointer-events: none;
-  background: url("../../asset/images/com_beginner_hero_char.png")
-    transparent -20.145px -41.961px / 108.696% 150% no-repeat;
+  background: url("../../asset/images/com_beginner_hero_char.png") center / contain
+    no-repeat;
   transform: rotate(8.334deg);
   transform-origin: center;
 }
