@@ -1,5 +1,4 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { AiFloatingButton } from '../components/AiFloatingButton'
 import { BottomNav } from './BottomNav'
 
 export function AppShell() {
@@ -37,7 +36,6 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      <AiFloatingButton />
       <BottomNav />
     </div>
   )

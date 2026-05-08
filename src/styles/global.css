@@ -682,32 +682,6 @@ a {
   transform: translateY(-3px);
 }
 
-.floating_ai {
-  position: fixed;
-  left: var(--nav-my-center-x);
-  right: auto;
-  bottom: calc(var(--app-header-height) + var(--floating-header-gap));
-  z-index: 20;
-  display: grid;
-  place-items: center;
-  width: 180px;
-  height: 180px;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  cursor: pointer;
-  transform: translateX(-50%);
-}
-
-.floating_ai img {
-  display: block;
-  width: 180px;
-  height: 180px;
-  object-fit: contain;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.22));
-}
-
 .modal_backdrop {
   position: fixed;
   inset: 0;
