@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
 import KeywordTag from '../../components/KeywordTag'
+import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import gaiImage from '../../asset/images/gai.png'
 import matchOutdoorImage from '../../asset/images/main_img01.png'
@@ -381,7 +382,7 @@ export function MatchHome() {
   }
 
   return (
-    <div className="page match_page">
+    <div className="match_page">
       <header className="match_page_header">
         <button className="match_page_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
           <img src={arrowLIcon} alt="" aria-hidden="true" />
@@ -392,22 +393,22 @@ export function MatchHome() {
       <section className="match_section" aria-labelledby="match-status-title">
         <div className="match_section_heading">
           <h2 id="match-status-title" className="match_section_title">내 매치 현황</h2>
-          <Link className="match_more_link" to="/my/matches">더 보기 <span aria-hidden="true">&gt;</span></Link>
+          <Link className="match_more_link" to="/my/matches" aria-label="내 매치 현황 더보기">
+            <More />
+          </Link>
         </div>
         <div className="match_status_grid">
           <Link className="match_status_card" to="/my/applications">
-            <span className="match_status_icon match_status_icon_blue" aria-hidden="true">▣</span>
             <span className="match_status_content">
-              <strong>신청 중</strong>
-              <small>참가 신청한 매치를 확인해요.</small>
+              <strong>신청 중인 일정</strong>
+              <small>참가 신청한 매치를<br />확인하세요.</small>
             </span>
             <b>2건</b>
           </Link>
           <Link className="match_status_card" to="/my/schedule">
-            <span className="match_status_icon match_status_icon_green" aria-hidden="true">✓</span>
             <span className="match_status_content">
               <strong>확정 일정</strong>
-              <small>확정된 경기 일정을 확인해요.</small>
+              <small>확정된 경기 일정을<br />확인해요.</small>
             </span>
             <b>1건</b>
           </Link>
