@@ -66,18 +66,14 @@ import { TeamDetail } from './pages/team/TeamDetail'
 import { TeamHome } from './pages/team/TeamHome'
 import { TeamList } from './pages/team/TeamList'
 
-function RootLayout() {
-  return (
-    <>
-      <ScrollToTop />
-      <Outlet />
-    </>
-  )
-}
-
 export const router = createBrowserRouter([
   {
-    element: <RootLayout />,
+    element: (
+      <>
+        <ScrollToTop />
+        <Outlet />
+      </>
+    ),
     children: [
       {
         children: [
