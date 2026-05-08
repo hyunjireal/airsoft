@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
 import KeywordTag from '../../components/KeywordTag'
+import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import gaiImage from '../../asset/images/gai.png'
 import matchOutdoorImage from '../../asset/images/main_img01.png'
 import matchIndoorImage from '../../asset/images/main_img02.png'
@@ -370,9 +371,24 @@ export function MatchHome() {
   const goNextMonth = () => {
     setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))
   }
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
+    navigate('/home')
+  }
 
   return (
     <div className="page match_page">
+      <header className="match_page_header">
+        <button className="match_page_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
+          <img src={arrowLIcon} alt="" aria-hidden="true" />
+        </button>
+        <h1 className="match_page_title">매치</h1>
+      </header>
+
       <section className="match_section" aria-labelledby="match-status-title">
         <div className="match_section_heading">
           <h2 id="match-status-title" className="match_section_title">내 매치 현황</h2>

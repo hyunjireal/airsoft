@@ -5,7 +5,8 @@ import { BottomNav } from './BottomNav'
 export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
-  const showBackButton = location.pathname !== '/home' && location.pathname !== '/my'
+  const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
+  const showBackButton = !isMatchPage && location.pathname !== '/home' && location.pathname !== '/my'
 
   const goBack = () => {
     if (window.history.length > 1) {

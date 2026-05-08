@@ -284,10 +284,6 @@ a {
   padding-top: 44px;
 }
 
-.page {
-  padding: 20px 16px 90px;
-}
-
 .standalone_page {
   min-height: 100vh;
   display: grid;
