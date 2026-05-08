@@ -49,7 +49,7 @@ const recentQuestions: RecentQuestion[] = [
     id: "q-001",
     title: "서바이벌 게임에서 꼭 지켜야 할 기본 규칙이 궁금해요!",
     category: "법규/규정",
-    author: "초보유저",
+    author: "진짜초보",
     time: "2시간 전",
     views: "999+",
     comments: "567",
@@ -68,7 +68,7 @@ const recentQuestions: RecentQuestion[] = [
     id: "q-003",
     title: "팀플레이 입문자가 알아두면 좋은 기본 전술 팁이 있을까요?",
     category: "게임/전술",
-    author: "전술입문",
+    author: "전술고수",
     time: "30분 전",
     views: "200",
     comments: "150",
@@ -77,7 +77,7 @@ const recentQuestions: RecentQuestion[] = [
     id: "q-004",
     title: "보호장비는 어느 정도까지 챙겨야 안전하게 즐길 수 있나요?",
     category: "안전",
-    author: "안전수칙",
+    author: "에솦러",
     time: "4시간 전",
     views: "188",
     comments: "42",
@@ -239,11 +239,7 @@ export function BeginnerBoard() {
             >
               <div className="beginner_start_text">
                 <h3>자주 묻는 질문</h3>
-                <p>
-                  많이 물어보는 질문들을
-                  <br />
-                  모아두었어요.
-                </p>
+                <p>많이 물어보는 질문들을 모아두었어요.</p>
               </div>
               <span
                 className="beginner_start_icon_shell beginner_start_icon_shell_question"

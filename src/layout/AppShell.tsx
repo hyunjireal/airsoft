@@ -6,7 +6,13 @@ export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
-  const showBackButton = !isMatchPage && location.pathname !== '/home' && location.pathname !== '/my'
+  const isBeginnerBoardHome = location.pathname === '/community'
+  const keepTopInset = isBeginnerBoardHome
+  const showBackButton =
+    !isMatchPage &&
+    !isBeginnerBoardHome &&
+    location.pathname !== '/home' &&
+    location.pathname !== '/my'
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -18,7 +24,11 @@ export function AppShell() {
   }
 
   return (
-    <div className={`mobile_frame ${showBackButton ? 'has_app_back_button' : ''}`}>
+    <div
+      className={`mobile_frame ${
+        showBackButton ? 'has_app_back_button' : keepTopInset ? 'has_app_top_inset' : ''
+      }`}
+    >
       {showBackButton ? (
         <button className="app_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
           ‹

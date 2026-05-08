@@ -308,6 +308,10 @@ a {
   padding-top: 44px;
 }
 
+.has_app_top_inset > main {
+  padding-top: 44px;
+}
+
 .standalone_page {
   min-height: 100vh;
   display: grid;
