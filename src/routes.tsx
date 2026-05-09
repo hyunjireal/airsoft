@@ -52,7 +52,6 @@ import { QuestionComplete } from './pages/question/QuestionComplete'
 import { QuestionStart } from './pages/question/QuestionStart'
 import { QuestionWrite } from './pages/question/QuestionWrite'
 import { SimilarQuestions } from './pages/question/SimilarQuestions'
-import { Splash } from './pages/Splash'
 import { HighlightDetail } from './pages/tournament/HighlightDetail'
 import { HighlightList } from './pages/tournament/HighlightList'
 import { MvpVote } from './pages/tournament/MvpVote'
@@ -79,7 +78,7 @@ export const router = createBrowserRouter([
     children: [
       {
         children: [
-          { path: '/', element: <Splash /> },
+          { path: '/', element: <Onboarding /> },
           { path: '/onboarding', element: <Onboarding /> },
           { path: '/login', element: <Login /> },
           { path: '/signup', element: <Signup /> },
