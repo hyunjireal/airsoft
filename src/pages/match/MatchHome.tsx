@@ -408,16 +408,16 @@ export function MatchHome() {
 
     setShowTypeSheet(false)
     if (guestFlow === 'wanted') {
-      navigate('/match/create/guest-wanted')
+      navigate(`/match/create/guest-wanted?date=${selectedDateKey}`)
       return
     }
 
     if (guestFlow === 'join') {
-      navigate('/match/create/guest-join')
+      navigate(`/match/create/guest-join?date=${selectedDateKey}`)
       return
     }
 
-    navigate(`/match/create?kind=${kind}`)
+    navigate(`/match/create?kind=${kind}&date=${selectedDateKey}`)
   }
 
   return (

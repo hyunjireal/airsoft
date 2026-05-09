@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
@@ -9,9 +9,20 @@ import guestScheduleIcon from '../../asset/icons/guest_schedule.svg'
 import './match.css'
 
 const difficultyOptions = ['초보', '숙련자', '상관없음']
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
+
+function resolveMatchDate(rawDate: string | null) {
+  if (!rawDate) return '2026-05-18'
+
+  const date = new Date(`${rawDate}T00:00:00`)
+  return Number.isNaN(date.getTime()) ? '2026-05-18' : rawDate
+}
 
 export function MatchGuestWantedCreate() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const matchDate = resolveMatchDate(searchParams.get('date'))
   const [difficulty, setDifficulty] = useState('초보')
   const [headcount, setHeadcount] = useState(5)
   const [title, setTitle] = useState('')
@@ -32,6 +43,35 @@ export function MatchGuestWantedCreate() {
 
   const increaseHeadcount = () => {
     setHeadcount((count) => count + 1)
+  }
+
+  const createGuestWantedMatch = () => {
+    const savedMatches = (() => {
+      try {
+        const matches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
+        return Array.isArray(matches) ? matches : []
+      } catch {
+        return []
+      }
+    })()
+    const createdMatch = {
+      id: `created-guest-wanted-${Date.now()}`,
+      type: 'mercenary',
+      title: title.trim() || '용병 모집글',
+      time: '14:00',
+      region: '지역 선택',
+      fieldName: '필드 선택',
+      difficulty: '용병',
+      currentParticipants: 1,
+      maxParticipants: headcount,
+      action: '상세 보기',
+      body,
+      date: matchDate,
+    }
+
+    localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify([createdMatch, ...savedMatches]))
+    localStorage.setItem(CREATED_MATCH_FOCUS_DATE_KEY, matchDate)
+    navigate('/match')
   }
 
   return (
@@ -128,7 +168,7 @@ export function MatchGuestWantedCreate() {
       <div className="mgc_submit_wrap">
         <LoginButton
           style={{ background: '#676b5d', backgroundColor: '#676b5d', color: '#ffffff', WebkitTextFillColor: '#ffffff' }}
-          onClick={() => navigate('/match')}
+          onClick={createGuestWantedMatch}
         >
           등록하기
         </LoginButton>

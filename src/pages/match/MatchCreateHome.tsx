@@ -24,6 +24,13 @@ function resolveKind(raw: string | null): MatchKind {
   return 'personal'
 }
 
+function resolveMatchDate(rawDate: string | null) {
+  if (!rawDate) return '2026-05-18'
+
+  const date = new Date(`${rawDate}T00:00:00`)
+  return Number.isNaN(date.getTime()) ? '2026-05-18' : rawDate
+}
+
 export function MatchCreateHome() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -32,7 +39,7 @@ export function MatchCreateHome() {
   const [time, setTime] = useState('주말 오후')
   const [fieldName, setFieldName] = useState('실내 OOO 구장')
   const [difficulty, setDifficulty] = useState('초급')
-  const [matchDate, setMatchDate] = useState('2026-05-18')
+  const [matchDate, setMatchDate] = useState(() => resolveMatchDate(searchParams.get('date')))
   const [maxParticipants, setMaxParticipants] = useState('16')
   const [title, setTitle] = useState('초보 환영 CQB 모집')
   const [body, setBody] = useState(
