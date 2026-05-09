@@ -9,6 +9,9 @@ import writeIcon from '../../asset/icons/com_write.svg'
 import hotFieldOne from '../../asset/images/com_field01.png'
 import hotFieldTwo from '../../asset/images/com_field02.png'
 import hotFieldThree from '../../asset/images/com_field03.png'
+import hotFieldFour from '../../asset/images/match_list01.jpg'
+import hotFieldFive from '../../asset/images/match_list02.jpg'
+import hotFieldSix from '../../asset/images/match_list03.jpg'
 import CategoryTag from '../../components/CategoryTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
@@ -35,6 +38,9 @@ const hotPosts = [
   { id: 'hot-001', title: '서울 근교 필드 BEST 5', image: hotFieldOne, comments: 42 },
   { id: 'hot-002', title: '숲 필드 주의할 점 7가지', image: hotFieldTwo, comments: 29 },
   { id: 'hot-003', title: '장비 직구 조언 부탁드립니다', image: hotFieldThree, comments: 26 },
+  { id: 'hot-004', title: '실내 CQB 입문자 추천 팁', image: hotFieldFour, comments: 38 },
+  { id: 'hot-005', title: '팀플레이 포지션 정하는 법', image: hotFieldFive, comments: 21 },
+  { id: 'hot-006', title: '에어소프트 총기 관리 기초', image: hotFieldSix, comments: 33 },
 ]
 
 const generalPosts: GeneralPostItem[] = [

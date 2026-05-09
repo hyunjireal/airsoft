@@ -266,7 +266,6 @@ export function BeginnerBoard() {
               className="beginner_more_button"
               type="button"
               aria-label="최근 질문 더 보기"
-              onClick={() => navigate("/community/beginner/recent")}
             >
               <More className="beginner_more_text" />
             </button>
