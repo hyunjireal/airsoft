@@ -1,18 +1,30 @@
-﻿import { useRef, type PointerEvent } from 'react'
+﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
+import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
+import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowR from '../../asset/icons/arrow_r.svg'
+import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
+import mainProfileIcon from '../../asset/icons/main_profile01.svg'
+import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
+import mainStarIcon from '../../asset/icons/main_star.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
 import heroImg from '../../asset/images/main_img02.png'
 import matchImg01 from '../../asset/images/main_img03.jpg'
 import matchImg02 from '../../asset/images/main_img04.jpg'
 import matchImg03 from '../../asset/images/main_img05.jpg'
 import matchImg04 from '../../asset/images/main_img06.jpg'
+import mainProfileTag01 from '../../asset/images/main_profile_tag01.png'
+import mainProfileTag02 from '../../asset/images/main_profile_tag02.png'
 import userAvatar from '../../asset/images/main_user01.png'
-import bannerChar from '../../asset/images/banner_char01.png'
-import symbol04 from '../../asset/images/symbol_05.png'
+import mainBuddy01 from '../../asset/images/main_buddy01.png'
+import mainBuddy02 from '../../asset/images/main_buddy02.png'
+import mainBuddy03 from '../../asset/images/main_buddy03.png'
+import mainBuddy04 from '../../asset/images/main_buddy04.png'
+import mainQnaImg from '../../asset/images/main_qna01.png'
+import mainQuizImg from '../../asset/images/main_quizImg01.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import mainTeam01 from '../../asset/images/main_team01.png'
 import mainTeam02 from '../../asset/images/main_team02.png'
@@ -80,12 +92,42 @@ const tournamentCards = [
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
 ]
 
+const buddyItems = [
+  {
+    id: 1,
+    image: mainBuddy02,
+    title: '장비 체크',
+    desc: <>출발 전<br />점검 지원</>,
+  },
+  {
+    id: 2,
+    image: mainBuddy03,
+    title: '룰 안내',
+    desc: <>필드 룰<br />쉽게 안내</>,
+  },
+  {
+    id: 3,
+    image: mainBuddy04,
+    title: '첫 라운드 동행',
+    desc: <>안심하고<br />함께 라운드</>,
+  },
+]
+
 const sortedMatchCards = [...matchCards].sort((a, b) => {
   const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
   const bDay = Number(b.dday.match(/\d+/)?.[0] ?? 0)
 
   return aDay - bDay
 })
+
+const homeAchievementTagStyle: CSSProperties = {
+  border: 0,
+  fontFamily: 'var(--font-pretendard)',
+  fontSize: 'var(--font-size-14)',
+  fontWeight: 'var(--font-weight-medium)',
+  lineHeight: 'var(--line-height-130)',
+  letterSpacing: 'var(--letter-spacing-tight)',
+}
 
 function useDragScroll() {
   const dragState = useRef({
@@ -131,7 +173,7 @@ export function Home() {
 
   return (
     <div className="home_page">
-      <div className="top">
+      <section className="home_main">
         {/* ① 히어로 섹션 */}
         <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
           <div className="home_hero_inner">
@@ -149,28 +191,74 @@ export function Home() {
 
         {/* ② 사용자 정보 + 경기 일정 */}
         <section className="home_userinfo">
-          <div className="home_userinfo_profile">
-            <div className="home_userinfo_pic_wrap">
-              <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
-            </div>
-            <div className="home_userinfo_tit">
-              <div className="home_userinfo_icons">
-                <div className="home_userinfo_user_icon">
-                  <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
-                  <span className="body_m_14">안전제일 뉴비</span>
-                </div>
-                <button className="home_userinfo_settings" type="button" aria-label="설정">
-                  <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
-                </button>
+          <div className="home_userinfo_summary">
+            <div className="home_userinfo_profile">
+              <div className="home_userinfo_pic_wrap">
+                <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
+                <span className="home_userinfo_pic_badge" aria-hidden="true">
+                  <img src={mainProfileIcon} alt="" className="home_userinfo_pic_badge_icon" />
+                </span>
               </div>
-              <p className="home_userinfo_name">
-                <span className="home_userinfo_name_user">삼삼오오</span>님
-                <br />
-                오늘도 안전한 슈팅 하세요!
-              </p>
-              <div className="home_userinfo_tag_list">
-                <MainTag className="home_userinfo_tag">첫 AI 질문 완료</MainTag>
-                <MainTag className="home_userinfo_tag">친환경 바이오탄 지식인</MainTag>
+              <div className="home_userinfo_tit">
+                <div className="home_userinfo_icons">
+                  <div className="home_userinfo_user_icon">
+                    <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
+                    <span className="body_m_14">안전제일 뉴비</span>
+                  </div>
+                  <button className="home_userinfo_settings" type="button" aria-label="설정">
+                    <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
+                  </button>
+                </div>
+                <p className="home_userinfo_name">
+                  <span className="home_userinfo_name_user">삼삼오오</span>
+                  <span className="home_userinfo_name_suffix">님</span>
+                  <br />
+                  <span className="home_userinfo_greeting body_m_16">오늘도 안전한 슈팅 하세요!</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="home_userinfo_badge">
+              <div className="home_userinfo_badge_top">
+                <img src={mainStarIcon} alt="" className="home_userinfo_badge_icon" />
+                <p className="home_userinfo_badge_title body_sb_16">보유 뱃지</p>
+              </div>
+              <div className="home_userinfo_tag_row">
+                <div className="home_userinfo_tag_pair">
+                  <CategoryTag
+                    className="home_userinfo_category_tag body_m_14"
+                    style={{
+                      ...homeAchievementTagStyle,
+                      background: '#E0E5EF',
+                      color: '#1F2B45',
+                    }}
+                  >
+                    <img src={mainProfileTag02} alt="" className="home_userinfo_category_icon" />
+                    <span>첫 AI 질문 완료</span>
+                  </CategoryTag>
+                  <CategoryTag
+                    className="home_userinfo_category_tag body_m_14"
+                    style={{
+                      ...homeAchievementTagStyle,
+                      background: '#EDF4E5',
+                      color: '#637A45',
+                    }}
+                  >
+                    <img src={mainProfileTag01} alt="" className="home_userinfo_category_icon" />
+                    <span>친환경 바이오탄 지식인</span>
+                  </CategoryTag>
+                </div>
+                <CategoryTag
+                  className="home_userinfo_category_tag home_userinfo_category_more body_m_14"
+                  style={{
+                    ...homeAchievementTagStyle,
+                    border: '1px solid #636363',
+                    background: '#fff',
+                    color: '#636363',
+                  }}
+                >
+                  +5
+                </CategoryTag>
               </div>
             </div>
           </div>
@@ -198,46 +286,86 @@ export function Home() {
             </div>
           </div>
         </section>
+      </section>
 
-        <section className="banner">
-          <div className="buddy">
-            <div className="txt">
-              <p className="buddy_label">나의 밀착 가이드 멘토</p>
-              <div className="name">
-                <img src={symbol04} alt="" className="name_symbol" />
-                <span>캡틴_서울</span>
+      <section className="banner">
+        <div className="buddy">
+          <div className="buddy_top">
+            <img src={mainBuddy01} alt="" className="buddy_main_img" />
+            <div className="buddy_text">
+              <div className="buddy_tit">
+                <p className="buddy_title body_sb_14">나의 필드 버디</p>
+                <KeywordTag className="buddy_status_tag">
+                  <img src={mainBuddyClockIcon} alt="" className="buddy_status_icon" />
+                  <span>매칭 전</span>
+                </KeywordTag>
               </div>
-              <p className="buddy_desc">전동건(AEG) 렌탈 및 CQB 필드 가이드 전문입니다. 편하게 물어보세요!</p>
-            </div>
-            <img src={bannerChar} alt="" className="banner_char" />
-          </div>
-
-          <div className="banner_bottom">
-            <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
-              <div className="bottom_text_group">
-                <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
-                <p className="bottom_title">
-                  <span className="bottom_title_semibold">안전한 슈팅의</span> 첫 걸음
-                </p>
-              </div>
-              <KeywordTag className="bottom_quiz_tag">
-                <span>퀴즈 풀기</span>
-                <img src={arrowR} alt="" className="bottom_quiz_tag_icon" aria-hidden="true" />
-              </KeywordTag>
-            </Link>
-            <div className="right">
-              <div className="right_title_group">
-                <p className="right_brand">GUNIT</p>
-                <p className="right_title">인기 질문&amp;팁</p>
-              </div>
-              <div className="right_tag_group">
-                <p>#뉴비필독</p>
-                <p>#AI가_답변완료</p>
+              <div className="buddy_info">
+                <p className="buddy_info_title">첫 매치가 걱정된다면<br />필드 버디와 함께 시작해보세요</p>
+                <p className="buddy_info_desc">예약할 때 멘토링 필요 여부를 선택하면 숙련자 버디를 매칭해드려요.</p>
               </div>
             </div>
           </div>
-        </section>
-      </div>
+
+          <div className="buddy_bottom">
+            <div className="buddy_con">
+              {buddyItems.map((item) => (
+                <div key={item.id} className="buddy_item">
+                  <img src={item.image} alt="" className="buddy_item_img" />
+                  <div className="buddy_item_text">
+                    <p className="buddy_item_title body_sb_14">{item.title}</p>
+                    <p className="buddy_item_desc">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="buddy_cta">
+              <LoginButton
+                className="buddy_button"
+                style={{
+                  background: '#676B5D',
+                  backgroundColor: '#676B5D',
+                  color: '#fff',
+                  WebkitTextFillColor: '#fff',
+                }}
+              >
+                <span className="body_b_18">버디 찾기</span>
+              </LoginButton>
+              <button className="buddy_process" type="button">
+                <span className="body_sb_14">어떻게 진행되나요?</span>
+                <img src={arrowR} alt="" className="buddy_process_icon" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="banner_bottom">
+          <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
+            <div className="bottom_text_group">
+              <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
+              <p className="bottom_title">
+                <span className="bottom_title_semibold">안전한 슈팅의</span> 첫 걸음
+              </p>
+            </div>
+            <KeywordTag className="bottom_quiz_tag">
+              <span>퀴즈 풀기</span>
+              <img src={mainQuizRIcon} alt="" className="bottom_quiz_tag_icon" aria-hidden="true" />
+            </KeywordTag>
+            <img src={mainQuizImg} alt="" className="bottom_quiz_img" aria-hidden="true" />
+          </Link>
+          <div className="right">
+            <div className="right_title_group">
+              <p className="right_brand">GUNIT</p>
+              <p className="right_title">인기 질문&amp;팁</p>
+            </div>
+            <div className="right_tag_group">
+              <p>#뉴비필독</p>
+              <p>#AI가_답변완료</p>
+            </div>
+            <img src={mainQnaImg} alt="" className="right_img" aria-hidden="true" />
+          </div>
+        </div>
+      </section>
 
       <div className="bottom">
         {/* ⑤ 팀 추천 섹션 */}
@@ -314,9 +442,19 @@ export function Home() {
               </Link>
             ))}
           </div>
-          <button className="home_tournament_join_button" type="button" aria-disabled="true">
-            투표하러 가기 
-          </button>
+          <div className="home_tournament_join_button_wrap">
+            <LoginButton
+              className="home_tournament_join_button"
+              style={{
+                background: '#1A1A1A',
+                backgroundColor: '#1A1A1A',
+                color: '#D9E5FF',
+                WebkitTextFillColor: '#D9E5FF',
+              }}
+            >
+              <span className="body_m_16">투표하러가기</span>
+            </LoginButton>
+          </div>
         </section>
       </div>
     </div>
