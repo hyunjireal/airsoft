@@ -401,8 +401,22 @@ export function MatchHome() {
 
   const [showTypeSheet, setShowTypeSheet] = useState(false)
 
-  const handleTypeSelect = (kind: 'personal' | 'team' | 'guest') => {
+  const handleTypeSelect = (kind: 'personal' | 'team' | 'guest', guestFlow?: 'wanted' | 'join') => {
+    if (kind !== 'guest') {
+      return
+    }
+
     setShowTypeSheet(false)
+    if (guestFlow === 'wanted') {
+      navigate('/match/create/guest-wanted')
+      return
+    }
+
+    if (guestFlow === 'join') {
+      navigate('/match/create/guest-join')
+      return
+    }
+
     navigate(`/match/create?kind=${kind}`)
   }
 
@@ -528,7 +542,7 @@ export function MatchHome() {
                     </div>
                   ))}
                 </div>
-                <Link className="match_full_button match_dark_button" to="/match/list">전체 보기</Link>
+                <button className="match_full_button match_dark_button" type="button">전체 보기</button>
               </>
             ) : (
               <article className="match_empty_recommend_card">
