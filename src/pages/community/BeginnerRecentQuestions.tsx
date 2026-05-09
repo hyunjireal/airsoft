@@ -8,6 +8,7 @@ const categoryTabs = ['전체', '법규/규정', '장비추천', '수리/튜닝'
 
 const recentQuestions = [
   {
+    id: 'q-001',
     title: '서바이벌 게임에서 꼭 지켜야 할 기본 규칙이 궁금해요!',
     category: '법규/규정',
     author: '화가난병아리',
@@ -17,6 +18,7 @@ const recentQuestions = [
     recommended: true,
   },
   {
+    id: 'q-002',
     title: '서바이벌 게임용 장비는 어떻게 안전하게 사용하는 게 좋나요?',
     category: '장비 사용법',
     author: '게임마스터',
@@ -25,6 +27,7 @@ const recentQuestions = [
     comments: '120',
   },
   {
+    id: 'q-003',
     title: '초보자를 위한 효과적인 팀 전략이 있나요?',
     category: '전략/전술',
     author: '전략가인호',
@@ -33,6 +36,7 @@ const recentQuestions = [
     comments: '98',
   },
   {
+    id: 'q-004',
     title: '서바이벌 게임 중 부상 방지를 위한 주의사항은 무엇인가요?',
     category: '안전 수칙',
     author: '안전지킴이',
@@ -77,11 +81,11 @@ export function BeginnerRecentQuestions() {
 
         <div className="beginner_question_list">
           {recentQuestions.map((question) => (
-            <article
-              className="beginner_question_card beginner_recent_question_card"
-              key={question.title}
-              onClick={() => navigate('/community/beginner/recent/first')}
-            >
+	            <article
+	              className="beginner_question_card beginner_recent_question_card"
+	              key={question.title}
+	              onClick={() => navigate(`/community/post/${question.id}`)}
+	            >
               <div className="beginner_question_body">
                 <div className="beginner_question_labels">
                   {question.recommended ? <span className="recommend_label">★ 추천 질문</span> : null}

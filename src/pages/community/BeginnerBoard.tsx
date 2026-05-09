@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import bookmarkIcon from "../../asset/icons/com_bookmark.svg";
 import bookmarkOnIcon from "../../asset/icons/com_bookmark_on.svg";
 import chatSmallIcon from "../../asset/icons/com_chat02.svg";
@@ -135,15 +135,15 @@ export function BeginnerBoard() {
   };
 
   return (
-    <div
-      className="beginner_board_page"
-      style={{
-        marginTop: "-140px",
-        paddingTop: "120px",
-        background: "linear-gradient(180deg, #E5EAD7 0 240px, #FFFFFF 240px)",
-      }}
-    >
+    <div className="beginner_board_page">
       <section className="beginner_hero" aria-label="초보 질문방 소개">
+        <nav className="community_tabs" aria-label="커뮤니티 게시판 탭">
+          <NavLink to="/community" end>
+            초보 질문방
+          </NavLink>
+          <NavLink to="/community/free">일반 게시판</NavLink>
+        </nav>
+
         <div className="beginner_hero_content">
           <span className="beginner_hero_badge">
             <img src={safetyIcon} alt="" />
@@ -302,11 +302,11 @@ export function BeginnerBoard() {
                 const bookmarked = bookmarkedIds.has(question.id);
 
                 return (
-                  <article
-                    className="beginner_question_card"
-                    key={question.id}
-                    onClick={() => navigate("/community/beginner/recent/first")}
-                  >
+	                  <article
+	                    className="beginner_question_card"
+	                    key={question.id}
+	                    onClick={() => navigate(`/community/post/${question.id}`)}
+	                  >
                     <div className="beginner_question_card_header">
                       <div className="beginner_question_labels">
                         <span className="beginner_question_card_category">

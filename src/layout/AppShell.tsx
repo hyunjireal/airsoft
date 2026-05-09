@@ -6,10 +6,14 @@ export function AppShell() {
   const navigate = useNavigate()
   const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
   const isBeginnerBoardHome = location.pathname === '/community'
-  const keepTopInset = isBeginnerBoardHome
+  const isGeneralBoardHome = location.pathname === '/community/free'
+  const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
+  const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
     !isBeginnerBoardHome &&
+    !isGeneralBoardHome &&
+    !isCommunityPostDetail &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'
 
