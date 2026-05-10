@@ -1,15 +1,15 @@
 .community_page {
   min-height: 100vh;
-  padding: 0 0 190px;
+  padding: 0;
   background: #ffffff;
 }
 
 .community_page:has(.beginner_board_page) {
-  padding-bottom: 95px;
+  padding-bottom: 0;
 }
 
 .community_page:has(.general_board_page) {
-  padding-bottom: 95px;
+  padding-bottom: 0;
 }
 
 .community_tabs {

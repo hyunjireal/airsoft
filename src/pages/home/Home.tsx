@@ -1,5 +1,5 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
@@ -167,6 +167,7 @@ function useDragScroll() {
 }
 
 export function Home() {
+  const navigate = useNavigate()
   const matchDragScroll = useDragScroll()
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
@@ -445,6 +446,7 @@ export function Home() {
           <div className="home_tournament_join_button_wrap">
             <LoginButton
               className="home_tournament_join_button"
+              onClick={() => navigate('/tournament/mvp-vote')}
               style={{
                 background: '#1A1A1A',
                 backgroundColor: '#1A1A1A',

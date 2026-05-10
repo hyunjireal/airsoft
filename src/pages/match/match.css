@@ -842,45 +842,11 @@
   color: #ffffff;
 }
 
-/* ── Create floating button ───────────────────────────────────── */
-
-.match_create_floating {
-  position: fixed;
-  left: var(--nav-my-center-x);
-  right: auto;
-  bottom: calc(var(--app-header-height) + var(--floating-header-gap) + var(--floating-stack-gap));
-  z-index: 21;
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  transform: translateX(-50%);
-}
-
-.match_create_fab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: max-content;
-  min-width: 92px;
-  height: 44px;
-  padding: 0 14px;
-  border: 2px solid #111111;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.14);
-  font-size: 13px;
-  font-weight: 800;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
 /* ── Create / AI match pages ──────────────────────────────────── */
 
 .match_create_page {
   min-height: 100vh;
-  padding: 136px 24px 160px;
+  padding: 136px 24px 24px;
   background: #ffffff;
   color: #111111;
 }
@@ -1242,7 +1208,7 @@
 .match_flow_page {
   display: grid;
   gap: 18px;
-  padding: 24px 16px 120px;
+  padding: 24px 16px;
 }
 
 .match_flow_page .button:disabled {

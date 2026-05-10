@@ -8,12 +8,14 @@ export function AppShell() {
   const isBeginnerBoardHome = location.pathname === '/community'
   const isGeneralBoardHome = location.pathname === '/community/free'
   const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
+  const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&
     !isCommunityPostDetail &&
+    !isTournamentMvpVote &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'
 

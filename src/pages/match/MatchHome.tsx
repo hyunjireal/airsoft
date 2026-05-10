@@ -574,16 +574,6 @@ export function MatchHome() {
         </Link>
       </section>
 
-      <div className="match_create_floating">
-        <button
-          className="match_create_fab"
-          type="button"
-          onClick={() => setShowTypeSheet(true)}
-        >
-          만들기 +
-        </button>
-      </div>
-
       <MatchTypeSheet
         open={showTypeSheet}
         onClose={() => setShowTypeSheet(false)}

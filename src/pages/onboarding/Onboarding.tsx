@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Onboarding.css'
@@ -6,6 +6,8 @@ import { InfoScreen, onboardingInfoSlides } from './InfoScreen'
 import { IntroScreen } from './IntroScreen'
 
 const ONBOARDING_SWIPE_THRESHOLD = 48
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
 
 export function Onboarding() {
   const navigate = useNavigate()
@@ -17,6 +19,11 @@ export function Onboarding() {
   const [isDragging, setIsDragging] = useState(false)
   const isIntroScreen = step === 0
   const infoSlideIndex = Math.max(step - 1, 0)
+
+  useEffect(() => {
+    localStorage.removeItem(CREATED_MATCHES_KEY)
+    localStorage.removeItem(CREATED_MATCH_FOCUS_DATE_KEY)
+  }, [])
 
   const resetSwipe = () => {
     swipeStartXRef.current = null
