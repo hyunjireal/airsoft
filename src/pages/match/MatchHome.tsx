@@ -605,7 +605,7 @@ export function MatchHome() {
               backdropFilter: 'blur(11.8px) saturate(180%)',
               WebkitBackdropFilter: 'blur(11.8px) saturate(180%)',
             }}
-            onClick={() => navigate('/tournament')}
+            onClick={() => navigate('/tournament/mvp-vote')}
           >
             투표하기
           </LoginButton>
