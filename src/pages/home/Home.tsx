@@ -1,4 +1,5 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
@@ -129,6 +130,54 @@ const homeAchievementTagStyle: CSSProperties = {
   letterSpacing: 'var(--letter-spacing-tight)',
 }
 
+const visibleAchievementBadges = [
+  {
+    label: '첫 AI 질문 완료',
+    icon: mainProfileTag02,
+    background: '#E0E5EF',
+    color: '#1F2B45',
+  },
+  {
+    label: '친환경 바이오탄 지식인',
+    icon: mainProfileTag01,
+    background: '#EDF4E5',
+    color: '#637A45',
+  },
+]
+
+const hiddenAchievementBadges = [
+  {
+    label: '첫 경기 예약 완료',
+    icon: mainProfileTag02,
+    background: '#F2E8DB',
+    color: '#7A5935',
+  },
+  {
+    label: '안전수칙 퀴즈 통과',
+    icon: mainProfileTag01,
+    background: '#E8F1F4',
+    color: '#416E7A',
+  },
+  {
+    label: '필드 버디 신청',
+    icon: mainProfileTag02,
+    background: '#F1E8F5',
+    color: '#70507A',
+  },
+  {
+    label: '장비 체크 완료',
+    icon: mainProfileTag01,
+    background: '#F4EFE5',
+    color: '#74633F',
+  },
+  {
+    label: '커뮤니티 첫 댓글',
+    icon: mainProfileTag02,
+    background: '#E8F0EA',
+    color: '#4F7359',
+  },
+]
+
 function useDragScroll() {
   const dragState = useRef({
     isDown: false,
@@ -171,6 +220,10 @@ export function Home() {
   const matchDragScroll = useDragScroll()
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
+  const [isAchievementExpanded, setIsAchievementExpanded] = useState(false)
+  const achievementBadges = isAchievementExpanded
+    ? [...visibleAchievementBadges, ...hiddenAchievementBadges]
+    : visibleAchievementBadges
 
   return (
     <div className="home_page">
@@ -191,102 +244,93 @@ export function Home() {
         </section>
 
         {/* ② 사용자 정보 + 경기 일정 */}
-        <section className="home_userinfo">
-          <div className="home_userinfo_summary">
-            <div className="home_userinfo_profile">
-              <div className="home_userinfo_pic_wrap">
-                <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
-                <span className="home_userinfo_pic_badge" aria-hidden="true">
-                  <img src={mainProfileIcon} alt="" className="home_userinfo_pic_badge_icon" />
-                </span>
-              </div>
-              <div className="home_userinfo_tit">
-                <div className="home_userinfo_icons">
-                  <div className="home_userinfo_user_icon">
-                    <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
-                    <span className="body_m_14">안전제일 뉴비</span>
-                  </div>
-                  <button className="home_userinfo_settings" type="button" aria-label="설정">
-                    <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
-                  </button>
+        <div className="home_userinfo_bg">
+          <section className="home_userinfo">
+            <div className="home_userinfo_summary">
+              <div className="home_userinfo_profile">
+                <div className="home_userinfo_pic_wrap">
+                  <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
+                  <span className="home_userinfo_pic_badge" aria-hidden="true">
+                    <img src={mainProfileIcon} alt="" className="home_userinfo_pic_badge_icon" />
+                  </span>
                 </div>
-                <p className="home_userinfo_name">
-                  <span className="home_userinfo_name_user">삼삼오오</span>
-                  <span className="home_userinfo_name_suffix">님</span>
-                  <br />
-                  <span className="home_userinfo_greeting body_m_16">오늘도 안전한 슈팅 하세요!</span>
-                </p>
+                <div className="home_userinfo_tit">
+                  <div className="home_userinfo_icons">
+                    <div className="home_userinfo_user_icon">
+                      <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
+                      <span className="body_m_14">안전제일 뉴비</span>
+                    </div>
+                    <button className="home_userinfo_settings" type="button" aria-label="설정">
+                      <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
+                    </button>
+                  </div>
+                  <p className="home_userinfo_name">
+                    <span className="home_userinfo_name_user">삼삼오오</span>
+                    <span className="home_userinfo_name_suffix">님</span>
+                    <br />
+                    <span className="home_userinfo_greeting body_m_16">오늘도 안전한 슈팅 하세요!</span>
+                  </p>
+                </div>
+              </div>
+
+              <div className="home_userinfo_badge">
+                <div className="home_userinfo_badge_top">
+                  <img src={mainStarIcon} alt="" className="home_userinfo_badge_icon" />
+                  <p className="home_userinfo_badge_title body_sb_16">보유 뱃지</p>
+                </div>
+                <div className="home_userinfo_tag_row">
+                  {achievementBadges.map((badge) => (
+                    <CategoryTag
+                      key={badge.label}
+                      className="home_userinfo_category_tag body_m_14"
+                      style={{
+                        ...homeAchievementTagStyle,
+                        background: badge.background,
+                        color: badge.color,
+                      }}
+                    >
+                      <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
+                      <span>{badge.label}</span>
+                    </CategoryTag>
+                  ))}
+                  {!isAchievementExpanded ? (
+                    <button
+                      className="home_userinfo_category_more body_m_14"
+                      type="button"
+                      onClick={() => setIsAchievementExpanded(true)}
+                      aria-label="숨겨진 보유 뱃지 5개 더 보기"
+                    >
+                      +5
+                    </button>
+                  ) : null}
+                </div>
               </div>
             </div>
 
-            <div className="home_userinfo_badge">
-              <div className="home_userinfo_badge_top">
-                <img src={mainStarIcon} alt="" className="home_userinfo_badge_icon" />
-                <p className="home_userinfo_badge_title body_sb_16">보유 뱃지</p>
+            <div className="home_userinfo_match">
+              <div className="home_userinfo_match_header">
+                <h2 className="home_userinfo_match_title">내 경기 일정</h2>
+                <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
+                  <More />
+                </Link>
               </div>
-              <div className="home_userinfo_tag_row">
-                <div className="home_userinfo_tag_pair">
-                  <CategoryTag
-                    className="home_userinfo_category_tag body_m_14"
-                    style={{
-                      ...homeAchievementTagStyle,
-                      background: '#E0E5EF',
-                      color: '#1F2B45',
-                    }}
-                  >
-                    <img src={mainProfileTag02} alt="" className="home_userinfo_category_icon" />
-                    <span>첫 AI 질문 완료</span>
-                  </CategoryTag>
-                  <CategoryTag
-                    className="home_userinfo_category_tag body_m_14"
-                    style={{
-                      ...homeAchievementTagStyle,
-                      background: '#EDF4E5',
-                      color: '#637A45',
-                    }}
-                  >
-                    <img src={mainProfileTag01} alt="" className="home_userinfo_category_icon" />
-                    <span>친환경 바이오탄 지식인</span>
-                  </CategoryTag>
-                </div>
-                <CategoryTag
-                  className="home_userinfo_category_tag home_userinfo_category_more body_m_14"
-                  style={{
-                    ...homeAchievementTagStyle,
-                    border: '1px solid #636363',
-                    background: '#fff',
-                    color: '#636363',
-                  }}
-                >
-                  +5
-                </CategoryTag>
+              <div className="home_match_scroll" {...matchDragScroll}>
+                {sortedMatchCards.map((card) => (
+                  <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
+                    <div className="home_match_card_top">
+                      <MainTag className="home_match_dday_tag">{card.dday}</MainTag>
+                      <p className="home_match_card_notice">{card.notice}</p>
+                    </div>
+                    <div className="home_match_card_txt">
+                      <p className="home_match_card_place">{card.place}</p>
+                      <p className="home_match_card_datetime">{card.datetime}</p>
+                    </div>
+                  </article>
+                ))}
               </div>
             </div>
-          </div>
-
-          <div className="home_userinfo_match">
-            <div className="home_userinfo_match_header">
-              <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-              <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
-                <More />
-              </Link>
-            </div>
-            <div className="home_match_scroll" {...matchDragScroll}>
-              {sortedMatchCards.map((card) => (
-                <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
-                  <div className="home_match_card_top">
-                    <MainTag className="home_match_dday_tag">{card.dday}</MainTag>
-                    <p className="home_match_card_notice">{card.notice}</p>
-                  </div>
-                  <div className="home_match_card_txt">
-                    <p className="home_match_card_place">{card.place}</p>
-                    <p className="home_match_card_datetime">{card.datetime}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </section>
 
       <section className="banner">
@@ -296,7 +340,7 @@ export function Home() {
             <div className="buddy_text">
               <div className="buddy_tit">
                 <p className="buddy_title body_sb_14">나의 필드 버디</p>
-                <KeywordTag className="buddy_status_tag">
+                <KeywordTag className="buddy_status_tag" style={{ padding: '2px 5px' }}>
                   <img src={mainBuddyClockIcon} alt="" className="buddy_status_icon" />
                   <span>매칭 전</span>
                 </KeywordTag>

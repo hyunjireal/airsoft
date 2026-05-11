@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 50px;
   width: 100%;
   background: #fff;
 }
@@ -42,9 +42,10 @@
 }
 
 .home_main {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  gap: 50px;
   width: 100%;
   padding: 0;
 }
@@ -65,10 +66,13 @@
    ① 히어로 섹션
    ============================================================ */
 .home_hero {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 0;
   width: 100%;
+  height: 435px;
   background-size: cover;
-  background-position: center bottom 70px;
+  background-position: center;
   background-repeat: no-repeat;
   overflow: hidden;
 }
@@ -77,7 +81,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 223px 24px 0 24px;
+  width: 100%;
+  height: 100%;
+  padding: 223px 24px 70px;
+  box-sizing: border-box;
 }
 
 .home_hero_tit {
@@ -111,7 +118,7 @@
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 26px;
   font-weight: 800;
-  color: #000;
+  color: #fff;
   line-height: 120%;
   letter-spacing: -0.03em;
 }
@@ -127,11 +134,28 @@
 /* ============================================================
    ② 사용자 정보 + 경기 일정
    ============================================================ */
+.home_userinfo_bg {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  margin-top: -35px;
+  padding-top: 35px;
+  background:
+    linear-gradient(to bottom, transparent 0, transparent 35px, #fff 35px, #fff 100%),
+    var(--home-userinfo-bg-image, none);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 .home_userinfo {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: 40px;
   width: 100%;
+  margin-top: -35px;
   padding: 35px 25px;
   border-radius: 35px;
   background: #fff;
@@ -292,21 +316,30 @@
 .home_userinfo_tag_row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.home_userinfo_tag_pair {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  justify-content: flex-start;
+  gap: 8px 5px;
   flex-wrap: wrap;
 }
 
 .home_userinfo_category_tag {
   gap: 5px;
   min-height: 26px;
+}
+
+.home_userinfo_category_more {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  min-height: 26px;
+  padding: 4px 8px;
+  border: 1px solid #636363;
+  border-radius: 999px;
+  background: #fff;
+  color: #636363;
+  box-sizing: border-box;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .home_userinfo_category_icon {
