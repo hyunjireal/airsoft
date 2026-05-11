@@ -8,6 +8,7 @@ import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
+import plusIcon from '../../asset/icons/plus.svg'
 import matchNolistImage from '../../asset/images/match_nolist01.png'
 import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
@@ -589,11 +590,12 @@ export function MatchHome() {
           <LoginButton
             className="match_tournament_cta"
             style={{
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              background: 'rgba(238, 33, 6, 0.15)',
+              border: '0',
+              background:
+                'linear-gradient(-145deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.18) 18%, rgba(255, 255, 255, 0.06) 38%, rgba(255, 255, 255, 0) 42%), rgba(238, 33, 6, 0.15)',
               backgroundColor: 'rgba(238, 33, 6, 0.15)',
-              backgroundImage:
-                'linear-gradient(135deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.08) 36%, rgba(255,255,255,0) 62%), linear-gradient(135deg, rgba(238,33,6,0.2), rgba(238,33,6,0.08))',
+              backdropFilter: 'blur(2.8px) saturate(140%)',
+              WebkitBackdropFilter: 'blur(2.8px) saturate(140%)',
               color: '#fff',
               WebkitTextFillColor: '#fff',
               fontSize: 16,
@@ -601,9 +603,7 @@ export function MatchHome() {
               lineHeight: 1.3,
               letterSpacing: '-0.02em',
               boxShadow:
-                'inset 0 1px 0 rgba(255,255,255,0.36), inset 0 -1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18)',
-              backdropFilter: 'blur(11.8px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(11.8px) saturate(180%)',
+                'inset 0 1px 1px rgba(255, 255, 255, 0.47), inset 0 -20px 50px rgba(238, 33, 6, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.08), 0 10px 28px rgba(0, 0, 0, 0.14)',
             }}
             onClick={() => navigate('/tournament/mvp-vote')}
           >
@@ -617,6 +617,10 @@ export function MatchHome() {
         onClose={() => setShowTypeSheet(false)}
         onSelect={handleTypeSelect}
       />
+
+      <button className="match_create_fab" type="button" aria-label="매치 만들기" onClick={() => setShowTypeSheet(true)}>
+        <img src={plusIcon} alt="" aria-hidden="true" />
+      </button>
     </div>
   )
 }
