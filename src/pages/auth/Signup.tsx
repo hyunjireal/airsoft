@@ -1,98 +1,338 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import type { UserLevel } from '../../types'
-import './Auth.css'
+import phoneNumberImage from '../../asset/images/login_number_img.png'
+import iconEyeOff from '../../asset/icons/login_eye_off.svg'
+import iconLocation from '../../asset/icons/login_location.svg'
+import { AuthShell } from './AuthShell'
 
-const skillOptions: Array<{
-  level: Extract<UserLevel, '입문자' | '숙련자'>
-  label: string
+type SignupModeId = 'beginner' | 'veteran'
+
+type SignupMode = {
+  id: SignupModeId
   alias: string
-  description: string
+  formSubtitle: string
   homePreset: string
-}> = [
+  label: string
+  title: string
+  description: string
+}
+
+const signupModes: SignupMode[] = [
   {
-    level: '입문자',
+    id: 'beginner',
     label: '입문자',
     alias: '뉴비',
-    description: '에어소프트건이 처음이거나 아직 배우는 중이에요.',
-    homePreset: 'AI 질문 가이드, 기초 퀴즈',
+    title: '입문자 (뉴비)',
+    description: '에어소프트건이 처음이거나 배우는 중이에요',
+    homePreset: 'AI 질문 가이드, 기초 퀴즈 위주',
+    formSubtitle: '입문자(뉴비) 맞춤 세팅으로 시작합니다.',
   },
   {
-    level: '숙련자',
+    id: 'veteran',
     label: '숙련자',
     alias: '베테랑',
-    description: '내 장비는 내가 정비하고 필드 경험도 많아요.',
-    homePreset: '전술 지도, 경기 매칭, 하이라이트',
+    title: '숙련자 (베테랑)',
+    description: '필드 경험이 많고, 경기 지식이 풍부해요',
+    homePreset: '전술 지도, 경기 매칭 위주',
+    formSubtitle: '숙련자(베테랑) 맞춤 세팅으로 시작합니다.',
   },
 ]
 
+const regionOptions = [
+  '서울',
+  '경기 북부',
+  '경기 남부',
+  '인천',
+  '강원',
+  '대전',
+  '세종',
+  '충북',
+  '충남',
+  '광주',
+  '전북',
+  '전남',
+  '대구',
+  '경북',
+  '부산',
+  '울산',
+  '경남',
+  '제주',
+]
+
+const regionPlaceholder = '활동 지역을 선택해주세요'
+
+function ChevronDownIcon({ className = 'auth_phone_chevron' }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" className={className} viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="m2 4 4 4 4-4"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.4"
+      />
+    </svg>
+  )
+}
+
+function CheckIcon() {
+  return (
+    <svg aria-hidden="true" className="auth_region_sheet_check" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M3.5 8.3 6.7 11.4 12.5 4.8"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
+  )
+}
+
 export function Signup() {
   const navigate = useNavigate()
-  const [step, setStep] = useState<'skill' | 'profile'>('skill')
-  const [nickname, setNickname] = useState('삼삼오오')
-  const [email, setEmail] = useState('rookie@airsoft.test')
-  const [password, setPassword] = useState('airsoft1234')
-  const [region, setRegion] = useState('서울 마포구')
-  const [level, setLevel] = useState<UserLevel>('입문자')
+  const [step, setStep] = useState<'level' | 'profile'>('level')
+  const [selectedModeId, setSelectedModeId] = useState<SignupModeId>('beginner')
+  const [nickname, setNickname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [region, setRegion] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [regionSheetOpen, setRegionSheetOpen] = useState(false)
 
-  const selectedSkill = skillOptions.find((option) => option.level === level) ?? skillOptions[0]
+  const selectedMode = signupModes.find((mode) => mode.id === selectedModeId) ?? signupModes[0]
 
-  const signup = () => {
+  useEffect(() => {
+    if (!regionSheetOpen) {
+      return undefined
+    }
+
+    const previousOverflow = document.body.style.overflow
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setRegionSheetOpen(false)
+      }
+    }
+
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [regionSheetOpen])
+
+  const goBack = () => {
+    if (regionSheetOpen) {
+      setRegionSheetOpen(false)
+      return
+    }
+
+    if (step === 'profile') {
+      setStep('level')
+      return
+    }
+
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
+    navigate('/onboarding')
+  }
+
+  const handleRegionSelect = (option: string) => {
+    setRegion(option)
+    setRegionSheetOpen(false)
+  }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
     localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem('nickname', nickname || '삼삼오오 유저')
-    localStorage.setItem('email', email || '미설정')
-    localStorage.setItem('region', region || '미설정')
-    localStorage.setItem('level', level)
-    localStorage.setItem('skillAlias', selectedSkill.alias)
-    localStorage.setItem('homePreset', selectedSkill.homePreset)
+    localStorage.setItem('nickname', nickname || '에어스쿼드 유저')
+    localStorage.setItem('email', email || 'rookie@airsoft.test')
+    localStorage.setItem('region', region || '서울')
+    localStorage.setItem('level', selectedMode.label)
+    localStorage.setItem('skillAlias', selectedMode.alias)
+    localStorage.setItem('homePreset', selectedMode.homePreset)
+
     navigate('/home')
   }
 
-  if (step === 'skill') {
-    return (
-      <main className="mobile_frame standalone_page signup_flow">
-        <section className="list">
-          <div>
-            <h1 className="page_title">실력을 먼저 알려주세요</h1>
-            <p className="page_description">선택한 값에 맞춰 가입 후 홈 화면 구성을 저장해둘게요.</p>
-          </div>
-          {skillOptions.map((option) => (
-            <button
-              key={option.level}
-              className={`card signup_choice_card ${level === option.level ? 'selected' : ''}`}
-              type="button"
-              onClick={() => setLevel(option.level)}
-            >
-              <strong>{option.label} ({option.alias})</strong>
-              <span>{option.description}</span>
-              <small>홈 세팅: {option.homePreset} 위주</small>
-            </button>
-          ))}
-        </section>
-        <button className="button primary_button" type="button" onClick={() => setStep('profile')}>
-          다음
-        </button>
-      </main>
-    )
-  }
-
   return (
-    <main className="mobile_frame standalone_page signup_flow">
-      <div>
-        <h1 className="page_title">회원가입</h1>
-        <p className="page_description">{selectedSkill.label} ({selectedSkill.alias}) 홈 세팅으로 시작합니다.</p>
-      </div>
-      <label className="field">닉네임<input className="input" value={nickname} onChange={(event) => setNickname(event.target.value)} /></label>
-      <label className="field">이메일<input className="input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} /></label>
-      <label className="field">비밀번호<input className="input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} /></label>
-      <label className="field">활동 지역<input className="input" value={region} onChange={(event) => setRegion(event.target.value)} /></label>
-      <article className="card">
-        <h2 className="section_title">선택한 실력</h2>
-        <p>{selectedSkill.label} ({selectedSkill.alias})</p>
-        <p className="muted">{selectedSkill.homePreset} 위주로 홈 화면 세팅</p>
-      </article>
-      <button className="button primary_button" type="button" onClick={signup}>가입하고 시작하기</button>
-      <button className="button" type="button" onClick={() => setStep('skill')}>이전</button>
-    </main>
+    <AuthShell onBack={goBack}>
+      {step === 'level' ? (
+        <section className="auth_page_body auth_signup_level_page">
+          <div className="auth_page_header auth_page_header_center">
+            <h1 className="auth_page_title auth_page_title_medium">실력을 먼저 알려주세요</h1>
+            <p className="auth_page_description auth_page_description_center">
+              선택한 실력에 맞춰 가입 후 홈 화면을 맞춤 설정해드릴게요
+            </p>
+          </div>
+
+          <div className="auth_option_list">
+            {signupModes.map((mode) => (
+              <button
+                key={mode.id}
+                className={`auth_option_card ${selectedMode.id === mode.id ? 'is_selected' : ''}`}
+                type="button"
+                onClick={() => setSelectedModeId(mode.id)}
+              >
+                <strong>{mode.title}</strong>
+                <span>{mode.description}</span>
+                <small>홈 세팅 : {mode.homePreset}</small>
+              </button>
+            ))}
+          </div>
+
+          <button className="auth_primary_button auth_page_footer_button" type="button" onClick={() => setStep('profile')}>
+            다음
+          </button>
+        </section>
+      ) : (
+        <form className="auth_page_body auth_signup_form_page" onSubmit={handleSubmit}>
+          <div className="auth_page_header auth_page_header_left">
+            <h1 className="auth_page_title">회원가입</h1>
+            <p className="auth_page_description">{selectedMode.formSubtitle}</p>
+          </div>
+
+          <div className="auth_form_block auth_form_block_signup">
+            <label className="auth_field">
+              <span className="auth_field__label">닉네임</span>
+              <input
+                className="auth_input"
+                type="text"
+                value={nickname}
+                placeholder="닉네임을 입력해주세요"
+                onChange={(event) => setNickname(event.target.value)}
+              />
+            </label>
+
+            <label className="auth_field">
+              <span className="auth_field__label">이메일</span>
+              <input
+                className="auth_input"
+                type="email"
+                value={email}
+                placeholder="이메일을 입력해주세요"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </label>
+
+            <label className="auth_field">
+              <span className="auth_field__label">비밀번호</span>
+              <span className="auth_input_wrap">
+                <input
+                  className="auth_input"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  placeholder="비밀번호를 입력해주세요"
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button
+                  className="auth_input_icon_button"
+                  type="button"
+                  aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+                  onClick={() => setShowPassword((current) => !current)}
+                >
+                  <img src={iconEyeOff} alt="" aria-hidden="true" />
+                </button>
+              </span>
+            </label>
+
+            <label className="auth_field">
+              <span className="auth_field__label">활동지역</span>
+              <button
+                className="auth_region_field_button"
+                type="button"
+                aria-expanded={regionSheetOpen}
+                aria-haspopup="dialog"
+                onClick={() => setRegionSheetOpen(true)}
+              >
+                <span className={`auth_region_field_value ${region ? '' : 'is_placeholder'}`}>
+                  {region || regionPlaceholder}
+                </span>
+                <span className="auth_region_field_suffix" aria-hidden="true">
+                  <img src={iconLocation} alt="" />
+                  <ChevronDownIcon className="auth_region_field_chevron" />
+                </span>
+              </button>
+            </label>
+
+            <label className="auth_field">
+              <span className="auth_field__label">전화번호</span>
+              <span className="auth_phone_input">
+                <span className="auth_phone_prefix" aria-hidden="true">
+                  <img className="auth_phone_flag" src={phoneNumberImage} alt="" />
+                  <ChevronDownIcon />
+                </span>
+                <input
+                  className="auth_input auth_phone_number"
+                  type="tel"
+                  value={phoneNumber}
+                  placeholder="(000) 000-0000"
+                  onChange={(event) => setPhoneNumber(event.target.value)}
+                />
+              </span>
+            </label>
+          </div>
+
+          <button className="auth_primary_button auth_page_footer_button" type="submit">
+            시작하기
+          </button>
+
+          {regionSheetOpen ? (
+            <div className="auth_region_sheet_backdrop" onClick={() => setRegionSheetOpen(false)}>
+              <div
+                className="auth_region_sheet"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="auth-region-sheet-title"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <span className="auth_region_sheet_handle" aria-hidden="true" />
+
+                <div className="auth_region_sheet_header">
+                  <div>
+                    <h2 className="auth_region_sheet_title" id="auth-region-sheet-title">
+                      활동 지역 선택
+                    </h2>
+                  </div>
+
+                  <button className="auth_region_sheet_close" type="button" onClick={() => setRegionSheetOpen(false)}>
+                    닫기
+                  </button>
+                </div>
+
+                <div className="auth_region_sheet_list">
+                  {regionOptions.map((option) => {
+                    const isSelected = region === option
+
+                    return (
+                      <button
+                        key={option}
+                        className={`auth_region_sheet_option ${isSelected ? 'is_selected' : ''}`}
+                        type="button"
+                        aria-pressed={isSelected}
+                        onClick={() => handleRegionSelect(option)}
+                      >
+                        <span>{option}</span>
+                        {isSelected ? <CheckIcon /> : null}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </form>
+      )}
+    </AuthShell>
   )
 }

@@ -79,6 +79,7 @@
   --floating-header-gap: 12px;
   --floating-stack-gap: 52px;
   --nav-my-center-x: calc(100vw - var(--app-edge-offset) - 44px);
+  --standalone-footer-offset: calc(env(safe-area-inset-bottom, 0px) + 47px);
 }
 
 .sub_kr {
