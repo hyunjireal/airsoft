@@ -285,8 +285,8 @@ a {
   padding-bottom: var(--app-bottom-safe-area);
 }
 
-.mobile_frame.without_app_header > main {
-  padding-bottom: 0;
+.creator_profile_frame > main {
+  padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
 }
 
 .app_back_button {

@@ -5,6 +5,8 @@ export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
+  const isCreatorProfile =
+    location.pathname.startsWith('/creator/') && location.pathname !== '/creator/list'
   const isBeginnerBoardHome = location.pathname === '/community'
   const isGeneralBoardHome = location.pathname === '/community/free'
   const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
@@ -12,6 +14,7 @@ export function AppShell() {
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
+    !isCreatorProfile &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&
     !isCommunityPostDetail &&
@@ -31,8 +34,14 @@ export function AppShell() {
   return (
     <div
       className={`mobile_frame ${
-        showBackButton ? 'has_app_back_button' : keepTopInset ? 'has_app_top_inset' : ''
-      } ${isCommunityPostDetail ? 'without_app_header' : ''}`}
+        isCreatorProfile
+          ? 'creator_profile_frame'
+          : showBackButton
+            ? 'has_app_back_button'
+            : keepTopInset
+              ? 'has_app_top_inset'
+              : ''
+      }`}
     >
       {showBackButton ? (
         <button className="app_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
