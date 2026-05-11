@@ -98,19 +98,16 @@ const buddyItems = [
     id: 1,
     image: mainBuddy02,
     title: '장비 체크',
-    desc: <>출발 전<br />점검 지원</>,
   },
   {
     id: 2,
     image: mainBuddy03,
     title: '룰 안내',
-    desc: <>필드 룰<br />쉽게 안내</>,
   },
   {
     id: 3,
     image: mainBuddy04,
     title: '첫 라운드 동행',
-    desc: <>안심하고<br />함께 라운드</>,
   },
 ]
 
@@ -364,7 +361,6 @@ export function Home() {
                   <img src={item.image} alt="" className="buddy_item_img" />
                   <div className="buddy_item_text">
                     <p className="buddy_item_title body_sb_14">{item.title}</p>
-                    <p className="buddy_item_desc">{item.desc}</p>
                   </div>
                 </div>
               ))}
