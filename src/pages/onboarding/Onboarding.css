@@ -48,7 +48,7 @@
   justify-content: space-between;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 160px 24px 67px;
+  padding: 160px 24px var(--standalone-footer-offset);
 }
 
 .onboarding_intro__hero {
@@ -217,10 +217,9 @@
 .onboarding_panel__actions {
   display: grid;
   gap: 12px;
-  padding: 0 24px 50px;
-  min-height: 196px;
+  padding: 0 24px var(--standalone-footer-offset);
   margin-top: auto;
-  align-content: center;
+  align-content: end;
 }
 
 @supports (min-height: 100svh) {

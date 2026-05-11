@@ -25,7 +25,7 @@ const signupButtonStyle: CSSProperties = {
   backgroundImage: 'none',
   color: '#1A1A1A',
   WebkitTextFillColor: '#1A1A1A',
-  fontFamily: "'Pretendard', system-ui, sans-serif",
+  fontFamily: "var(--font-pretendard)",
   fontSize: 18,
   fontWeight: 700,
   lineHeight: 1.3,

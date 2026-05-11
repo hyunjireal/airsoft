@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import iconArrowLeft from '../../asset/icons/arrow_l.svg'
@@ -20,7 +20,7 @@ type MatchCard = {
 const upcomingMatches: MatchCard[] = [
   {
     id: 'upcoming-1',
-    title: '초보 환영 야외전',
+    title: '초보 환영 주말전',
     detail: '5/23 (토) 13:00 택티컬 필드',
     tagLabel: 'D-14',
     to: '/match/match-001',
@@ -28,7 +28,7 @@ const upcomingMatches: MatchCard[] = [
   {
     id: 'upcoming-2',
     title: '서울 CQB 입문 경기',
-    detail: '5/31 (일) 12:00 어반 CQB',
+    detail: '5/31 (토) 12:00 어반 CQB',
     tagLabel: 'D-22',
     to: '/match/match-003',
   },
@@ -38,7 +38,7 @@ const pastMatches: MatchCard[] = [
   {
     id: 'past-1',
     title: '2026 5월 입문자 경기',
-    detail: '5/2 (일) 10:00 하남 실내 필드',
+    detail: '5/2 (토) 10:00 하남 실내 필드',
     tagLabel: '지난 매치',
     to: '/my/schedule',
   },
@@ -46,14 +46,14 @@ const pastMatches: MatchCard[] = [
 
 const teamMenuItems = [
   { label: '나의 소속 팀', to: '/team/team-001' },
-  { label: '내가 생성한 팀', to: '/team/create' },
+  { label: '팀 생성하기', to: '/team/create' },
   { label: '버디 매칭', to: '/home' },
 ]
 
 const communityMenuItems = [
-  { label: '내가 쓴 글', to: '/my/posts' },
+  { label: '나의 쓴 글', to: '/my/posts' },
   { label: '내 질문', to: '/community/beginner/recent' },
-  { label: '내가 저장한 글', to: '/community/free' },
+  { label: '나의 저장한 글', to: '/community/free' },
 ]
 
 const settingsItems = [
@@ -115,9 +115,25 @@ export function MyPage() {
   const navigate = useNavigate()
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true')
   const [matchTab, setMatchTab] = useState<MatchTab>('다가오는 매치')
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false)
   const savedNickname = localStorage.getItem('nickname')
   const profileName = !savedNickname || savedNickname === '에어소프트 루키' ? '삼삼오오' : savedNickname
   const visibleMatches = matchTab === '다가오는 매치' ? upcomingMatches : pastMatches
+
+  useEffect(() => {
+    if (!logoutModalOpen) {
+      return
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLogoutModalOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [logoutModalOpen])
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -128,9 +144,18 @@ export function MyPage() {
     navigate('/home')
   }
 
-  const logout = () => {
+  const confirmLogout = () => {
+    localStorage.removeItem('nickname')
+    localStorage.removeItem('email')
+    localStorage.removeItem('region')
+    localStorage.removeItem('level')
+    localStorage.removeItem('skillAlias')
+    localStorage.removeItem('homePreset')
+    localStorage.removeItem('rememberLogin')
     localStorage.removeItem('isLoggedIn')
     setLoggedIn(false)
+    setLogoutModalOpen(false)
+    navigate('/onboarding', { replace: true })
   }
 
   if (!loggedIn) {
@@ -233,11 +258,47 @@ export function MyPage() {
               <img alt="" aria-hidden="true" className="my_menu_arrow" src={iconArrowRight} />
             </Link>
           ))}
-          <button className="my_logout_button" type="button" onClick={logout}>
+          <button className="my_logout_button" type="button" onClick={() => setLogoutModalOpen(true)}>
             로그아웃
           </button>
         </div>
       </section>
+
+      {logoutModalOpen ? (
+        <div
+          className="my_logout_modal_backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="my-logout-title"
+          aria-describedby="my-logout-description"
+          onClick={() => setLogoutModalOpen(false)}
+        >
+          <div className="my_logout_modal" onClick={(event) => event.stopPropagation()}>
+            <h2 id="my-logout-title">로그아웃 하시겠습니까?</h2>
+            <p id="my-logout-description">
+              현재 계정에서 로그아웃하고
+              <br />
+              온보딩 첫 화면으로 이동합니다
+            </p>
+            <div className="my_logout_modal_actions">
+              <button
+                className="my_logout_modal_button my_logout_modal_button_secondary"
+                type="button"
+                onClick={() => setLogoutModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="my_logout_modal_button my_logout_modal_button_primary"
+                type="button"
+                onClick={confirmLogout}
+              >
+                로그아웃
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
