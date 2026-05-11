@@ -770,76 +770,139 @@
 
 /* ── Tournament card ──────────────────────────────────────────── */
 
-.match_tournament_card {
+.match_tournament_section {
   position: relative;
-  display: grid;
-  place-items: center;
-  min-height: 88px;
+  isolation: isolate;
   overflow: hidden;
-  gap: 0;
-  padding: 16px;
-  border-radius: 8px;
-  background:
-    radial-gradient(circle at 70% 45%, rgba(218, 255, 35, 0.22), transparent 26%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.52), rgba(0, 0, 0, 0.2)),
-    linear-gradient(135deg, #0c1013 0%, #2a3337 45%, #0d0d0d 100%);
-  color: #ffffff;
-  text-align: center;
+  min-height: 286px;
+  padding: 24px;
+  border-radius: 10px;
 }
 
-.match_tournament_card h2,
-.match_tournament_card p {
+.match_tournament_section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url('../../asset/images/match_tournamentBanner.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.match_tournament_card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 100%;
+  gap: 30px;
+  padding: 0;
+  color: #ffffff;
+}
+
+.match_tournament_tag {
+  gap: 5px;
+  color: #ffffff;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.match_tournament_tag_dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.match_tournament_textbox,
+.match_tournament_titlebox,
+.match_tournament_info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.match_tournament_textbox {
+  gap: 16px;
+  max-width: 100%;
+}
+
+.match_tournament_titlebox {
+  gap: 4px;
+}
+
+.match_tournament_title,
+.match_tournament_desc,
+.match_tournament_info p {
   margin: 0;
 }
 
-.match_tournament_card h2 {
-  color: #d9ff22;
-  font-size: 20px;
-  font-weight: 1000;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
+.match_tournament_title {
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-20);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  color: #ffffff;
+  word-break: keep-all;
 }
 
-.match_tournament_card p,
-.match_tournament_actions {
-  display: none;
+.match_tournament_title span {
+  color: #E2FD34;
 }
 
-.match_badge {
-  display: inline-flex;
+.match_tournament_desc {
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  color: #D9D9D9;
+  word-break: keep-all;
+}
+
+.match_tournament_info {
+  max-width: 100%;
   width: fit-content;
-  padding: 0;
-  border-radius: 999px;
-  background: transparent;
+  height: fit-content;
+  gap: 2px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.match_tournament_time {
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.16em;
 }
 
-.match_yellow_button,
-.match_ghost_button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 0 10px;
-  border-radius: 7px;
-  font-size: 13px;
-  font-weight: 900;
+.match_tournament_matchup {
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  color: #ADADAD;
 }
 
-.match_yellow_button {
-  border: 1px solid #ffd42a;
-  background: #ffd42a;
-  color: #111111;
-  cursor: pointer;
-}
-
-.match_ghost_button {
-  border: 1px solid rgba(255, 255, 255, 0.75);
-  background: rgba(255, 255, 255, 0.04);
-  color: #ffffff;
+.match_tournament_cta {
+  width: 100%;
+  min-height: 50px;
+  border-radius: 10px;
 }
 
 /* ── Create / AI match pages ──────────────────────────────────── */
@@ -1743,6 +1806,21 @@
 
 .mts_option:active {
   background: #eeeeee;
+}
+
+.mts_option.is_unavailable {
+  cursor: default;
+}
+
+.mts_option.is_unavailable .mts_option_image,
+.mts_option.is_unavailable .mts_option_arrow {
+  filter: grayscale(1);
+  opacity: 0.42;
+}
+
+.mts_option.is_unavailable .mts_option_label,
+.mts_option.is_unavailable .mts_option_desc {
+  color: #9f9f9f;
 }
 
 .mts_option_image {

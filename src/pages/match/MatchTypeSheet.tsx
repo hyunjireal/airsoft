@@ -112,8 +112,9 @@ export function MatchTypeSheet({ open, onClose, onSelect }: Props) {
               {currentOptions.map((opt) => (
                 <button
                   key={`${step}-${opt.label}`}
-                  className="mts_option"
+                  className={`mts_option ${!opt.hasNext ? 'is_unavailable' : ''}`}
                   type="button"
+                  aria-disabled={!opt.hasNext}
                   onClick={() => handleSelect(opt)}
                 >
                   <img className="mts_option_image" src={opt.imageSrc} alt="" aria-hidden="true" />

@@ -566,12 +566,50 @@ export function MatchHome() {
         </div>
       </section>
 
-      <section className="match_section" aria-labelledby="match-tournament-title">
-        <Link className="match_tournament_card" to="/tournament">
-          <span className="match_badge">Coming Soon</span>
-          <h2 id="match-tournament-title">공식 토너먼트 준비 중</h2>
-          <p>추후 하이라이트와 MVP 투표로 연결될 예정이에요.</p>
-        </Link>
+      <section className="match_section match_tournament_section" aria-labelledby="match-tournament-title">
+        <article className="match_tournament_card">
+          <MainTag className="match_tournament_tag" style={{ padding: '3px 8px', background: '#EE2106' }}>
+            <span className="match_tournament_tag_dot" aria-hidden="true" />
+            <span>토너먼트 진행중</span>
+          </MainTag>
+
+          <div className="match_tournament_textbox">
+            <div className="match_tournament_titlebox">
+              <h2 id="match-tournament-title" className="match_tournament_title">
+                곧 시작되는 <span>4강전</span>
+              </h2>
+              <p className="match_tournament_desc">치열한 승부가 펼쳐집니다!</p>
+            </div>
+            <div className="match_tournament_info">
+              <p className="match_tournament_time">오늘 18:00</p>
+              <p className="match_tournament_matchup">바주카 VS 블랙워터</p>
+            </div>
+          </div>
+
+          <LoginButton
+            className="match_tournament_cta"
+            style={{
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              background: 'rgba(238, 33, 6, 0.15)',
+              backgroundColor: 'rgba(238, 33, 6, 0.15)',
+              backgroundImage:
+                'linear-gradient(135deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.08) 36%, rgba(255,255,255,0) 62%), linear-gradient(135deg, rgba(238,33,6,0.2), rgba(238,33,6,0.08))',
+              color: '#fff',
+              WebkitTextFillColor: '#fff',
+              fontSize: 16,
+              fontWeight: 500,
+              lineHeight: 1.3,
+              letterSpacing: '-0.02em',
+              boxShadow:
+                'inset 0 1px 0 rgba(255,255,255,0.36), inset 0 -1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18)',
+              backdropFilter: 'blur(11.8px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(11.8px) saturate(180%)',
+            }}
+            onClick={() => navigate('/tournament')}
+          >
+            투표하기
+          </LoginButton>
+        </article>
       </section>
 
       <MatchTypeSheet
