@@ -231,10 +231,13 @@ export function PostDetail() {
   const [modalOpen, setModalOpen] = useState(false)
   const [postLiked, setPostLiked] = useState(false)
   const [postLikes, setPostLikes] = useState(12)
+  const [comments, setComments] = useState<DetailComment[]>(detailComments)
   const [commentReactions, setCommentReactions] = useState<Record<string, { liked: boolean; likes: number }>>(() =>
     Object.fromEntries(detailComments.map((comment) => [comment.id, { liked: Boolean(comment.liked), likes: comment.likes }])),
   )
   const [commentInput, setCommentInput] = useState('')
+  const [openReplyIds, setOpenReplyIds] = useState<string[]>([])
+  const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
   const boardPost = boardPosts.find((item) => item.id === id)
   const detailPost = id ? detailPostMap[id] : undefined
   const post = detailPost ?? (boardPost
@@ -250,6 +253,9 @@ export function PostDetail() {
         recommended: boardPost.isBeginnerQuestion,
       }
     : undefined)
+  const initialVisibleCommentCount = detailComments.length + detailComments.reduce((total, comment) => total + comment.replies.length, 0)
+  const visibleCommentCount = comments.length + comments.reduce((total, comment) => total + comment.replies.length, 0)
+  const postCommentCount = post ? post.comments + Math.max(visibleCommentCount - initialVisibleCommentCount, 0) : 0
 
   if (!post) {
     return <div className="page"><h1 className="page_title">게시글을 찾을 수 없어요</h1></div>
@@ -261,12 +267,59 @@ export function PostDetail() {
   }
 
   const submitComment = () => {
-    if (!commentInput.trim()) {
+    const body = commentInput.trim()
+
+    if (!body) {
       setModalOpen(true)
       return
     }
 
+    const commentId = `detail-comment-user-${Date.now()}`
+    const nextComment: DetailComment = {
+      id: commentId,
+      author: '나',
+      time: '방금 전',
+      body,
+      likes: 0,
+      replies: [],
+    }
+
+    setComments((items) => [...items, nextComment])
+    setCommentReactions((reactions) => ({ ...reactions, [commentId]: { liked: false, likes: 0 } }))
     setCommentInput('')
+  }
+
+  const toggleReplyInput = (commentId: string) => {
+    setOpenReplyIds((ids) => (ids.includes(commentId) ? ids.filter((item) => item !== commentId) : [...ids, commentId]))
+  }
+
+  const submitReply = (commentId: string) => {
+    const body = replyInputs[commentId]?.trim()
+
+    if (!body) {
+      setModalOpen(true)
+      return
+    }
+
+    setComments((items) =>
+      items.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: [
+                ...comment.replies,
+                {
+                  author: '나',
+                  time: '방금 전',
+                  body,
+                },
+              ],
+            }
+          : comment,
+      ),
+    )
+    setReplyInputs((inputs) => ({ ...inputs, [commentId]: '' }))
+    setOpenReplyIds((ids) => (ids.includes(commentId) ? ids : [...ids, commentId]))
   }
 
   const toggleCommentLike = (commentId: string) => {
@@ -312,7 +365,7 @@ export function PostDetail() {
               </span>
               <span>
                 <img src={chatSmallIcon} alt="" />
-                {post.comments}
+                {postCommentCount}
               </span>
             </div>
           </div>
@@ -333,10 +386,10 @@ export function PostDetail() {
       </article>
 
       <section className="post_detail_comments">
-        <h2>댓글 {Math.min(post.comments, 3)}</h2>
+        <h2>댓글 {postCommentCount}</h2>
 
         <div className="post_detail_comment_list">
-          {detailComments.map((comment) => {
+          {comments.map((comment) => {
             const reaction = commentReactions[comment.id] ?? { liked: false, likes: comment.likes }
 
             return (
@@ -353,7 +406,7 @@ export function PostDetail() {
                   <p>{comment.body}</p>
 
                   <div className="post_detail_comment_actions">
-                    <button type="button">
+                    <button type="button" onClick={() => toggleReplyInput(comment.id)}>
                       답글 <span>{comment.replies.length}</span>
                     </button>
                     <button
@@ -380,6 +433,23 @@ export function PostDetail() {
                     <p>{reply.body}</p>
                   </div>
                 ))}
+
+                {openReplyIds.includes(comment.id) ? (
+                  <form
+                    className="post_detail_reply_input"
+                    onSubmit={(event) => {
+                      event.preventDefault()
+                      submitReply(comment.id)
+                    }}
+                  >
+                    <input
+                      value={replyInputs[comment.id] ?? ''}
+                      placeholder="답글을 입력하세요"
+                      onChange={(event) => setReplyInputs((inputs) => ({ ...inputs, [comment.id]: event.target.value }))}
+                    />
+                    <button type="submit">답글쓰기</button>
+                  </form>
+                ) : null}
               </article>
             )
           })}
