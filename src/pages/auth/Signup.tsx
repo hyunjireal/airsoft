@@ -29,7 +29,7 @@ const skillOptions: Array<{
 export function Signup() {
   const navigate = useNavigate()
   const [step, setStep] = useState<'skill' | 'profile'>('skill')
-  const [nickname, setNickname] = useState('에어소프트 루키')
+  const [nickname, setNickname] = useState('삼삼오오')
   const [email, setEmail] = useState('rookie@airsoft.test')
   const [password, setPassword] = useState('airsoft1234')
   const [region, setRegion] = useState('서울 마포구')

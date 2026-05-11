@@ -260,7 +260,12 @@ export function Home() {
                       <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
                       <span className="body_m_14">안전제일 뉴비</span>
                     </div>
-                    <button className="home_userinfo_settings" type="button" aria-label="설정">
+                    <button
+                      className="home_userinfo_settings"
+                      type="button"
+                      aria-label="마이페이지로 이동"
+                      onClick={() => navigate('/my')}
+                    >
                       <img src={settingsIcon} alt="" className="home_userinfo_settings_icon" />
                     </button>
                   </div>

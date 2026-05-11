@@ -1,37 +1,132 @@
-import { useState, type CSSProperties } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import badge01 from '../../asset/images/badge01.png'
-import iconUser from '../../asset/icons/com_user.svg'
-import iconSettings from '../../asset/icons/settings.svg'
-import iconMatch from '../../asset/icons/header_match.svg'
-import iconWrite from '../../asset/icons/com_write.svg'
-import iconQna from '../../asset/icons/com_qna.svg'
-import iconBookmark from '../../asset/icons/com_bookmark.svg'
-import { currentUser } from '../../data/mockData'
+import KeywordTag from '../../components/KeywordTag'
+import iconArrowLeft from '../../asset/icons/arrow_l.svg'
+import iconArrowRight from '../../asset/icons/arrow_r.svg'
+import badge03 from '../../asset/images/badge03.png'
+import profileImage from '../../asset/images/main_user01.png'
 import './my.css'
 
 type MatchTab = '다가오는 매치' | '지난 매치'
 
-const upcomingMatches = [
-  { id: 'u1', title: '초보 환영 야외전', date: '5/10 (토) 14:00', place: '택티컬 필드', dday: 'D-3', route: '/match/match-001' },
-  { id: 'u2', title: '서울 CQB 입문 스크림', date: '5/11 (일) 12:00', place: '어반 CQB', dday: 'D-4', route: '/match/match-003' },
+type MatchCard = {
+  id: string
+  title: string
+  detail: string
+  tagLabel: string
+  to: string
+}
+
+const upcomingMatches: MatchCard[] = [
+  {
+    id: 'upcoming-1',
+    title: '초보 환영 야외전',
+    detail: '5/23 (토) 13:00 택티컬 필드',
+    tagLabel: 'D-14',
+    to: '/match/match-001',
+  },
+  {
+    id: 'upcoming-2',
+    title: '서울 CQB 입문 경기',
+    detail: '5/31 (일) 12:00 어반 CQB',
+    tagLabel: 'D-22',
+    to: '/match/match-003',
+  },
 ]
 
-const pastMatches = [
-  { id: 'p1', title: '지난 입문자 스크림', date: '5/4 (일) 10:00', place: '하남 실내 필드', route: '/my/schedule' },
+const pastMatches: MatchCard[] = [
+  {
+    id: 'past-1',
+    title: '2026 5월 입문자 경기',
+    detail: '5/2 (일) 10:00 하남 실내 필드',
+    tagLabel: '지난 매치',
+    to: '/my/schedule',
+  },
 ]
 
-const settingsItems: { label: string; to: string }[] = [
-  { label: '계정 설정', to: '#' },
+const teamMenuItems = [
+  { label: '나의 소속 팀', to: '/team/team-001' },
+  { label: '내가 생성한 팀', to: '/team/create' },
+  { label: '버디 매칭', to: '/home' },
+]
+
+const communityMenuItems = [
+  { label: '내가 쓴 글', to: '/my/posts' },
+  { label: '내 질문', to: '/community/beginner/recent' },
+  { label: '내가 저장한 글', to: '/community/free' },
+]
+
+const settingsItems = [
+  { label: '계정 설정', to: '/my/profile' },
   { label: '알림 설정', to: '/my/notifications' },
-  { label: '개인정보 및 보안', to: '#' },
-  { label: '고객센터', to: '#' },
+  { label: '개인정보 및 보안', to: '/my/profile' },
+  { label: '고객센터', to: '/chat' },
 ]
+
+function BellIcon() {
+  return (
+    <svg aria-hidden="true" className="my_bell_icon" viewBox="0 0 17 19" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M8.5 1.2a4.8 4.8 0 0 0-4.8 4.8v2.2c0 .8-.3 1.5-.8 2.1L1.7 12c-.5.6-.2 1.6.6 1.6h12.4c.8 0 1.1-1 .6-1.6L14 10.3a3.2 3.2 0 0 1-.8-2.1V6A4.8 4.8 0 0 0 8.5 1.2Zm0 16.3a2.3 2.3 0 0 0 2.1-1.4H6.4a2.3 2.3 0 0 0 2.1 1.4Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
+function CameraIcon() {
+  return (
+    <svg aria-hidden="true" className="my_camera_icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M7.3 6.8h1.8l.9-1.4c.3-.5.9-.8 1.5-.8h1c.6 0 1.2.3 1.5.8l.9 1.4h1.8c1.3 0 2.3 1 2.3 2.3v6.8c0 1.3-1 2.3-2.3 2.3H7.3C6 18.2 5 17.2 5 15.9V9.1c0-1.3 1-2.3 2.3-2.3Zm4.7 8.1a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.7"
+      />
+    </svg>
+  )
+}
+
+type MenuSectionProps = {
+  title: string
+  items: Array<{ label: string; to: string }>
+}
+
+function MenuSection({ title, items }: MenuSectionProps) {
+  return (
+    <section className="my_menu_section">
+      <h2 className="my_section_title">{title}</h2>
+      <div className="my_section_rule" aria-hidden="true" />
+      <div className="my_menu_list">
+        {items.map((item) => (
+          <Link className="my_menu_item" key={item.label} to={item.to}>
+            <span>{item.label}</span>
+            <img alt="" aria-hidden="true" className="my_menu_arrow" src={iconArrowRight} />
+          </Link>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 export function MyPage() {
   const navigate = useNavigate()
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true')
   const [matchTab, setMatchTab] = useState<MatchTab>('다가오는 매치')
+  const savedNickname = localStorage.getItem('nickname')
+  const profileName = !savedNickname || savedNickname === '에어소프트 루키' ? '삼삼오오' : savedNickname
+  const visibleMatches = matchTab === '다가오는 매치' ? upcomingMatches : pastMatches
+
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
+    navigate('/home')
+  }
 
   const logout = () => {
     localStorage.removeItem('isLoggedIn')
@@ -53,160 +148,96 @@ export function MyPage() {
 
   return (
     <div className="page my_page">
+      <header className="my_header">
+        <div className="my_header_left">
+          <button className="my_header_button" type="button" aria-label="뒤로가기" onClick={goBack}>
+            <img alt="" aria-hidden="true" className="my_back_icon" src={iconArrowLeft} />
+          </button>
+          <h1 className="my_page_title">마이페이지</h1>
+        </div>
+        <Link className="my_header_button my_bell_button" to="/notifications" aria-label="알림">
+          <BellIcon />
+        </Link>
+      </header>
 
-      {/* 헤더 */}
-      <div className="my_header">
-        <h1 className="my_page_title">마이페이지</h1>
-        <Link to="/notifications" className="my_bell_btn" aria-label="알림">🔔</Link>
-      </div>
-
-      {/* 프로필 카드 */}
-      <section className="card my_profile_card">
-        <div className="my_profile_row">
-          <div className="my_avatar">
-            <span className="my_icon" style={{ '--my-icon': `url(${iconUser})` } as CSSProperties} />
-          </div>
-          <div className="my_profile_info">
-            <div className="my_name_row">
-              <span className="my_nickname">{currentUser.nickname}</span>
-              <img className="my_badge_icon" src={badge01} alt="뱃지" />
+      <section className="my_profile_section">
+        <div className="my_profile_card">
+          <div className="my_profile_top">
+            <div className="my_profile_avatar_wrap">
+              <img className="my_profile_avatar" src={profileImage} alt={`${profileName} 프로필`} />
+              <button className="my_profile_camera" type="button" aria-label="프로필 이미지 변경">
+                <CameraIcon />
+              </button>
             </div>
-            <p className="muted my_region">활동지역 • 서울·마포구</p>
-            <div className="chip_row">
-              <span className="chip">#에어소프트</span>
-              <span className="chip">#야외전</span>
-              <span className="chip">#입문자</span>
+            <p className="my_profile_name">
+              <span>{profileName}</span>
+              <span className="my_profile_suffix">님</span>
+            </p>
+          </div>
+          <div className="my_profile_divider" aria-hidden="true" />
+          <div className="my_profile_stats">
+            <div className="my_stat_card">
+              <p className="my_stat_value">2,450</p>
+              <p className="my_stat_label">포인트</p>
+            </div>
+            <div className="my_stat_card">
+              <p className="my_stat_value">12개</p>
+              <p className="my_stat_label">활동 배지</p>
             </div>
           </div>
-          <Link className="my_edit_btn" to="/my/profile">수정</Link>
         </div>
       </section>
 
-      {/* 빠른 메뉴 */}
-      <section className="card my_quick_menu">
-        <Link className="my_quick_item" to="/my/profile">
-          <span className="my_icon" style={{ '--my-icon': `url(${iconUser})` } as CSSProperties} />
-          <span className="my_quick_label">프로필 수정</span>
-        </Link>
-        <span className="my_vdivider" aria-hidden="true" />
-        <Link className="my_quick_item" to="#">
-          <span className="my_pin_icon" aria-hidden="true" />
-          <span className="my_quick_label">활동지역</span>
-        </Link>
-        <span className="my_vdivider" aria-hidden="true" />
-        <Link className="my_quick_item" to="/my/notifications">
-          <span className="my_icon" style={{ '--my-icon': `url(${iconSettings})` } as CSSProperties} />
-          <span className="my_quick_label">알림 설정</span>
-        </Link>
-      </section>
-
-      {/* 통계 */}
-      <section className="card my_stats_row">
-        <div className="my_stat_item">
-          <span className="my_stat_p">P</span>
-          <span className="my_stat_label">포인트</span>
-          <strong className="my_stat_value">2,450P</strong>
-        </div>
-        <span className="my_vdivider" aria-hidden="true" />
-        <div className="my_stat_item">
-          <img className="my_stat_badge_img" src={badge01} alt="" />
-          <span className="my_stat_label">배지</span>
-          <strong className="my_stat_value">12개</strong>
-        </div>
-        <span className="my_vdivider" aria-hidden="true" />
-        <div className="my_stat_item">
-          <span className="my_icon" style={{ '--my-icon': `url(${iconMatch})` } as CSSProperties} />
-          <span className="my_stat_label">참여 매치</span>
-          <strong className="my_stat_value">18회</strong>
-        </div>
-      </section>
-
-      {/* 내 매치 */}
-      <section className="my_match_section">
-        <div className="my_match_tabs">
+      <section className="my_matches_section">
+        <div className="my_match_tabs" role="tablist" aria-label="매치 탭">
           {(['다가오는 매치', '지난 매치'] as MatchTab[]).map((tab) => (
             <button
               key={tab}
               className={`my_match_tab${matchTab === tab ? ' active' : ''}`}
               type="button"
+              role="tab"
+              aria-selected={matchTab === tab}
               onClick={() => setMatchTab(tab)}
             >
               {tab}
             </button>
           ))}
         </div>
-        <div className="my_match_list">
-          {matchTab === '다가오는 매치'
-            ? upcomingMatches.map((m) => (
-                <Link className="my_match_card" key={m.id} to={m.route}>
-                  <div className="my_match_thumb" aria-hidden="true" />
-                  <div className="my_match_info">
-                    <p className="my_match_title">{m.title}</p>
-                    <p className="muted my_match_sub">{m.date}</p>
-                    <p className="muted my_match_sub">{m.place}</p>
-                  </div>
-                  <div className="my_match_right">
-                    <span className="my_dday">{m.dday}</span>
-                    <span className="my_arrow">›</span>
-                  </div>
-                </Link>
-              ))
-            : pastMatches.map((m) => (
-                <Link className="my_match_card" key={m.id} to={m.route}>
-                  <div className="my_match_thumb" aria-hidden="true" />
-                  <div className="my_match_info">
-                    <span className="chip my_past_chip">지난 매치</span>
-                    <p className="my_match_title">{m.title}</p>
-                    <p className="muted my_match_sub">{m.date} · {m.place}</p>
-                  </div>
-                  <span className="my_arrow">›</span>
-                </Link>
-              ))}
-        </div>
-      </section>
 
-      {/* 커뮤니티 활동 */}
-      <section className="my_community_section">
-        <div className="my_comm_header">
-          <h2 className="section_title">커뮤니티 활동</h2>
-          <Link className="text_button my_see_all" to="/my/posts">전체 보기 ›</Link>
-        </div>
-        <div className="my_community_grid">
-          <Link className="card my_community_item" to="/my/posts">
-            <span className="my_icon" style={{ '--my-icon': `url(${iconWrite})` } as CSSProperties} />
-            <span className="muted my_comm_label">내가 쓴 글</span>
-            <strong className="my_comm_count">7</strong>
-          </Link>
-          <Link className="card my_community_item" to="#">
-            <span className="my_icon" style={{ '--my-icon': `url(${iconQna})` } as CSSProperties} />
-            <span className="muted my_comm_label">내 질문</span>
-            <strong className="my_comm_count">4</strong>
-          </Link>
-          <Link className="card my_community_item" to="#">
-            <span className="my_icon" style={{ '--my-icon': `url(${iconBookmark})` } as CSSProperties} />
-            <span className="muted my_comm_label">저장한 글</span>
-            <strong className="my_comm_count">9</strong>
-          </Link>
-        </div>
-      </section>
-
-      {/* 설정 */}
-      <section className="card my_settings_section">
-        <h2 className="section_title">설정</h2>
-        <div className="my_settings_list">
-          {settingsItems.map(({ label, to }) => (
-            <Link key={label} className="my_settings_item" to={to}>
-              <span>{label}</span>
-              <span className="my_arrow">›</span>
+        <div className="my_match_cards">
+          {visibleMatches.map((match) => (
+            <Link className="my_match_card" key={match.id} to={match.to}>
+              <div className="my_match_thumb" aria-hidden="true">
+                <img className="my_match_thumb_image" src={badge03} alt="" />
+              </div>
+              <div className="my_match_info">
+                <KeywordTag className="my_match_tag">{match.tagLabel}</KeywordTag>
+                <p className="my_match_title">{match.title}</p>
+                <p className="my_match_meta">{match.detail}</p>
+              </div>
             </Link>
           ))}
-          <button className="my_settings_item my_logout_btn" type="button" onClick={logout}>
-            <span>로그아웃</span>
-            <span className="my_arrow">›</span>
+        </div>
+      </section>
+
+      <MenuSection title="나의 팀" items={teamMenuItems} />
+      <MenuSection title="커뮤니티 활동" items={communityMenuItems} />
+
+      <section className="my_menu_section my_settings_section">
+        <h2 className="my_section_title">설정</h2>
+        <div className="my_section_rule" aria-hidden="true" />
+        <div className="my_menu_list">
+          {settingsItems.map((item) => (
+            <Link className="my_menu_item" key={item.label} to={item.to}>
+              <span>{item.label}</span>
+              <img alt="" aria-hidden="true" className="my_menu_arrow" src={iconArrowRight} />
+            </Link>
+          ))}
+          <button className="my_logout_button" type="button" onClick={logout}>
+            로그아웃
           </button>
         </div>
       </section>
-
     </div>
   )
 }
