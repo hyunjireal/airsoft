@@ -423,7 +423,7 @@ export function Home() {
           <div className="home_team_content_box">
             <div className="home_team_header">
               <h2 className="home_team_title">
-                <span className="home_team_title_user">AI 맞춤 추천 팀</span>
+                <span className="home_team_title_user sub_kr">AI 맞춤 추천 팀</span>
               </h2>
             </div>
             <div className="home_team_con">
@@ -496,12 +496,6 @@ export function Home() {
             <LoginButton
               className="home_tournament_join_button"
               onClick={() => navigate('/tournament/mvp-vote')}
-              style={{
-                background: '#1A1A1A',
-                backgroundColor: '#1A1A1A',
-                color: '#D9E5FF',
-                WebkitTextFillColor: '#D9E5FF',
-              }}
             >
               <span className="body_m_16">투표하러가기</span>
             </LoginButton>
