@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
@@ -10,12 +10,32 @@ import './match.css'
 
 const difficultyOptions = ['초보', '숙련자', '상관없음']
 const participantCount = 1
+const fieldOptions: Record<string, string[]> = {
+  서울: ['강남 CQB', '어반 CQB'],
+  '경기 남부': ['택티컬 필드', '용인 숲 필드'],
+  '경기 북부': ['포레스트 아레나', '파주 CQB 아레나'],
+  인천: ['서구 야외 필드', '송도 CQB'],
+}
+const timeOptions = ['10:30', '14:00', '16:00', '19:00']
+
+function resolveMatchDate(rawDate: string | null) {
+  if (!rawDate) return '2026-05-18'
+
+  const date = new Date(`${rawDate}T00:00:00`)
+  return Number.isNaN(date.getTime()) ? '2026-05-18' : rawDate
+}
 
 export function MatchGuestJoinCreate() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [difficulty, setDifficulty] = useState('초보')
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const [region, setRegion] = useState('서울')
+  const [fieldName, setFieldName] = useState(fieldOptions['서울'][0])
+  const [matchDate, setMatchDate] = useState(() => resolveMatchDate(searchParams.get('date')))
+  const [matchTime, setMatchTime] = useState('14:00')
+  const [openSelector, setOpenSelector] = useState<'place' | 'schedule' | null>(null)
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -24,6 +44,11 @@ export function MatchGuestJoinCreate() {
     }
 
     navigate('/match')
+  }
+
+  const changeRegion = (nextRegion: string) => {
+    setRegion(nextRegion)
+    setFieldName(fieldOptions[nextRegion][0])
   }
 
   return (
@@ -42,20 +67,72 @@ export function MatchGuestJoinCreate() {
             <h2 id="mgj-level-1" className="body_m_20">장소와 시간을 선택해주세요.</h2>
           </div>
           <div className="mgc_menu_group">
-            <button className="mgc_menu" type="button">
+            <button
+              className="mgc_menu"
+              type="button"
+              aria-expanded={openSelector === 'place'}
+              onClick={() => setOpenSelector((selector) => (selector === 'place' ? null : 'place'))}
+            >
               <span className="mgc_menu_left">
                 <img src={guestLocaIcon} alt="" aria-hidden="true" />
-                <span>지역 / 필드 선택</span>
+                <span>
+                  지역 / 필드 선택
+                  <strong>{region} · {fieldName}</strong>
+                </span>
               </span>
               <img className="mgc_menu_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
             </button>
-            <button className="mgc_menu" type="button">
+            {openSelector === 'place' ? (
+              <div className="mgc_selector_panel">
+                <label>
+                  지역
+                  <select value={region} onChange={(event) => changeRegion(event.target.value)}>
+                    {Object.keys(fieldOptions).map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  필드
+                  <select value={fieldName} onChange={(event) => setFieldName(event.target.value)}>
+                    {fieldOptions[region].map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            ) : null}
+            <button
+              className="mgc_menu"
+              type="button"
+              aria-expanded={openSelector === 'schedule'}
+              onClick={() => setOpenSelector((selector) => (selector === 'schedule' ? null : 'schedule'))}
+            >
               <span className="mgc_menu_left">
                 <img src={guestScheduleIcon} alt="" aria-hidden="true" />
-                <span>날짜 / 시간 선택</span>
+                <span>
+                  날짜 / 시간 선택
+                  <strong>{matchDate} · {matchTime}</strong>
+                </span>
               </span>
               <img className="mgc_menu_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
             </button>
+            {openSelector === 'schedule' ? (
+              <div className="mgc_selector_panel">
+                <label>
+                  날짜
+                  <input type="date" value={matchDate} onChange={(event) => setMatchDate(event.target.value)} />
+                </label>
+                <label>
+                  시간
+                  <select value={matchTime} onChange={(event) => setMatchTime(event.target.value)}>
+                    {timeOptions.map((option) => (
+                      <option key={option}>{option}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            ) : null}
           </div>
         </section>
 
@@ -65,8 +142,8 @@ export function MatchGuestJoinCreate() {
             <h2 id="mgj-level-2" className="body_m_20">내 정보를 입력해주세요.</h2>
           </div>
           <article className="mgc_form_card">
-            <span className="mgc_form_label body_m_16">난이도</span>
-            <div className="mgc_tag_group" aria-label="난이도 선택">
+            <span className="mgc_form_label body_m_16">실력</span>
+            <div className="mgc_tag_group" aria-label="실력 선택">
               {difficultyOptions.map((option) => (
                 <button
                   className="mgc_tag_button"
@@ -90,7 +167,7 @@ export function MatchGuestJoinCreate() {
                 <button type="button" disabled aria-label="참여인원 늘리기">+</button>
               </div>
             </div>
-            <p className="mgc_join_count_hint">자동선택...이라는 문구를 넣어주고 싶은데 뭐라고할지 모르겠어요</p>
+            <p className="mgc_join_count_hint">지원글은 본인 1명 기준으로 등록돼요.</p>
           </article>
         </section>
 
@@ -105,7 +182,7 @@ export function MatchGuestJoinCreate() {
               className="mgc_text_field"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
-              placeholder="제목을 입력하세요."
+              placeholder="제목을 입력하세요"
             />
           </label>
           <label className="mgc_form_card">
@@ -114,7 +191,7 @@ export function MatchGuestJoinCreate() {
               className="mgc_text_field mgc_text_area"
               value={body}
               onChange={(event) => setBody(event.target.value)}
-              placeholder="본문을 입력하세요."
+              placeholder="본문을 입력하세요"
             />
           </label>
         </section>

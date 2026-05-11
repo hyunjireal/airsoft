@@ -12,6 +12,7 @@ export function AppShell() {
   const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
   const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
   const isChatPage = location.pathname === '/chat'
+  const isMySchedulePage = location.pathname === '/my/schedule'
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
@@ -21,6 +22,7 @@ export function AppShell() {
     !isCommunityPostDetail &&
     !isTournamentMvpVote &&
     !isChatPage &&
+    !isMySchedulePage &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'
 
