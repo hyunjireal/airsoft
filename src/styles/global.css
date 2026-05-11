@@ -285,6 +285,10 @@ a {
   padding-bottom: var(--app-bottom-safe-area);
 }
 
+.creator_profile_frame > main {
+  padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
+}
+
 .app_back_button {
   position: fixed;
   top: 14px;

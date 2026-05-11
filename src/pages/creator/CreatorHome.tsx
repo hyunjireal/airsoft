@@ -9,15 +9,15 @@ import list02 from '../../asset/images/creator_list02.png'
 import list03 from '../../asset/images/creator_list03.png'
 
 const podiumData = [
-  { rank: 2, name: '나르마치고', score: '1225', avatar: grade02, profileId: 'creator-002' },
+  { rank: 2, name: '하나캠', score: '1225', avatar: grade02, profileId: 'creator-002' },
   { rank: 1, name: '레드닷존', score: '1500', avatar: grade01, profileId: 'creator-001' },
   { rank: 3, name: '꼬꼬댁', score: '1080', avatar: grade03, profileId: 'creator-003' },
 ]
 
 const liveRanking = [
-  { rank: 1, name: '레드닷존', score: 1500 },
-  { rank: 2, name: '나르마치고', score: 1225 },
-  { rank: 3, name: '꼬꼬댁', score: 1080 },
+  { rank: 1, name: '레드닷존', score: 1500, profileId: 'creator-001' },
+  { rank: 2, name: '하나캠', score: 1225, profileId: 'creator-002' },
+  { rank: 3, name: '꼬꼬댁', score: 1080, profileId: 'creator-003' },
   { rank: 4, name: '베키사리', score: 985 },
   { rank: 5, name: '하나캠', score: 922 },
   { rank: 6, name: '알파튜브', score: 885 },
@@ -156,9 +156,23 @@ export function CreatorHome() {
             <ol className="creator_rank_list" aria-label="1위부터 10위 크리에이터 순위">
               {liveRanking.map((item) => (
                 <li className={item.rank === activeRanking.rank ? 'is_active' : ''} key={item.rank}>
-                  <span>{item.rank}</span>
-                  <strong>{item.name}</strong>
-                  <em>{item.score}</em>
+                  {item.profileId ? (
+                    <Link
+                      className="creator_rank_list_link"
+                      to={`/creator/${item.profileId}`}
+                      aria-label={`${item.rank}위 ${item.name} 프로필 보기`}
+                    >
+                      <span>{item.rank}</span>
+                      <strong>{item.name}</strong>
+                      <em>{item.score}</em>
+                    </Link>
+                  ) : (
+                    <>
+                      <span>{item.rank}</span>
+                      <strong>{item.name}</strong>
+                      <em>{item.score}</em>
+                    </>
+                  )}
                 </li>
               ))}
             </ol>
