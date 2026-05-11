@@ -285,6 +285,10 @@ a {
   padding-bottom: var(--app-bottom-safe-area);
 }
 
+.mobile_frame.without_app_header > main {
+  padding-bottom: 0;
+}
+
 .app_back_button {
   position: fixed;
   top: 14px;

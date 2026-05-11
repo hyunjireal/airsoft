@@ -32,7 +32,7 @@ export function AppShell() {
     <div
       className={`mobile_frame ${
         showBackButton ? 'has_app_back_button' : keepTopInset ? 'has_app_top_inset' : ''
-      }`}
+      } ${isCommunityPostDetail ? 'without_app_header' : ''}`}
     >
       {showBackButton ? (
         <button className="app_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
@@ -42,7 +42,7 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      <BottomNav />
+      {isCommunityPostDetail ? null : <BottomNav />}
     </div>
   )
 }

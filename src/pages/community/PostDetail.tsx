@@ -1,17 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import bellIcon from '../../asset/icons/com_bell.svg'
+import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
+import bookmarkOnIcon from '../../asset/icons/com_bookmark_on.svg'
+import commentIcon from '../../asset/icons/com_comment.svg'
+import goodIcon from '../../asset/icons/com_good.svg'
+import sendIcon from '../../asset/icons/com_send.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
+import verticalDotIcon from '../../asset/icons/com_verticalDot.svg'
 import eyeIcon from '../../asset/icons/com_eyes.svg'
 import userIcon from '../../asset/icons/com_user.svg'
+import MainTag from '../../components/MainTag'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 import './Community.css'
 
 type DetailReply = {
+  id?: string
   author: string
   time: string
   body: string
+  isMine?: boolean
 }
 
 type DetailComment = {
@@ -22,6 +32,12 @@ type DetailComment = {
   likes: number
   replies: DetailReply[]
   liked?: boolean
+  isMine?: boolean
+}
+
+type ReplyMenuTarget = {
+  commentId: string
+  replyId: string
 }
 
 type DetailPost = {
@@ -41,7 +57,7 @@ const detailPostMap: Record<string, DetailPost> = {
     id: 'q-001',
     title: '서바이벌 게임에서 꼭 지켜야 할 기본 규칙이 궁금해요!',
     category: '법규/규정',
-    author: '마다가스카르',
+    author: '필드메이트',
     time: '2시간 전',
     body: '이번 주말에 처음으로 서바이벌 게임에 참여하려고 합니다. 안전장비는 준비했는데, 현장에서 꼭 지켜야 하는 기본 규칙이나 입문자가 실수하기 쉬운 부분이 궁금해요.',
     views: '999+',
@@ -193,13 +209,14 @@ const detailPostMap: Record<string, DetailPost> = {
 const detailComments: DetailComment[] = [
   {
     id: 'detail-comment-1',
-    author: '마다가스카르',
+    author: '안전교관',
     time: '2시간 전',
     body: '가장 중요한 건 고글을 절대 벗지 않는 거예요. 경기장 안에서는 진행자의 안내를 먼저 듣고, 히트 선언은 크게 말해주세요. 처음이라면 시작 전에 안전거리와 탄속 규정을 꼭 확인하면 좋아요.',
-    likes: 12,
+    likes: 22,
     replies: [
       {
-        author: '마다가스카르',
+        id: 'detail-reply-1',
+        author: '입문러너',
         time: '2시간 전',
         body: '고글은 정말 계속 착용해야겠네요. 처음 가기 전에 필드 규정도 미리 확인해볼게요.',
       },
@@ -210,17 +227,15 @@ const detailComments: DetailComment[] = [
     author: '새벽달빛',
     time: '45분 전',
     body: '장비를 사용할 때는 항상 상태를 점검하는 게 중요해요. 손잡이나 연결 부위가 느슨하지 않은지 꼭 확인하세요.',
-    likes: 12,
-    liked: true,
+    likes: 7,
     replies: [],
   },
   {
     id: 'detail-comment-3',
-    author: '바람의노래',
+    author: '탄속체커',
     time: '방금 전',
     body: '경기 중에는 항상 주변을 살피고, 다른 참가자와의 거리를 유지하는 것이 안전사고를 예방하는 데 도움이 돼요.',
-    likes: 12,
-    liked: true,
+    likes: 4,
     replies: [],
   },
 ]
@@ -230,17 +245,25 @@ export function PostDetail() {
   const navigate = useNavigate()
   const [modalOpen, setModalOpen] = useState(false)
   const [postLiked, setPostLiked] = useState(false)
-  const [postLikes, setPostLikes] = useState(12)
+  const [postLikes, setPostLikes] = useState(18)
+  const [postBookmarked, setPostBookmarked] = useState(false)
   const [comments, setComments] = useState<DetailComment[]>(detailComments)
   const [commentReactions, setCommentReactions] = useState<Record<string, { liked: boolean; likes: number }>>(() =>
     Object.fromEntries(detailComments.map((comment) => [comment.id, { liked: Boolean(comment.liked), likes: comment.likes }])),
   )
   const [commentInput, setCommentInput] = useState('')
   const [openReplyIds, setOpenReplyIds] = useState<string[]>([])
-  const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
+  const [openCommentMenuId, setOpenCommentMenuId] = useState<string | null>(null)
+  const [replyMenuTarget, setReplyMenuTarget] = useState<ReplyMenuTarget | null>(null)
+  const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null)
+  const [openPostMenu, setOpenPostMenu] = useState(false)
+  const [postEdits, setPostEdits] = useState<Record<string, Partial<Pick<DetailPost, 'title' | 'body'>>>>({})
+  const [deletedPostIds, setDeletedPostIds] = useState<string[]>([])
+  const [commentsExpanded, setCommentsExpanded] = useState(false)
+  const replyLongPressTimer = useRef<number | null>(null)
   const boardPost = boardPosts.find((item) => item.id === id)
   const detailPost = id ? detailPostMap[id] : undefined
-  const post = detailPost ?? (boardPost
+  const postBase = detailPost ?? (boardPost
     ? {
         id: boardPost.id,
         title: boardPost.title,
@@ -253,9 +276,24 @@ export function PostDetail() {
         recommended: boardPost.isBeginnerQuestion,
       }
     : undefined)
+  const post = postBase && !deletedPostIds.includes(postBase.id) ? { ...postBase, ...postEdits[postBase.id] } : undefined
   const initialVisibleCommentCount = detailComments.length + detailComments.reduce((total, comment) => total + comment.replies.length, 0)
   const visibleCommentCount = comments.length + comments.reduce((total, comment) => total + comment.replies.length, 0)
   const postCommentCount = post ? post.comments + Math.max(visibleCommentCount - initialVisibleCommentCount, 0) : 0
+  const hasOpenReply = openReplyIds.length > 0
+  const activeReplyId = openReplyIds.at(-1)
+  const visibleComments = commentsExpanded ? comments : comments.slice(0, 1)
+
+  useEffect(() => {
+    const closeMenus = () => {
+      setOpenPostMenu(false)
+      setOpenCommentMenuId(null)
+      setReplyMenuTarget(null)
+    }
+
+    window.addEventListener('click', closeMenus)
+    return () => window.removeEventListener('click', closeMenus)
+  }, [])
 
   if (!post) {
     return <div className="page"><h1 className="page_title">게시글을 찾을 수 없어요</h1></div>
@@ -266,11 +304,72 @@ export function PostDetail() {
     setPostLikes((likes) => likes + (postLiked ? -1 : 1))
   }
 
+  const editPost = () => {
+    const nextTitle = window.prompt('글 제목을 수정하세요', post.title)?.trim()
+    if (!nextTitle) {
+      return
+    }
+
+    const nextBody = window.prompt('글 내용을 수정하세요', post.body)?.trim()
+    if (!nextBody) {
+      return
+    }
+
+    setPostEdits((items) => ({ ...items, [post.id]: { title: nextTitle, body: nextBody } }))
+    setOpenPostMenu(false)
+  }
+
+  const deletePost = () => {
+    if (!window.confirm('글을 삭제할까요?')) {
+      return
+    }
+
+    setDeletedPostIds((items) => [...items, post.id])
+    setOpenPostMenu(false)
+  }
+
+  const revealWrittenItem = (itemId: string) => {
+    setHighlightedItemId(itemId)
+    window.setTimeout(() => {
+      document.getElementById(itemId)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 0)
+    window.setTimeout(() => {
+      setHighlightedItemId((currentId) => (currentId === itemId ? null : currentId))
+    }, 1400)
+  }
+
   const submitComment = () => {
     const body = commentInput.trim()
 
     if (!body) {
       setModalOpen(true)
+      return
+    }
+
+    if (activeReplyId) {
+      const replyId = `detail-reply-user-${Date.now()}`
+      setComments((items) =>
+        items.map((comment) =>
+          comment.id === activeReplyId
+            ? {
+                ...comment,
+                replies: [
+                  ...comment.replies,
+                  {
+                    id: replyId,
+                    author: '나',
+                    time: '방금 전',
+                    body,
+                    isMine: true,
+                  },
+                ],
+              }
+            : comment,
+        ),
+      )
+      setCommentsExpanded(true)
+      setCommentInput('')
+      revealWrittenItem(replyId)
       return
     }
 
@@ -282,44 +381,18 @@ export function PostDetail() {
       body,
       likes: 0,
       replies: [],
+      isMine: true,
     }
 
     setComments((items) => [...items, nextComment])
     setCommentReactions((reactions) => ({ ...reactions, [commentId]: { liked: false, likes: 0 } }))
+    setCommentsExpanded(true)
     setCommentInput('')
+    revealWrittenItem(commentId)
   }
 
   const toggleReplyInput = (commentId: string) => {
     setOpenReplyIds((ids) => (ids.includes(commentId) ? ids.filter((item) => item !== commentId) : [...ids, commentId]))
-  }
-
-  const submitReply = (commentId: string) => {
-    const body = replyInputs[commentId]?.trim()
-
-    if (!body) {
-      setModalOpen(true)
-      return
-    }
-
-    setComments((items) =>
-      items.map((comment) =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: [
-                ...comment.replies,
-                {
-                  author: '나',
-                  time: '방금 전',
-                  body,
-                },
-              ],
-            }
-          : comment,
-      ),
-    )
-    setReplyInputs((inputs) => ({ ...inputs, [commentId]: '' }))
-    setOpenReplyIds((ids) => (ids.includes(commentId) ? ids : [...ids, commentId]))
   }
 
   const toggleCommentLike = (commentId: string) => {
@@ -339,20 +412,139 @@ export function PostDetail() {
     })
   }
 
+  const editComment = (commentId: string) => {
+    const current = comments.find((comment) => comment.id === commentId)
+    if (!current) {
+      return
+    }
+
+    const nextBody = window.prompt('댓글을 수정하세요', current.body)?.trim()
+    if (!nextBody) {
+      return
+    }
+
+    setComments((items) => items.map((comment) => (comment.id === commentId ? { ...comment, body: nextBody } : comment)))
+    setOpenCommentMenuId(null)
+  }
+
+  const deleteComment = (commentId: string) => {
+    const current = comments.find((comment) => comment.id === commentId)
+    if (!current || !window.confirm('댓글을 삭제할까요?')) {
+      return
+    }
+
+    setComments((items) => items.filter((comment) => comment.id !== commentId))
+    setCommentReactions((reactions) => {
+      const nextReactions = { ...reactions }
+      delete nextReactions[commentId]
+      return nextReactions
+    })
+    setOpenReplyIds((ids) => ids.filter((id) => id !== commentId))
+    setOpenCommentMenuId(null)
+  }
+
+  const editReply = (commentId: string, replyId: string) => {
+    const reply = comments.find((comment) => comment.id === commentId)?.replies.find((item) => item.id === replyId)
+    if (!reply) {
+      return
+    }
+
+    const nextBody = window.prompt('답글을 수정하세요', reply.body)?.trim()
+    if (!nextBody) {
+      return
+    }
+
+    setComments((items) =>
+      items.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: comment.replies.map((item) => (item.id === replyId ? { ...item, body: nextBody } : item)),
+            }
+          : comment,
+      ),
+    )
+    setReplyMenuTarget(null)
+  }
+
+  const deleteReply = (commentId: string, replyId: string) => {
+    const reply = comments.find((comment) => comment.id === commentId)?.replies.find((item) => item.id === replyId)
+    if (!reply || !window.confirm('답글을 삭제할까요?')) {
+      return
+    }
+
+    setComments((items) =>
+      items.map((comment) =>
+        comment.id === commentId ? { ...comment, replies: comment.replies.filter((item) => item.id !== replyId) } : comment,
+      ),
+    )
+    setReplyMenuTarget(null)
+  }
+
+  const openReplyMenu = (commentId: string, replyId?: string) => {
+    if (!replyId) {
+      return
+    }
+
+    setReplyMenuTarget({ commentId, replyId })
+  }
+
+  const clearReplyLongPressTimer = () => {
+    if (replyLongPressTimer.current) {
+      window.clearTimeout(replyLongPressTimer.current)
+      replyLongPressTimer.current = null
+    }
+  }
+
   return (
     <div className="post_detail_page">
       <article className="post_detail_top">
-        <button className="post_detail_back_button" type="button" aria-label="뒤로가기" onClick={() => navigate(-1)}>
-          <img src={arrowLeftIcon} alt="" />
-        </button>
+        <div className="post_detail_icon_box">
+          <button className="post_detail_icon_button post_detail_back_button" type="button" aria-label="뒤로가기" onClick={() => navigate(-1)}>
+            <img src={arrowLeftIcon} alt="" />
+          </button>
+
+          <div className="post_detail_icon_right">
+            <button className="post_detail_icon_button" type="button" aria-label="알림">
+              <img src={bellIcon} alt="" />
+            </button>
+            <button
+              className="post_detail_icon_button"
+              type="button"
+              aria-label="더보기"
+              aria-expanded={openPostMenu}
+              onClick={(event) => {
+                event.stopPropagation()
+                setOpenPostMenu((open) => !open)
+                setOpenCommentMenuId(null)
+                setReplyMenuTarget(null)
+              }}
+            >
+              <img src={verticalDotIcon} alt="" />
+            </button>
+            {openPostMenu ? (
+              <div className="post_detail_post_menu">
+                <button type="button" onClick={(event) => { event.stopPropagation(); editPost() }}>
+                  수정
+                </button>
+                <button type="button" onClick={(event) => { event.stopPropagation(); deletePost() }}>
+                  삭제
+                </button>
+              </div>
+            ) : null}
+          </div>
+        </div>
 
         <div className="post_detail_content">
           <div className="post_detail_title_group">
-            <div className="post_detail_tag_row">
-              <span>{post.category}</span>
-            </div>
+            <div className="post_detail_title_top">
+              <div className="post_detail_tag_row">
+                {post.recommended ? <span className="is_recommended">추천질문</span> : null}
+                <span>{post.category.replace('/', ' ')}</span>
+              </div>
 
-            <h1>{post.title}</h1>
+              <h1>{post.title}</h1>
+            </div>
 
             <div className="post_detail_meta">
               <span>
@@ -373,83 +565,186 @@ export function PostDetail() {
           <p className="post_detail_body">{post.body}</p>
         </div>
 
-        <button
-          className={`post_detail_like ${postLiked ? 'is_active' : ''}`}
-          type="button"
-          aria-pressed={postLiked}
-          onClick={togglePostLike}
-        >
-          <span aria-hidden="true">♥</span>
-          좋아요
-          <strong>{postLikes}</strong>
-        </button>
+        <div className="post_detail_button_box">
+          <button
+            className={`post_detail_action post_detail_action_good ${postLiked ? 'is_active' : ''}`}
+            type="button"
+            aria-pressed={postLiked}
+            onClick={togglePostLike}
+          >
+            <img src={goodIcon} alt="" />
+            <span>공감</span>
+            <strong>{postLikes}</strong>
+          </button>
+
+          <button
+            className={`post_detail_action post_detail_action_comment ${commentsExpanded ? 'is_active' : ''}`}
+            type="button"
+            aria-expanded={commentsExpanded}
+            onClick={() => setCommentsExpanded((expanded) => !expanded)}
+          >
+            <img src={commentIcon} alt="" />
+            <span>댓글</span>
+            <strong>{postCommentCount}</strong>
+          </button>
+
+          <button
+            className={`post_detail_action post_detail_action_arch ${postBookmarked ? 'is_active' : ''}`}
+            type="button"
+            aria-pressed={postBookmarked}
+            onClick={() => setPostBookmarked((bookmarked) => !bookmarked)}
+          >
+            <img src={postBookmarked ? bookmarkOnIcon : bookmarkIcon} alt="" />
+            <span>스크랩</span>
+          </button>
+        </div>
       </article>
 
       <section className="post_detail_comments">
         <h2>댓글 {postCommentCount}</h2>
 
         <div className="post_detail_comment_list">
-          {comments.map((comment) => {
+          {visibleComments.map((comment) => {
+            const commentIndex = comments.findIndex((item) => item.id === comment.id)
             const reaction = commentReactions[comment.id] ?? { liked: false, likes: comment.likes }
 
             return (
               <article className="post_detail_comment" key={comment.id}>
-                <div className="post_detail_comment_main">
-                  <div className="post_detail_comment_head">
-                    <span className="post_detail_comment_author">
-                      <img src={userIcon} alt="" />
-                      {comment.author}
-                    </span>
-                    <span className="post_detail_comment_time">{comment.time}</span>
+                <div
+                  id={comment.id}
+                  className={`post_detail_comment_main ${highlightedItemId === comment.id ? 'is_written_flash' : ''}`}
+                >
+                  <div className="post_detail_comment_top">
+                    <div className="post_detail_comment_left">
+                      <span className="post_detail_comment_author">
+                        <img src={userIcon} alt="" />
+                        {comment.author}
+                      </span>
+                      {commentIndex === 0 ? <MainTag className="post_detail_comment_best_tag">BEST</MainTag> : null}
+                      {comment.author === '새벽달빛' ? <MainTag className="post_detail_comment_staff_tag">운영 스태프</MainTag> : null}
+                    </div>
+
+                    <div className="post_detail_comment_right">
+                      <button
+                        className={`post_detail_comment_icon_action ${reaction.liked ? 'is_active' : ''}`}
+                        type="button"
+                        aria-label="공감"
+                        aria-pressed={reaction.liked}
+                        onClick={() => toggleCommentLike(comment.id)}
+                      >
+                        <img src={goodIcon} alt="" />
+                      </button>
+                      <button
+                        className={`post_detail_comment_icon_action ${openReplyIds.includes(comment.id) ? 'is_active' : ''}`}
+                        type="button"
+                        aria-label="댓글"
+                        aria-pressed={openReplyIds.includes(comment.id)}
+                        onClick={() => toggleReplyInput(comment.id)}
+                      >
+                        <img src={commentIcon} alt="" />
+                      </button>
+                      <button
+                        className="post_detail_comment_more"
+                        type="button"
+                        aria-label="더보기"
+                        aria-expanded={openCommentMenuId === comment.id}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          setReplyMenuTarget(null)
+                          setOpenPostMenu(false)
+                          setOpenCommentMenuId((menuId) => (menuId === comment.id ? null : comment.id))
+                        }}
+                      >
+                        <img src={verticalDotIcon} alt="" />
+                      </button>
+                      {openCommentMenuId === comment.id ? (
+                        <div className="post_detail_edit_menu">
+                          <button type="button" onClick={(event) => { event.stopPropagation(); editComment(comment.id) }}>
+                            수정
+                          </button>
+                          <button type="button" onClick={(event) => { event.stopPropagation(); deleteComment(comment.id) }}>
+                            삭제
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
 
-                  <p>{comment.body}</p>
-
-                  <div className="post_detail_comment_actions">
-                    <button type="button" onClick={() => toggleReplyInput(comment.id)}>
-                      답글 <span>{comment.replies.length}</span>
-                    </button>
-                    <button
-                      className={reaction.liked ? 'is_active' : undefined}
-                      type="button"
-                      aria-pressed={reaction.liked}
-                      onClick={() => toggleCommentLike(comment.id)}
-                    >
-                      <span aria-hidden="true">♥</span>
-                      {reaction.likes}
-                    </button>
+                  <div className="post_detail_comment_bottom">
+                    <p>{comment.body}</p>
+                    <div className="post_detail_comment_meta_line">
+                      <time dateTime="2026-05-11T14:31">2026.05.11 14:31</time>
+                      <span className="post_detail_comment_good_count">
+                        <img src={goodIcon} alt="" />
+                        <span>{reaction.likes}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {comment.replies.map((reply) => (
-                  <div className="post_detail_reply" key={`${reply.author}-${reply.time}-${reply.body}`}>
-                    <div className="post_detail_comment_head">
-                      <span className="post_detail_comment_author">
-                        <img src={userIcon} alt="" />
-                        {reply.author}
-                      </span>
-                      <span className="post_detail_comment_time">{reply.time}</span>
-                    </div>
-                    <p>{reply.body}</p>
-                  </div>
-                ))}
+                {openReplyIds.includes(comment.id)
+                  ? comment.replies.map((reply, replyIndex) => {
+                      const replyId = reply.id ?? `${comment.id}-reply-${replyIndex}`
+                      const replyMenuOpen =
+                        replyMenuTarget?.commentId === comment.id && replyMenuTarget.replyId === replyId
 
-                {openReplyIds.includes(comment.id) ? (
-                  <form
-                    className="post_detail_reply_input"
-                    onSubmit={(event) => {
-                      event.preventDefault()
-                      submitReply(comment.id)
-                    }}
-                  >
-                    <input
-                      value={replyInputs[comment.id] ?? ''}
-                      placeholder="답글을 입력하세요"
-                      onChange={(event) => setReplyInputs((inputs) => ({ ...inputs, [comment.id]: event.target.value }))}
-                    />
-                    <button type="submit">답글쓰기</button>
-                  </form>
-                ) : null}
+                      return (
+                      <div
+                        id={replyId}
+                        className={`post_detail_reply ${highlightedItemId === replyId ? 'is_written_flash' : ''}`}
+                        key={replyId}
+                        onContextMenu={(event) => {
+                          event.preventDefault()
+                          openReplyMenu(comment.id, replyId)
+                        }}
+                        onPointerDown={() => {
+                          clearReplyLongPressTimer()
+                          replyLongPressTimer.current = window.setTimeout(() => {
+                            openReplyMenu(comment.id, replyId)
+                          }, 550)
+                        }}
+                        onPointerLeave={clearReplyLongPressTimer}
+                        onPointerUp={clearReplyLongPressTimer}
+                      >
+                        <div className="post_detail_reply_head">
+                          <div className="post_detail_reply_identity">
+                            <span className="post_detail_comment_author">
+                              <img src={userIcon} alt="" />
+                              {reply.author}
+                            </span>
+                            <span className="post_detail_comment_time">{reply.time}</span>
+                          </div>
+                          <button
+                            className="post_detail_comment_more post_detail_reply_more"
+                            type="button"
+                            aria-label="더보기"
+                            aria-expanded={replyMenuOpen}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              setOpenCommentMenuId(null)
+                              setOpenPostMenu(false)
+                              openReplyMenu(comment.id, replyId)
+                            }}
+                          >
+                            <img src={verticalDotIcon} alt="" />
+                          </button>
+                          {replyMenuOpen ? (
+                            <div className="post_detail_reply_menu">
+                              <button type="button" onClick={(event) => { event.stopPropagation(); editReply(comment.id, replyId) }}>
+                                수정
+                              </button>
+                              <button type="button" onClick={(event) => { event.stopPropagation(); deleteReply(comment.id, replyId) }}>
+                                삭제
+                              </button>
+                            </div>
+                          ) : null}
+                        </div>
+                        <p>{reply.body}</p>
+                      </div>
+                      )
+                    })
+                  : null}
+
               </article>
             )
           })}
@@ -462,12 +757,16 @@ export function PostDetail() {
             submitComment()
           }}
         >
-          <input
-            value={commentInput}
-            placeholder="댓글을 입력하세요"
-            onChange={(event) => setCommentInput(event.target.value)}
-          />
-          <button type="submit">댓글쓰기</button>
+          <div className="post_detail_comment_searchbar">
+            <input
+              value={commentInput}
+              placeholder={hasOpenReply ? '답글을 입력하세요' : '댓글을 입력하세요'}
+              onChange={(event) => setCommentInput(event.target.value)}
+            />
+            <button type="submit" aria-label="보내기">
+              <img src={sendIcon} alt="" />
+            </button>
+          </div>
         </form>
       </section>
 
