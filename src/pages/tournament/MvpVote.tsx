@@ -224,7 +224,7 @@ export function MvpVote() {
         ) : null}
       </section>
 
-      <section className="tournament_live_rank_section">
+      <section className={`tournament_live_rank_section${!isCandidateSelectOpen ? ' is_locked' : ''}`}>
         <h2>실시간 랭킹</h2>
         <div className="tournament_player_rank_list">
           {liveRanking.map((player) => (
