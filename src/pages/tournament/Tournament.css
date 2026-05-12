@@ -1,7 +1,7 @@
 .tournament_page {
   display: grid;
-  background: #000;
-  color: #111111;
+  background: var(--tournament-dark-bg);
+  color: var(--tournament-dark-btn-txt);
 }
 
 .tournament_header {
@@ -724,11 +724,11 @@
   padding: 112px 24px 24px;
   overflow: hidden;
   border-radius: 0;
-  background-color: var(--color-black);
+  background-color: var(--tournament-dark-bg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
 }
 
 .tournament_intro_tit {
@@ -741,7 +741,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
   text-align: left;
 }
 
@@ -786,16 +786,16 @@
 }
 
 .tournament_intro_bottom p {
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
 }
 
 .tournament_intro_bottom em {
-  color: var(--color-lime);
+  color: var(--tournament-dark-point-sub);
   font-style: normal;
 }
 
 .tournament_intro_bottom span {
-  color: var(--color-gray03);
+  color: var(--tournament-dark-txt-sub);
   font-family: var(--font-pretendard);
   font-size: 12px;
   font-weight: 500;
@@ -809,12 +809,12 @@
   justify-items: start;
   gap: 20px;
   padding: 45px 24px 24px;
-  background: var(--color-black);
+  background: var(--tournament-dark-bg);
 }
 
 .tournament_match_section h2 {
   margin: 0;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
   font-family: var(--font-pretendard);
   font-size: 24px;
   font-weight: 600;
@@ -843,8 +843,8 @@
   padding: 15px;
   border: 2px solid transparent;
   border-radius: 8px;
-  background: #363636;
-  color: var(--color-white);
+  background: var(--tournament-dark-card-bg);
+  color: var(--tournament-dark-card-tit);
   text-align: center;
   cursor: pointer;
 }
@@ -856,7 +856,7 @@
 }
 
 .tournament_match_info strong {
-  color: var(--color-white);
+  color: var(--tournament-dark-card-tit);
 }
 
 .tournament_match_teams {
@@ -864,7 +864,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: var(--color-gray03);
+  color: var(--tournament-dark-card-txt);
 }
 
 .tournament_match_teams span,
@@ -873,7 +873,7 @@
 }
 
 .tournament_match_card em {
-  color: var(--color-lime);
+  color: var(--tournament-dark-vote-state);
   font-style: normal;
 }
 
@@ -885,9 +885,9 @@
   width: 100%;
   min-height: 82px;
   padding: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--tournament-dark-card-stroke);
   border-radius: 8px;
-  background: #272727;
+  background: var(--tournament-dark-card-deactive-bg);
   cursor: not-allowed;
 }
 
@@ -907,14 +907,14 @@
 
 .tournament_match_lock_card strong,
 .tournament_match_lock_card span {
-  color: var(--color-gray02);
+  color: var(--tournament-dark-card-deactive-txt);
 }
 
 .tournament_team_select_section {
   display: grid;
   gap: 20px;
   padding: 24px;
-  background: var(--color-black);
+  background: var(--tournament-dark-bg);
 }
 
 .tournament_team_select_section h2 {
@@ -922,7 +922,7 @@
   align-items: center;
   gap: 20px;
   margin: 0;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
   font-family: var(--font-pretendard);
   font-size: 24px;
   font-weight: 600;
@@ -946,7 +946,7 @@
 }
 
 .tournament_team_select_box > strong {
-  color: var(--color-gray04);
+  color: var(--tournament-dark-player-info-txt);
 }
 
 .tournament_team_select_cards {
@@ -959,15 +959,15 @@
 .tournament_team_select_cards button {
   width: 100%;
   padding: 15px;
-  border: 2px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid var(--tournament-dark-card-stroke);
   border-radius: 8px;
-  background: #363636;
-  color: var(--color-gray03);
+  background: var(--tournament-dark-card-bg);
+  color: var(--tournament-dark-card-subtxt);
   cursor: pointer;
 }
 
 .tournament_team_select_cards button.is_selected {
-  color: var(--color-white);
+  color: var(--tournament-dark-card-tit);
 }
 
 .tournament_team_media_section {
@@ -975,21 +975,21 @@
   gap: 20px;
   width: 100%;
   padding: 24px;
-  background: var(--color-black);
+  background: var(--tournament-dark-bg);
   overflow: hidden;
   animation: tournament_accordion_open 240ms ease-out both;
 }
 
 .tournament_team_media_section h2 {
   margin: 0;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
 }
 
 .tournament_team_media_placeholder {
   width: 100%;
   min-height: 188px;
   border-radius: 8px;
-  background: var(--color-gray02);
+  background: var(--tournament-dark-card-deactive-txt);
 }
 
 .tournament_candidate_section {
@@ -1006,7 +1006,7 @@
   align-items: center;
   gap: 20px;
   margin: 0;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
   font-family: var(--font-pretendard);
   font-size: 24px;
   font-weight: 600;
@@ -1032,7 +1032,7 @@
   padding: 15px 0;
   border: 2px solid transparent;
   border-radius: 8px;
-  background: #3a3a3a;
+  background: var(--tournament-dark-card-bg);
   text-align: center;
   cursor: pointer;
 }
@@ -1040,8 +1040,8 @@
 .tournament_match_card.is_selected,
 .tournament_team_select_cards button.is_selected,
 .tournament_vote_candidate_card.is_selected {
-  border-color: var(--color-lime);
-  background: rgba(226, 253, 52, 0.1);
+  border-color: var(--tournament-dark-border);
+  background: var(--tournament-dark-card-selected-bg);
 }
 
 
@@ -1056,7 +1056,7 @@
   width: 45px;
   height: 45px;
   border-radius: 999px;
-  background: var(--color-gray04);
+  background: var(--tournament-dark-player-info-txt);
 }
 
 .tournament_candidate_player div {
@@ -1073,18 +1073,18 @@
 
 .tournament_candidate_player p,
 .tournament_candidate_player strong {
-  color: var(--color-white);
+  color: var(--tournament-dark-card-tit);
 }
 
 .tournament_candidate_desc {
-  color: var(--color-gray03);
+  color: var(--tournament-dark-card-txt);
 }
 
 .tournament_live_rank_section {
   display: grid;
   gap: 20px;
   padding: 24px;
-  background: var(--color-black);
+  background: var(--tournament-dark-bg);
 }
 
 .tournament_live_rank_section h2 {
@@ -1092,7 +1092,7 @@
   align-items: center;
   gap: 20px;
   margin: 0;
-  color: var(--color-white);
+  color: var(--tournament-dark-txt-main);
   font-family: var(--font-pretendard);
   font-size: 24px;
   font-weight: 600;
@@ -1119,9 +1119,9 @@
   display: grid;
   gap: 12px;
   padding: 15px;
-  border: 2px solid rgba(255, 255, 255, 0.08);
+  border: 2px solid var(--tournament-dark-card-stroke);
   border-radius: 8px;
-  background: #363636;
+  background: var(--tournament-dark-card-bg);
 }
 
 .tournament_player_rank_item {
@@ -1139,15 +1139,15 @@
 }
 
 .tournament_rank_tag {
-  border: 1px solid var(--color-gray03);
+  border: 1px solid var(--tournament-dark-txt-sub);
   background: transparent;
-  color: var(--color-gray03);
+  color: var(--tournament-dark-txt-sub);
 }
 
 .tournament_rank_tag.is_first {
   border-color: transparent;
-  background: var(--color-orange-red);
-  color: var(--color-white);
+  background: var(--tournament-dark-rank01-tag);
+  color: var(--tournament-dark-txt-main);
 }
 
 .tournament_rank_tag span {
@@ -1155,7 +1155,7 @@
 }
 
 .tournament_player_rank_name strong {
-  color: var(--color-white);
+  color: var(--tournament-dark-card-tit);
 }
 
 .tournament_player_rank_meter {
@@ -1172,18 +1172,18 @@
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(173, 173, 173, 0.24);
+  background: var(--tournament-dark-bar-bg);
 }
 
 .tournament_player_rank_meter b {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--color-lime);
+  background: var(--tournament-dark-vote-state);
 }
 
 .tournament_player_rank_meter em {
-  color: var(--color-gray03);
+  color: var(--tournament-dark-card-txt);
   font-style: normal;
   white-space: nowrap;
 }
@@ -1192,7 +1192,7 @@
   display: grid;
   gap: 10px;
   padding: 24px;
-  background: var(--color-black);
+  background: var(--tournament-dark-bg);
 }
 
 .tournament_fixed_vote {
@@ -1226,7 +1226,7 @@
   justify-content: center;
   gap: 6px;
   margin: 0;
-  color: var(--color-gray02);
+  color: var(--tournament-dark-btn-alert);
 }
 
 .tournament_lock_notice img {
@@ -1546,18 +1546,18 @@
    ============================================= */
 
 .tournament_page.is_light {
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--tournament-light-bg);
+  color: var(--tournament-light-txt-main);
 }
 
 /* intro card */
 .tournament_page.is_light .tournament_intro_card {
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background-color: var(--tournament-light-bg);
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_intro_top {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_intro_top img {
@@ -1565,55 +1565,55 @@
 }
 
 .tournament_page.is_light .tournament_intro_bottom p {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_intro_bottom em {
-  color: #c2d282;
+  color: var(--tournament-light-point-sub);
 }
 
 .tournament_page.is_light .tournament_intro_bottom span {
-  color: #adadad;
+  color: var(--tournament-light-txt-sub);
 }
 
 /* match section */
 .tournament_page.is_light .tournament_match_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_match_section h2 {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_match_card {
-  background: #ffffff;
-  border: 2px solid #eeeeee;
-  color: #1a1a1a;
+  background: var(--tournament-light-card-bg);
+  border: 2px solid var(--tournament-light-card-stroke);
+  color: var(--tournament-light-card-tit);
 }
 
 .tournament_page.is_light .tournament_match_info strong {
-  color: #1a1a1a;
+  color: var(--tournament-light-card-tit);
 }
 
 .tournament_page.is_light .tournament_match_teams {
-  color: #636363;
+  color: var(--tournament-light-card-txt);
 }
 
 .tournament_page.is_light .tournament_match_card em {
-  color: #90ac1c;
+  color: var(--tournament-light-vote-state);
 }
 
 .tournament_page.is_light .tournament_match_card.is_selected,
 .tournament_page.is_light .tournament_team_select_cards button.is_selected,
 .tournament_page.is_light .tournament_vote_candidate_card.is_selected {
-  border-color: #b8db2d;
-  background: #ffffff;
+  border-color: var(--tournament-light-border);
+  background: var(--tournament-light-card-selected-bg);
 }
 
 /* lock card (deactive) */
 .tournament_page.is_light .tournament_match_lock_card {
-  background: #f5f5f5;
-  border: 1px solid #eeeeee;
+  background: var(--tournament-light-card-deactive-bg);
+  border: 1px solid var(--tournament-light-card-stroke);
 }
 
 .tournament_page.is_light .tournament_match_lock_card img {
@@ -1622,16 +1622,16 @@
 
 .tournament_page.is_light .tournament_match_lock_card strong,
 .tournament_page.is_light .tournament_match_lock_card span {
-  color: #d1d1d1;
+  color: var(--tournament-light-card-deactive-txt);
 }
 
 /* team select section */
 .tournament_page.is_light .tournament_team_select_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_team_select_section h2 {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_team_select_section h2 img {
@@ -1639,39 +1639,39 @@
 }
 
 .tournament_page.is_light .tournament_team_select_box > strong {
-  color: #636363;
+  color: var(--tournament-light-player-info-txt);
 }
 
 .tournament_page.is_light .tournament_team_select_cards button {
-  background: #ffffff;
-  border: 2px solid #eeeeee;
-  color: #919191;
+  background: var(--tournament-light-card-bg);
+  border: 2px solid var(--tournament-light-card-stroke);
+  color: var(--tournament-light-card-subtxt);
 }
 
 .tournament_page.is_light .tournament_team_select_cards button.is_selected {
-  color: #1a1a1a;
+  color: var(--tournament-light-card-tit);
 }
 
 /* media section */
 .tournament_page.is_light .tournament_team_media_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_team_media_section h2 {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_team_media_placeholder {
-  background: #eeeeee;
+  background: var(--tournament-light-bar-bg);
 }
 
 /* candidate section */
 .tournament_page.is_light .tournament_candidate_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_candidate_section h2 {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_candidate_section h2 img {
@@ -1679,30 +1679,30 @@
 }
 
 .tournament_page.is_light .tournament_vote_candidate_card {
-  background: #ffffff;
-  border: 2px solid #eeeeee;
+  background: var(--tournament-light-card-bg);
+  border: 2px solid var(--tournament-light-card-stroke);
 }
 
 .tournament_page.is_light .tournament_candidate_player > span {
-  background: #eeeeee;
+  background: var(--tournament-light-bar-bg);
 }
 
 .tournament_page.is_light .tournament_candidate_player p,
 .tournament_page.is_light .tournament_candidate_player strong {
-  color: #1a1a1a;
+  color: var(--tournament-light-card-tit);
 }
 
 .tournament_page.is_light .tournament_candidate_desc {
-  color: #636363;
+  color: var(--tournament-light-card-txt);
 }
 
 /* live ranking section */
 .tournament_page.is_light .tournament_live_rank_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_live_rank_section h2 {
-  color: #1a1a1a;
+  color: var(--tournament-light-txt-main);
 }
 
 .tournament_page.is_light .tournament_live_rank_section.is_locked h2::before {
@@ -1710,53 +1710,306 @@
 }
 
 .tournament_page.is_light .tournament_player_rank_list {
-  background: #ffffff;
-  border: 2px solid #eeeeee;
+  background: var(--tournament-light-card-bg);
+  border: 2px solid var(--tournament-light-card-stroke);
 }
 
 .tournament_page.is_light .tournament_rank_tag {
-  border-color: #adadad;
-  color: #adadad;
+  border-color: var(--tournament-light-txt-sub);
+  color: var(--tournament-light-txt-sub);
 }
 
 .tournament_page.is_light .tournament_rank_tag.is_first {
-  background: #ee2106;
+  background: var(--tournament-light-rank01-tag);
   border-color: transparent;
-  color: #ffffff;
+  color: var(--tournament-light-btn-txt);
 }
 
 .tournament_page.is_light .tournament_player_rank_name strong {
-  color: #1a1a1a;
+  color: var(--tournament-light-card-tit);
 }
 
 .tournament_page.is_light .tournament_player_rank_meter i {
-  background: #eeeeee;
+  background: var(--tournament-light-bar-bg);
 }
 
 .tournament_page.is_light .tournament_player_rank_meter b {
-  background: #b8db2d;
+  background: var(--tournament-light-btn-bg);
 }
 
 .tournament_page.is_light .tournament_player_rank_meter em {
-  color: #636363;
+  color: var(--tournament-light-player-info-txt);
 }
 
 /* CTA section */
 .tournament_page.is_light .tournament_cta_section {
-  background: #ffffff;
+  background: var(--tournament-light-bg);
 }
 
 .tournament_page.is_light .tournament_fixed_vote {
-  background: #b8db2d !important;
-  background-color: #b8db2d !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
+  background: var(--tournament-light-btn-bg) !important;
+  background-color: var(--tournament-light-btn-bg) !important;
+  color: var(--tournament-light-btn-txt) !important;
+  -webkit-text-fill-color: var(--tournament-light-btn-txt) !important;
 }
 
 .tournament_page.is_light .tournament_lock_notice {
-  color: #adadad;
+  color: var(--tournament-light-btn-alert);
 }
 
 .tournament_page.is_light .tournament_lock_notice img {
   filter: brightness(0) opacity(0.4);
+}
+
+/* =============================================
+   mvpc_ — MVP 투표 완료 페이지 (light mode)
+   변수: point_card_bg=#FAFFE9, point_card_stroke=#B8DB2D,
+         vote_complete_tit=#1A1A1A, vote_state=#90AC1C,
+         player_info_txt=#636363, btn_sub_txt=#90AC1C,
+         point_sub=#C2D282
+   ============================================= */
+
+/* 히어로 */
+.mvpc_hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 280px;
+  padding-bottom: 36px;
+  overflow: hidden;
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.mvpc_hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 30%, var(--tournament-light-bg) 100%);
+  pointer-events: none;
+}
+
+.mvpc_hero_inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 16px;
+}
+
+.mvpc_check_medal {
+  width: 103px;
+  height: 115px;
+}
+
+.mvpc_check_medal img {
+  display: block;
+  width: 103px;
+  height: 115px;
+  object-fit: contain;
+}
+
+.mvpc_hero_tit {
+  margin: 0;
+  color: var(--tournament-light-vote-complete-tit);
+  font-family: var(--font-pretendard);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.56px;
+}
+
+/* 포인트 카드 */
+.mvpc_point_section {
+  padding: 24px;
+  background: var(--tournament-light-bg);
+}
+
+.mvpc_point_card {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  padding: 28px 24px;
+  border: 1.5px solid var(--tournament-light-point-card-stroke);
+  border-radius: 8px;
+  background: var(--tournament-light-point-card-bg);
+  text-align: center;
+}
+
+.mvpc_point_label {
+  margin: 0;
+  color: var(--tournament-light-txt-main);
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.28px;
+}
+
+.mvpc_point_amount {
+  color: var(--tournament-light-border);
+  font-family: var(--font-pretendard);
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1.04px;
+}
+
+.mvpc_point_prev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 18px;
+  border: 1px solid var(--tournament-light-point-card-stroke);
+  border-radius: 999px;
+  color: var(--tournament-light-player-info-txt);
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.28px;
+}
+
+.mvpc_point_link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tournament-light-btn-sub-txt);
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.28px;
+  text-decoration: none;
+}
+
+.mvpc_point_icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--tournament-light-point-sub);
+  background: var(--tournament-light-point-sub);
+}
+
+/* 내가 선택한 선수 */
+.mvpc_player_section {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--tournament-light-bg);
+}
+
+.mvpc_player_section h2 {
+  margin: 0;
+  color: var(--tournament-light-txt-main);
+}
+
+.mvpc_player_card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.mvpc_player_left {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.mvpc_player_photo {
+  display: block;
+  width: 78px;
+  height: 78px;
+  border-radius: 999px;
+  background: var(--tournament-dark-player-info-txt);
+}
+
+.mvpc_player_name {
+  color: var(--tournament-light-vote-state);
+  text-align: center;
+}
+
+.mvpc_player_info {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px 12px;
+  margin: 0;
+  align-content: start;
+  padding-top: 2px;
+}
+
+.mvpc_player_info dt {
+  color: var(--tournament-light-player-info-txt);
+  white-space: nowrap;
+}
+
+.mvpc_player_info dd {
+  margin: 0;
+  color: var(--tournament-light-txt-main);
+}
+
+/* 실시간 랭킹 */
+.mvpc_rank_section {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--tournament-light-bg);
+}
+
+.mvpc_rank_section h2 {
+  margin: 0;
+  color: var(--tournament-light-txt-main);
+}
+
+/* CTA */
+.mvpc_cta_section {
+  display: grid;
+  gap: 10px;
+  padding: 24px;
+  background: var(--tournament-light-bg);
+}
+
+.mvpc_btn_primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--tournament-light-btn-bg);
+  color: var(--tournament-light-btn-txt);
+  text-align: center;
+  text-decoration: none;
+}
+
+.mvpc_btn_secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1.5px solid var(--tournament-light-card-stroke);
+  border-radius: 10px;
+  background: var(--tournament-light-card-bg);
+  color: var(--tournament-light-txt-main);
+  text-align: center;
+  text-decoration: none;
+}
+
+.mvpc_result_notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 0;
+  padding-top: 4px;
+  color: var(--tournament-light-txt-sub);
 }

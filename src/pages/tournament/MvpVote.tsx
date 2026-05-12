@@ -4,7 +4,7 @@ import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import tournamentLockIcon from '../../asset/icons/tournament_lock.svg'
-import tournamentMainImg from '../../asset/images/tournament_main01.png'
+import tournamentMainLightImg from '../../asset/images/tournament_main_light.png'
 import './Tournament.css'
 
 const matches = [
@@ -101,7 +101,7 @@ export function MvpVote() {
     <div className="tournament_page is_light">
       <section
         className="tournament_intro_card"
-        style={{ backgroundImage: `url(${tournamentMainImg})` }}
+        style={{ backgroundImage: `url(${tournamentMainLightImg})` }}
       >
         <div className="tournament_intro_tit">
           <div className="tournament_intro_top">
@@ -252,10 +252,10 @@ export function MvpVote() {
           onClick={submitVote}
           disabled={!selectedCandidate}
           style={{
-            background: '#b8db2d',
-            backgroundColor: '#b8db2d',
-            color: '#ffffff',
-            WebkitTextFillColor: '#ffffff',
+            background: 'var(--tournament-light-btn-bg)',
+            backgroundColor: 'var(--tournament-light-btn-bg)',
+            color: 'var(--tournament-light-btn-txt)',
+            WebkitTextFillColor: 'var(--tournament-light-btn-txt)',
           }}
         >
           {selected ? selected.name : '후보'}에게 투표하기
