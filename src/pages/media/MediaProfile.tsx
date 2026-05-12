@@ -19,7 +19,7 @@ import youtube02 from '../../asset/images/creator_youtube_img02.png'
 import youtube03 from '../../asset/images/creator_youtube_img03.png'
 import youtube04 from '../../asset/images/creator_youtube_img04.png'
 import youtube05 from '../../asset/images/creator_youtube_img05.png'
-import './CreatorProfile.css'
+import './MediaProfile.css'
 
 const CREATOR_LIKES_STORAGE_KEY = 'creatorProfileLikes'
 
@@ -36,7 +36,7 @@ type MediaItem = {
   alt: string
 }
 
-type CreatorProfileData = {
+type MediaProfileData = {
   intro: string
   likes: string
   name: string
@@ -89,7 +89,7 @@ function readCreatorLikes() {
   }
 }
 
-const creatorProfiles: Record<string, CreatorProfileData> = {
+const mediaProfiles: Record<string, MediaProfileData> = {
   'creator-001': {
     name: '레드닷존',
     likes: '2.1K',
@@ -207,15 +207,15 @@ function CreatorHeartIcon({ liked }: { liked: boolean }) {
   )
 }
 
-export function CreatorProfile() {
+export function MediaProfile() {
   const navigate = useNavigate()
-  const { creatorId } = useParams()
-  const resolvedCreatorId = creatorId && creatorProfiles[creatorId] ? creatorId : 'creator-001'
-  const profile = creatorProfiles[resolvedCreatorId]
+  const { mediaId } = useParams()
+  const resolvedMediaId = mediaId && mediaProfiles[mediaId] ? mediaId : 'creator-001'
+  const profile = mediaProfiles[resolvedMediaId]
   const [activeYear, setActiveYear] = useState(profile.years[0])
   const [likedCreators, setLikedCreators] = useState<Record<string, boolean>>(() => readCreatorLikes())
   const [likeBurstKey, setLikeBurstKey] = useState(0)
-  const liked = likedCreators[resolvedCreatorId] ?? false
+  const liked = likedCreators[resolvedMediaId] ?? false
 
   useEffect(() => {
     setActiveYear(profile.years[0])
@@ -225,7 +225,7 @@ export function CreatorProfile() {
     const nextLiked = !liked
 
     setLikedCreators((previous) => {
-      const nextState = { ...previous, [resolvedCreatorId]: nextLiked }
+      const nextState = { ...previous, [resolvedMediaId]: nextLiked }
       window.localStorage.setItem(CREATOR_LIKES_STORAGE_KEY, JSON.stringify(nextState))
       return nextState
     })

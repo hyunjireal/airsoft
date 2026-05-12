@@ -15,9 +15,9 @@ import { BoardList } from './pages/community/BoardList'
 import { CommunityHome } from './pages/community/CommunityHome'
 import { PostCreate } from './pages/community/PostCreate'
 import { PostDetail } from './pages/community/PostDetail'
-import { CreatorHome } from './pages/creator/CreatorHome'
-import { CreatorList } from './pages/creator/CreatorList'
-import { CreatorProfile } from './pages/creator/CreatorProfile'
+import { MediaHome } from './pages/media/MediaHome'
+import { MediaList } from './pages/media/MediaList'
+import { MediaProfile } from './pages/media/MediaProfile'
 import { GuideComplete } from './pages/guide/GuideComplete'
 import { GuideQuiz } from './pages/guide/GuideQuiz'
 import { GuideStepPage } from './pages/guide/GuideStepPage'
@@ -150,9 +150,9 @@ export const router = createBrowserRouter([
           { path: '/community/post/create', element: <PostCreate /> },
           { path: '/community/post/:id', element: <PostDetail /> },
           { path: '/community/:boardType', element: <BoardList /> },
-          { path: '/creator', element: <CreatorHome /> },
-          { path: '/creator/list', element: <CreatorList /> },
-          { path: '/creator/:creatorId', element: <CreatorProfile /> },
+          { path: '/media', element: <MediaHome /> },
+          { path: '/media/list', element: <MediaList /> },
+          { path: '/media/:mediaId', element: <MediaProfile /> },
           { path: '/tournament', element: <TournamentHome /> },
           { path: '/tournament/highlights', element: <HighlightList /> },
           { path: '/tournament/highlights/:id', element: <HighlightDetail /> },

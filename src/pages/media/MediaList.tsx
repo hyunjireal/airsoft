@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import './CreatorHome.css'
+import './MediaHome.css'
 import list01 from '../../asset/images/creator_list01.png'
 import list02 from '../../asset/images/creator_list02.png'
 import list03 from '../../asset/images/creator_list03.png'
@@ -46,7 +46,7 @@ const SearchIcon = () => (
   </svg>
 )
 
-export function CreatorList() {
+export function MediaList() {
   const [activeFilter, setActiveFilter] = useState<CreatorFilter>('gear')
   const filteredCreators = creatorProfiles.filter((creator) => creator.category === activeFilter)
 
@@ -74,7 +74,7 @@ export function CreatorList() {
 
       <section className="creator_profile_grid" aria-label="크리에이터 프로필 목록">
         {filteredCreators.map((creator, index) => (
-          <Link className="creator_profile_tile" key={`${creator.name}-${index}`} to={`/creator/${creator.id}`}>
+          <Link className="creator_profile_tile" key={`${creator.name}-${index}`} to={`/media/${creator.id}`}>
             <img src={creator.avatar} alt="" />
             <strong>{creator.name}</strong>
             <span>{creator.stat}</span>

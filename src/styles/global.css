@@ -300,7 +300,7 @@ a {
   padding-bottom: var(--app-bottom-safe-area);
 }
 
-.creator_profile_frame > main {
+.media_profile_frame > main {
   padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
 }
 
@@ -764,4 +764,3 @@ a {
     border: 0;
   }
 }
-

@@ -5,8 +5,8 @@ export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
-  const isCreatorProfile =
-    location.pathname.startsWith('/creator/') && location.pathname !== '/creator/list'
+  const isMediaProfile =
+    location.pathname.startsWith('/media/') && location.pathname !== '/media/list'
   const isBeginnerBoardHome = location.pathname === '/community'
   const isGeneralBoardHome = location.pathname === '/community/free'
   const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
@@ -16,7 +16,7 @@ export function AppShell() {
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
-    !isCreatorProfile &&
+    !isMediaProfile &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&
     !isCommunityPostDetail &&
@@ -29,8 +29,8 @@ export function AppShell() {
   const frameClassName = [
     'mobile_frame',
     isChatPage ? 'chat_frame' : '',
-    isCreatorProfile
-      ? 'creator_profile_frame'
+    isMediaProfile
+      ? 'media_profile_frame'
       : showBackButton
         ? 'has_app_back_button'
         : keepTopInset

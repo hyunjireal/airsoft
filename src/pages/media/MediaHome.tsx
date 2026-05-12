@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import './CreatorHome.css'
+import './MediaHome.css'
 import grade01 from '../../asset/images/creator_grade01.png'
 import grade02 from '../../asset/images/creator_grade02.png'
 import grade03 from '../../asset/images/creator_grade03.png'
@@ -65,7 +65,7 @@ const ChevronIcon = () => (
   </svg>
 )
 
-export function CreatorHome() {
+export function MediaHome() {
   const [rankingOpen, setRankingOpen] = useState(false)
   const [activeRankIndex, setActiveRankIndex] = useState(0)
   const [tickerTransition, setTickerTransition] = useState(true)
@@ -115,7 +115,7 @@ export function CreatorHome() {
         <div className="podium_section">
           {podiumData.map((item) => (
             <article className={`podium_item podium_${item.rank}`} key={item.rank}>
-              <Link className="podium_profile_link" to={`/creator/${item.profileId}`} aria-label={`${item.name} 프로필 보기`}>
+              <Link className="podium_profile_link" to={`/media/${item.profileId}`} aria-label={`${item.name} 프로필 보기`}>
                 <img src={item.avatar} alt={item.name} className="podium_avatar" />
                 <strong className="podium_name">{item.name}</strong>
               </Link>
@@ -159,7 +159,7 @@ export function CreatorHome() {
                   {item.profileId ? (
                     <Link
                       className="creator_rank_list_link"
-                      to={`/creator/${item.profileId}`}
+                      to={`/media/${item.profileId}`}
                       aria-label={`${item.rank}위 ${item.name} 프로필 보기`}
                     >
                       <span>{item.rank}</span>
@@ -178,7 +178,7 @@ export function CreatorHome() {
             </ol>
           ) : null}
         </div>
-        <Link className="creator_more_button" to="/creator/list">
+        <Link className="creator_more_button" to="/media/list">
           더보기 <span aria-hidden="true">&gt;</span>
         </Link>
       </section>
