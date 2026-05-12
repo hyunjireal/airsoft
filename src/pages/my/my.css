@@ -527,7 +527,7 @@
 
 .my_schedule_match_media {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   min-width: 0;
 }

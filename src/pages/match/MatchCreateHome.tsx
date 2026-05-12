@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+﻿import { useMemo, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
@@ -12,6 +12,24 @@ import matchXCircleIcon from '../../asset/icons/match_x_circle.svg'
 import './match.css'
 
 type MatchKind = 'personal' | 'team' | 'guest'
+
+type CreatedMatch = {
+  id: string
+  type?: string
+  title?: string
+  date?: string
+  time?: string
+  region?: string
+  fieldName?: string
+  difficulty?: string
+  currentParticipants?: number
+  maxParticipants?: number
+  action?: string
+  body?: string
+  recruitType?: string
+  deadlineDate?: string
+  deadlineTime?: string
+}
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
@@ -50,17 +68,30 @@ function formatPickerDate(value: string) {
   return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')} (${weekdays[date.getDay()]})`
 }
 
-function readCreatedMatch(matchId: string | null) {
-  if (!matchId) return null
-
+function readCreatedMatches(): CreatedMatch[] {
   try {
     const value = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
-    if (!Array.isArray(value)) return null
-
-    return value.find((match) => match && typeof match === 'object' && match.id === matchId) ?? null
+    return Array.isArray(value) ? value : []
   } catch {
-    return null
+    return []
   }
+}
+
+function readCreatedMatch(matchId: string | null) {
+  if (!matchId) return null
+  return readCreatedMatches().find((match) => match && typeof match === 'object' && match.id === matchId) ?? null
+}
+
+function resolveEditedType(recruitType: string) {
+  if (recruitType === 'mercenary') return 'mercenary'
+  if (recruitType === 'team') return 'team'
+  return 'personal'
+}
+
+function resolveDifficulty(recruitType: string) {
+  if (recruitType === 'mercenary') return '용병'
+  if (recruitType === 'team') return '팀'
+  return '개인'
 }
 
 export function MatchCreateHome() {
@@ -95,16 +126,22 @@ export function MatchCreateHome() {
     typeof editingMatch?.fieldName === 'string' ? editingMatch.fieldName : '어반CQB',
   )
   const [editHeadcount, setEditHeadcount] = useState(Number(editingMatch?.maxParticipants) || 12)
-  const [editRecruitType, setEditRecruitType] = useState('team')
-  const [editDescription, setEditDescription] = useState('')
-  const [deadlineDate, setDeadlineDate] = useState('2026-05-10')
-  const [deadlineTime, setDeadlineTime] = useState('18:00')
+  const [editRecruitType, setEditRecruitType] = useState(
+    typeof editingMatch?.recruitType === 'string' ? editingMatch.recruitType : 'team',
+  )
+  const [editDescription, setEditDescription] = useState(typeof editingMatch?.body === 'string' ? editingMatch.body : '')
+  const [deadlineDate, setDeadlineDate] = useState(
+    typeof editingMatch?.deadlineDate === 'string' ? editingMatch.deadlineDate : '2026-05-10',
+  )
+  const [deadlineTime, setDeadlineTime] = useState(
+    typeof editingMatch?.deadlineTime === 'string' ? editingMatch.deadlineTime : '18:00',
+  )
   const editDateRef = useRef<HTMLInputElement>(null)
   const deadlineDateRef = useRef<HTMLInputElement>(null)
 
   const createMatch = () => {
-    const savedMatches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
-    const createdMatch = {
+    const savedMatches = readCreatedMatches()
+    const createdMatch: CreatedMatch = {
       id: `created-match-${Date.now()}`,
       type: matchKind === 'guest' ? 'mercenary' : matchKind,
       title: title.trim() || `${matchKind === 'team' ? '팀전' : '개인전'} 모집`,
@@ -143,38 +180,17 @@ export function MatchCreateHome() {
 
   const completeEdit = () => {
     try {
-      const savedMatches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
-      if (Array.isArray(savedMatches) && editMatchId) {
-        const nextMatches = savedMatches.map((match) => {
-          if (!match || typeof match !== 'object' || match.id !== editMatchId) return match
-
-          return {
-            ...match,
-            type: editRecruitType === 'mercenary' ? 'mercenary' : editRecruitType === 'team' ? 'team' : 'personal',
-            title: editTitle.trim() || '매치 제목',
-            date: editDate,
-            time: editTime,
-            region: '서울',
-            fieldName: editPlace,
-            difficulty: editRecruitType === 'mercenary' ? '용병' : editRecruitType === 'team' ? '팀' : '개인',
-            maxParticipants: editHeadcount,
-            action: '상세 보기',
-            body: editDescription,
-            recruitType: editRecruitType,
-            deadlineDate,
-            deadlineTime,
-          }
-        })
-        const hasSavedMatch = savedMatches.some((match) => match && typeof match === 'object' && match.id === editMatchId)
-        const fallbackEditedMatch = {
+      const savedMatches = readCreatedMatches()
+      if (editMatchId) {
+        const editedMatch: CreatedMatch = {
           id: editMatchId,
-          type: editRecruitType === 'mercenary' ? 'mercenary' : editRecruitType === 'team' ? 'team' : 'personal',
+          type: resolveEditedType(editRecruitType),
           title: editTitle.trim() || '매치 제목',
           date: editDate,
           time: editTime,
           region: '서울',
           fieldName: editPlace,
-          difficulty: editRecruitType === 'mercenary' ? '용병' : editRecruitType === 'team' ? '팀' : '개인',
+          difficulty: resolveDifficulty(editRecruitType),
           currentParticipants: Number(editingMatch?.currentParticipants) || 1,
           maxParticipants: editHeadcount,
           action: '상세 보기',
@@ -183,12 +199,34 @@ export function MatchCreateHome() {
           deadlineDate,
           deadlineTime,
         }
+        const hasSavedMatch = savedMatches.some((match) => match && typeof match === 'object' && match.id === editMatchId)
+        const nextMatches = hasSavedMatch
+          ? savedMatches.map((match) => (match && typeof match === 'object' && match.id === editMatchId ? { ...match, ...editedMatch } : match))
+          : [editedMatch, ...savedMatches]
 
-        localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify(hasSavedMatch ? nextMatches : [fallbackEditedMatch, ...savedMatches]))
+        localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify(nextMatches))
         localStorage.setItem(CREATED_MATCH_FOCUS_DATE_KEY, editDate)
       }
     } catch {
       // 저장 실패 시에도 목록으로 복귀해 흐름을 막지 않습니다.
+    }
+
+    navigate('/my/schedule')
+  }
+
+  const deleteMatch = () => {
+    try {
+      const savedMatches = readCreatedMatches()
+      if (editMatchId) {
+        const nextMatches = savedMatches.filter((match) => !match || typeof match !== 'object' || match.id !== editMatchId)
+        localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify(nextMatches))
+
+        if (editingMatch?.date === localStorage.getItem(CREATED_MATCH_FOCUS_DATE_KEY)) {
+          localStorage.removeItem(CREATED_MATCH_FOCUS_DATE_KEY)
+        }
+      }
+    } catch {
+      // 삭제 실패 시에도 목록으로 복귀해 흐름을 막지 않습니다.
     }
 
     navigate('/my/schedule')
@@ -242,11 +280,7 @@ export function MatchCreateHome() {
                 <label className="match_edit_select_box match_edit_hug_box match_edit_time_box">
                   <span className="match_edit_picker_value">
                     <img className="match_edit_icon_15" src={matchClockIcon} alt="" aria-hidden="true" />
-                    <select
-                      className="match_edit_time_select"
-                      value={editTime}
-                      onChange={(event) => setEditTime(event.target.value)}
-                    >
+                    <select className="match_edit_time_select" value={editTime} onChange={(event) => setEditTime(event.target.value)}>
                       {timeOptions.map((option) => (
                         <option key={option}>{option}</option>
                       ))}
@@ -287,33 +321,15 @@ export function MatchCreateHome() {
               <span className="body_sb_16">모집 유형</span>
               <div className="match_edit_radio_group" role="radiogroup" aria-label="모집 유형">
                 <label className="body_m_14">
-                  <input
-                    type="radio"
-                    name="recruitType"
-                    value="team"
-                    checked={editRecruitType === 'team'}
-                    onChange={(event) => setEditRecruitType(event.target.value)}
-                  />
+                  <input type="radio" name="recruitType" value="team" checked={editRecruitType === 'team'} onChange={(event) => setEditRecruitType(event.target.value)} />
                   팀(용병가능)
                 </label>
                 <label className="body_m_14">
-                  <input
-                    type="radio"
-                    name="recruitType"
-                    value="personal"
-                    checked={editRecruitType === 'personal'}
-                    onChange={(event) => setEditRecruitType(event.target.value)}
-                  />
+                  <input type="radio" name="recruitType" value="personal" checked={editRecruitType === 'personal'} onChange={(event) => setEditRecruitType(event.target.value)} />
                   개인
                 </label>
                 <label className="body_m_14">
-                  <input
-                    type="radio"
-                    name="recruitType"
-                    value="mercenary"
-                    checked={editRecruitType === 'mercenary'}
-                    onChange={(event) => setEditRecruitType(event.target.value)}
-                  />
+                  <input type="radio" name="recruitType" value="mercenary" checked={editRecruitType === 'mercenary'} onChange={(event) => setEditRecruitType(event.target.value)} />
                   용병
                 </label>
               </div>
@@ -324,7 +340,7 @@ export function MatchCreateHome() {
         <section className="match_edit_description_section">
           <div className="match_edit_description_head">
             <div className="match_edit_optional_title">
-              <h2 className="body_sb_20">상세설명</h2>
+              <h2 className="body_sb_20">상세 설명</h2>
               <span className="body_m_14">(선택)</span>
             </div>
             <span className="body_m_14">{editDescription.length} / 200</span>
@@ -338,7 +354,7 @@ export function MatchCreateHome() {
         </section>
 
         <section className="match_edit_extra_section">
-          <h2 className="body_sb_20">추가설정</h2>
+          <h2 className="body_sb_20">추가 설정</h2>
           <div className="match_edit_deadline">
             <h3 className="body_sb_16">모집 마감</h3>
             <div className="match_edit_deadline_inputs">
@@ -353,11 +369,7 @@ export function MatchCreateHome() {
               <label className="match_edit_select_box match_edit_time_box">
                 <span className="match_edit_picker_value">
                   <img className="match_edit_icon_15" src={matchClockIcon} alt="" aria-hidden="true" />
-                  <select
-                    className="match_edit_time_select"
-                    value={deadlineTime}
-                    onChange={(event) => setDeadlineTime(event.target.value)}
-                  >
+                  <select className="match_edit_time_select" value={deadlineTime} onChange={(event) => setDeadlineTime(event.target.value)}>
                     {timeOptions.map((option) => (
                       <option key={option}>{option}</option>
                     ))}
@@ -391,9 +403,9 @@ export function MatchCreateHome() {
               color: '#000000',
               WebkitTextFillColor: '#000000',
             }}
-            onClick={goBack}
+            onClick={deleteMatch}
           >
-            취소
+            삭제
           </LoginButton>
           <LoginButton
             style={{
@@ -404,7 +416,7 @@ export function MatchCreateHome() {
             }}
             onClick={completeEdit}
           >
-            수정완료
+            수정 완료
           </LoginButton>
         </div>
       </div>
