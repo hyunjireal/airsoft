@@ -5,6 +5,7 @@ export function AppShell() {
   const location = useLocation()
   const navigate = useNavigate()
   const isMatchPage = location.pathname === '/match' || location.pathname.startsWith('/match/')
+  const isMediaPage = location.pathname === '/media' || location.pathname.startsWith('/media/')
   const isMediaProfile =
     location.pathname.startsWith('/media/') && location.pathname !== '/media/list'
   const isBeginnerBoardHome = location.pathname === '/community'
@@ -16,6 +17,7 @@ export function AppShell() {
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
+    !isMediaPage &&
     !isMediaProfile &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&

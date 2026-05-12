@@ -1,25 +1,102 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import KeywordTag from '../../components/KeywordTag'
+import arrowDownIcon from '../../asset/icons/arrow_down.svg'
+import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import rankingCheckIcon from '../../asset/icons/ranking_check.svg'
+import userIcon from '../../asset/icons/creator_profile.svg'
+import mediaMainBg from '../../asset/images/media_main01.png'
+import mediaRankingIcon from '../../asset/images/media_ranking.svg'
+import mediaFrame1 from '../../asset/images/media_1.png'
+import mediaFrame2 from '../../asset/images/media_2.png'
+import mediaFrame3 from '../../asset/images/media_3.png'
+import mediaUser1 from '../../asset/images/media_user1.png'
+import mediaUser2 from '../../asset/images/media_user2.png'
+import mediaUser3 from '../../asset/images/media_user3.png'
 import './MediaHome.css'
-import grade01 from '../../asset/images/creator_grade01.png'
-import grade02 from '../../asset/images/creator_grade02.png'
-import grade03 from '../../asset/images/creator_grade03.png'
-import list01 from '../../asset/images/creator_list01.png'
-import list02 from '../../asset/images/creator_list02.png'
-import list03 from '../../asset/images/creator_list03.png'
 
-const podiumData = [
-  { rank: 2, name: '하나캠', score: '1225', avatar: grade02, profileId: 'creator-002' },
-  { rank: 1, name: '레드닷존', score: '1500', avatar: grade01, profileId: 'creator-001' },
-  { rank: 3, name: '꼬꼬댁', score: '1080', avatar: grade03, profileId: 'creator-003' },
+const podiumCreators = [
+  {
+    rank: 2,
+    name: '하나캠',
+    subscribers: '98K',
+    frame: mediaFrame2,
+    user: mediaUser2,
+    className: 'media_podium_second',
+    profileId: 'creator-002',
+  },
+  {
+    rank: 1,
+    name: '레드닷존',
+    subscribers: '150K',
+    frame: mediaFrame1,
+    user: mediaUser1,
+    className: 'media_podium_first',
+    profileId: 'creator-001',
+  },
+  {
+    rank: 3,
+    name: '꼬꼬댁',
+    subscribers: '63K',
+    frame: mediaFrame3,
+    user: mediaUser3,
+    className: 'media_podium_third',
+    profileId: 'creator-003',
+  },
 ]
 
-const liveRanking = [
-  { rank: 1, name: '레드닷존', score: 1500, profileId: 'creator-001' },
-  { rank: 2, name: '하나캠', score: 1225, profileId: 'creator-002' },
-  { rank: 3, name: '꼬꼬댁', score: 1080, profileId: 'creator-003' },
+const videoItems = [
+  {
+    id: 'media-video-1',
+    creator: '레드닷존',
+    title: '2024 가성비 전동건 TOP 5 리뷰',
+    views: 56,
+    daysAgo: 2,
+  },
+  {
+    id: 'media-video-2',
+    creator: '하나캠',
+    title: '초보자를 위한 CQB 입문 세팅',
+    views: 18,
+    daysAgo: 4,
+  },
+  {
+    id: 'media-video-3',
+    creator: '꼬꼬댁',
+    title: '필드에서 바로 쓰는 엄폐 이동 팁',
+    views: 64,
+    daysAgo: 7,
+  },
+  {
+    id: 'media-video-4',
+    creator: '베키사리',
+    title: '야외전 필수 장비 체크리스트',
+    views: 29,
+    daysAgo: 14,
+  },
+  {
+    id: 'media-video-5',
+    creator: '알파튜브',
+    title: '팀 매치에서 콜사인 제대로 쓰는 법',
+    views: 41,
+    daysAgo: 21,
+  },
+]
+
+type ContentSort = 'latest' | 'popular'
+
+function formatDaysAgo(daysAgo: number) {
+  if (daysAgo < 7) return `${daysAgo}일 전`
+  if (daysAgo % 7 === 0) return `${daysAgo / 7}주 전`
+  return `${daysAgo}일 전`
+}
+
+const rankingItems = [
+  { rank: 1, name: '레드닷존', score: 1500 },
+  { rank: 2, name: '하나캠', score: 1225 },
+  { rank: 3, name: '꼬꼬댁', score: 1080 },
   { rank: 4, name: '베키사리', score: 985 },
-  { rank: 5, name: '하나캠', score: 922 },
+  { rank: 5, name: '나르마치고', score: 922 },
   { rank: 6, name: '알파튜브', score: 885 },
   { rank: 7, name: '빛나는꼬꼬', score: 823 },
   { rank: 8, name: '비온', score: 736 },
@@ -27,173 +104,133 @@ const liveRanking = [
   { rank: 10, name: '육조준', score: 557 },
 ]
 
-const tickerRanking = [...liveRanking, liveRanking[0]]
-
-const updates = [
-  {
-    title: '간지난는 에어소프트건',
-    meta: '조회수 238만회 · 7일 전',
-    creator: '레드닷존',
-    description: '공지 이 영상은 오락 목적의 콘텐츠입니다. 과한 몰입은 시청에 방해를 줍니다.',
-    image: list01,
-  },
-  {
-    title: '에어소프트 과대평가 총??',
-    meta: '조회수 238만회 · 3주 전',
-    creator: '레드닷존',
-    description: '공지 이 영상은 오락 목적의 콘텐츠입니다. 과한 몰입은 시청에 방해를 줍니다.',
-    image: list02,
-  },
-  {
-    title: 'Play the Gun Game',
-    meta: '조회수 238만회 · 1개월 전',
-    creator: '레드닷존',
-    description: '공지 이 영상은 오락 목적의 콘텐츠입니다. 과한 몰입은 시청에 방해를 줍니다.',
-    image: list03,
-  },
-]
-
-const TrophyIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M8 21h8M12 17v4M7 4h10M5 4H3v3a4 4 0 0 0 4 4M19 4h2v3a4 4 0 0 1-4 4M17 4v7a5 5 0 0 1-10 0V4" />
-  </svg>
-)
-
-const ChevronIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m6 9 6 6 6-6" />
-  </svg>
-)
+function PodiumProfile({ creator }: { creator: (typeof podiumCreators)[number] }) {
+  return (
+    <Link
+      className={`media_podium_profile ${creator.className}`}
+      to={`/media/${creator.profileId}`}
+      aria-label={`${creator.name} 프로필 보기`}
+    >
+      <div className="media_podium_image" aria-hidden="true">
+        <img className="media_podium_user" src={creator.user} alt="" />
+        <img className="media_podium_frame" src={creator.frame} alt="" />
+      </div>
+      <strong className="media_podium_name">{creator.name}</strong>
+      <p className="media_podium_subscribers">
+        <img src={userIcon} alt="" aria-hidden="true" />
+        <span>구독자 {creator.subscribers}</span>
+      </p>
+    </Link>
+  )
+}
 
 export function MediaHome() {
+  const navigate = useNavigate()
   const [rankingOpen, setRankingOpen] = useState(false)
   const [activeRankIndex, setActiveRankIndex] = useState(0)
-  const [tickerTransition, setTickerTransition] = useState(true)
-  const activeRanking = liveRanking[activeRankIndex % liveRanking.length]
-
-  useEffect(() => {
-    if (rankingOpen) {
-      return undefined
+  const [contentSort, setContentSort] = useState<ContentSort>('latest')
+  const activeRanking = rankingItems[activeRankIndex % rankingItems.length]
+  const sortedVideoItems = [...videoItems].sort((a, b) => {
+    if (contentSort === 'popular') {
+      return b.views - a.views
     }
 
+    return a.daysAgo - b.daysAgo
+  })
+
+  useEffect(() => {
     const timer = window.setInterval(() => {
-      setTickerTransition(true)
-      setActiveRankIndex((current) => current + 1)
-    }, 2200)
+      setActiveRankIndex((current) => (current + 1) % rankingItems.length)
+    }, 1800)
 
     return () => window.clearInterval(timer)
-  }, [rankingOpen])
-
-  useEffect(() => {
-    if (activeRankIndex !== liveRanking.length) {
-      return undefined
-    }
-
-    const resetTimer = window.setTimeout(() => {
-      setTickerTransition(false)
-      setActiveRankIndex(0)
-    }, 420)
-
-    return () => window.clearTimeout(resetTimer)
-  }, [activeRankIndex])
-
-  useEffect(() => {
-    if (tickerTransition || activeRankIndex !== 0) {
-      return undefined
-    }
-
-    const transitionTimer = window.setTimeout(() => {
-      setTickerTransition(true)
-    }, 30)
-
-    return () => window.clearTimeout(transitionTimer)
-  }, [activeRankIndex, tickerTransition])
+  }, [])
 
   return (
-    <div className="creator_page">
-      <section className="creator_rank_hero" aria-label="크리에이터 랭킹">
-        <div className="podium_section">
-          {podiumData.map((item) => (
-            <article className={`podium_item podium_${item.rank}`} key={item.rank}>
-              <Link className="podium_profile_link" to={`/media/${item.profileId}`} aria-label={`${item.name} 프로필 보기`}>
-                <img src={item.avatar} alt={item.name} className="podium_avatar" />
-                <strong className="podium_name">{item.name}</strong>
-              </Link>
-              <div className="podium_base">
-                <span className="podium_medal" aria-hidden="true" />
-                <span className="podium_score">{item.score}</span>
-              </div>
-            </article>
+    <div className="media_page">
+      <section
+        className="media_hero"
+        style={{ backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.5)), url(${mediaMainBg})` }}
+      >
+        <header className="media_home_top">
+          <div className="media_home_title">
+            <button className="media_home_back" type="button" aria-label="뒤로가기" onClick={() => navigate(-1)}>
+              <img src={arrowLIcon} alt="" aria-hidden="true" />
+            </button>
+            <h1 className="body_b_24">크리에이터 랭킹</h1>
+          </div>
+        </header>
+
+        <div className="media_podium_row" aria-label="크리에이터 단상">
+          {podiumCreators.map((creator) => (
+            <PodiumProfile creator={creator} key={creator.rank} />
           ))}
         </div>
       </section>
 
-      <section className="creator_rank_summary" aria-label="실시간 크리에이터 순위">
-        <p>실시간 1~10위 크리에이터 순위를 확인하세요.</p>
-        <div className={`creator_rank_dropdown ${rankingOpen ? 'is_open' : ''}`}>
+      <section className="media_ranking_section" aria-labelledby="media-ranking-title">
+        <div className="media_section_title" id="media-ranking-title">
+          <img src={mediaRankingIcon} alt="" aria-hidden="true" />
+          <h2 className="body_sb_16">실시간 크리에이터 랭킹 TOP 10</h2>
+        </div>
+
+        <div className={`media_ranking_box ${rankingOpen ? 'is_open' : ''}`}>
           <button
-            className="creator_rank_select"
+            className="media_ranking_toggle"
             type="button"
             aria-expanded={rankingOpen}
+            aria-label="실시간 크리에이터 랭킹 펼치기"
             onClick={() => setRankingOpen((open) => !open)}
           >
-            <span className="creator_rank_ticker_icon"><TrophyIcon /></span>
-            <span className="creator_rank_ticker_window">
-              <span
-                className={`creator_rank_ticker_track ${tickerTransition ? '' : 'no_transition'}`}
-                style={{ transform: `translateY(-${activeRankIndex * 37}px)` }}
-              >
-                {tickerRanking.map((item, index) => (
-                  <span className="creator_rank_ticker_item" key={`${item.rank}-${index}`}>
-                    {item.rank} {item.name}
-                  </span>
-                ))}
+            <span className="media_ranking_left">
+              <span className="media_ranking_ticker" key={activeRanking.rank}>
+                <span className="media_ranking_number body_b_16">{activeRanking.rank}</span>
+                <strong className="body_sb_16">{activeRanking.name}</strong>
               </span>
             </span>
-            <ChevronIcon />
+            <img src={arrowDownIcon} alt="" aria-hidden="true" />
           </button>
+
           {rankingOpen ? (
-            <ol className="creator_rank_list" aria-label="1위부터 10위 크리에이터 순위">
-              {liveRanking.map((item) => (
-                <li className={item.rank === activeRanking.rank ? 'is_active' : ''} key={item.rank}>
-                  {item.profileId ? (
-                    <Link
-                      className="creator_rank_list_link"
-                      to={`/media/${item.profileId}`}
-                      aria-label={`${item.rank}위 ${item.name} 프로필 보기`}
-                    >
-                      <span>{item.rank}</span>
-                      <strong>{item.name}</strong>
-                      <em>{item.score}</em>
-                    </Link>
-                  ) : (
-                    <>
-                      <span>{item.rank}</span>
-                      <strong>{item.name}</strong>
-                      <em>{item.score}</em>
-                    </>
-                  )}
+            <ol className="media_ranking_list" aria-label="실시간 크리에이터 랭킹 1위부터 10위">
+              {rankingItems.map((item) => (
+                <li className={`media_ranking_item ${item.rank === activeRanking.rank ? 'is_active' : ''}`} key={item.rank}>
+                  <span className="media_ranking_item_left">
+                    <span className={`media_ranking_item_rank body_b_14 ${item.rank <= 3 ? 'is_top' : ''}`}>{item.rank}</span>
+                    <strong className="body_b_14">{item.name}</strong>
+                  </span>
+                  <span className="media_ranking_item_score body_sb_14">{item.score}</span>
                 </li>
               ))}
             </ol>
           ) : null}
         </div>
-        <Link className="creator_more_button" to="/media/list">
-          더보기 <span aria-hidden="true">&gt;</span>
-        </Link>
       </section>
 
-      <section className="creator_updates_section" aria-labelledby="creator-updates-title">
-        <h2 id="creator-updates-title">레드닷존 유튜브 업데이트</h2>
-        <div className="creator_update_list">
-          {updates.map((item) => (
-            <article className="creator_update_card" key={item.title}>
-              <img src={item.image} alt="" />
-              <div className="creator_update_content">
-                <h3>{item.title}</h3>
-                <p className="creator_update_meta">{item.meta}</p>
-                <p className="creator_update_name"><span aria-hidden="true" /> {item.creator}</p>
-                <p className="creator_update_description">{item.description}</p>
+      <section className="media_contents_section" aria-labelledby="media-contents-title">
+        <div className="media_contents_head">
+          <h2 id="media-contents-title" className="body_b_20">크리에이터 컨텐츠</h2>
+          <div className="media_content_filters" aria-label="컨텐츠 정렬">
+            <button className="media_content_filter_button" type="button" onClick={() => setContentSort('latest')}>
+              <KeywordTag className={`media_content_filter ${contentSort === 'latest' ? 'is_active' : ''}`}>최신순</KeywordTag>
+            </button>
+            <button className="media_content_filter_button" type="button" onClick={() => setContentSort('popular')}>
+              <KeywordTag className={`media_content_filter ${contentSort === 'popular' ? 'is_active' : ''}`}>인기순</KeywordTag>
+            </button>
+          </div>
+        </div>
+
+        <div className="media_video_list">
+          {sortedVideoItems.map((item) => (
+            <article className="media_video_item" key={item.id}>
+              <div className="media_video_thumb" aria-hidden="true" />
+              <div className="media_video_info">
+                <div className="media_video_top">
+                  <span className="body_m_14">{item.creator}</span>
+                  <img src={rankingCheckIcon} alt="" aria-hidden="true" />
+                </div>
+                <strong className="media_video_title body_sb_16">{item.title}</strong>
+                <p className="media_video_meta body_m_14">조회수 {item.views}K · {formatDaysAgo(item.daysAgo)}</p>
               </div>
             </article>
           ))}
