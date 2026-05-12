@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import More from '../../components/More'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
-import bannerCharImage from '../../asset/images/banner_char01.png'
+import pointshopBannerImage from '../../asset/images/pointshop_bannger_img.png'
 import pointshopBestImg01 from '../../asset/images/pointshop_best_img01.png'
 import pointshopBestImg02 from '../../asset/images/pointshop_best_img02.png'
 import pointshopBestImg03 from '../../asset/images/pointshop_best_img03.png'
@@ -40,7 +40,7 @@ const bestItems: BestItem[] = [
     id: 'best-field-ticket',
     titleLines: ['필드 평일 입장권', '3,000원 할인권'],
     price: '3,000',
-    visual: { kind: 'image', alt: '필드 평일 입장권 할인권', src: pointshopBestImg01 },
+    visual: { kind: 'image', alt: '필드 평일 입장권 3,000원 할인권', src: pointshopBestImg01 },
   },
   {
     id: 'best-field-drink',
@@ -122,6 +122,15 @@ const gearItems: ShopListItem[] = [
   },
 ]
 
+const moreActionStyle = {
+  gap: 4,
+  color: '#9f9f9f',
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: '130%',
+  letterSpacing: '-0.02em',
+} as const
+
 function PointBadgeIcon() {
   return (
     <span aria-hidden="true" className="point_shop_point_icon">
@@ -178,18 +187,7 @@ function SectionHeading({ title }: { title: string }) {
   return (
     <div className="point_shop_section_heading">
       <h2 className="point_shop_section_title">{title}</h2>
-      <button className="point_shop_more_button" type="button">
-        <More
-          style={{
-            gap: 4,
-            color: '#9f9f9f',
-            fontSize: 14,
-            fontWeight: 500,
-            lineHeight: '130%',
-            letterSpacing: '-0.02em',
-          }}
-        />
-      </button>
+      <More ariaLabel={`${title} 더보기`} className="point_shop_more_button" style={moreActionStyle} type="button" />
     </div>
   )
 }
@@ -252,17 +250,21 @@ export function PointShop() {
     navigate('/my')
   }
 
+  const goToCoupons = () => {
+    navigate('/my/point-shop/coupons')
+  }
+
   return (
     <div className="point_shop_page">
       <div className="point_shop_content">
         <header className="point_shop_header point_shop_shell">
           <div className="point_shop_header_left">
-            <button className="point_shop_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
+            <button className="point_shop_back_button" type="button" aria-label="뒤로 가기" onClick={goBack}>
               <img className="point_shop_back_icon" src={arrowLeftIcon} alt="" aria-hidden="true" />
             </button>
             <h1 className="point_shop_title">포인트 샵</h1>
           </div>
-          <button className="point_shop_coupon_button" type="button">
+          <button className="point_shop_coupon_button" type="button" onClick={goToCoupons}>
             내 쿠폰함
           </button>
         </header>
@@ -278,7 +280,7 @@ export function PointShop() {
             </div>
             <img
               className="point_shop_hero_image"
-              src={bannerCharImage}
+              src={pointshopBannerImage}
               alt=""
               aria-hidden="true"
             />
@@ -290,15 +292,10 @@ export function PointShop() {
             <h2 className="point_shop_section_title">BEST 추천 보급품</h2>
           </div>
           <div className="point_shop_best_wrap">
-            <div className="point_shop_best_row" role="list" aria-label="포인트 샵 추천 보급품">
+            <div className="point_shop_best_row" role="list" aria-label="포인트샵 추천 보급품">
               {bestItems.map((item) => (
                 <BestCard key={item.id} item={item} />
               ))}
-            </div>
-            <div className="point_shop_best_dots" aria-hidden="true">
-              <span className="point_shop_best_dot is_active" />
-              <span className="point_shop_best_dot" />
-              <span className="point_shop_best_dot" />
             </div>
           </div>
         </section>

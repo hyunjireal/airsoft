@@ -1,10 +1,16 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import arrowR from '../asset/icons/arrow_r.svg'
 
 type MoreProps = {
+  ariaLabel?: string
   children?: ReactNode
   className?: string
+  disabled?: boolean
+  onClick?: () => void
   style?: CSSProperties
+  to?: string
+  type?: 'button' | 'reset' | 'submit'
 }
 
 const moreStyle: CSSProperties = {
@@ -17,6 +23,7 @@ const moreStyle: CSSProperties = {
   padding: 0,
   background: 'transparent',
   color: '#98999A',
+  textDecoration: 'none',
   fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
   fontSize: 12,
   fontWeight: 700,
@@ -30,11 +37,50 @@ const arrowStyle: CSSProperties = {
   flexShrink: 0,
 }
 
-function More({ children = '\uB354\uBCF4\uAE30', className, style }: MoreProps) {
-  return (
-    <span className={className} style={{ ...moreStyle, ...style }}>
+function More({
+  ariaLabel,
+  children = '\uB354\uBCF4\uAE30',
+  className,
+  disabled,
+  onClick,
+  style,
+  to,
+  type,
+}: MoreProps) {
+  const mergedStyle = { ...moreStyle, ...style }
+  const content = (
+    <>
       <span>{children}</span>
       <img aria-hidden="true" alt="" className="arrow_r" src={arrowR} style={arrowStyle} />
+    </>
+  )
+
+  if (to) {
+    return (
+      <Link aria-label={ariaLabel} className={className} style={mergedStyle} to={to}>
+        {content}
+      </Link>
+    )
+  }
+
+  if (type || onClick || disabled) {
+    return (
+      <button
+        aria-label={ariaLabel}
+        className={className}
+        disabled={disabled}
+        style={mergedStyle}
+        type={type ?? 'button'}
+        onClick={onClick}
+      >
+        {content}
+      </button>
+    )
+  }
+
+  return (
+    <span className={className} style={mergedStyle}>
+      {content}
     </span>
   )
 }

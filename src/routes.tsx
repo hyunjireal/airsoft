@@ -43,6 +43,7 @@ import { MyApplications } from './pages/my/MyApplications'
 import { MyMatches } from './pages/my/MyMatches'
 import { MyPage } from './pages/my/MyPage'
 import { PointShop } from './pages/my/PointShop'
+import { PointShopCoupons } from './pages/my/PointShopCoupons'
 import { MyPosts } from './pages/my/MyPosts'
 import { MySchedule } from './pages/my/MySchedule'
 import { NotificationSettings } from './pages/my/NotificationSettings'
@@ -163,6 +164,7 @@ export const router = createBrowserRouter([
           { path: '/chat', element: <ChatbotPage /> },
           { path: '/my', element: <MyPage /> },
           { path: '/my/point-shop', element: <PointShop /> },
+          { path: '/my/point-shop/coupons', element: <PointShopCoupons /> },
           { path: '/my/matches', element: <MyMatches /> },
           { path: '/my/profile', element: <ProfileEdit /> },
           { path: '/my/schedule', element: <MySchedule /> },

@@ -117,6 +117,15 @@ const profileStats = [
   { label: '작성한 글', value: '56개' },
 ]
 
+const moreActionStyle = {
+  gap: 4,
+  color: '#9f9f9f',
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: '130%',
+  letterSpacing: '-0.02em',
+} as const
+
 function resolveProfileName(savedNickname: string | null) {
   const trimmedNickname = savedNickname?.trim()
 
@@ -418,18 +427,12 @@ export function MyPage() {
       <section className="my_matches_section my_section_shell">
         <div className="my_matches_heading">
           <h2 className="my_section_title">내 매치</h2>
-          <Link className="my_matches_more" to="/my/matches" aria-label="내 매치 더보기">
-            <More
-              style={{
-                gap: 4,
-                color: '#9f9f9f',
-                fontSize: 14,
-                fontWeight: 500,
-                lineHeight: '130%',
-                letterSpacing: '-0.02em',
-              }}
-            />
-          </Link>
+          <More
+            ariaLabel="내 매치 더보기"
+            className="my_matches_more"
+            style={moreActionStyle}
+            to="/my/matches"
+          />
         </div>
 
         <div className="my_match_tabs" role="tablist" aria-label="내 매치 상태 탭">
