@@ -534,7 +534,12 @@ export function MatchHome() {
               <>
                 <div className="match_selected_list">
                   {selectedMatches.map((match) => (
-                    <div className="match_selected_item" key={match.id}>
+                    <Link
+                      className="match_selected_item"
+                      to={`/match/schedule/${match.id}/join`}
+                      aria-label={`${match.title} 참가 안내 보기`}
+                      key={match.id}
+                    >
                       <MainTag className="match_item_tag" style={{ backgroundColor: matchTypeColor[match.type], color: '#ffffff' }}>
                         {getMatchTypeLabel(match)}
                       </MainTag>
@@ -559,11 +564,11 @@ export function MatchHome() {
                             </p>
                           </div>
                         </div>
-                        <Link className="match_item_arrow_link" to={`/match/${match.id}`} aria-label={`${match.title} 상세 보기`}>
+                        <span className="match_item_arrow_link" aria-hidden="true">
                           <img className="match_item_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
-                        </Link>
+                        </span>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
                 <button className="match_full_button match_dark_button" type="button">전체 보기</button>

@@ -1,40 +1,92 @@
-import { Link, useParams } from 'react-router-dom'
-import { matches } from '../../data/mockData'
+import { useNavigate, useParams } from 'react-router-dom'
+import { LoginButton } from '../../components/LoginButton'
+import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import matchCheckIcon from '../../asset/icons/match_check.svg'
 import './match.css'
+
+const noticeItems = [
+  '이번 주 일요일 12:00까지 어반 CQB에 도착해주세요.',
+  '현장에서는 고글을 벗지 않고, 세이프존 규칙을 먼저 확인해주세요.',
+  '참석이 어려워지면 팀장 승인 전이라도 빠르게 취소 연락을 남겨주세요.',
+  '렌탈을 신청했다면 신분증과 렌탈 비용을 준비해주세요.',
+]
 
 export function MatchApplyComplete() {
   const { id } = useParams()
-  const match = matches.find((item) => item.id === id)
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
+
+    navigate(`/match/${id ?? 'match-003'}/apply`)
+  }
 
   return (
-    <div className="page match_flow_page">
-      <section className="match_complete_panel">
-        <span aria-hidden="true">✓</span>
-        <h1>참가 신청이 완료되었습니다</h1>
-        <p>팀장의 승낙 여부를 기다려주세요. 승인 또는 조율이 필요하면 등록한 연락처로 안내가 전달됩니다.</p>
-      </section>
+    <div className="match_apply_complete_page match_flow_page">
+      <header className="schedule_join_top match_apply_top">
+        <div className="schedule_join_tit">
+          <button className="schedule_join_back" type="button" aria-label="뒤로가기" onClick={goBack}>
+            <img src={arrowLIcon} alt="" aria-hidden="true" />
+          </button>
+        </div>
+      </header>
 
-      <section className="match_notice_panel">
-        <h2>숙지해야 할 정보</h2>
-        <ul>
-          <li>{match ? `${match.date} ${match.time}까지 ${match.fieldName}에 도착해주세요.` : '신청한 경기의 날짜와 장소를 다시 확인해주세요.'}</li>
-          <li>현장에서는 고글을 벗지 않고, 세이프존 규칙을 먼저 확인해주세요.</li>
-          <li>참석이 어려워지면 팀장 승인 전이라도 빠르게 취소 연락을 남겨주세요.</li>
-          <li>{match?.rentalAvailable ? '렌탈을 신청했다면 신분증과 렌탈 비용을 준비해주세요.' : '이 일정은 장비 렌탈이 제공되지 않으니 개인 장비를 준비해주세요.'}</li>
-        </ul>
-      </section>
-
-      {match ? (
-        <section className="match_apply_summary">
-          <strong>{match.title}</strong>
-          <p>{match.region} · {match.fieldName} · {match.fee}</p>
+      <main className="match_apply_complete_main">
+        <section className="match_complete_panel">
+          <span aria-hidden="true">✓</span>
+          <h1>참가 신청이 완료되었습니다</h1>
+          <div className="match_complete_copy">
+            <p>팀장의 승낙 여부를 기다려주세요.</p>
+            <p>승인 또는 조율 시 등록한 연락처로 안내가 전달됩니다.</p>
+          </div>
         </section>
-      ) : null}
 
-      <div className="list">
-        <Link className="button primary_button" to="/my/schedule">내 경기 일정 보기</Link>
-        <Link className="button" to="/home">홈으로</Link>
-      </div>
+        <section className="match_notice_panel match_complete_notice">
+          <h2>숙지해야할 정보</h2>
+          <ul>
+            {noticeItems.map((item) => (
+              <li key={item}>
+                <img src={matchCheckIcon} alt="" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="match_apply_summary match_complete_summary">
+          <strong>서울 CQB 입문 경기</strong>
+          <p>서울 · 어반 CQB · 40,000원</p>
+        </section>
+
+        <div className="match_complete_actions">
+          <LoginButton
+            onClick={() => navigate('/my/schedule')}
+            style={{
+              background: '#111111',
+              backgroundColor: '#111111',
+              color: '#ffffff',
+              WebkitTextFillColor: '#ffffff',
+            }}
+          >
+            내 경기 일정 보기
+          </LoginButton>
+          <LoginButton
+            onClick={() => navigate('/home')}
+            style={{
+              border: '1px solid #111111',
+              background: '#ffffff',
+              backgroundColor: '#ffffff',
+              color: '#111111',
+              WebkitTextFillColor: '#111111',
+            }}
+          >
+            홈으로
+          </LoginButton>
+        </div>
+      </main>
     </div>
   )
 }

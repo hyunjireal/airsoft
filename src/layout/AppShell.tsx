@@ -59,7 +59,7 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      {isCommunityPostDetail || isChatPage ? null : <BottomNav />}
+      {isCommunityPostDetail || isChatPage || location.pathname.startsWith('/match/schedule/') ? null : <BottomNav />}
     </div>
   )
 }

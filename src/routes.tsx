@@ -35,6 +35,7 @@ import { MatchHome } from './pages/match/MatchHome'
 import { MatchJoinHome } from './pages/match/MatchJoinHome'
 import { MatchList } from './pages/match/MatchList'
 import { MatchManageHome } from './pages/match/MatchManageHome'
+import { MatchScheduleJoin } from './pages/match/MatchScheduleJoin'
 import { TeamMatchApply } from './pages/match/TeamMatchApply'
 import { TeamMatchDetail } from './pages/match/TeamMatchDetail'
 import { TeamMatchJoinList } from './pages/match/TeamMatchJoinList'
@@ -118,6 +119,7 @@ export const router = createBrowserRouter([
           { path: '/match/fields', element: <FieldInfo /> },
           { path: '/match/list', element: <MatchList /> },
           { path: '/match/filter', element: <MatchFilter /> },
+          { path: '/match/schedule/:matchId/join', element: <MatchScheduleJoin /> },
           { path: '/match/:id', element: <MatchDetail /> },
           { path: '/match/:id/apply', element: <MatchApply /> },
           { path: '/match/:id/complete', element: <MatchApplyComplete /> },
