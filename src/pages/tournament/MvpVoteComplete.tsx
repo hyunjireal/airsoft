@@ -1,9 +1,15 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import MainTag from '../../components/MainTag'
+import tournamentHighlightIcon from '../../asset/icons/tournament_highlight.svg'
+import tournamentInfoIcon from '../../asset/icons/tournament_info.svg'
+import tournamentTourIcon from '../../asset/icons/tournament_tour.svg'
 import tournamentCheckImg from '../../asset/images/tournament_check.png'
+import tournamentMainCompleteDarkImg from '../../asset/images/tournament03_dark.png'
 import tournamentMainCompleteImg from '../../asset/images/tournament_main02.png'
 import './Tournament.css'
+
+type ThemeMode = 'light' | 'dark'
 
 type RankItem = { rank: number; name: string; votes: number; percent: number }
 
@@ -130,18 +136,35 @@ const candidateMap: Record<string, CandidateInfo> = {
 const defaultCandidate = candidateMap['bazooka-01']
 
 export function MvpVoteComplete() {
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const savedTheme = localStorage.getItem('airsoft-theme')
+    return savedTheme === 'dark' ? 'dark' : 'light'
+  })
   const voted = useMemo<CandidateInfo>(() => {
     const id = localStorage.getItem('votedMvpId') ?? ''
     return candidateMap[id] ?? defaultCandidate
   }, [])
+  const heroImage = themeMode === 'dark' ? tournamentMainCompleteDarkImg : tournamentMainCompleteImg
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode
+
+    const handleThemeStorage = (event: StorageEvent) => {
+      if (event.key !== 'airsoft-theme') return
+      setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
+    }
+
+    window.addEventListener('storage', handleThemeStorage)
+    return () => window.removeEventListener('storage', handleThemeStorage)
+  }, [themeMode])
 
   return (
-    <div className="tournament_page is_light">
+    <div className={`tournament_page is_${themeMode}`}>
 
       {/* 히어로 */}
       <section
         className="mvpc_hero"
-        style={{ backgroundImage: `url(${tournamentMainCompleteImg})` }}
+        style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="mvpc_hero_inner">
           <div className="mvpc_check_medal" aria-hidden="true">
@@ -214,25 +237,15 @@ export function MvpVoteComplete() {
           다른 경기 투표하기
         </Link>
         <Link className="mvpc_btn_secondary body_sb_16" to="/tournament/highlights">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M8 7L14 10L8 13V7Z" fill="currentColor" />
-          </svg>
+          <img src={tournamentHighlightIcon} alt="" aria-hidden="true" />
           하이라이트 더 보기
         </Link>
         <Link className="mvpc_btn_secondary body_sb_16" to="/tournament">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <path d="M4 3h12v2c0 3-2 5-4 6 2 1 4 3 4 6v1H4v-1c0-3 2-5 4-6C6 10 4 8 4 5V3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-            <path d="M7 3H4M16 3h-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
+          <img src={tournamentTourIcon} alt="" aria-hidden="true" />
           토너먼트 돌아가기
         </Link>
         <p className="mvpc_result_notice body_m_14">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.2" />
-            <path d="M8 7v5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-            <circle cx="8" cy="5" r="0.75" fill="currentColor" />
-          </svg>
+          <img src={tournamentInfoIcon} alt="" aria-hidden="true" />
           결과는 실시간으로 집계되어 반영됩니다.
         </p>
       </section>

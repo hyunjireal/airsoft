@@ -759,6 +759,9 @@
   background: transparent;
   background-color: transparent;
   background-image: none;
+  background-position: center;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   box-shadow: none;
   outline: 0;
   cursor: pointer;
@@ -1773,10 +1776,10 @@
 .mvpc_hero {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   min-height: 280px;
-  padding-bottom: 36px;
+  padding: 153px 24px 24px;
   overflow: hidden;
   background-position: center top;
   background-size: cover;
@@ -1824,7 +1827,7 @@
 
 /* 포인트 카드 */
 .mvpc_point_section {
-  padding: 24px;
+  padding: 0 24px;
   background: var(--tournament-light-bg);
 }
 
@@ -1843,19 +1846,19 @@
   margin: 0;
   color: var(--tournament-light-txt-main);
   font-family: var(--font-pretendard);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.02em;
 }
 
 .mvpc_point_amount {
   color: var(--tournament-light-border);
   font-family: var(--font-pretendard);
-  font-size: 52px;
+  font-size: 55px;
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -1.04px;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .mvpc_point_prev {
@@ -1863,22 +1866,23 @@
   align-items: center;
   justify-content: center;
   min-height: 32px;
-  padding: 0 18px;
+  gap: 10px;
+  padding: 4px 25px;
   border: 1px solid var(--tournament-light-point-card-stroke);
-  border-radius: 999px;
-  color: var(--tournament-light-player-info-txt);
+  border-radius: 8px;
+  color: var(--tournament-light-point-sub);
   font-family: var(--font-pretendard);
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.02em;
 }
 
 .mvpc_point_link {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  color: var(--tournament-light-btn-sub-txt);
+  gap: 7px;
+  color: var(--tournament-light-txt-sub);
   font-family: var(--font-pretendard);
   font-size: 14px;
   font-weight: 500;
@@ -1891,16 +1895,18 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  border-radius: 999px;
-  border: 1.5px solid var(--tournament-light-point-sub);
-  background: var(--tournament-light-point-sub);
+  flex-shrink: 0;
+  background-image: url('../../asset/images/tournament_coin.png');
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* 내가 선택한 선수 */
 .mvpc_player_section {
   display: grid;
   gap: 20px;
-  padding: 24px;
+  padding: 50px 24px 24px;
   background: var(--tournament-light-bg);
 }
 
@@ -1924,41 +1930,59 @@
 
 .mvpc_player_photo {
   display: block;
-  width: 78px;
-  height: 78px;
+  width: 99px;
+  height: 99px;
   border-radius: 999px;
   background: var(--tournament-dark-player-info-txt);
 }
 
 .mvpc_player_name {
-  color: var(--tournament-light-vote-state);
+  color: var(--tournament-light-border);
+  font-family: var(--font-pretendard);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
   text-align: center;
 }
 
 .mvpc_player_info {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 10px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
   margin: 0;
   align-content: start;
   padding-top: 2px;
 }
 
 .mvpc_player_info dt {
-  color: var(--tournament-light-player-info-txt);
+  flex: 0 0 auto;
+  color: var(--tournament-light-point-sub);
+  font-family: var(--font-pretendard);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
   white-space: nowrap;
 }
 
 .mvpc_player_info dd {
+  flex: 1 1 calc(100% - 72px);
   margin: 0;
-  color: var(--tournament-light-txt-main);
+  color: var(--tournament-light-player-info-txt);
+  font-family: var(--font-pretendard);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 /* 실시간 랭킹 */
 .mvpc_rank_section {
   display: grid;
   gap: 20px;
-  padding: 24px;
+  padding: 50px 24px 24px;
   background: var(--tournament-light-bg);
 }
 
@@ -1967,11 +1991,19 @@
   color: var(--tournament-light-txt-main);
 }
 
+.mvpc_rank_section .tournament_player_rank_name strong {
+  color: var(--tournament-light-txt-main);
+}
+
+.mvpc_rank_section .tournament_player_rank_meter em {
+  color: var(--tournament-light-txt-sub);
+}
+
 /* CTA */
 .mvpc_cta_section {
   display: grid;
   gap: 10px;
-  padding: 24px;
+  padding: 50px 24px 24px;
   background: var(--tournament-light-bg);
 }
 
@@ -1993,15 +2025,27 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   min-height: 50px;
   padding: 0 16px;
   border: 1.5px solid var(--tournament-light-card-stroke);
   border-radius: 10px;
   background: var(--tournament-light-card-bg);
-  color: var(--tournament-light-txt-main);
+  color: var(--tournament-light-btn-sub-txt);
+  font-family: var(--font-pretendard);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
   text-align: center;
   text-decoration: none;
+}
+
+.mvpc_btn_secondary img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .mvpc_result_notice {
@@ -2012,4 +2056,80 @@
   margin: 0;
   padding-top: 4px;
   color: var(--tournament-light-txt-sub);
+}
+
+.mvpc_result_notice img {
+  display: block;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.tournament_page.is_dark .mvpc_hero::after {
+  background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 30%, var(--tournament-dark-bg) 100%);
+}
+
+.tournament_page.is_dark .mvpc_hero_tit {
+  color: var(--tournament-dark-vote-complete-tit);
+}
+
+.tournament_page.is_dark .mvpc_point_section,
+.tournament_page.is_dark .mvpc_player_section,
+.tournament_page.is_dark .mvpc_rank_section,
+.tournament_page.is_dark .mvpc_cta_section {
+  background: var(--tournament-dark-bg);
+}
+
+.tournament_page.is_dark .mvpc_point_card {
+  border-color: var(--tournament-dark-point-card-stroke);
+  background: var(--tournament-dark-point-card-bg);
+}
+
+.tournament_page.is_dark .mvpc_point_label,
+.tournament_page.is_dark .mvpc_player_section h2,
+.tournament_page.is_dark .mvpc_rank_section h2,
+.tournament_page.is_dark .mvpc_rank_section .tournament_player_rank_name strong {
+  color: var(--tournament-dark-txt-main);
+}
+
+.tournament_page.is_dark .mvpc_point_amount,
+.tournament_page.is_dark .mvpc_player_name {
+  color: var(--tournament-dark-border);
+}
+
+.tournament_page.is_dark .mvpc_point_prev {
+  border-color: var(--tournament-dark-point-card-stroke);
+  color: var(--tournament-dark-point-sub);
+}
+
+.tournament_page.is_dark .mvpc_point_link,
+.tournament_page.is_dark .mvpc_rank_section .tournament_player_rank_meter em {
+  color: var(--tournament-dark-txt-sub);
+}
+
+.tournament_page.is_dark .mvpc_player_info dt {
+  color: var(--tournament-dark-point-sub);
+}
+
+.tournament_page.is_dark .mvpc_player_info dd {
+  color: var(--tournament-dark-player-info-txt);
+}
+
+.tournament_page.is_dark .mvpc_player_photo {
+  background: var(--tournament-dark-player-info-txt);
+}
+
+.tournament_page.is_dark .mvpc_btn_primary {
+  background: var(--tournament-dark-btn-bg);
+  color: var(--tournament-dark-btn-txt);
+}
+
+.tournament_page.is_dark .mvpc_btn_secondary {
+  border-color: var(--tournament-dark-border);
+  background: var(--tournament-dark-bg);
+  color: var(--tournament-dark-btn-sub-txt);
+}
+
+.tournament_page.is_dark .mvpc_result_notice {
+  color: var(--tournament-dark-btn-alert);
 }

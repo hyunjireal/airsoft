@@ -1,5 +1,5 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
@@ -34,6 +34,8 @@ import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
 import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
 import mainTeamImg04 from '../../asset/images/main_teamImg04.png'
 import './Home.css'
+
+type ThemeMode = 'light' | 'dark'
 
 const matchCards = [
   {
@@ -218,15 +220,40 @@ export function Home() {
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
   const [isAchievementExpanded, setIsAchievementExpanded] = useState(false)
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    const savedTheme = localStorage.getItem('airsoft-theme')
+    return savedTheme === 'dark' ? 'dark' : 'light'
+  })
   const achievementBadges = isAchievementExpanded
     ? [...visibleAchievementBadges, ...hiddenAchievementBadges]
     : visibleAchievementBadges
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode
+    localStorage.setItem('airsoft-theme', themeMode)
+  }, [themeMode])
+
+  const toggleThemeMode = () => {
+    setThemeMode((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
+  }
 
   return (
     <div className="home_page">
       <section className="home_main">
         {/* ① 히어로 섹션 */}
         <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
+          <button
+            className={`home_theme_toggle is_${themeMode}`}
+            type="button"
+            aria-label={`${themeMode === 'dark' ? '라이트' : '다크'}모드로 전환`}
+            aria-pressed={themeMode === 'dark'}
+            onClick={toggleThemeMode}
+          >
+            <span className="home_theme_toggle_knob" aria-hidden="true" />
+            <span className="home_theme_toggle_text">
+              {themeMode === 'dark' ? 'Dark' : 'Light'}
+            </span>
+          </button>
           <div className="home_hero_inner">
             <div className="home_hero_tit">
               <div className="home_hero_tag_row">

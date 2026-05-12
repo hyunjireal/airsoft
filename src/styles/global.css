@@ -148,6 +148,16 @@
   --standalone-footer-offset: calc(env(safe-area-inset-bottom, 0px) + 47px);
 }
 
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  color: var(--color-white);
+  background: var(--color-black);
+}
+
 .sub_kr {
   font-family: var(--font-kbl-jump);
   font-weight: var(--font-weight-bold);
