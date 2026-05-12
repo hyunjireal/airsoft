@@ -30,7 +30,7 @@
   flex-direction: column;
   gap: 5px;
   padding: 81px 24px 24px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .chat_tit {
@@ -71,7 +71,7 @@
 .chat_subtitle {
   margin: 0;
   padding-left: 32px;
-  color: #636363;
+  color: var(--color-gray02);
 }
 
 .chat {
@@ -147,8 +147,8 @@
   gap: 10px;
   padding: 10px 15px;
   border-radius: 8px;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--color-white);
+  color: var(--color-black);
   font-family: var(--font-pretendard);
   font-size: 16px;
   font-weight: 400;
@@ -160,11 +160,11 @@
 
 .chat_message_frame.user .chat_bubble {
   background: #898f7a;
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .chat_message_stack time {
-  color: #636363;
+  color: var(--color-gray02);
   font-family: var(--font-pretendard);
   font-size: 14px;
   font-weight: 400;
@@ -206,7 +206,7 @@
 
 .chat_faq p {
   margin: 0;
-  color: #4b4b4b;
+  color: var(--color-gray01);
 }
 
 .chat_faq_tags {

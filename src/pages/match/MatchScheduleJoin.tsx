@@ -156,10 +156,10 @@ export function MatchScheduleJoin() {
           className="schedule_join_apply_button"
           onClick={() => navigate(`/match/${targetMatchId}/apply`)}
           style={{
-            background: '#676B5D',
-            backgroundColor: '#676B5D',
-            color: '#ffffff',
-            WebkitTextFillColor: '#ffffff',
+            background: 'var(--color-khaki)',
+            backgroundColor: 'var(--color-khaki)',
+            color: 'var(--color-white)',
+            WebkitTextFillColor: 'var(--color-white)',
             borderRadius: 5,
             height: 40,
             minHeight: 40,

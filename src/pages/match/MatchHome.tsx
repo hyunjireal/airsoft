@@ -297,9 +297,9 @@ function getMatchTypeLabel(match: MatchSchedule) {
 }
 
 const matchTypeColor: Record<MatchType, string> = {
-  team: '#1f2b45',
-  personal: '#10425d',
-  mercenary: '#676b5d',
+  team: 'var(--color-navy)',
+  personal: 'var(--color-teal)',
+  mercenary: 'var(--color-khaki)',
 }
 
 function isMatchType(type: unknown): type is MatchType {
@@ -540,7 +540,7 @@ export function MatchHome() {
                       aria-label={`${match.title} 참가 안내 보기`}
                       key={match.id}
                     >
-                      <MainTag className="match_item_tag" style={{ backgroundColor: matchTypeColor[match.type], color: '#ffffff' }}>
+                      <MainTag className="match_item_tag" style={{ backgroundColor: matchTypeColor[match.type], color: 'var(--color-white)' }}>
                         {getMatchTypeLabel(match)}
                       </MainTag>
                       <div className="match_item_bottom">
@@ -583,7 +583,7 @@ export function MatchHome() {
                 <div className="match_empty_recommend_actions">
                   <LoginButton
                     className="match_empty_login_btn"
-                    style={{ background: 'rgba(0,0,0,0.55)', color: '#ffffff', fontSize: 16, fontWeight: 500 }}
+                    style={{ background: 'rgba(0,0,0,0.55)', color: 'var(--color-white)', fontSize: 16, fontWeight: 500 }}
                     onClick={() => setShowTypeSheet(true)}
                   >
                     일정 만들러 가기
@@ -597,7 +597,7 @@ export function MatchHome() {
 
       <section className="match_section match_tournament_section" aria-labelledby="match-tournament-title">
         <article className="match_tournament_card">
-          <MainTag className="match_tournament_tag" style={{ padding: '3px 8px', background: '#EE2106' }}>
+          <MainTag className="match_tournament_tag" style={{ padding: '3px 8px', background: 'var(--color-orange-red)' }}>
             <span className="match_tournament_tag_dot" aria-hidden="true" />
             <span>토너먼트 진행중</span>
           </MainTag>

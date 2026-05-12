@@ -252,8 +252,8 @@ export function MvpVote() {
           onClick={submitVote}
           disabled={!selectedCandidate}
           style={{
-            background: '#E2FD34',
-            backgroundColor: '#E2FD34',
+            background: 'var(--color-lime)',
+            backgroundColor: 'var(--color-lime)',
             color: '#000000',
             WebkitTextFillColor: '#000000',
           }}

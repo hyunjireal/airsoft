@@ -1,7 +1,7 @@
 .my_page {
   padding: 52px 0 12px;
   margin-bottom: -36px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .my_header {
@@ -26,7 +26,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #1a1a1a;
+  color: var(--color-black);
   cursor: pointer;
 }
 
@@ -48,7 +48,7 @@
 
 .my_page_title {
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 28px;
   font-weight: 700;
   line-height: 1.3;
@@ -69,7 +69,7 @@
 .my_profile_card {
   border: 1px solid #c5ced0;
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--color-white);
   padding: 0 23px 22px;
 }
 
@@ -108,8 +108,8 @@
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--color-white);
+  color: var(--color-black);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.16);
   cursor: pointer;
 }
@@ -121,7 +121,7 @@
 
 .my_profile_name {
   margin: 0;
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
@@ -155,7 +155,7 @@
   padding: 12px 9px;
   border: 1px solid #c5ced0;
   border-radius: 16px;
-  background: #ffffff;
+  background: var(--color-white);
   text-align: center;
 }
 
@@ -171,7 +171,7 @@
 }
 
 .my_stat_value {
-  color: #676b5d;
+  color: var(--color-khaki);
   font-size: 22px;
   font-weight: 700;
   line-height: 1.3;
@@ -194,14 +194,14 @@
   border: 1px solid #c5ced0;
   border-radius: 6px;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .my_match_tab {
   min-height: 50px;
   border: 0;
-  background: #ffffff;
-  color: #adadad;
+  background: var(--color-white);
+  color: var(--color-gray03);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
@@ -210,8 +210,8 @@
 }
 
 .my_match_tab.active {
-  background: #1a1a1a;
-  color: #ffffff;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .my_match_cards {
@@ -226,7 +226,7 @@
   gap: 15px;
   border: 1px solid #c5ced0;
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--color-white);
   padding: 22px 23px;
 }
 
@@ -237,7 +237,7 @@
   width: 74px;
   height: 74px;
   border-radius: 6px;
-  background: #676b5d;
+  background: var(--color-khaki);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -261,8 +261,8 @@
   min-height: 28px;
   padding: 5px 10px;
   border-radius: 8px;
-  background: #e2fd34;
-  color: #1a1a1a;
+  background: var(--color-lime);
+  color: var(--color-black);
   font-size: 14px;
   font-weight: 700;
   line-height: 1.3;
@@ -277,7 +277,7 @@
 }
 
 .my_match_meta {
-  color: #636363;
+  color: var(--color-gray02);
   font-size: 14px;
   font-weight: 400;
   line-height: 1.3;
@@ -327,7 +327,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #adadad;
+  color: var(--color-gray03);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.3;
@@ -352,7 +352,7 @@
   padding: 24px 20px 20px;
   border: 1px solid #c5ced0;
   border-radius: 20px;
-  background: #ffffff;
+  background: var(--color-white);
   box-shadow: 0 18px 40px rgba(17, 17, 17, 0.18);
   text-align: center;
 }
@@ -364,7 +364,7 @@
 }
 
 .my_logout_modal h2 {
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 20px;
   font-weight: 700;
   line-height: 1.3;
@@ -372,7 +372,7 @@
 
 .my_logout_modal p {
   margin-top: 10px;
-  color: #636363;
+  color: var(--color-gray02);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.5;
@@ -397,14 +397,14 @@
 
 .my_logout_modal_button_secondary {
   border: 1px solid #c5ced0;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--color-white);
+  color: var(--color-black);
 }
 
 .my_logout_modal_button_primary {
   border: 0;
-  background: #1a1a1a;
-  color: #ffffff;
+  background: var(--color-black);
+  color: var(--color-white);
 }
 
 .my_settings_section {
@@ -414,8 +414,8 @@
 .my_schedule_page {
   min-height: 100vh;
   padding: 0;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--color-white);
+  color: var(--color-black);
 }
 
 .my_schedule_top {
@@ -473,7 +473,7 @@
   width: 100%;
   height: fit-content;
   padding: 24px 24px 5px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .my_schedule_tab {
@@ -487,7 +487,7 @@
   border: 0;
   border-bottom: 1px solid transparent;
   background: transparent;
-  color: #adadad;
+  color: var(--color-gray03);
   cursor: pointer;
   white-space: nowrap;
   transition: color 180ms ease, border-color 180ms ease;
@@ -513,7 +513,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid var(--color-gray04);
   border-radius: 8px;
   padding: 15px;
 }
@@ -617,13 +617,13 @@
 }
 
 .my_schedule_empty strong {
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 17px;
   line-height: 1.3;
 }
 
 .my_schedule_empty p {
-  color: #636363;
+  color: var(--color-gray02);
   font-size: 14px;
   line-height: 1.4;
 }

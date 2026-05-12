@@ -237,7 +237,7 @@ export function MatchGuestWantedCreate() {
 
       <div className="mgc_submit_wrap">
         <LoginButton
-          style={{ background: '#676b5d', backgroundColor: '#676b5d', color: '#ffffff', WebkitTextFillColor: '#ffffff' }}
+          style={{ background: 'var(--color-khaki)', backgroundColor: 'var(--color-khaki)', color: 'var(--color-white)', WebkitTextFillColor: 'var(--color-white)' }}
           onClick={createGuestWantedMatch}
         >
           등록하기

@@ -397,9 +397,9 @@ export function MatchCreateHome() {
         <div className="match_edit_form_cta">
           <LoginButton
             style={{
-              background: '#FFFFFF',
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #D9D9D9',
+              background: 'var(--color-white)',
+              backgroundColor: 'var(--color-white)',
+              border: '1px solid var(--color-gray04)',
               color: '#000000',
               WebkitTextFillColor: '#000000',
             }}
@@ -411,8 +411,8 @@ export function MatchCreateHome() {
             style={{
               background: '#000000',
               backgroundColor: '#000000',
-              color: '#FFFFFF',
-              WebkitTextFillColor: '#FFFFFF',
+              color: 'var(--color-white)',
+              WebkitTextFillColor: 'var(--color-white)',
             }}
             onClick={completeEdit}
           >

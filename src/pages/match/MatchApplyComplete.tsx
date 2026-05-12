@@ -67,8 +67,8 @@ export function MatchApplyComplete() {
             style={{
               background: '#111111',
               backgroundColor: '#111111',
-              color: '#ffffff',
-              WebkitTextFillColor: '#ffffff',
+              color: 'var(--color-white)',
+              WebkitTextFillColor: 'var(--color-white)',
             }}
           >
             내 경기 일정 보기
@@ -77,8 +77,8 @@ export function MatchApplyComplete() {
             onClick={() => navigate('/home')}
             style={{
               border: '1px solid #111111',
-              background: '#ffffff',
-              backgroundColor: '#ffffff',
+              background: 'var(--color-white)',
+              backgroundColor: 'var(--color-white)',
               color: '#111111',
               WebkitTextFillColor: '#111111',
             }}

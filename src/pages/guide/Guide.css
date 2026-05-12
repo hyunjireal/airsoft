@@ -8,7 +8,7 @@
   top: 0;
   z-index: 5;
   padding: 8px 0 12px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .guide_toc_card,
@@ -61,8 +61,8 @@
   align-content: start;
   min-height: calc(100vh - 64px);
   padding: 28px 24px 128px;
-  background: #ffffff;
-  color: #1f2b45;
+  background: var(--color-white);
+  color: var(--color-navy);
 }
 
 .guide_tutorial_header {
@@ -93,10 +93,10 @@
   justify-self: center;
   width: 32px;
   height: 22px;
-  border: 1px solid #1f2b45;
+  border: 1px solid var(--color-navy);
   border-radius: 999px;
-  background: #ffffff;
-  color: #1f2b45;
+  background: var(--color-white);
+  color: var(--color-navy);
   font-size: 14px;
   font-weight: 900;
   line-height: 1;
@@ -108,14 +108,14 @@
   top: 50%;
   width: calc((100vw - 96px) / 5);
   height: 1px;
-  background: #1f2b45;
+  background: var(--color-navy);
   transform: translateY(-50%);
   content: "";
 }
 
 .guide_tutorial_steps span.is_active {
-  background: #1f2b45;
-  color: #ffffff;
+  background: var(--color-navy);
+  color: var(--color-white);
 }
 
 .guide_tutorial_card {
@@ -123,8 +123,8 @@
   align-content: start;
   gap: 26px;
   padding: 22px 16px 22px;
-  border-top: 1px solid #1f2b45;
-  border-bottom: 1px solid #1f2b45;
+  border-top: 1px solid var(--color-navy);
+  border-bottom: 1px solid var(--color-navy);
   border-radius: 8px;
 }
 
@@ -139,10 +139,10 @@
   place-items: center;
   width: 36px;
   height: 34px;
-  border: 1px solid #1f2b45;
+  border: 1px solid var(--color-navy);
   border-radius: 6px;
-  background: #1f2b45;
-  color: #ffffff;
+  background: var(--color-navy);
+  color: var(--color-white);
   font-size: 16px;
   line-height: 1;
 }
@@ -155,7 +155,7 @@
   border: 1px solid #9db45a;
   border-radius: 999px;
   background: #e9f6b8;
-  color: #1f2b45;
+  color: var(--color-navy);
   font-size: 10px;
   font-weight: 800;
 }
@@ -171,7 +171,7 @@
 
 .guide_tutorial_summary {
   margin: 0;
-  color: #1f2b45;
+  color: var(--color-navy);
   font-size: 14px;
   line-height: 1.7;
   font-weight: 700;
@@ -185,8 +185,8 @@
   min-height: 138px;
   padding: 24px 18px;
   border-radius: 12px;
-  background: #1f2b45;
-  color: #ffffff;
+  background: var(--color-navy);
+  color: var(--color-white);
 }
 
 .guide_tutorial_shield {
@@ -194,9 +194,9 @@
   place-items: center;
   width: 30px;
   height: 36px;
-  border: 3px solid #ffffff;
+  border: 3px solid var(--color-white);
   border-radius: 12px 12px 16px 16px;
-  color: #ffffff;
+  color: var(--color-white);
   font-weight: 900;
 }
 
@@ -223,8 +223,8 @@
   justify-content: center;
   min-height: 52px;
   border-radius: 8px;
-  background: #1f2b45;
-  color: #ffffff;
+  background: var(--color-navy);
+  color: var(--color-white);
   font-size: 16px;
   font-weight: 900;
 }
@@ -259,7 +259,7 @@
 .guide_quiz_page {
   min-height: calc(100vh - 108px);
   padding: 18px 16px 92px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .guide_quiz_intro {
@@ -276,7 +276,7 @@
   width: 100%;
   min-height: 420px;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .guide_quiz_cover_content {
@@ -317,7 +317,7 @@
   padding: 4px 10px;
   border: 1px solid #cfcfcf;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--color-white);
   color: #111111;
   font-size: 12px;
   font-weight: 800;
@@ -378,7 +378,7 @@
   padding: 0 12px;
   border: 1px solid #d5d5d5;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--color-white);
   color: #222222;
   text-align: left;
   cursor: pointer;
@@ -399,7 +399,7 @@
   height: 18px;
   border: 2px solid #cfcfcf;
   border-radius: 999px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .guide_quiz_choice.selected .guide_quiz_radio {
@@ -423,7 +423,7 @@
   padding: 14px;
   border: 1px solid #d5d5d5;
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--color-white);
 }
 
 .guide_quiz_feedback > span {
@@ -476,7 +476,7 @@
 
 .guide_quiz_primary {
   background: #111111;
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .guide_quiz_primary:disabled {
@@ -487,7 +487,7 @@
 }
 
 .guide_quiz_secondary {
-  background: #ffffff;
+  background: var(--color-white);
   color: #111111;
 }
 
@@ -604,7 +604,7 @@
   padding: 12px;
   border: 1px solid #d8d8d8;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--color-white);
   text-align: left;
 }
 

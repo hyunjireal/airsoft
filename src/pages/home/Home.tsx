@@ -132,7 +132,7 @@ const visibleAchievementBadges = [
     label: '첫 AI 질문 완료',
     icon: mainProfileTag02,
     background: '#E0E5EF',
-    color: '#1F2B45',
+    color: 'var(--color-navy)',
   },
   {
     label: '친환경 바이오탄 지식인',
@@ -369,8 +369,8 @@ export function Home() {
               <LoginButton
                 className="buddy_button"
                 style={{
-                  background: '#676B5D',
-                  backgroundColor: '#676B5D',
+                  background: 'var(--color-khaki)',
+                  backgroundColor: 'var(--color-khaki)',
                   color: '#fff',
                   WebkitTextFillColor: '#fff',
                 }}

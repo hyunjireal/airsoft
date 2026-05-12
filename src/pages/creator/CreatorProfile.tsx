@@ -183,9 +183,9 @@ function VerifiedBadgeIcon() {
     <svg aria-hidden="true" className="creator_detail_verified_icon" viewBox="0 0 20 21" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M9.3 1.2a1 1 0 0 1 1.4 0l1.2 1.1a1 1 0 0 0 .7.3l1.6-.1a1 1 0 0 1 1 .8l.3 1.5a1 1 0 0 0 .4.7l1.3.9a1 1 0 0 1 .4 1.4l-.7 1.4a1 1 0 0 0-.1.8l.7 1.4a1 1 0 0 1-.4 1.4l-1.3.8a1 1 0 0 0-.4.7l-.3 1.6a1 1 0 0 1-1 .8l-1.6-.2a1 1 0 0 0-.7.3l-1.2 1.1a1 1 0 0 1-1.4 0l-1.2-1.1a1 1 0 0 0-.7-.3l-1.6.2a1 1 0 0 1-1-.8l-.3-1.6a1 1 0 0 0-.4-.7L2.4 14a1 1 0 0 1-.4-1.4l.7-1.4a1 1 0 0 0 0-.8L2 8.9a1 1 0 0 1 .4-1.4l1.3-.9a1 1 0 0 0 .4-.7l.3-1.5a1 1 0 0 1 1-.8l1.6.1a1 1 0 0 0 .7-.3l1.2-1.1Z"
-        fill="#FFFFFF"
+        fill="var(--color-white)"
       />
-      <path d="m7.5 10.6 1.5 1.5 3.6-3.7" fill="none" stroke="#1A1A1A" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+      <path d="m7.5 10.6 1.5 1.5 3.6-3.7" fill="none" stroke="var(--color-black)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
     </svg>
   )
 }
@@ -200,7 +200,7 @@ function CreatorHeartIcon({ liked }: { liked: boolean }) {
     >
       <path
         d="M13 0C15.7614 0 18 2.23858 18 5C18 6.60255 17.2448 8.02735 16.0723 8.94238L9.13379 16L2.0625 9.04492C0.813014 8.13596 0 6.66337 0 5C0 2.23858 2.23858 0 5 0C6.63574 0 8.08779 0.785653 9 2C9.91221 0.785653 11.3643 0 13 0Z"
-        fill={liked ? '#EE2106' : '#FFFFFF'}
+        fill={liked ? 'var(--color-orange-red)' : 'var(--color-white)'}
         fillOpacity={liked ? 1 : 0.6}
       />
     </svg>

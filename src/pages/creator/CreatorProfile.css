@@ -1,8 +1,8 @@
 .creator_detail_page {
   --creator-detail-card-overlap: 40px;
   --creator-detail-media-gap: 21px;
-  background: #ffffff;
-  color: #1a1a1a;
+  background: var(--color-white);
+  color: var(--color-black);
 }
 
 .creator_detail_hero {
@@ -16,7 +16,7 @@
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .creator_detail_hero::before {
@@ -96,7 +96,7 @@
 }
 
 .creator_detail_like_button.is_liked {
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .creator_detail_like_icon_shell {
@@ -290,9 +290,9 @@
   align-items: center;
   min-height: 80px;
   padding: 18px 10px;
-  border: 1px solid #e9e9e9;
+  border: 1px solid var(--color-gray05);
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--color-white);
   box-shadow: 0 14px 32px rgba(17, 17, 17, 0.08);
   transform: translateY(50%);
 }
@@ -305,7 +305,7 @@
 }
 
 .creator_detail_stat + .creator_detail_stat {
-  border-left: 1px solid #e9e9e9;
+  border-left: 1px solid var(--color-gray05);
 }
 
 .creator_detail_stat strong,
@@ -316,13 +316,13 @@
 }
 
 .creator_detail_stat strong {
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 18px;
   font-weight: 700;
 }
 
 .creator_detail_stat span {
-  color: #636363;
+  color: var(--color-gray02);
   font-size: 14px;
   font-weight: 400;
 }
@@ -351,7 +351,7 @@
 
 .creator_detail_section p {
   margin: 16px 0 0;
-  color: #636363;
+  color: var(--color-gray02);
   font-family: var(--font-pretendard);
   font-size: 16px;
   font-weight: 400;
@@ -378,8 +378,8 @@
   padding: 0 12px;
   border: 1px solid #bec5ad;
   border-radius: 8px;
-  background: #ffffff;
-  color: #636363;
+  background: var(--color-white);
+  color: var(--color-gray02);
   font-family: var(--font-pretendard);
   font-size: 14px;
   font-weight: 500;
@@ -389,9 +389,9 @@
 }
 
 .creator_detail_years button.is_active {
-  border-color: #282828;
-  background: #282828;
-  color: #ffffff;
+  border-color: var(--color-gray00);
+  background: var(--color-gray00);
+  color: var(--color-white);
   font-weight: 600;
 }
 
@@ -414,7 +414,7 @@
 }
 
 .creator_detail_media_heading h3 {
-  color: #1a1a1a;
+  color: var(--color-black);
   font-size: 20px;
 }
 

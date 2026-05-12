@@ -33,7 +33,7 @@
 }
 .home_tag_lime {
   background: #C6FF00;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 .home_tag_outline_white {
   border: 1px solid rgba(255,255,255,0.6);
@@ -56,7 +56,7 @@
   font-size: 22px;
   font-weight: 400;
   line-height: 130%;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 .home_kbl_title_white {
   color: #fff;
@@ -99,7 +99,7 @@
 }
 
 .home_hero_tag {
-  background: #EE2106;
+  background: var(--color-orange-red);
   color: #fff;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 12px;
@@ -225,7 +225,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_userinfo_symbol {
@@ -262,7 +262,7 @@
 .home_userinfo_name {
   margin: 0;
   font-family: var(--font-pretendard);
-  color: #1A1A1A;
+  color: var(--color-black);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -284,7 +284,7 @@
 }
 
 .home_userinfo_greeting {
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_userinfo_badge {
@@ -310,7 +310,7 @@
 
 .home_userinfo_badge_title {
   margin: 0;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_userinfo_tag_row {
@@ -333,10 +333,10 @@
   min-width: 35px;
   min-height: 26px;
   padding: 4px 8px;
-  border: 1px solid #636363;
+  border: 1px solid var(--color-gray02);
   border-radius: 999px;
   background: #fff;
-  color: #636363;
+  color: var(--color-gray02);
   box-sizing: border-box;
   cursor: pointer;
   flex-shrink: 0;
@@ -364,7 +364,7 @@
   font-weight: 700;
   line-height: 130%;
   letter-spacing: 0;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_more_link {
@@ -447,7 +447,7 @@
 .home_match_dday_tag {
   padding: 3px 7px;
   background: #F6FFBC;
-  color: #1A1A1A;
+  color: var(--color-black);
   font-family: var(--font-pretendard);
   font-size: var(--font-size-14);
   font-weight: 400;
@@ -530,7 +530,7 @@
 
 .buddy_title {
   margin: 0;
-  color: #676B5D;
+  color: var(--color-khaki);
 }
 
 .buddy_status_tag {
@@ -670,8 +670,8 @@
 }
 
 .buddy_button {
-  background: #676B5D !important;
-  background-color: #676B5D !important;
+  background: var(--color-khaki) !important;
+  background-color: var(--color-khaki) !important;
   color: #fff !important;
   -webkit-text-fill-color: #fff !important;
 }
@@ -689,7 +689,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #ADADAD;
+  color: var(--color-gray03);
   cursor: pointer;
 }
 
@@ -761,7 +761,7 @@
   font-size: var(--font-size-14);
   font-weight: 400;
   line-height: var(--line-height-130);
-  color: #676B5D;
+  color: var(--color-khaki);
 }
 
 .bottom_title {
@@ -769,7 +769,7 @@
   font-size: var(--font-size-16);
   font-weight: var(--font-weight-extrabold);
   line-height: normal;
-  color: #676B5D;
+  color: var(--color-khaki);
 }
 
 .bottom_title_semibold {
@@ -780,7 +780,7 @@
   position: relative;
   z-index: 1;
   gap: 5px;
-  background: #676B5D;
+  background: var(--color-khaki);
   color: #fff;
   font-family: var(--font-pretendard);
   font-size: 10px;
@@ -862,7 +862,7 @@
   font-weight: 400;
   line-height: normal;
   letter-spacing: var(--letter-spacing-tight);
-  color: #636363;
+  color: var(--color-gray02);
 }
 
 .right_img {
@@ -902,11 +902,11 @@
   flex-direction: column;
   gap: 2px;
   margin: 0;
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_team_title_user {
-  color: #1A1A1A;
+  color: var(--color-black);
 }
 
 .home_team_title_main {
@@ -983,7 +983,7 @@
   font-weight: 700;
   line-height: 110%;
   letter-spacing: 0;
-  color: #1A1A1A;
+  color: var(--color-black);
   white-space: nowrap;
 }
 
@@ -994,7 +994,7 @@
   font-weight: 400;
   line-height: 110%;
   letter-spacing: 0;
-  color: #676B5D;
+  color: var(--color-khaki);
   white-space: nowrap;
 }
 
@@ -1030,7 +1030,7 @@
   box-sizing: border-box;
   padding: 10px 10px 16px 0;
   border-radius: 16px;
-  background: #1A1A1A;
+  background: var(--color-black);
   background-image: url('../../asset/images/main_ow01.png');
   background-size: cover;
   background-position: center;
@@ -1105,7 +1105,7 @@
   font-family: var(--font-kbl-jump-eb-extended);
   font-size: 22px;
   font-weight: 800;
-  color: #1A1A1A;
+  color: var(--color-black);
   text-align: center;
   letter-spacing: 0.03em;
   line-height: 130%;
@@ -1128,7 +1128,7 @@
   min-height: 92px;
   padding: 15px 35px;
   border-radius: 999px;
-  background: #1F2B45;
+  background: var(--color-navy);
   text-decoration: none;
 }
 
@@ -1237,8 +1237,8 @@
   min-height: 0 !important;
   padding: 15px 35px !important;
   border-radius: 10px !important;
-  background: #1A1A1A !important;
-  background-color: #1A1A1A !important;
+  background: var(--color-black) !important;
+  background-color: var(--color-black) !important;
   color: #D9E5FF !important;
   -webkit-text-fill-color: #D9E5FF !important;
 }
