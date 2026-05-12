@@ -98,7 +98,7 @@ export function MvpVote() {
   }
 
   return (
-    <div className="tournament_page">
+    <div className="tournament_page is_light">
       <section
         className="tournament_intro_card"
         style={{ backgroundImage: `url(${tournamentMainImg})` }}
@@ -252,10 +252,10 @@ export function MvpVote() {
           onClick={submitVote}
           disabled={!selectedCandidate}
           style={{
-            background: 'var(--color-lime)',
-            backgroundColor: 'var(--color-lime)',
-            color: '#000000',
-            WebkitTextFillColor: '#000000',
+            background: '#b8db2d',
+            backgroundColor: '#b8db2d',
+            color: '#ffffff',
+            WebkitTextFillColor: '#ffffff',
           }}
         >
           {selected ? selected.name : '후보'}에게 투표하기
