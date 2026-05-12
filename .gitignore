@@ -29,3 +29,6 @@ dist/
 .DS_Store
 Thumbs.db
 .vscode/SSS
+
+# MCP config (contains API tokens)
+.mcp.json

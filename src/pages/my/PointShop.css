@@ -1,0 +1,371 @@
+.point_shop_page {
+  padding: clamp(52px, 8vw, 60px) 0 20px;
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-pretendard);
+}
+
+.point_shop_content {
+  display: grid;
+  gap: 15px;
+}
+
+.point_shop_shell {
+  width: min(calc(100% - 46px), 347px);
+  margin: 0 auto;
+}
+
+.point_shop_header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 24px 0 10px;
+}
+
+.point_shop_header_left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.point_shop_back_button,
+.point_shop_coupon_button,
+.point_shop_more_button,
+.point_shop_list_item {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.point_shop_back_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+}
+
+.point_shop_back_icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.point_shop_title,
+.point_shop_section_title,
+.point_shop_hero_label,
+.point_shop_hero_value,
+.point_shop_best_title,
+.point_shop_list_title {
+  margin: 0;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.point_shop_title {
+  color: var(--color-black);
+  font-size: var(--font-size-28);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+}
+
+.point_shop_coupon_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  background: rgba(187, 226, 28, 0.15);
+  color: var(--color-gray00);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  white-space: nowrap;
+}
+
+.point_shop_hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 105px;
+  padding: 9px 22px 13px;
+  border-radius: 10px;
+  background: #29261c;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.point_shop_hero_copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.point_shop_hero_label {
+  color: var(--color-gray05);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+}
+
+.point_shop_hero_value {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-white);
+  font-size: var(--font-size-24);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+}
+
+.point_shop_point_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #abcc15;
+  color: var(--color-white);
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.point_shop_hero_image {
+  position: absolute;
+  right: 16px;
+  bottom: -2px;
+  width: 92px;
+  height: 96px;
+  object-fit: contain;
+}
+
+.point_shop_best_section {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+}
+
+.point_shop_best_heading,
+.point_shop_section_heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.point_shop_section_title {
+  color: var(--color-black);
+  font-size: var(--font-size-20);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+}
+
+.point_shop_more_button {
+  padding: 0;
+}
+
+.point_shop_more_button .arrow_r {
+  width: 6px !important;
+  height: 9px !important;
+  opacity: 0.35;
+}
+
+.point_shop_best_wrap {
+  display: grid;
+  gap: 20px;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+.point_shop_best_row {
+  display: flex;
+  gap: 9px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-snap-type: x proximity;
+}
+
+.point_shop_best_row::-webkit-scrollbar {
+  display: none;
+}
+
+.point_shop_best_card {
+  flex: 0 0 111px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 191px;
+  padding: 19px 12px;
+  border: 1px solid var(--color-gray05);
+  border-radius: 10px;
+  background: rgba(233, 233, 233, 0.3);
+  scroll-snap-align: start;
+}
+
+.point_shop_best_media {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 74px;
+}
+
+.point_shop_best_media_image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.point_shop_best_info {
+  display: grid;
+  gap: 12px;
+}
+
+.point_shop_best_title {
+  display: grid;
+  gap: 0;
+  color: var(--color-gray00);
+  font-size: 13px;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+}
+
+.point_shop_price {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-black);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.point_shop_best_dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.point_shop_best_dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-gray04);
+}
+
+.point_shop_best_dot.is_active {
+  width: 32px;
+  background: #abcc15;
+}
+
+.point_shop_list_section {
+  display: grid;
+  gap: 0;
+  padding: 14px 0;
+}
+
+.point_shop_list_box {
+  display: grid;
+  gap: 12px;
+  padding: 11px 12px 9px;
+  border: 1px solid var(--color-gray05);
+  border-radius: 10px;
+  background: var(--color-white);
+}
+
+.point_shop_list_item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 56px;
+  padding: 0;
+  text-align: left;
+}
+
+.point_shop_list_thumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 45px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: rgba(183, 183, 183, 0.2);
+  overflow: hidden;
+}
+
+.point_shop_list_thumb_image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.point_shop_team_thumb {
+  color: #abcc15;
+}
+
+.point_shop_team_icon {
+  width: 34px;
+  height: 34px;
+}
+
+.point_shop_list_meta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.point_shop_list_title {
+  color: var(--color-gray00);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.point_shop_list_arrow_wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.point_shop_list_arrow {
+  width: 6px;
+  height: 12px;
+  object-fit: contain;
+  opacity: 0.35;
+}
+
+.point_shop_back_button:focus-visible,
+.point_shop_coupon_button:focus-visible,
+.point_shop_more_button:focus-visible,
+.point_shop_list_item:focus-visible {
+  outline: 2px solid var(--color-black);
+  outline-offset: 2px;
+}
+
+@media (min-width: 640px) {
+  .point_shop_page {
+    padding-bottom: 28px;
+  }
+}

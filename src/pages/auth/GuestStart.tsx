@@ -32,7 +32,7 @@ export function GuestStart() {
         </div>
 
         <button className="auth_primary_button auth_page_footer_button" type="button" onClick={() => navigate('/home')}>
-          다음
+          시작하기
         </button>
       </section>
     </AuthShell>

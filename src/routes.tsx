@@ -42,6 +42,7 @@ import { TeamMatchJoinList } from './pages/match/TeamMatchJoinList'
 import { MyApplications } from './pages/my/MyApplications'
 import { MyMatches } from './pages/my/MyMatches'
 import { MyPage } from './pages/my/MyPage'
+import { PointShop } from './pages/my/PointShop'
 import { MyPosts } from './pages/my/MyPosts'
 import { MySchedule } from './pages/my/MySchedule'
 import { NotificationSettings } from './pages/my/NotificationSettings'
@@ -161,6 +162,7 @@ export const router = createBrowserRouter([
           { path: '/tournament/ranking', element: <Ranking /> },
           { path: '/chat', element: <ChatbotPage /> },
           { path: '/my', element: <MyPage /> },
+          { path: '/my/point-shop', element: <PointShop /> },
           { path: '/my/matches', element: <MyMatches /> },
           { path: '/my/profile', element: <ProfileEdit /> },
           { path: '/my/schedule', element: <MySchedule /> },
