@@ -40,6 +40,9 @@ type MatchTypeFilter = 'all' | MatchType
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
+const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
+const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
+const DEFAULT_APPLIED_MATCH_IDS = ['match-003', 'match-002']
 
 const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '전체', value: 'all' },
@@ -352,6 +355,19 @@ function readFocusedMatchDate() {
   return Number.isNaN(date.getTime()) ? defaultDate : date
 }
 
+function readStringList(key: string) {
+  if (typeof window === 'undefined') {
+    return []
+  }
+
+  try {
+    const value = JSON.parse(localStorage.getItem(key) ?? '[]')
+    return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+  } catch {
+    return []
+  }
+}
+
 export function MatchHome() {
   const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
@@ -401,6 +417,13 @@ export function MatchHome() {
   }
 
   const [showTypeSheet, setShowTypeSheet] = useState(false)
+  const canceledMatchIds = readStringList(CANCELED_MATCH_IDS_KEY)
+  const joinedMatchIds = readStringList(JOINED_MATCH_IDS_KEY)
+  const appliedMatchCount =
+    Array.from(new Set([...DEFAULT_APPLIED_MATCH_IDS, ...joinedMatchIds])).filter(
+      (matchId) => !canceledMatchIds.includes(matchId),
+    ).length +
+    createdMatches.length
 
   const handleTypeSelect = (kind: 'personal' | 'team' | 'guest', guestFlow?: 'wanted' | 'join') => {
     if (kind !== 'guest') {
@@ -443,7 +466,7 @@ export function MatchHome() {
               <strong>신청 중인 일정</strong>
               <small>참가 신청한 매치를<br />확인하세요.</small>
             </span>
-            <b>2건</b>
+            <b>{Math.max(appliedMatchCount, 0)}건</b>
           </article>
           <article className="match_status_card">
             <span className="match_status_content">

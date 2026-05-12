@@ -6,9 +6,10 @@ import matchPencilIcon from '../../asset/icons/match_pencil.svg'
 import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
 import matchList03 from '../../asset/images/match_list03.jpg'
+import { matches } from '../../data/mockData'
 import './my.css'
 
-type ScheduleStatus = 'applied' | 'confirmed' | 'completed'
+type ScheduleStatus = 'applied' | 'confirmed'
 type MatchType = 'personal' | 'team' | 'mercenary'
 
 type ScheduleTab = {
@@ -31,10 +32,13 @@ type ScheduleMatch = {
   isMine?: boolean
 }
 
+const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
+const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+
 const tabs: ScheduleTab[] = [
   { label: '신청 중', value: 'applied' },
   { label: '확정', value: 'confirmed' },
-  { label: '참가완료', value: 'completed' },
 ]
 
 const initialSchedules: ScheduleMatch[] = [
@@ -71,35 +75,92 @@ const initialSchedules: ScheduleMatch[] = [
     type: 'personal',
     title: '초보 환영 야외전',
     time: '2026.05.23 · 14:00',
-    region: '경기 하남',
-    fieldName: '택티컬 필드',
+    region: '경기 남부',
+    fieldName: '택티쿨 필드',
     currentParticipants: 18,
     maxParticipants: 24,
     imageSrc: matchList03,
-    isMine: true,
-  },
-  {
-    id: 'schedule-004',
-    matchId: 'match-004',
-    status: 'completed',
-    type: 'team',
-    title: '야간 팀 스크림',
-    time: '2026.04.30 · 18:00',
-    region: '서울',
-    fieldName: '강남 CQB',
-    currentParticipants: 12,
-    maxParticipants: 16,
-    imageSrc: matchList01,
   },
 ]
+
+function readStringList(key: string) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key) ?? '[]')
+    return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
+  } catch {
+    return []
+  }
+}
+
+function readCreatedSchedules(): ScheduleMatch[] {
+  try {
+    const value = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
+    if (!Array.isArray(value)) return []
+
+    return value
+      .filter((match) => match && typeof match === 'object' && typeof match.id === 'string')
+      .map((match): ScheduleMatch => {
+        const type = match.type === 'team' || match.type === 'mercenary' ? match.type : 'personal'
+        const imageSrc = type === 'team' ? matchList02 : type === 'mercenary' ? matchList03 : matchList01
+        const dateLabel = typeof match.date === 'string' ? match.date.replaceAll('-', '.') : '2026.05.18'
+
+        return {
+          id: `created-${match.id}`,
+          matchId: match.id,
+          status: 'applied',
+          type,
+          title: typeof match.title === 'string' ? match.title : '내가 만든 매치',
+          time: `${dateLabel} · ${typeof match.time === 'string' ? match.time : '14:00'}`,
+          region: typeof match.region === 'string' ? match.region : '서울',
+          fieldName: typeof match.fieldName === 'string' ? match.fieldName : '어반 CQB',
+          currentParticipants: Number(match.currentParticipants) || 1,
+          maxParticipants: Number(match.maxParticipants) || 12,
+          imageSrc,
+          isMine: true,
+        }
+      })
+  } catch {
+    return []
+  }
+}
+
+function createJoinedSchedules(canceledIds: string[]) {
+  return readStringList(JOINED_MATCH_IDS_KEY)
+    .filter((id) => !canceledIds.includes(id))
+    .map((matchId) => matches.find((match) => match.id === matchId))
+    .filter((match): match is NonNullable<typeof match> => Boolean(match))
+    .map((match): ScheduleMatch => ({
+      id: `joined-${match.id}`,
+      matchId: match.id,
+      status: 'applied',
+      type: 'personal',
+      title: match.title,
+      time: `${match.dateValue?.replaceAll('-', '.') ?? match.date} · ${match.time}`,
+      region: match.region,
+      fieldName: match.fieldName,
+      currentParticipants: match.currentParticipants,
+      maxParticipants: match.maxParticipants,
+      imageSrc: matchList01,
+    }))
+}
 
 export function MySchedule() {
   const navigate = useNavigate()
   const [selectedTab, setSelectedTab] = useState<ScheduleStatus>('applied')
 
+  const schedules = useMemo(() => {
+    const canceledIds = readStringList(CANCELED_MATCH_IDS_KEY)
+    const baseSchedules = initialSchedules.filter((schedule) => !canceledIds.includes(schedule.matchId))
+    const joinedSchedules = createJoinedSchedules(canceledIds).filter(
+      (joined) => !baseSchedules.some((schedule) => schedule.matchId === joined.matchId),
+    )
+
+    return [...baseSchedules, ...joinedSchedules, ...readCreatedSchedules()]
+  }, [])
+
   const filteredSchedules = useMemo(
-    () => initialSchedules.filter((schedule) => schedule.status === selectedTab),
-    [selectedTab],
+    () => schedules.filter((schedule) => schedule.status === selectedTab),
+    [schedules, selectedTab],
   )
 
   const goBack = () => {
@@ -144,7 +205,7 @@ export function MySchedule() {
               const actionIcon = match.isMine ? matchPencilIcon : arrowRIcon
 
               return (
-                <div className="my_schedule_match_item" key={match.id}>
+                <Link className="my_schedule_match_item" to={actionTo} aria-label={actionLabel} key={match.id}>
                   <div className="my_schedule_match_bottom">
                     <div className="my_schedule_match_media">
                       <img className="my_schedule_match_thumb" src={match.imageSrc} alt="" aria-hidden="true" />
@@ -170,16 +231,16 @@ export function MySchedule() {
                         </p>
                       </div>
                     </div>
-                    <Link className="my_schedule_match_arrow_link" to={actionTo} aria-label={actionLabel}>
+                    <span className="my_schedule_match_arrow_link" aria-hidden="true">
                       <img
                         className={`my_schedule_match_arrow ${match.isMine ? 'is_pencil' : ''}`}
                         src={actionIcon}
                         alt=""
                         aria-hidden="true"
                       />
-                    </Link>
+                    </span>
                   </div>
-                </div>
+                </Link>
               )
             })}
           </div>

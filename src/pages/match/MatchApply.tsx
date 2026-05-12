@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { matches } from '../../data/mockData'
 import './match.css'
 
+const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
+
 const checks = [
   '안전수칙과 현장 규정을 확인했어요',
   '신청 후 팀장 승인 여부를 기다릴게요',
@@ -24,6 +26,10 @@ export function MatchApply() {
     const stored = JSON.parse(localStorage.getItem('joinedMatchIds') || '[]') as string[]
     if (id && !stored.includes(id)) {
       localStorage.setItem('joinedMatchIds', JSON.stringify([...stored, id]))
+    }
+    if (id) {
+      const canceled = JSON.parse(localStorage.getItem(CANCELED_MATCH_IDS_KEY) || '[]') as string[]
+      localStorage.setItem(CANCELED_MATCH_IDS_KEY, JSON.stringify(canceled.filter((matchId) => matchId !== id)))
     }
     navigate(`/match/${id}/complete`)
   }
