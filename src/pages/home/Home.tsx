@@ -1,5 +1,6 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
 import { useEffect, useState } from 'react'
+import type { ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
 import KeywordTag from '../../components/KeywordTag'
@@ -219,7 +220,12 @@ export function Home() {
   const matchDragScroll = useDragScroll()
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const albumInputRef = useRef<HTMLInputElement>(null)
   const [isAchievementExpanded, setIsAchievementExpanded] = useState(false)
+  const [isProfileSheetOpen, setIsProfileSheetOpen] = useState(false)
+  const [profilePreview, setProfilePreview] = useState(userAvatar)
+  const [profileObjectUrl, setProfileObjectUrl] = useState<string | null>(null)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     const savedTheme = localStorage.getItem('airsoft-theme')
     return savedTheme === 'dark' ? 'dark' : 'light'
@@ -233,8 +239,31 @@ export function Home() {
     localStorage.setItem('airsoft-theme', themeMode)
   }, [themeMode])
 
+  useEffect(() => {
+    return () => {
+      if (profileObjectUrl) {
+        URL.revokeObjectURL(profileObjectUrl)
+      }
+    }
+  }, [profileObjectUrl])
+
   const toggleThemeMode = () => {
     setThemeMode((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
+  }
+
+  const updateProfileImage = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const nextPreview = URL.createObjectURL(file)
+    if (profileObjectUrl) {
+      URL.revokeObjectURL(profileObjectUrl)
+    }
+
+    setProfileObjectUrl(nextPreview)
+    setProfilePreview(nextPreview)
+    setIsProfileSheetOpen(false)
+    event.target.value = ''
   }
 
   return (
@@ -273,10 +302,15 @@ export function Home() {
             <div className="home_userinfo_summary">
               <div className="home_userinfo_profile">
                 <div className="home_userinfo_pic_wrap">
-                  <img src={userAvatar} alt="프로필" className="home_userinfo_pic" />
-                  <span className="home_userinfo_pic_badge" aria-hidden="true">
+                  <img src={profilePreview} alt="프로필" className="home_userinfo_pic" />
+                  <button
+                    className="home_userinfo_pic_badge"
+                    type="button"
+                    aria-label="프로필 사진 변경"
+                    onClick={() => setIsProfileSheetOpen(true)}
+                  >
                     <img src={mainProfileIcon} alt="" className="home_userinfo_pic_badge_icon" />
-                  </span>
+                  </button>
                 </div>
                 <div className="home_userinfo_tit">
                   <div className="home_userinfo_icons">
@@ -529,6 +563,58 @@ export function Home() {
           </div>
         </section>
       </div>
+      <input
+        ref={cameraInputRef}
+        className="home_profile_file_input"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={updateProfileImage}
+      />
+      <input
+        ref={albumInputRef}
+        className="home_profile_file_input"
+        type="file"
+        accept="image/*"
+        onChange={updateProfileImage}
+      />
+      {isProfileSheetOpen ? (
+        <div className="home_profile_sheet_layer" role="presentation">
+          <button
+            className="home_profile_sheet_backdrop"
+            type="button"
+            aria-label="프로필 사진 변경 닫기"
+            onClick={() => setIsProfileSheetOpen(false)}
+          />
+          <section className="home_profile_sheet" role="dialog" aria-modal="true" aria-labelledby="home_profile_sheet_title">
+            <div className="home_profile_sheet_handle" aria-hidden="true" />
+            <h2 id="home_profile_sheet_title">프로필 사진 변경</h2>
+            <div className="home_profile_sheet_actions">
+              <button
+                className="home_profile_sheet_action"
+                type="button"
+                onClick={() => cameraInputRef.current?.click()}
+              >
+                카메라로 촬영
+              </button>
+              <button
+                className="home_profile_sheet_action"
+                type="button"
+                onClick={() => albumInputRef.current?.click()}
+              >
+                앨범에서 선택
+              </button>
+            </div>
+            <button
+              className="home_profile_sheet_cancel"
+              type="button"
+              onClick={() => setIsProfileSheetOpen(false)}
+            >
+              취소
+            </button>
+          </section>
+        </div>
+      ) : null}
     </div>
   )
 }

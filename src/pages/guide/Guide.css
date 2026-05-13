@@ -952,6 +952,121 @@
 }
 
 /* Home quiz entry - Figma node 2551:3476 */
+.guide_quiz_start_page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.guide_quiz_start_bg,
+.guide_quiz_start_overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.guide_quiz_start_bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.guide_quiz_start_content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 110px 28px 174px;
+}
+
+.guide_quiz_start_title {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.guide_quiz_start_heading {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.guide_quiz_start_back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 24px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.guide_quiz_start_back img {
+  width: 232x;
+  height: 32px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.guide_quiz_start_title h1,
+.guide_quiz_start_title p {
+  margin: 0;
+}
+
+.guide_quiz_start_title h1 {
+  color: var(--color-white);
+  font-family: var(--font-pretendard);
+  font-size: 36px;
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.guide_quiz_start_title p {
+  color: var(--color-gray04);
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-18);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.guide_quiz_start_cta {
+  position: fixed;
+  right: 50%;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: calc(124px + env(safe-area-inset-bottom, 0px));
+  padding: 0 24px;
+  transform: translateX(50%);
+}
+
+.guide_quiz_start_button {
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: var(--color-white) !important;
+  -webkit-text-fill-color: var(--color-white) !important;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
 .guide_quiz_figma_page {
   display: flex;
   flex-direction: column;

@@ -7,6 +7,7 @@ import quizFinishIcon from '../../asset/icons/quiz_finish.svg'
 import quizInfoIcon from '../../asset/icons/quiz_info.svg'
 import quizRepostIcon from '../../asset/icons/quiz_repost.svg'
 import quizShieldIcon from '../../asset/icons/quiz_shield.svg'
+import quizStartImage from '../../asset/images/quiz_start01.png'
 import './Guide.css'
 
 type Quiz = {
@@ -130,8 +131,20 @@ const previousQuizButtonStyle: CSSProperties = {
   WebkitTextFillColor: 'var(--color-gray02)',
 }
 
+const startQuizButtonStyle: CSSProperties = {
+  ...quizButtonStyle,
+  border: '1px solid rgba(255, 255, 255, 0.14)',
+  background: 'rgba(255, 255, 255, 0.25)',
+  backgroundColor: 'rgba(255, 255, 255, 0.25)',
+  color: 'var(--color-white)',
+  WebkitTextFillColor: 'var(--color-white)',
+  backdropFilter: 'blur(2px)',
+  WebkitBackdropFilter: 'blur(2px)',
+}
+
 export function GuideQuiz() {
   const navigate = useNavigate()
+  const [isStarted, setIsStarted] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
   const [isErrorNoteVisible, setIsErrorNoteVisible] = useState(false)
@@ -177,6 +190,7 @@ export function GuideQuiz() {
   }
 
   const restartQuiz = () => {
+    setIsStarted(true)
     setCurrentIndex(0)
     setSelectedChoice(null)
     setIsErrorNoteVisible(false)
@@ -207,6 +221,41 @@ export function GuideQuiz() {
             hintTitle: '이제 기본 상식은 문제 없어요!',
             hintDescription: '안전 수칙을 항상 기억하고 즐거운 게임 되세요!',
           }
+
+  if (!isStarted) {
+    return (
+      <div className="guide_quiz_start_page">
+        <img src={quizStartImage} alt="" className="guide_quiz_start_bg" aria-hidden="true" />
+        <div className="guide_quiz_start_overlay" aria-hidden="true" />
+
+        <main className="guide_quiz_start_content">
+          <section className="guide_quiz_start_title">
+            <div className="guide_quiz_start_heading">
+              <button className="guide_quiz_start_back" type="button" aria-label="뒤로가기" onClick={() => navigate('/home')}>
+                <img src={arrowLIcon} alt="" aria-hidden="true" />
+              </button>
+              <h1>초보자 퀴즈</h1>
+            </div>
+            <p>
+              안전과 기본 룰을 가볍게 익히고,
+              <br />
+              첫 게임을 더 편하게 시작해보세요.
+            </p>
+          </section>
+        </main>
+
+        <section className="guide_quiz_start_cta">
+          <LoginButton
+            className="guide_quiz_start_button"
+            onClick={() => setIsStarted(true)}
+            style={startQuizButtonStyle}
+          >
+            시작하기
+          </LoginButton>
+        </section>
+      </div>
+    )
+  }
 
   if (isComplete) {
     return (
