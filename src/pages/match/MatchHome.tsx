@@ -1,5 +1,7 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
 import { DayPicker } from 'react-day-picker'
 import { ko } from 'date-fns/locale'
@@ -376,6 +378,7 @@ export function MatchHome() {
   )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
+  const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
   const selectedDay = String(selectedDate.getDate())
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
   const selectedDateKey = [
@@ -424,6 +427,12 @@ export function MatchHome() {
       (matchId) => !canceledMatchIds.includes(matchId),
     ).length +
     createdMatches.length
+
+  useEffect(() => {
+    if (consumeMatchRegistrationToastPending()) {
+      setRegistrationToastOpen(true)
+    }
+  }, [])
 
   const handleTypeSelect = (kind: 'personal' | 'team' | 'guest', guestFlow?: 'wanted' | 'join') => {
     if (kind !== 'guest') {
@@ -645,6 +654,8 @@ export function MatchHome() {
         onClose={() => setShowTypeSheet(false)}
         onSelect={handleTypeSelect}
       />
+
+      <MatchRegistrationToast open={registrationToastOpen} onClose={() => setRegistrationToastOpen(false)} />
 
       <button className="match_create_fab" type="button" aria-label="매치 만들기" onClick={() => setShowTypeSheet(true)}>
         <img src={plusIcon} alt="" aria-hidden="true" />

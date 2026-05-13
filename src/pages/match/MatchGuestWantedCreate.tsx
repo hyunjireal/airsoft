@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { markMatchRegistrationToastPending } from './MatchRegistrationToast'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
@@ -89,6 +90,7 @@ export function MatchGuestWantedCreate() {
 
     localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify([createdMatch, ...savedMatches]))
     localStorage.setItem(CREATED_MATCH_FOCUS_DATE_KEY, matchDate)
+    markMatchRegistrationToastPending()
     navigate('/match')
   }
 

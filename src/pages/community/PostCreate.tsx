@@ -117,7 +117,7 @@ export function PostCreate() {
           <div className="post_create_board_select_wrap" ref={boardDropdownRef}>
             <button
               id="post-board-trigger"
-              className={`post_create_board_trigger${boardMenuOpen ? ' is_open' : ''}`}
+              className={`post_create_control post_create_board_trigger${boardMenuOpen ? ' is_open' : ''}`}
               type="button"
               aria-haspopup="listbox"
               aria-expanded={boardMenuOpen}
@@ -178,7 +178,7 @@ export function PostCreate() {
           </label>
           <input
             id="post_title"
-            className="post_create_input"
+            className="post_create_control post_create_input"
             placeholder="제목을 입력해주세요"
             value={title}
             onChange={(event) => setTitle(event.target.value)}

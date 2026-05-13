@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { markMatchRegistrationToastPending } from './MatchRegistrationToast'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
@@ -49,6 +50,11 @@ export function MatchGuestJoinCreate() {
   const changeRegion = (nextRegion: string) => {
     setRegion(nextRegion)
     setFieldName(fieldOptions[nextRegion][0])
+  }
+
+  const completeGuestJoinRegistration = () => {
+    markMatchRegistrationToastPending()
+    navigate('/match')
   }
 
   return (
@@ -200,7 +206,7 @@ export function MatchGuestJoinCreate() {
       <div className="mgc_submit_wrap">
         <LoginButton
           style={{ background: 'var(--color-khaki)', backgroundColor: 'var(--color-khaki)', color: 'var(--color-white)', WebkitTextFillColor: 'var(--color-white)' }}
-          onClick={() => navigate('/match')}
+          onClick={completeGuestJoinRegistration}
         >
           등록하기
         </LoginButton>
