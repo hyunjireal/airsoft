@@ -1,107 +1,142 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { guideFlow } from '../../data/guideFlow'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import arrowDownIcon from '../../asset/icons/arrow_down.svg'
+import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import arrowRightIcon from '../../asset/icons/arrow_r.svg'
+import bookIcon from '../../asset/icons/com_book.svg'
+import safetyBadgeIcon from '../../asset/icons/com_safety.svg'
+import guideHandImage from '../../asset/images/guide_hand.png'
+import guideRuleImage from '../../asset/images/guide_rule.png'
+import guideSafeImage from '../../asset/images/guide_safe.png'
+import { beginnerGuideSections } from '../../data/beginnerGuideSections'
 import './Guide.css'
 
+const guideTips = [
+  {
+    id: 'safety',
+    title: '안전이 최우선',
+    description: ['보안경 착용은', '선택이 아닌 필수!'],
+    image: guideSafeImage,
+  },
+  {
+    id: 'rules',
+    title: '규칙을 기억해요',
+    description: ['규칙을 지키는 사람이', '멋진 플레이어입니다'],
+    image: guideRuleImage,
+  },
+  {
+    id: 'respect',
+    title: '서로 존중해요',
+    description: ['배려와 존중이', '게임을 더 즐겁게!'],
+    image: guideHandImage,
+  },
+] as const
+
 export function BeginnerHub() {
-  const cardRefs = useRef<Array<HTMLElement | null>>([])
-  const [readGuideIds, setReadGuideIds] = useState<string[]>([])
-  const progress = Math.round((readGuideIds.length / guideFlow.length) * 100)
-  const completed = readGuideIds.length === guideFlow.length
+  const navigate = useNavigate()
+  const [openSectionId, setOpenSectionId] = useState<string | null>(null)
 
-  const observerOptions = useMemo(
-    () => ({
-      root: null,
-      rootMargin: '0px 0px -30% 0px',
-      threshold: 0.55,
-    }),
-    [],
-  )
+  const goBack = () => {
+    if (window.history.length > 1) {
+      navigate(-1)
+      return
+    }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) {
-          return
-        }
+    navigate('/community')
+  }
 
-        const id = entry.target.getAttribute('data-guide-id')
-        if (!id) {
-          return
-        }
-
-        setReadGuideIds((ids) => (ids.includes(id) ? ids : [...ids, id]))
-      })
-    }, observerOptions)
-
-    cardRefs.current.forEach((card) => {
-      if (card) {
-        observer.observe(card)
-      }
-    })
-
-    return () => observer.disconnect()
-  }, [observerOptions])
+  const toggleSection = (sectionId: string) => {
+    setOpenSectionId((currentId) => (currentId === sectionId ? null : sectionId))
+  }
 
   return (
-    <div className="page guide_intro_page">
-      <div className="guide_sticky_progress">
-        <div className="guide_step_header">
-          <span>{readGuideIds.length} / {guideFlow.length}</span>
-          <div className="guide_progress" aria-label={`가이드 진행률 ${progress}%`}>
-            <span style={{ width: `${progress}%` }} />
+    <div className="beginner_guide_page">
+      <header className="beginner_guide_header">
+        <button className="beginner_guide_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
+          <img src={arrowLeftIcon} alt="" aria-hidden="true" />
+        </button>
+        <h1>초보자 가이드</h1>
+      </header>
+
+      <section className="beginner_guide_tips" aria-labelledby="beginner-guide-tips-title">
+        <div className="beginner_guide_tips_label" id="beginner-guide-tips-title">
+          <img src={safetyBadgeIcon} alt="" aria-hidden="true" />
+          <span>초보자 팁</span>
+        </div>
+
+        <div className="beginner_guide_tips_grid">
+          {guideTips.map((tip) => (
+            <article className="beginner_guide_tip_card" key={tip.id}>
+              <img className="beginner_guide_tip_image" src={tip.image} alt="" aria-hidden="true" />
+              <strong>{tip.title}</strong>
+              <p>
+                {tip.description.map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="beginner_guide_section_list" aria-label="초보자 가이드 목록">
+        {beginnerGuideSections.map((section) => {
+          const isOpen = openSectionId === section.id
+          const contentId = `beginner-guide-panel-${section.id}`
+
+          return (
+            <article className={`beginner_guide_section_card${isOpen ? ' is_open' : ''}`} key={section.id}>
+              <button
+                className="beginner_guide_section_button"
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={contentId}
+                onClick={() => toggleSection(section.id)}
+              >
+                <div className="beginner_guide_section_heading">
+                  <span className="beginner_guide_section_number">{section.number}</span>
+                  <span className="beginner_guide_section_title">{section.title}</span>
+                </div>
+                <img
+                  className="beginner_guide_section_chevron"
+                  src={arrowDownIcon}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+
+              <div
+                className={`beginner_guide_section_panel_wrap${isOpen ? ' is_open' : ''}`}
+                id={contentId}
+                aria-hidden={!isOpen}
+              >
+                <div className="beginner_guide_section_panel">
+                  <p className="beginner_guide_section_summary">{section.summary}</p>
+                  <ul className="beginner_guide_section_points">
+                    {section.points.map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          )
+        })}
+      </section>
+
+      <Link className="beginner_guide_help_card" to="/community">
+        <div className="beginner_guide_help_card_left">
+          <img className="beginner_guide_help_icon" src={bookIcon} alt="" aria-hidden="true" />
+          <div className="beginner_guide_help_copy">
+            <strong>더 도움이 필요하신가요?</strong>
+            <p>
+              <span>궁금한 내용은</span>
+              <span>초보 질문방을 이용해보세요.</span>
+            </p>
           </div>
         </div>
-      </div>
-
-      <h1 className="page_title">초보자 가이드</h1>
-      <p className="page_description">처음 필드 가기 전, 카드를 내려보며 꼭 필요한 내용을 확인해요.</p>
-
-      <section className="section">
-        <div className="chip_row">
-          <span className="chip">약 5분</span>
-          <span className="chip">안전/규칙/매너</span>
-          <span className="chip">초보자 필수</span>
-        </div>
-      </section>
-
-      <section className="section">
-        {guideFlow.map((guide, index) => (
-          <article
-            className="card guide_scroll_card"
-            data-guide-id={guide.id}
-            key={guide.id}
-            ref={(element) => {
-              cardRefs.current[index] = element
-            }}
-          >
-            <span className="badge">{guide.number}</span>
-            <h2>{guide.title}</h2>
-            <article className="placeholder_image guide_hero_image" aria-label={`${guide.title} 안내 이미지`}>
-              {guide.title}
-            </article>
-            <p>{guide.summary}</p>
-            <div>
-              <h3>꼭 기억해요</h3>
-              <ul className="guide_list">
-                {guide.remember.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-            <div>
-              <h3>이런 행동은 위험해요</h3>
-              <ul className="guide_list">
-                {guide.warning.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            </div>
-          </article>
-        ))}
-      </section>
-
-      {completed ? (
-        <Link className="button primary_button" to="/guide/complete">가이드 완료하기</Link>
-      ) : (
-        <button className="button" type="button" disabled>가이드 진행 중 {progress}%</button>
-      )}
+        <img className="beginner_guide_help_arrow" src={arrowRightIcon} alt="" aria-hidden="true" />
+      </Link>
     </div>
   )
 }

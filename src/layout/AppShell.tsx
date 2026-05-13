@@ -14,6 +14,7 @@ export function AppShell() {
   const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
   const isChatPage = location.pathname === '/chat'
   const isMySchedulePage = location.pathname === '/my/schedule'
+  const isGuideHubPage = location.pathname === '/guide'
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
@@ -24,6 +25,7 @@ export function AppShell() {
     !isCommunityPostDetail &&
     !isTournamentMvpVote &&
     !isChatPage &&
+    !isGuideHubPage &&
     !isMySchedulePage &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'
@@ -31,6 +33,7 @@ export function AppShell() {
   const frameClassName = [
     'mobile_frame',
     isChatPage ? 'chat_frame' : '',
+    isGuideHubPage ? 'guide_hub_frame' : '',
     isMediaProfile
       ? 'media_profile_frame'
       : showBackButton

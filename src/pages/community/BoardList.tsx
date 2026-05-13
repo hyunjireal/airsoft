@@ -22,6 +22,7 @@ import type { BoardPost } from '../../types'
 
 const freeBoardCategories = ['전체', '자유수다', '팀원모집', '경기후기', '장비', '정보', '이벤트']
 const freeBoardTypes: BoardPost['boardType'][] = ['free', 'tip', 'review']
+const INITIAL_VISIBLE_GENERAL_POST_COUNT = 5
 
 interface GeneralPostItem {
   id: string
@@ -117,6 +118,205 @@ const generalPosts: GeneralPostItem[] = [
     commentsCount: 138,
     saved: true,
   },
+  {
+    id: 'general-009',
+    category: '자유수다',
+    title: '오늘 처음 필드 다녀왔는데 생각보다 체력 소모가 크네요',
+    author: '첫게임완료',
+    createdAt: '20분 전',
+    views: 214,
+    commentsCount: 33,
+  },
+  {
+    id: 'general-010',
+    category: '자유수다',
+    title: '비 오는 날 우중전 해본 분들, 신발 뭐 신으세요?',
+    author: '젖은양말',
+    createdAt: '1시간 전',
+    views: 182,
+    commentsCount: 21,
+  },
+  {
+    id: 'general-011',
+    category: '자유수다',
+    title: '게임 끝나고 다들 장비 정리는 얼마나 꼼꼼하게 하나요?',
+    author: '정리정돈러',
+    createdAt: '3시간 전',
+    views: 128,
+    commentsCount: 17,
+  },
+  {
+    id: 'general-012',
+    category: '자유수다',
+    title: '초보 데리고 가기 좋은 수도권 필드 추천 부탁드립니다',
+    author: '주말원정',
+    createdAt: '5시간 전',
+    views: 267,
+    commentsCount: 44,
+  },
+  {
+    id: 'general-013',
+    category: '팀원모집',
+    title: '[인천] 월 2회 정기전 함께하실 팀원 모집합니다',
+    author: '도시전사',
+    createdAt: '35분 전',
+    views: 241,
+    commentsCount: 28,
+  },
+  {
+    id: 'general-014',
+    category: '팀원모집',
+    title: 'CQB 위주로 뛰는 소규모 팀에서 신규 멤버 구합니다',
+    author: '실내파',
+    createdAt: '1시간 전',
+    views: 193,
+    commentsCount: 14,
+  },
+  {
+    id: 'general-015',
+    category: '팀원모집',
+    title: '[경기북부] 차량 카풀 가능하신 분 같이 게임 다녀요',
+    author: '필드출근',
+    createdAt: '4시간 전',
+    views: 158,
+    commentsCount: 22,
+  },
+  {
+    id: 'general-016',
+    category: '경기후기',
+    title: '이번주 실내전 후기, 운영 깔끔해서 만족도 높았습니다',
+    author: '후기남겨요',
+    createdAt: '40분 전',
+    views: 284,
+    commentsCount: 39,
+  },
+  {
+    id: 'general-017',
+    category: '경기후기',
+    title: '야외 필드 첫 방문 후기, 동선이 넓어서 재밌었어요',
+    author: '숲길정찰병',
+    createdAt: '1시간 전',
+    views: 176,
+    commentsCount: 18,
+  },
+  {
+    id: 'general-018',
+    category: '경기후기',
+    title: '야간전 처음 뛰어봤는데 라이트 세팅 중요하네요',
+    author: '밤전문',
+    createdAt: '2시간 전',
+    views: 149,
+    commentsCount: 15,
+  },
+  {
+    id: 'general-019',
+    category: '경기후기',
+    title: '비기너 친구랑 다녀온 필드 후기, 렌탈도 괜찮았습니다',
+    author: '동반입문',
+    createdAt: '6시간 전',
+    views: 133,
+    commentsCount: 12,
+  },
+  {
+    id: 'general-020',
+    category: '장비',
+    title: '초보용 체스트리그 가볍게 쓰기 좋은 모델 뭐가 있나요',
+    author: '파우치고민',
+    createdAt: '25분 전',
+    views: 194,
+    commentsCount: 26,
+  },
+  {
+    id: 'general-021',
+    category: '장비',
+    title: '고글 김서림 방지제 써보신 분들 추천 제품 있나요?',
+    author: '시야확보',
+    createdAt: '2시간 전',
+    views: 168,
+    commentsCount: 19,
+  },
+  {
+    id: 'general-022',
+    category: '장비',
+    title: '배터리 보관 케이스 따로 쓰시나요? 안전하게 관리하고 싶어요',
+    author: '배터리보호',
+    createdAt: '5시간 전',
+    views: 119,
+    commentsCount: 11,
+  },
+  {
+    id: 'general-023',
+    category: '정보',
+    title: '초보자 대상 안전 교육 있는 필드 정리해봤습니다',
+    author: '정리요정',
+    createdAt: '30분 전',
+    views: 341,
+    commentsCount: 46,
+    saved: true,
+  },
+  {
+    id: 'general-024',
+    category: '정보',
+    title: '서울 근교 실내 필드 운영시간 비교표 공유합니다',
+    author: '지도장인',
+    createdAt: '2시간 전',
+    views: 228,
+    commentsCount: 31,
+  },
+  {
+    id: 'general-025',
+    category: '정보',
+    title: '국내 택티컬 장비 매장 오프라인 방문 후기 모음',
+    author: '오프매장탐방',
+    createdAt: '4시간 전',
+    views: 177,
+    commentsCount: 16,
+  },
+  {
+    id: 'general-026',
+    category: '정보',
+    title: '에어소프트 입문 비용 대략적으로 정리해봤어요',
+    author: '입문계산기',
+    createdAt: '7시간 전',
+    views: 392,
+    commentsCount: 54,
+  },
+  {
+    id: 'general-027',
+    category: '이벤트',
+    title: '이번달 필드 할인 이벤트 정리본 업데이트했습니다',
+    author: '할인추적자',
+    createdAt: '45분 전',
+    views: 205,
+    commentsCount: 23,
+  },
+  {
+    id: 'general-028',
+    category: '이벤트',
+    title: '장비 브랜드 사은품 행사 참여해보신 분 후기 궁금해요',
+    author: '사은품헌터',
+    createdAt: '3시간 전',
+    views: 144,
+    commentsCount: 12,
+  },
+  {
+    id: 'general-029',
+    category: '이벤트',
+    title: '필드 협찬 미니게임 이벤트 상품 수령하신 분 있나요?',
+    author: '럭키박스',
+    createdAt: '6시간 전',
+    views: 118,
+    commentsCount: 9,
+  },
+  {
+    id: 'general-030',
+    category: '이벤트',
+    title: '커뮤니티 출석 이벤트 포인트 들어온 분 체크해봐요',
+    author: '출석체커',
+    createdAt: '8시간 전',
+    views: 156,
+    commentsCount: 18,
+  },
 ]
 
 function getPostCategory(post: BoardPost) {
@@ -138,6 +338,7 @@ export function BoardList() {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
   const typedBoard = boardType as BoardPost['boardType']
   const isFreeBoard = typedBoard === 'free'
   const posts = boardPosts.filter((post) => {
@@ -157,10 +358,14 @@ export function BoardList() {
         views: 320,
         commentsCount: post.commentsCount,
       }))
+  const categoryKey = isFreeBoard ? selectedCategory : typedBoard
+  const isExpanded = expandedCategories.has(categoryKey)
+  const visiblePosts = isExpanded ? displayPosts : displayPosts.slice(0, INITIAL_VISIBLE_GENERAL_POST_COUNT)
+  const hasMorePosts = displayPosts.length > INITIAL_VISIBLE_GENERAL_POST_COUNT && !isExpanded
 
   const write = () => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
-      navigate('/community/post/create')
+      navigate('/community/post/create', { state: { boardContext: 'general' } })
       return
     }
     setModalOpen(true)
@@ -168,6 +373,14 @@ export function BoardList() {
 
   const openPost = (postId: string) => {
     navigate(`/community/post/${postId}`)
+  }
+
+  const showMorePosts = () => {
+    setExpandedCategories((current) => {
+      const next = new Set(current)
+      next.add(categoryKey)
+      return next
+    })
   }
 
   if (isFreeBoard) {
@@ -253,7 +466,7 @@ export function BoardList() {
         </section>
 
         <section className="general_post_list" aria-label="일반 게시글 목록">
-          {displayPosts.map((post) => (
+          {visiblePosts.map((post) => (
             <button className="general_post_card" key={post.id} type="button" onClick={() => openPost(post.id)}>
               <span className="general_post_card_top">
                 <span className="general_post_category">{post.category}</span>
@@ -278,6 +491,17 @@ export function BoardList() {
             </button>
           ))}
         </section>
+
+        {hasMorePosts ? (
+          <div className="general_post_more_wrap">
+            <More
+              ariaLabel={`${selectedCategory} 게시글 더보기`}
+              className="general_post_more_button"
+              onClick={showMorePosts}
+              style={{ fontSize: 14, fontWeight: 500, lineHeight: '18px' }}
+            />
+          </div>
+        ) : null}
 
         <button
           className="community_write_floating beginner_write_floating general_write_fab"

@@ -15,6 +15,7 @@ import { BoardList } from './pages/community/BoardList'
 import { CommunityHome } from './pages/community/CommunityHome'
 import { PostCreate } from './pages/community/PostCreate'
 import { PostDetail } from './pages/community/PostDetail'
+import { BeginnerHub } from './pages/guide/BeginnerHub'
 import { MediaHome } from './pages/media/MediaHome'
 import { MediaList } from './pages/media/MediaList'
 import { MediaProfile } from './pages/media/MediaProfile'
@@ -93,7 +94,7 @@ export const router = createBrowserRouter([
         element: <AppShell />,
         children: [
           { path: '/home', element: <Home /> },
-          { path: '/guide', element: <Navigate to="/guide/safety" replace /> },
+          { path: '/guide', element: <BeginnerHub /> },
           { path: '/guide/safety', element: <GuideStepPage stepId="safety-gear" /> },
           { path: '/guide/rules', element: <GuideStepPage stepId="safe-zone" /> },
           { path: '/guide/gear', element: <GuideStepPage stepId="in-game" /> },

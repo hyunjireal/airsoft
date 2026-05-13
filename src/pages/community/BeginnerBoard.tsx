@@ -44,6 +44,8 @@ const quickQuestions = [
   "필드 규칙 알려줘",
 ];
 
+const INITIAL_VISIBLE_QUESTION_COUNT = 5;
+
 const recentQuestions: RecentQuestion[] = [
   {
     id: "q-001",
@@ -82,6 +84,233 @@ const recentQuestions: RecentQuestion[] = [
     views: "188",
     comments: "42",
   },
+  {
+    id: "q-005",
+    title: "초보자가 필드 브리핑에서 꼭 체크해야 할 규정은 뭐가 있나요?",
+    category: "법규/규정",
+    author: "룰체크",
+    time: "15분 전",
+    views: "83",
+    comments: "19",
+  },
+  {
+    id: "q-006",
+    title: "배터리랑 비비탄은 처음에 어떤 걸 사면 무난할까요?",
+    category: "장비",
+    author: "장비입문",
+    time: "50분 전",
+    views: "96",
+    comments: "27",
+  },
+  {
+    id: "q-007",
+    title: "근거리에서 마주쳤을 때 초보자는 어떻게 움직이는 게 좋나요?",
+    category: "게임/전술",
+    author: "첫게임준비중",
+    time: "1시간 전",
+    views: "121",
+    comments: "31",
+  },
+  {
+    id: "q-008",
+    title: "안개 낀 날에도 고글 김서림 방지 없이 플레이해도 괜찮나요?",
+    category: "안전",
+    author: "고글초보",
+    time: "1시간 전",
+    views: "145",
+    comments: "38",
+  },
+  {
+    id: "q-009",
+    title: "처음 산 전동건에서 소리가 이상한데 바로 수리 맡겨야 하나요?",
+    category: "수리/튜닝",
+    author: "기어박스무서워",
+    time: "1시간 전",
+    views: "77",
+    comments: "14",
+  },
+  {
+    id: "q-010",
+    title: "세이프존에서 탄창 분리만 하면 공탄 확인은 꼭 안 해도 되나요?",
+    category: "법규/규정",
+    author: "필드첫방문",
+    time: "2시간 전",
+    views: "167",
+    comments: "44",
+  },
+  {
+    id: "q-011",
+    title: "초보자용 장갑은 어떤 형태가 제일 편했는지 추천 부탁드려요",
+    category: "장비",
+    author: "뉴비손시림",
+    time: "2시간 전",
+    views: "132",
+    comments: "23",
+  },
+  {
+    id: "q-012",
+    title: "히트 후 리스폰까지 이동할 때 길막처럼 안 보이려면 어떻게 해야 하나요?",
+    category: "게임/전술",
+    author: "히트헷갈림",
+    time: "2시간 전",
+    views: "114",
+    comments: "29",
+  },
+  {
+    id: "q-013",
+    title: "여름철 게임할 때 열사병 예방용으로 꼭 챙겨야 할 게 있나요?",
+    category: "안전",
+    author: "여름필드초보",
+    time: "2시간 전",
+    views: "158",
+    comments: "34",
+  },
+  {
+    id: "q-014",
+    title: "홉업 조절하다가 탄이 너무 뜨는데 초보도 직접 만져봐도 될까요?",
+    category: "수리/튜닝",
+    author: "홉업초보",
+    time: "3시간 전",
+    views: "90",
+    comments: "18",
+  },
+  {
+    id: "q-015",
+    title: "필드마다 복장 규정이 다른가요, 청바지로 가면 안 되나요?",
+    category: "법규/규정",
+    author: "복장고민중",
+    time: "3시간 전",
+    views: "143",
+    comments: "26",
+  },
+  {
+    id: "q-016",
+    title: "고글, 마스크, 체스트리그까지 다 사기 부담되면 우선순위가 어떻게 될까요?",
+    category: "장비",
+    author: "월급전뉴비",
+    time: "3시간 전",
+    views: "176",
+    comments: "52",
+  },
+  {
+    id: "q-017",
+    title: "엄폐할 때 몸을 너무 많이 내민다고 하는데 감 잡는 팁이 있을까요?",
+    category: "게임/전술",
+    author: "코너약함",
+    time: "4시간 전",
+    views: "109",
+    comments: "17",
+  },
+  {
+    id: "q-018",
+    title: "맞았는지 애매할 때 초보자는 무조건 히트 선언하는 게 맞나요?",
+    category: "안전",
+    author: "매너배우는중",
+    time: "4시간 전",
+    views: "240",
+    comments: "61",
+    recommended: true,
+  },
+  {
+    id: "q-019",
+    title: "배럴 청소는 게임 몇 번마다 한 번씩 해주는 게 적당한가요?",
+    category: "수리/튜닝",
+    author: "청소타이밍",
+    time: "5시간 전",
+    views: "68",
+    comments: "9",
+  },
+  {
+    id: "q-020",
+    title: "공공장소 이동할 때 장비를 차에 싣는 방식도 규정 위반이 될 수 있나요?",
+    category: "법규/규정",
+    author: "이동걱정",
+    time: "5시간 전",
+    views: "201",
+    comments: "35",
+  },
+  {
+    id: "q-021",
+    title: "예비 탄창은 첫 게임에 몇 개 정도 챙기면 충분할까요?",
+    category: "장비",
+    author: "탄창몇개",
+    time: "6시간 전",
+    views: "117",
+    comments: "20",
+  },
+  {
+    id: "q-022",
+    title: "초보자가 팀원이랑 콜사인을 맞출 때 자주 쓰는 말이 뭔가요?",
+    category: "게임/전술",
+    author: "콜사인헷갈림",
+    time: "6시간 전",
+    views: "104",
+    comments: "16",
+  },
+  {
+    id: "q-023",
+    title: "귀 보호는 다들 어떻게 하시나요? 안 아프게 맞는 팁도 궁금해요",
+    category: "안전",
+    author: "귀아픔",
+    time: "7시간 전",
+    views: "136",
+    comments: "22",
+  },
+  {
+    id: "q-024",
+    title: "모터 높이 조절은 초보가 건드리기 위험한 편인가요?",
+    category: "수리/튜닝",
+    author: "셀프정비입문",
+    time: "7시간 전",
+    views: "59",
+    comments: "11",
+  },
+  {
+    id: "q-025",
+    title: "야외 필드와 CQB 필드의 규칙 차이는 초보가 어떤 부분부터 알아야 하나요?",
+    category: "법규/규정",
+    author: "필드비교중",
+    time: "8시간 전",
+    views: "124",
+    comments: "24",
+  },
+  {
+    id: "q-026",
+    title: "렌탈 장비만으로도 첫 경기 충분히 즐길 수 있을까요?",
+    category: "장비",
+    author: "렌탈도전",
+    time: "8시간 전",
+    views: "165",
+    comments: "37",
+    recommended: true,
+  },
+  {
+    id: "q-027",
+    title: "초보가 후방 커버 맡았을 때 가장 먼저 신경 써야 할 포인트는 뭔가요?",
+    category: "게임/전술",
+    author: "역할연습중",
+    time: "9시간 전",
+    views: "94",
+    comments: "13",
+  },
+  {
+    id: "q-028",
+    title: "장비 이상이 생겼을 때 바로 손들고 빠지는 게 안전상 맞는 대응인가요?",
+    category: "안전",
+    author: "운영자호출",
+    time: "9시간 전",
+    views: "118",
+    comments: "21",
+  },
+  {
+    id: "q-029",
+    title: "비비탄이 자주 걸리는데 노즐 문제인지 탄 문제인지 구분하는 법이 있나요?",
+    category: "수리/튜닝",
+    author: "급탄불량",
+    time: "10시간 전",
+    views: "72",
+    comments: "12",
+  },
 ];
 
 const questionCategoryToneClass: Record<QuestionCategory, string> = {
@@ -99,6 +328,9 @@ function chatQuestionUrl(question: string) {
 export function BeginnerBoard() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
+  const [expandedTabs, setExpandedTabs] = useState<Set<CategoryTab>>(
+    () => new Set(),
+  );
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(
     () => new Set([recentQuestions[0]?.id].filter(Boolean)),
   );
@@ -115,6 +347,14 @@ export function BeginnerBoard() {
     );
   }, [activeCategory]);
 
+  const activeTabExpanded = expandedTabs.has(activeCategory);
+  const visibleQuestions = activeTabExpanded
+    ? filteredQuestions
+    : filteredQuestions.slice(0, INITIAL_VISIBLE_QUESTION_COUNT);
+  const hasMoreQuestions =
+    filteredQuestions.length > INITIAL_VISIBLE_QUESTION_COUNT &&
+    !activeTabExpanded;
+
   const askGai = (question: string) => {
     const trimmed = question.trim();
     if (!trimmed) return;
@@ -130,6 +370,14 @@ export function BeginnerBoard() {
       } else {
         next.add(questionId);
       }
+      return next;
+    });
+  };
+
+  const showMoreQuestions = () => {
+    setExpandedTabs((current) => {
+      const next = new Set(current);
+      next.add(activeCategory);
       return next;
     });
   };
@@ -235,7 +483,7 @@ export function BeginnerBoard() {
             <button
               className="beginner_start_card beginner_start_card_blue beginner_start_card_question"
               type="button"
-              onClick={() => navigate("/community/beginner/recent")}
+              onClick={() => navigate("/chat")}
             >
               <div className="beginner_start_text">
                 <h3>자주 묻는 질문</h3>
@@ -261,14 +509,6 @@ export function BeginnerBoard() {
               <h2>최근 올라온 질문</h2>
               <p>다른 입문자들의 고민과 답변을 확인해보세요</p>
             </div>
-
-            <button
-              className="beginner_more_button"
-              type="button"
-              aria-label="최근 질문 더 보기"
-            >
-              <More className="beginner_more_text" />
-            </button>
           </div>
 
           <div className="beginner_question_inner">
@@ -297,7 +537,7 @@ export function BeginnerBoard() {
             </div>
 
             <div className="beginner_question_card_list">
-              {filteredQuestions.map((question) => {
+              {visibleQuestions.map((question) => {
                 const bookmarked = bookmarkedIds.has(question.id);
 
                 return (
@@ -355,15 +595,29 @@ export function BeginnerBoard() {
                 );
               })}
             </div>
+
+            {hasMoreQuestions ? (
+              <div className="beginner_question_more_wrap">
+                <More
+                  ariaLabel={`${activeCategory} 질문 더 보기`}
+                  className="beginner_question_more_button"
+                  onClick={showMoreQuestions}
+                  style={{ fontSize: 14, fontWeight: 500, lineHeight: "18px" }}
+                />
+              </div>
+            ) : null}
           </div>
         </section>
       </div>
 
+      <div className="beginner_write_notice" aria-hidden="true">
+        *초보자만 글쓰기 가능해요
+      </div>
       <button
         className="community_write_floating beginner_write_floating"
         type="button"
         aria-label="글 작성하기"
-        onClick={() => navigate("/community/post/create")}
+        onClick={() => navigate("/community/post/create", { state: { boardContext: "beginner" } })}
       >
         <img src={writeIcon} alt="" />
         <span>글 작성하기</span>
