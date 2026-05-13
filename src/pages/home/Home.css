@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 45px;
   width: 100%;
   background: #fff;
 }
@@ -53,7 +53,7 @@
 .home_kbl_title {
   margin: 0;
   font-family: var(--font-kbl-jump);
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 400;
   line-height: 130%;
   color: var(--color-black);
@@ -70,7 +70,7 @@
   top: 0;
   z-index: 0;
   width: 100%;
-  height: 435px;
+  height: 423px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -130,7 +130,7 @@
   justify-content: flex-end;
   width: 100%;
   height: 100%;
-  padding: 223px 24px 70px;
+  padding: 223px 24px 64px;
   box-sizing: border-box;
 }
 
@@ -149,15 +149,16 @@
   background: var(--color-orange-red);
   color: #fff;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  padding: 5px 10px;
 }
 
 .home_hero_txt {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .home_hero_title {
@@ -200,13 +201,13 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 55px;
   width: 100%;
   margin-top: -35px;
   padding: 35px 25px;
   border-radius: 35px;
   background: #fff;
-  box-shadow: 0 0 18.8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 9.4px rgba(0, 0, 0, 0.15);
 }
 
 .home_userinfo_summary {
@@ -219,8 +220,8 @@
 /* 프로필 행 */
 .home_userinfo_profile {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 20px;
   width: 100%;
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -248,16 +249,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 25px;
-  height: 25px;
+  width: 23px;
+  height: 23px;
+  padding: 6px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   background: #fff;
 }
 
 .home_userinfo_pic_badge_icon {
-  width: 11px;
-  height: 11px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -271,7 +273,7 @@
 .home_userinfo_user_icon {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   color: var(--color-black);
 }
 
@@ -302,7 +304,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 }
 
@@ -331,6 +333,8 @@
 }
 
 .home_userinfo_greeting {
+  display: block;
+  margin-top: 3px;
   color: var(--color-black);
 }
 
@@ -349,8 +353,8 @@
 }
 
 .home_userinfo_badge_icon {
-  width: 15px;
-  height: 15px;
+  width: 17px;
+  height: 17px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -364,7 +368,16 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px 5px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.home_userinfo_category_tags {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1 1 auto;
+  min-width: 0;
   flex-wrap: wrap;
 }
 
@@ -377,9 +390,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 35px;
-  min-height: 26px;
-  padding: 4px 8px;
+  min-width: 27px;
+  width: 27px;
+  min-height: 27px;
+  height: 27px;
+  padding: 5px;
   border: 1px solid var(--color-gray02);
   border-radius: 999px;
   background: #fff;
@@ -422,7 +437,7 @@
 
 .home_match_scroll {
   display: flex;
-  gap: 12px;
+  gap: 5px;
   overflow-x: auto;
   padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
@@ -439,9 +454,9 @@
 .home_match_card {
   position: relative;
   flex-shrink: 0;
-  width: clamp(190px, 42vw, 240px);
-  height: clamp(190px, 42vw, 240px);
-  border-radius: 12px;
+  width: 170px;
+  height: 191px;
+  border-radius: 15px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
@@ -472,13 +487,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 5px;
 }
 
 .home_match_card_txt {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .home_match_card_notice {
@@ -528,7 +543,7 @@
 .banner {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 25px;
   width: 100%;
   padding: 0 24px;
 }
@@ -557,13 +572,25 @@
   overflow: visible;
 }
 
+.buddy_visual {
+  position: absolute;
+  left: 11px;
+  bottom: 0;
+  z-index: 0;
+  width: clamp(92px, 31vw, 122px);
+  max-height: 186px;
+  pointer-events: none;
+}
+
 .buddy_text {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 25px;
   width: 100%;
   min-width: 0;
-  padding-left: clamp(92px, 31vw, 120px);
+  padding: 5px 0 5px clamp(112px, 33vw, 120px);
 }
 
 .buddy_tit {
@@ -606,7 +633,7 @@
 .buddy_info {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 5px;
   align-items: flex-start;
 }
 
@@ -618,7 +645,6 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
-  word-break: keep-all;
 }
 
 .buddy_info_desc {
@@ -629,20 +655,15 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
-  word-break: keep-all;
 }
 
 .buddy_main_img {
-  position: absolute;
-  left: clamp(0px, 2vw, 8px);
-  bottom: 0;
-  width: clamp(92px, 31vw, 122px);
+  display: block;
+  width: 100%;
   height: auto;
   max-height: 186px;
-  flex-shrink: 0;
   object-fit: contain;
   object-position: center bottom;
-  pointer-events: none;
 }
 
 .buddy_bottom {
@@ -650,7 +671,7 @@
   flex-direction: column;
   gap: 25px;
   width: 100%;
-  padding: 18px 15px;
+  padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0 0 15px 15px;
   box-shadow: 0 4px 18.8px rgba(0, 0, 0, 0.1);
@@ -660,15 +681,15 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: clamp(8px, 3vw, 25px);
   width: 100%;
+  padding: 0 12px;
 }
 
 .buddy_item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   flex: 1 1 0;
   width: auto;
   max-width: 80px;
@@ -749,7 +770,7 @@
 
 .banner_bottom {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   width: 100%;
 }
 
@@ -770,10 +791,10 @@
   flex: 200 1 0;
   width: auto;
   min-width: 0;
-  min-height: 126px;
+  min-height: 122px;
   padding: 15px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  border-radius: 10px;
   background: #fff;
 }
 
@@ -927,13 +948,13 @@
    ============================================================ */
 .home_team {
   width: 100%;
-  padding: 30px 0;
+  padding: 0;
 }
 
 .home_team_content_box {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 15px;
   width: 100%;
   padding: 0 24px;
   background: transparent;
@@ -970,9 +991,11 @@
 .home_team_scroll {
   display: flex;
   align-items: flex-start;
-  gap: 13px;
+  gap: 7px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  width: calc(100% + 48px);
+  margin: 0 -24px;
+  padding: 0 24px 4px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   cursor: grab;
@@ -986,14 +1009,14 @@
 
 .home_team_card {
   flex-shrink: 0;
-  width: 96px;
-  min-height: 138px;
+  width: 94px;
+  min-height: 135px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 8px;
-  padding: 12px 8px;
+  gap: 13px;
+  padding: 12px 15px;
   border-radius: 10px;
   background: #F5F7FB;
   text-decoration: none;
@@ -1008,8 +1031,8 @@
 }
 
 .home_team_card_logo {
-  width: 62px;
-  height: 62px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   display: flex;
@@ -1026,10 +1049,10 @@
 .home_team_card_name {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 110%;
-  letter-spacing: 0;
+  font-size: 16px;
+  font-weight: var(--font-weight-extrabold);
+  line-height: normal;
+  letter-spacing: var(--letter-spacing-tight);
   color: var(--color-black);
   white-space: nowrap;
 }
@@ -1039,7 +1062,7 @@
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 12px;
   font-weight: 400;
-  line-height: 110%;
+  line-height: var(--line-height-130);
   letter-spacing: 0;
   color: var(--color-khaki);
   white-space: nowrap;
@@ -1050,7 +1073,7 @@
    ============================================================ */
 .home_banner {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   height: 88px;
   padding: 0 24px;
@@ -1067,16 +1090,16 @@
 }
 
 .home_banner_inner {
-  flex: 0 0 min(100%, 520px);
-  width: min(100%, 520px);
+  flex: 0 0 min(100%, 345px);
+  width: min(100%, 345px);
   height: 100%;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 16px;
+  gap: 10px;
   box-sizing: border-box;
-  padding: 10px 10px 16px 0;
-  border-radius: 16px;
+  padding: 15px;
+  border-radius: 10px;
   background: var(--color-black);
   background-image: url('../../asset/images/main_ow01.png');
   background-size: cover;
@@ -1093,14 +1116,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   padding: 0 12px;
 }
 
 .home_banner_label {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 130%;
   letter-spacing: -0.02em;
@@ -1110,7 +1133,7 @@
 .home_banner_title {
   margin: 0;
   font-family: var(--font-kbl-jump);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 130%;
   letter-spacing: 0.02em;
@@ -1132,6 +1155,8 @@
   letter-spacing: -0.02em;
   color: #fff;
   padding: 2px 10px;
+  border-radius: 555px;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 /* ============================================================
@@ -1143,7 +1168,7 @@
   align-items: center;
   gap: 24px;
   width: 100%;
-  padding: 24px 0;
+  padding: 0 0 30px;
   background: transparent;
 }
 
@@ -1170,13 +1195,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
-  width: calc(100% - 24px);
-  min-height: 92px;
-  padding: 15px 35px;
+  gap: clamp(10px, 3vw, 15px);
+  width: min(88vw, 346px);
+  min-height: clamp(76px, 20.9vw, 82px);
+  padding: 15px clamp(20px, 8.9vw, 35px);
   border-radius: 999px;
   background: var(--color-navy);
   text-decoration: none;
+  overflow: hidden;
 }
 
 .home_tournament_team:first-child {
@@ -1192,7 +1218,8 @@
 .home_tournament_left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: clamp(10px, 3.8vw, 15px);
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -1201,16 +1228,16 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 66px;
-  height: 68px;
+  width: clamp(44px, 13.2vw, 52px);
+  height: clamp(44px, 13.2vw, 52px);
   border-radius: 100px;
   overflow: hidden;
   background: #fff;
 }
 
 .home_tournament_team_logo_img {
-  width: 45px;
-  height: 60px;
+  width: clamp(26px, 7.9vw, 31px);
+  height: clamp(34px, 10.4vw, 41px);
   object-fit: cover;
   object-position: center;
 }
@@ -1219,16 +1246,19 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  min-width: 0;
 }
 
 .home_tournament_team_name {
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
   line-height: 130%;
   color: #fff;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .home_tournament_team_region {
@@ -1239,12 +1269,14 @@
   line-height: 130%;
   color: #fff;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .home_tournament_state {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: clamp(10px, 4.6vw, 18px);
   flex-shrink: 0;
 }
 
@@ -1257,20 +1289,20 @@
 
 .home_tournament_stat_label {
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 10px;
-  font-weight: 700;
+  font-size: clamp(11px, 3.5vw, 14px);
+  font-weight: var(--font-weight-semibold);
   line-height: 130%;
   letter-spacing: 0;
-  color: #7F8BA8;
+  color: #5F7197;
 }
 
 .home_tournament_stat_value {
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
-  font-size: 28px;
+  font-size: clamp(22px, 7.1vw, 28px);
   font-weight: 700;
   line-height: 130%;
-  letter-spacing: 0;
-  color: #fff;
+  letter-spacing: var(--letter-spacing-tight);
+  color: #D9E5FF;
 }
 
 .home_tournament_join_button_wrap {
@@ -1284,7 +1316,9 @@
   min-height: 0 !important;
   padding: 15px 35px !important;
   border-radius: 10px !important;
-  background: var(--color-black) !important;
+  min-height: 50px !important;
+  padding: 12px 35px !important;
+  background: linear-gradient(0deg, rgb(26, 26, 26) 18.627%, rgb(31, 43, 69) 146.08%) !important;
   background-color: var(--color-black) !important;
   color: #D9E5FF !important;
   -webkit-text-fill-color: #D9E5FF !important;

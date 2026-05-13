@@ -308,20 +308,22 @@ export function Home() {
                   <p className="home_userinfo_badge_title body_sb_16">보유 뱃지</p>
                 </div>
                 <div className="home_userinfo_tag_row">
-                  {achievementBadges.map((badge) => (
-                    <CategoryTag
-                      key={badge.label}
-                      className="home_userinfo_category_tag body_m_14"
-                      style={{
-                        ...homeAchievementTagStyle,
-                        background: badge.background,
-                        color: badge.color,
-                      }}
-                    >
-                      <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
-                      <span>{badge.label}</span>
-                    </CategoryTag>
-                  ))}
+                  <div className="home_userinfo_category_tags">
+                    {achievementBadges.map((badge) => (
+                      <CategoryTag
+                        key={badge.label}
+                        className="home_userinfo_category_tag body_m_14"
+                        style={{
+                          ...homeAchievementTagStyle,
+                          background: badge.background,
+                          color: badge.color,
+                        }}
+                      >
+                        <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
+                        <span>{badge.label}</span>
+                      </CategoryTag>
+                    ))}
+                  </div>
                   {!isAchievementExpanded ? (
                     <button
                       className="home_userinfo_category_more body_m_14"
@@ -365,7 +367,9 @@ export function Home() {
       <section className="banner">
         <div className="buddy">
           <div className="buddy_top">
-            <img src={mainBuddy01} alt="" className="buddy_main_img" />
+            <div className="buddy_visual" aria-hidden="true">
+              <img src={mainBuddy01} alt="" className="buddy_main_img" />
+            </div>
             <div className="buddy_text">
               <div className="buddy_tit">
                 <p className="buddy_title body_sb_14">나의 필드 버디</p>

@@ -14,7 +14,11 @@ export function AppShell() {
   const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
   const isChatPage = location.pathname === '/chat'
   const isMySchedulePage = location.pathname === '/my/schedule'
+<<<<<<< HEAD
   const isGuideHubPage = location.pathname === '/guide'
+=======
+  const isGuideQuizPage = location.pathname === '/guide/quiz'
+>>>>>>> 30d26db78c2721759e5e1315b8327137fa6b02d6
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
@@ -27,6 +31,7 @@ export function AppShell() {
     !isChatPage &&
     !isGuideHubPage &&
     !isMySchedulePage &&
+    !isGuideQuizPage &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'
 
@@ -36,6 +41,8 @@ export function AppShell() {
     isGuideHubPage ? 'guide_hub_frame' : '',
     isMediaProfile
       ? 'media_profile_frame'
+      : isGuideQuizPage
+        ? 'guide_quiz_frame'
       : showBackButton
         ? 'has_app_back_button'
         : keepTopInset
@@ -64,7 +71,10 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      {isCommunityPostDetail || isChatPage || location.pathname.startsWith('/match/schedule/') ? null : <BottomNav />}
+      {isCommunityPostDetail ||
+      isChatPage ||
+      isGuideQuizPage ||
+      location.pathname.startsWith('/match/schedule/') ? null : <BottomNav />}
     </div>
   )
 }

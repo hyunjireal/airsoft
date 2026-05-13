@@ -366,6 +366,10 @@ a {
   padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
 }
 
+.guide_quiz_frame > main {
+  padding-bottom: 0;
+}
+
 .app_back_button {
   position: fixed;
   top: 14px;
