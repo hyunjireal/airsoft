@@ -14,11 +14,8 @@ export function AppShell() {
   const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
   const isChatPage = location.pathname === '/chat'
   const isMySchedulePage = location.pathname === '/my/schedule'
-<<<<<<< HEAD
   const isGuideHubPage = location.pathname === '/guide'
-=======
   const isGuideQuizPage = location.pathname === '/guide/quiz'
->>>>>>> 30d26db78c2721759e5e1315b8327137fa6b02d6
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
