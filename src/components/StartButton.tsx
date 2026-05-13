@@ -1,49 +1,28 @@
 import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
+import './ActionButton.css'
 
 type StartButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   children?: ReactNode
 }
 
 const startButtonStyle: CSSProperties = {
-  colorScheme: 'light',
-  boxSizing: 'border-box',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  height: 50,
-  minHeight: 50,
-  padding: '12px 16px',
-  border: 'none',
-  borderRadius: 10,
-  appearance: 'none',
-  WebkitAppearance: 'none',
-  MozAppearance: 'none',
-  opacity: 1,
-  background: 'var(--color-lime)',
-  backgroundColor: 'var(--color-lime)',
-  backgroundImage: 'none',
-  color: 'var(--color-black)',
   WebkitTextFillColor: 'var(--color-black)',
-  fontFamily: "'Pretendard', system-ui, sans-serif",
-  fontSize: 18,
-  fontWeight: 700,
-  lineHeight: 1.3,
-  letterSpacing: '-0.36px',
-  boxShadow: 'none',
-  filter: 'none',
-  mixBlendMode: 'normal',
-  cursor: 'pointer',
 }
 
 export function StartButton({
   children = '시작하기',
+  className,
   style,
   type = 'button',
   ...props
 }: StartButtonProps) {
   return (
-    <button {...props} type={type} style={{ ...startButtonStyle, ...style }}>
+    <button
+      {...props}
+      className={['app_action_button', 'app_action_button--accent', className].filter(Boolean).join(' ')}
+      type={type}
+      style={{ ...startButtonStyle, ...style }}
+    >
       {children}
     </button>
   )

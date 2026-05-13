@@ -1,0 +1,54 @@
+.app_action_button {
+  --app-action-min-height: 50px;
+  --app-action-padding-inline: 16px;
+  --app-action-radius: 10px;
+  --app-action-font-size: 18px;
+  color-scheme: light;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: var(--app-action-min-height);
+  padding: 12px var(--app-action-padding-inline);
+  border: none;
+  border-radius: var(--app-action-radius);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  box-shadow: none;
+  filter: none;
+  mix-blend-mode: normal;
+  cursor: pointer;
+  font-family: var(--font-pretendard);
+  font-size: var(--app-action-font-size);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.app_action_button--light {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+.app_action_button--accent {
+  background: var(--color-lime);
+  color: var(--color-black);
+}
+
+.app_action_button__label {
+  color: inherit;
+  text-decoration: none;
+}
+
+.onboarding_flow .app_action_button,
+.auth_screen .app_action_button {
+  --app-fluid-range: clamp(0px, calc(100vw - 393px), 631px);
+  --app-action-min-height: calc(50px + 18 * (var(--app-fluid-range) / 631));
+  --app-action-padding-inline: calc(16px + 12 * (var(--app-fluid-range) / 631));
+  --app-action-radius: calc(10px + 6 * (var(--app-fluid-range) / 631));
+  --app-action-font-size: calc(18px + 6 * (var(--app-fluid-range) / 631));
+}

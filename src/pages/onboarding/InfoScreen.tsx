@@ -1,4 +1,4 @@
-import type { MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from 'react'
+import type { CSSProperties, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent } from 'react'
 import onboarding01Image from '../../asset/images/onboarding01.png'
 import onboarding02Image from '../../asset/images/onboarding02.png'
 import onboarding03Image from '../../asset/images/onboarding03.png'
@@ -93,13 +93,11 @@ export function InfoScreen({
               <div className="onboarding_panel__hero">
                 <img className="onboarding_panel__logo" src={onboardingLogo} alt="" aria-hidden="true" />
 
-                <div className="onboarding_panel__illustration">
-                  <img
-                    src={slide.imageSrc}
-                    alt=""
-                    aria-hidden="true"
-                    style={{ width: slide.imageWidth, height: slide.imageHeight }}
-                  />
+                <div
+                  className="onboarding_panel__illustration"
+                  style={{ '--slide-illustration-width': `${slide.imageWidth}px` } as CSSProperties}
+                >
+                  <img src={slide.imageSrc} alt="" aria-hidden="true" />
                 </div>
               </div>
 

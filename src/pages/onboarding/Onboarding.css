@@ -1,8 +1,17 @@
-.onboarding_flow {
-  position: relative;
-  width: min(100%, 393px);
+.mobile_frame.onboarding_flow {
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: 100svh;
+}
+
+.onboarding_flow {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
   margin: 0 auto;
   overflow: hidden;
   border-left: 0;
@@ -10,6 +19,10 @@
   background: var(--color-black);
   color: var(--color-white);
   isolation: isolate;
+  --onboarding-shell-max-width: 1024px;
+  --onboarding-fluid-range: clamp(0px, calc(100vw - 393px), 631px);
+  --onboarding-page-padding: calc(24px + 32 * (var(--onboarding-fluid-range) / 631));
+  --onboarding-content-max-width: 1020px;
 }
 
 .onboarding_intro {
@@ -46,20 +59,27 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: min(100%, var(--onboarding-content-max-width));
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 160px 24px var(--standalone-footer-offset);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding:
+    calc(136px + 92 * (var(--onboarding-fluid-range) / 631))
+    var(--onboarding-page-padding)
+    calc(env(safe-area-inset-bottom, 0px) + 47px + 9 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_intro__hero {
-  max-width: 224px;
+  width: 100%;
+  max-width: calc(320px + 440 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_intro__logo {
   display: block;
-  width: 100px;
+  width: calc(100px + 76 * (var(--onboarding-fluid-range) / 631));
   height: auto;
-  margin-bottom: 15px;
+  margin-bottom: calc(18px + 10 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_intro__title,
@@ -69,7 +89,7 @@
 }
 
 .onboarding_intro__title {
-  font-size: 32px;
+  font-size: calc(32px + 36 * (var(--onboarding-fluid-range) / 631));
   font-weight: 600;
   line-height: 1.3;
 }
@@ -85,11 +105,12 @@
 }
 
 .onboarding_intro__description {
+  max-width: 24em;
   margin: 24px 0 0;
   color: var(--color-gray03);
-  font-size: 16px;
+  font-size: calc(16px + 10 * (var(--onboarding-fluid-range) / 631));
   font-weight: 500;
-  line-height: 1.3;
+  line-height: 1.45;
   letter-spacing: -0.02em;
 }
 
@@ -103,10 +124,14 @@
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
+  min-height: 100svh;
   background: var(--color-black);
 }
 
 .onboarding_panel__viewport {
+  flex: 1 1 auto;
+  width: min(100%, var(--onboarding-shell-max-width));
+  margin: 0 auto;
   overflow: hidden;
   touch-action: pan-y;
   user-select: none;
@@ -115,11 +140,15 @@
 .onboarding_panel__track {
   display: flex;
   width: 100%;
+  height: 100%;
 }
 
 .onboarding_panel__slide {
   flex: 0 0 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .onboarding_panel__hero {
@@ -127,27 +156,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 50px;
-  min-height: 443px;
-  padding: 130px 24px 50px;
+  gap: calc(36px + 48 * (var(--onboarding-fluid-range) / 631));
+  min-height: calc(380px + 280 * (var(--onboarding-fluid-range) / 631));
+  padding:
+    calc(104px + 44 * (var(--onboarding-fluid-range) / 631))
+    var(--onboarding-page-padding)
+    calc(36px + 28 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_panel__logo {
   display: block;
-  width: 123px;
+  width: calc(123px + 41 * (var(--onboarding-fluid-range) / 631));
   height: auto;
 }
 
 .onboarding_panel__illustration {
+  --slide-illustration-scale: calc(1 + 0.65 * (var(--onboarding-fluid-range) / 631));
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 161px;
+  height: calc(161px + 199 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_panel__illustration img {
   display: block;
+  width: calc(var(--slide-illustration-width) * var(--slide-illustration-scale));
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
   object-fit: contain;
 }
 
@@ -155,9 +192,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 35px;
-  min-height: 213px;
-  padding: 0 24px 24px;
+  flex: 1 1 auto;
+  gap: calc(28px + 20 * (var(--onboarding-fluid-range) / 631));
+  min-height: 0;
+  padding:
+    0
+    var(--onboarding-page-padding)
+    calc(24px + 16 * (var(--onboarding-fluid-range) / 631));
   text-align: center;
 }
 
@@ -165,13 +206,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
+  gap: calc(15px + 3 * (var(--onboarding-fluid-range) / 631));
+  max-width: 620px;
 }
 
 .onboarding_panel__indicator {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: calc(10px + 4 * (var(--onboarding-fluid-range) / 631));
 }
 
 .onboarding_panel__indicator_button {
@@ -186,20 +229,20 @@
 
 .onboarding_panel__indicator_dot {
   display: block;
-  width: 8px;
-  height: 8px;
+  width: calc(8px + 2 * (var(--onboarding-fluid-range) / 631));
+  height: calc(8px + 2 * (var(--onboarding-fluid-range) / 631));
   border-radius: 999px;
   background: var(--color-gray04);
   transition: width 0.2s ease, background-color 0.2s ease;
 }
 
 .onboarding_panel__indicator_button.is-active .onboarding_panel__indicator_dot {
-  width: 32px;
+  width: calc(32px + 8 * (var(--onboarding-fluid-range) / 631));
   background: var(--color-lime);
 }
 
 .onboarding_panel__title {
-  font-size: 22px;
+  font-size: calc(22px + 18 * (var(--onboarding-fluid-range) / 631));
   font-weight: 700;
   line-height: 1.3;
   color: var(--color-white);
@@ -208,16 +251,21 @@
 .onboarding_panel__description {
   margin: 0;
   color: var(--color-gray05);
-  font-size: 16px;
+  font-size: calc(16px + 6 * (var(--onboarding-fluid-range) / 631));
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 1.45;
   letter-spacing: -0.02em;
 }
 
 .onboarding_panel__actions {
   display: grid;
-  gap: 12px;
-  padding: 0 24px var(--standalone-footer-offset);
+  gap: calc(12px + 8 * (var(--onboarding-fluid-range) / 631));
+  width: min(100%, 1020px);
+  margin: 0 auto;
+  padding:
+    0
+    var(--onboarding-page-padding)
+    calc(env(safe-area-inset-bottom, 0px) + 47px + 9 * (var(--onboarding-fluid-range) / 631));
   margin-top: auto;
   align-content: end;
 }
