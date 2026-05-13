@@ -3126,3 +3126,169 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Match dark mode colors - Figma node 2551:2959 */
+:root[data-theme='dark'] .match_page {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_page_title,
+:root[data-theme='dark'] .match_section_title,
+:root[data-theme='dark'] .match_month_header h3,
+:root[data-theme='dark'] .match_selected_schedule h3,
+:root[data-theme='dark'] .match_item_title,
+:root[data-theme='dark'] .match_meta_label,
+:root[data-theme='dark'] .match_meta_value {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_page_back_button img,
+:root[data-theme='dark'] .match_month_header button,
+:root[data-theme='dark'] .match_item_arrow {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .match_more_link > span {
+  color: var(--color-gray05) !important;
+}
+
+:root[data-theme='dark'] .match_status_card {
+  background-color: #d3dbc1;
+  color: var(--color-black);
+  box-shadow: 0 1px 8.5px rgba(0, 0, 0, 0.11);
+}
+
+:root[data-theme='dark'] .match_status_card:nth-child(2) {
+  background-color: var(--color-gray02);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_status_card b {
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .match_status_card:nth-child(2) b {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_type_filter {
+  border-color: var(--color-gray04);
+  background: var(--color-black);
+  color: var(--color-gray04);
+}
+
+:root[data-theme='dark'] .match_type_filter.is_active {
+  border-color: var(--color-white);
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .match_month_card,
+:root[data-theme='dark'] .match_selected_schedule {
+  background: #000;
+  color: var(--color-white);
+  box-shadow: 0 1px 13.4px rgba(0, 0, 0, 0.11);
+}
+
+:root[data-theme='dark'] .match_month_header button {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_day_picker {
+  --rdp-accent-color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-weekday {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-weekday:first-child {
+  color: var(--color-orange-red);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-day_button {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-outside .rdp-day_button {
+  color: var(--color-gray03);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-selected .rdp-day_button {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .match_day_picker .rdp-day.hasMatch::after,
+:root[data-theme='dark'] .match_day_picker .rdp-day.rdp-selected.hasMatch::after {
+  background: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_item_tag {
+  background: var(--color-lime) !important;
+  color: var(--color-black) !important;
+}
+
+:root[data-theme='dark'] .match_dark_button {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_empty_recommend_card {
+  background: var(--color-gray00);
+  color: var(--color-white);
+  box-shadow: 0 1px 13.4px rgba(0, 0, 0, 0.11);
+}
+
+:root[data-theme='dark'] .match_empty_recommend_copy h3 {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_empty_recommend_copy p {
+  color: var(--color-gray04);
+}
+
+:root[data-theme='dark'] .match_empty_login_btn {
+  background: rgba(0, 0, 0, 0.68) !important;
+  background-color: rgba(0, 0, 0, 0.68) !important;
+  color: var(--color-white) !important;
+  -webkit-text-fill-color: var(--color-white) !important;
+  backdrop-filter: blur(5.9px);
+  -webkit-backdrop-filter: blur(5.9px);
+}
+
+:root[data-theme='dark'] .match_tournament_section {
+  box-shadow: 0 1px 13.4px rgba(0, 0, 0, 0.11);
+}
+
+:root[data-theme='dark'] .match_tournament_section::after {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme='dark'] .match_tournament_desc {
+  color: var(--color-gray04);
+}
+
+:root[data-theme='dark'] .match_tournament_matchup {
+  color: var(--color-gray03);
+}
+
+:root[data-theme='dark'] .match_tournament_info {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.13);
+}
+
+:root[data-theme='dark'] .match_tournament_cta {
+  background:
+    linear-gradient(-145deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.18) 18%, rgba(255, 255, 255, 0.06) 38%, rgba(255, 255, 255, 0) 42%),
+    rgba(238, 33, 6, 0.15) !important;
+  background-color: rgba(238, 33, 6, 0.15) !important;
+  color: var(--color-white) !important;
+  -webkit-text-fill-color: var(--color-white) !important;
+}
+
+:root[data-theme='dark'] .match_create_fab {
+  background: #000;
+  box-shadow: 0 1px 10.8px rgba(0, 0, 0, 0.32);
+}

@@ -13,10 +13,6 @@
   background: #fff;
 }
 
-:root[data-theme='dark'] .home_page {
-  background: var(--color-black);
-}
-
 .home_tag {
   display: inline-flex;
   align-items: center;
@@ -123,52 +119,9 @@
   line-height: 1;
 }
 
-.home_theme_toggle.is_dark {
-  border-color: rgba(226, 253, 52, 0.5);
-  background: rgba(26, 26, 26, 0.72);
-  color: var(--color-lime);
-}
-
-.home_theme_toggle.is_dark .home_theme_toggle_knob {
-  background: var(--color-lime);
-}
-
-.home_theme_toggle.is_dark .home_theme_toggle_knob::before {
-  content: '●';
-  font-size: 10px;
-}
-
 .home_theme_toggle_text {
   min-width: 34px;
   text-align: left;
-}
-
-:root[data-theme='dark'] .home_userinfo_bg {
-  background:
-    linear-gradient(to bottom, transparent 0, transparent 35px, var(--color-black) 35px, var(--color-black) 100%),
-    var(--home-userinfo-bg-image, none);
-}
-
-:root[data-theme='dark'] .home_userinfo,
-:root[data-theme='dark'] .home_match_card,
-:root[data-theme='dark'] .home_team_card,
-:root[data-theme='dark'] .home_banner_inner {
-  background: #242424;
-  color: var(--color-white);
-}
-
-:root[data-theme='dark'] .home_kbl_title,
-:root[data-theme='dark'] .home_userinfo_name_user,
-:root[data-theme='dark'] .home_userinfo_name_suffix,
-:root[data-theme='dark'] .home_userinfo_match_header,
-:root[data-theme='dark'] .home_match_card,
-:root[data-theme='dark'] .home_team_header,
-:root[data-theme='dark'] .home_team_card {
-  color: var(--color-white);
-}
-
-:root[data-theme='dark'] .home_userinfo_profile {
-  border-bottom-color: rgba(255, 255, 255, 0.14);
 }
 
 .home_hero_inner {
@@ -1339,4 +1292,209 @@
 
 .home_tournament_join_button span {
   color: inherit;
+}
+
+/* ============================================================
+   Home dark mode colors – Figma node 2551-2431
+   Only color/paint values are overridden here.
+   ============================================================ */
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] .mobile_frame,
+:root[data-theme='dark'] .home_page,
+:root[data-theme='dark'] .home_main,
+:root[data-theme='dark'] .banner,
+:root[data-theme='dark'] .bottom {
+  background: var(--color-black);
+}
+
+:root[data-theme='dark'] .home_hero {
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme='dark'] .home_theme_toggle.is_dark {
+  border-color: rgba(226, 253, 52, 0.5);
+  background: rgba(26, 26, 26, 0.72);
+  color: var(--color-lime);
+}
+
+:root[data-theme='dark'] .home_theme_toggle.is_dark .home_theme_toggle_knob {
+  background: var(--color-lime);
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .home_userinfo_bg {
+  background:
+    linear-gradient(to bottom, transparent 0, transparent 35px, var(--color-black) 35px, var(--color-black) 100%),
+    var(--home-userinfo-bg-image, none);
+}
+
+:root[data-theme='dark'] .home_userinfo {
+  background: #000;
+  color: var(--color-white);
+  box-shadow: 0 0 9.4px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme='dark'] .home_userinfo_profile {
+  border-bottom-color: rgba(255, 255, 255, 0.14);
+}
+
+:root[data-theme='dark'] .home_userinfo_pic,
+:root[data-theme='dark'] .home_userinfo_pic_badge,
+:root[data-theme='dark'] .buddy,
+:root[data-theme='dark'] .buddy_top,
+:root[data-theme='dark'] .buddy_bottom,
+:root[data-theme='dark'] .left {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+:root[data-theme='dark'] .home_userinfo_user_icon,
+:root[data-theme='dark'] .home_userinfo_name,
+:root[data-theme='dark'] .home_userinfo_name_user,
+:root[data-theme='dark'] .home_userinfo_name_suffix,
+:root[data-theme='dark'] .home_userinfo_greeting,
+:root[data-theme='dark'] .home_userinfo_badge_title,
+:root[data-theme='dark'] .home_userinfo_match_title,
+:root[data-theme='dark'] .home_team_title,
+:root[data-theme='dark'] .home_team_title_user,
+:root[data-theme='dark'] .home_tournament_title {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_more_link > span {
+  color: var(--color-gray05) !important;
+}
+
+:root[data-theme='dark'] .home_userinfo_settings_icon {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .home_match_card {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_match_card_notice {
+  color: var(--color-gray05);
+}
+
+:root[data-theme='dark'] .home_match_dday_tag {
+  background: var(--color-lime);
+  color: var(--color-black);
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme='dark'] .buddy_top {
+  background: #e8ecdf;
+}
+
+:root[data-theme='dark'] .buddy_bottom {
+  background: #000;
+}
+
+:root[data-theme='dark'] .buddy_title {
+  color: var(--color-khaki);
+}
+
+:root[data-theme='dark'] .buddy_status_tag {
+  border-color: #8b9c62;
+  background: #f3ffd3;
+  color: #8b9c62;
+}
+
+:root[data-theme='dark'] .buddy_info_title,
+:root[data-theme='dark'] .buddy_item_title {
+  color: #2b2f21;
+}
+
+:root[data-theme='dark'] .buddy_info_desc {
+  color: #66695e;
+}
+
+:root[data-theme='dark'] .buddy_button {
+  background: var(--color-lime) !important;
+  background-color: var(--color-lime) !important;
+  color: var(--color-black) !important;
+  -webkit-text-fill-color: var(--color-black) !important;
+}
+
+:root[data-theme='dark'] .buddy_process {
+  color: var(--color-gray03);
+}
+
+:root[data-theme='dark'] .left {
+  background: #f8f8f4;
+}
+
+:root[data-theme='dark'] .right {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: #e4dcd5;
+}
+
+:root[data-theme='dark'] .home_team_card {
+  background: var(--color-khaki);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_team_card_logo {
+  background: transparent;
+}
+
+:root[data-theme='dark'] .home_team_card_name,
+:root[data-theme='dark'] .home_team_card_region {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_banner_inner {
+  border-color: var(--color-white);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_banner_inner {
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.45);
+}
+
+:root[data-theme='dark'] .home_banner_label {
+  color: #a8918e;
+}
+
+:root[data-theme='dark'] .home_banner_title {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_banner_title_accent {
+  color: var(--color-lime);
+}
+
+:root[data-theme='dark'] .home_banner_pg_nav {
+  background: rgba(0, 0, 0, 0.6);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_tournament_team {
+  background: var(--color-navy);
+}
+
+:root[data-theme='dark'] .home_tournament_team_logo {
+  background: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_tournament_team_name,
+:root[data-theme='dark'] .home_tournament_team_region {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_tournament_stat_label {
+  color: #5f7197;
+}
+
+:root[data-theme='dark'] .home_tournament_stat_value {
+  color: #d9e5ff;
+}
+
+:root[data-theme='dark'] .home_tournament_join_button {
+  background:
+    linear-gradient(0deg, rgb(26, 26, 26) 18.627%, rgb(31, 43, 69) 146.08%),
+    var(--color-khaki) !important;
+  background-color: var(--color-black) !important;
+  color: #d9e5ff !important;
+  -webkit-text-fill-color: #d9e5ff !important;
 }
