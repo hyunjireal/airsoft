@@ -2659,9 +2659,6 @@
   background: #e8edd8;
 }
 
-.post_create_input {
-}
-
 .post_create_input::placeholder {
   color: var(--color-gray03);
 }
