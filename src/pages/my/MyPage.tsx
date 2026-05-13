@@ -201,6 +201,18 @@ function ProfileStat({ label, value }: { label: string; value: string }) {
   )
 }
 
+function getMatchTagClassName(tagLabel: string) {
+  if (tagLabel === 'D-14') {
+    return 'my_match_tag my_match_tag_d14'
+  }
+
+  if (tagLabel === 'D-22') {
+    return 'my_match_tag my_match_tag_d22'
+  }
+
+  return 'my_match_tag'
+}
+
 function MatchCardLink({ match }: { match: MatchCard }) {
   return (
     <Link className="my_match_card" to={match.to}>
@@ -209,7 +221,7 @@ function MatchCardLink({ match }: { match: MatchCard }) {
       </div>
       <div className="my_match_info">
         <div className="my_match_title_row">
-          <KeywordTag className="my_match_tag">{match.tagLabel}</KeywordTag>
+          <KeywordTag className={getMatchTagClassName(match.tagLabel)}>{match.tagLabel}</KeywordTag>
           <p className="my_match_title">{match.title}</p>
         </div>
         <p className="my_match_meta">{match.detail}</p>

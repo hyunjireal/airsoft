@@ -62,13 +62,13 @@ const bestItems: BestItem[] = [
   },
   {
     id: 'best-night-game',
-    titleLines: ['주말 야간전 참가 할인권'],
+    titleLines: ['주말 야간전 참가', '할인권'],
     price: '4,000',
     visual: { kind: 'image', alt: '주말 야간전 참가 할인권', src: pointshopBestImg05 },
   },
   {
     id: 'best-glove',
-    titleLines: ['고급 글러브 무료 이용권'],
+    titleLines: ['고급 글러브', '무료 이용권'],
     price: '1,000',
     visual: { kind: 'image', alt: '고급 글러브 무료 이용권', src: pointshopBestImg07 },
   },
@@ -136,6 +136,26 @@ function PointBadgeIcon() {
     <span aria-hidden="true" className="point_shop_point_icon">
       P
     </span>
+  )
+}
+
+function HeroArrowIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      className="point_shop_hero_arrow_icon"
+      viewBox="0 0 7 12"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0.9 0.9L5.9 5.9L0.9 10.9"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    </svg>
   )
 }
 
@@ -254,6 +274,10 @@ export function PointShop() {
     navigate('/my/point-shop/coupons')
   }
 
+  const goToPointHistory = () => {
+    navigate('/my/point-shop/history')
+  }
+
   return (
     <div className="point_shop_page">
       <div className="point_shop_content">
@@ -270,21 +294,31 @@ export function PointShop() {
         </header>
 
         <section className="point_shop_shell">
-          <div className="point_shop_hero">
-            <div className="point_shop_hero_copy">
-              <p className="point_shop_hero_label">내 포인트</p>
-              <div className="point_shop_hero_value">
-                <PointBadgeIcon />
-                <span>2,450P</span>
+          <button
+            className="point_shop_hero_button"
+            type="button"
+            aria-label="포인트 적립내역 보기"
+            onClick={goToPointHistory}
+          >
+            <div className="point_shop_hero">
+              <div className="point_shop_hero_copy">
+                <p className="point_shop_hero_label">내 포인트</p>
+                <div className="point_shop_hero_value">
+                  <PointBadgeIcon />
+                  <span>2,450P</span>
+                  <span className="point_shop_hero_arrow_button" aria-hidden="true">
+                    <HeroArrowIcon />
+                  </span>
+                </div>
               </div>
+              <img
+                className="point_shop_hero_image"
+                src={pointshopBannerImage}
+                alt=""
+                aria-hidden="true"
+              />
             </div>
-            <img
-              className="point_shop_hero_image"
-              src={pointshopBannerImage}
-              alt=""
-              aria-hidden="true"
-            />
-          </div>
+          </button>
         </section>
 
         <section className="point_shop_best_section point_shop_shell">

@@ -1,4 +1,6 @@
 .my_page {
+  --my-section-max-width: 720px;
+  --my-section-inline-padding: 24px;
   padding: clamp(52px, 8vw, 86px) 0 20px;
   margin-bottom: -48px;
   background: var(--color-white);
@@ -7,7 +9,7 @@
 }
 
 .my_section_shell {
-  width: min(calc(100% - 46px), 720px);
+  width: min(calc(100% - (var(--my-section-inline-padding) * 2)), var(--my-section-max-width));
   margin: 0 auto;
 }
 
@@ -258,10 +260,6 @@
   opacity: 0.35;
 }
 
-.my_profile_points_link:hover {
-  transform: translateY(-1px);
-}
-
 .my_profile_points_link:focus-visible {
   outline: 2px solid var(--color-black);
   outline-offset: 2px;
@@ -419,6 +417,16 @@
   letter-spacing: var(--letter-spacing-tight);
 }
 
+.my_match_tag_d14 {
+  background: rgba(0, 51, 192, 0.1);
+  color: #3d65d0;
+}
+
+.my_match_tag_d22 {
+  background: rgba(241, 192, 32, 0.1);
+  color: #f29c08;
+}
+
 .my_match_title {
   min-width: 0;
   color: #000000;
@@ -563,7 +571,7 @@
 
 .my_list_divider {
   position: relative;
-  width: min(calc(100% - 26px), 740px);
+  width: min(calc(100% - (var(--my-section-inline-padding) * 2)), var(--my-section-max-width));
   height: 20px;
   margin: 0 auto;
 }
@@ -572,11 +580,11 @@
   content: '';
   position: absolute;
   top: 50%;
-  left: 50%;
-  width: min(347px, calc(100% - 20px));
+  left: 0;
+  width: 100%;
   height: 1px;
   background: var(--color-gray05);
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
 }
 
 .my_logout_section {
@@ -936,10 +944,6 @@
 @media (max-width: 359px) {
   .my_page_title {
     font-size: 24px;
-  }
-
-  .my_section_shell {
-    width: min(calc(100% - 32px), 720px);
   }
 
   .my_profile_identity {

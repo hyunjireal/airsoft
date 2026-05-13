@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import pointshopBestImg01 from '../../asset/images/pointshop_best_img01.png'
@@ -10,6 +10,7 @@ type CouponTab = 'available' | 'used'
 type CouponItem = {
   id: string
   actionLabel: string
+  barcodeValue: string
   imageAlt: string
   imageSrc: string
   titleLines: string[]
@@ -21,20 +22,22 @@ const coupons: Record<CouponTab, CouponItem[]> = {
     {
       id: 'weekday-field-discount',
       actionLabel: '사용하기',
+      barcodeValue: '202110061039340001',
       imageAlt: '강남 CQB 필드 평일 할인권',
       imageSrc: pointshopBestImg01,
       titleLines: ['강남 CQB 필드', '평일 할인권'],
-      validity: '유효기간  2025.06.01 ~ 2026.06.01',
+      validity: '유효기간 2025.06.01 ~ 2026.06.01',
     },
   ],
   used: [
     {
       id: 'protective-gear-rental',
-      actionLabel: '사용완료',
+      actionLabel: '사용 완료',
+      barcodeValue: '202110061039340002',
       imageAlt: '보호장비 대여 무료 이용권',
       imageSrc: pointshopBestImg03,
-      titleLines: ['보호장비 대여 무료 이용권'],
-      validity: '유효기간  2025.07.01 ~ 2026.07.01',
+      titleLines: ['보호장비 대여', '무료 이용권'],
+      validity: '유효기간 2025.07.01 ~ 2026.07.01',
     },
   ],
 }
@@ -63,9 +66,66 @@ function CouponTabButton({
   )
 }
 
+function CouponBarcodeModal({ coupon, onClose }: { coupon: CouponItem; onClose: () => void }) {
+  const couponTitle = coupon.titleLines.join(' ')
+
+  return (
+    <div
+      className="point_shop_coupon_modal_backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="point-shop-coupon-modal-title"
+      aria-describedby="point-shop-coupon-modal-validity"
+      onClick={onClose}
+    >
+      <div className="point_shop_coupon_modal" onClick={(event) => event.stopPropagation()}>
+        <span className="point_shop_coupon_modal_handle" aria-hidden="true" />
+
+        <div className="point_shop_coupon_modal_header">
+          <p className="point_shop_coupon_modal_label">사용 쿠폰</p>
+          <h2 id="point-shop-coupon-modal-title" className="point_shop_coupon_modal_title">
+            {couponTitle}
+          </h2>
+          <p id="point-shop-coupon-modal-validity" className="point_shop_coupon_modal_validity">
+            {coupon.validity}
+          </p>
+        </div>
+
+        <div className="point_shop_coupon_barcode_card">
+          <div className="point_shop_coupon_barcode_visual" aria-hidden="true" />
+          <p className="point_shop_coupon_barcode_value">{coupon.barcodeValue}</p>
+          <p className="point_shop_coupon_barcode_hint">
+            매장에서 상품 수령 시 직원에게 바코드를 보여주세요.
+          </p>
+        </div>
+
+        <button className="point_shop_coupon_modal_close" type="button" onClick={onClose}>
+          취소
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function PointShopCoupons() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<CouponTab>('available')
+  const [selectedCoupon, setSelectedCoupon] = useState<CouponItem | null>(null)
+
+  useEffect(() => {
+    if (!selectedCoupon) {
+      return
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setSelectedCoupon(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [selectedCoupon])
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -135,6 +195,7 @@ export function PointShopCoupons() {
                     className={`point_shop_coupon_action${isUsed ? ' point_shop_coupon_action_used' : ''}`}
                     disabled={isUsed}
                     type="button"
+                    onClick={() => setSelectedCoupon(coupon)}
                   >
                     {coupon.actionLabel}
                   </button>
@@ -144,6 +205,8 @@ export function PointShopCoupons() {
           </div>
         </section>
       </div>
+
+      {selectedCoupon ? <CouponBarcodeModal coupon={selectedCoupon} onClose={() => setSelectedCoupon(null)} /> : null}
     </div>
   )
 }
