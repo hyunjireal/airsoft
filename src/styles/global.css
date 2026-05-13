@@ -314,6 +314,11 @@ body,
   overflow-x: hidden;
 }
 
+html,
+body {
+  scrollbar-gutter: stable;
+}
+
 @supports (overflow: clip) {
   html,
   body,

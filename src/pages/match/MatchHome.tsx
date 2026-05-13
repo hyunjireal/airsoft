@@ -11,6 +11,8 @@ import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import plusIcon from '../../asset/icons/plus.svg'
+import settingsIcon from '../../asset/icons/settings.svg'
+import myMatchThumbImage from '../../asset/images/my_match_img01.png'
 import matchNolistImage from '../../asset/images/match_nolist01.png'
 import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
@@ -21,6 +23,7 @@ import { LoginButton } from '../../components/LoginButton'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
+type MatchOverviewTab = 'waiting' | 'confirmed' | 'past'
 
 type MatchSchedule = {
   id: string
@@ -38,13 +41,18 @@ type MatchSchedule = {
   imageSrc?: string
 }
 
+type MatchOverviewCard = {
+  id: string
+  title: string
+  detail: string
+  tagLabel: string
+  to: string
+}
+
 type MatchTypeFilter = 'all' | MatchType
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
-const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
-const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
-const DEFAULT_APPLIED_MATCH_IDS = ['match-003', 'match-002']
 
 const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '전체', value: 'all' },
@@ -52,6 +60,58 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '팀', value: 'team' },
   { label: '용병', value: 'mercenary' },
 ]
+
+const matchOverviewTabs: Array<{ key: MatchOverviewTab; label: string }> = [
+  { key: 'waiting', label: '대기 중' },
+  { key: 'confirmed', label: '확정' },
+  { key: 'past', label: '지난 매치' },
+]
+
+const matchOverviewCardsByTab: Record<MatchOverviewTab, MatchOverviewCard[]> = {
+  waiting: [
+    {
+      id: 'waiting-1',
+      title: '초보 환영 야외전',
+      detail: '5/23 (토) 13:00 I 택티컬 필드',
+      tagLabel: 'D-14',
+      to: '/match/match-001',
+    },
+    {
+      id: 'waiting-2',
+      title: '서울 CQB 입문 경기',
+      detail: '5/31 (일) 12:00 I 어반 CQB',
+      tagLabel: 'D-22',
+      to: '/match/match-003',
+    },
+  ],
+  confirmed: [
+    {
+      id: 'confirmed-1',
+      title: '초보 환영 야외전',
+      detail: '5/23 (토) 13:00 I 택티컬 필드',
+      tagLabel: 'D-14',
+      to: '/match/match-001',
+    },
+  ],
+  past: [
+    {
+      id: 'past-1',
+      title: '2026 5월 입문전 경기',
+      detail: '5/2 (토) 10:00 I 하남 실내 필드',
+      tagLabel: '종료',
+      to: '/my/schedule',
+    },
+  ],
+}
+
+const homeMatchMoreStyle = {
+  gap: 4,
+  color: '#9f9f9f',
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: '130%',
+  letterSpacing: '-0.02em',
+} as const
 
 const calendarDays: Array<{ label: string; muted?: boolean; types?: MatchType[] }> = [
   { label: '27', muted: true },
@@ -308,6 +368,18 @@ function isMatchType(type: unknown): type is MatchType {
   return type === 'personal' || type === 'team' || type === 'mercenary'
 }
 
+function getMatchOverviewTagClassName(tagLabel: string) {
+  if (tagLabel === 'D-14') {
+    return 'my_match_tag my_match_tag_d14'
+  }
+
+  if (tagLabel === 'D-22') {
+    return 'my_match_tag my_match_tag_d22'
+  }
+
+  return 'my_match_tag'
+}
+
 function readCreatedMatches() {
   if (typeof window === 'undefined') {
     return []
@@ -357,19 +429,6 @@ function readFocusedMatchDate() {
   return Number.isNaN(date.getTime()) ? defaultDate : date
 }
 
-function readStringList(key: string) {
-  if (typeof window === 'undefined') {
-    return []
-  }
-
-  try {
-    const value = JSON.parse(localStorage.getItem(key) ?? '[]')
-    return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
-  } catch {
-    return []
-  }
-}
-
 export function MatchHome() {
   const navigate = useNavigate()
   const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
@@ -378,8 +437,10 @@ export function MatchHome() {
   )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
+  const [matchOverviewTab, setMatchOverviewTab] = useState<MatchOverviewTab>('waiting')
   const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
   const selectedDay = String(selectedDate.getDate())
+  const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
   const selectedDateKey = [
     selectedDate.getFullYear(),
@@ -404,6 +465,7 @@ export function MatchHome() {
     .map((match) => new Date(`${match.date}T00:00:00`))
     .filter((date) => !Number.isNaN(date.getTime()))
   const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
+  const visibleMatchOverviewCards = matchOverviewCardsByTab[matchOverviewTab]
   const goPrevMonth = () => {
     setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))
   }
@@ -420,13 +482,6 @@ export function MatchHome() {
   }
 
   const [showTypeSheet, setShowTypeSheet] = useState(false)
-  const canceledMatchIds = readStringList(CANCELED_MATCH_IDS_KEY)
-  const joinedMatchIds = readStringList(JOINED_MATCH_IDS_KEY)
-  const appliedMatchCount =
-    Array.from(new Set([...DEFAULT_APPLIED_MATCH_IDS, ...joinedMatchIds])).filter(
-      (matchId) => !canceledMatchIds.includes(matchId),
-    ).length +
-    createdMatches.length
 
   useEffect(() => {
     if (consumeMatchRegistrationToastPending()) {
@@ -462,28 +517,45 @@ export function MatchHome() {
         <h1 className="match_page_title">매치</h1>
       </header>
 
-      <section className="match_section" aria-labelledby="match-status-title">
-        <div className="match_section_heading">
-          <h2 id="match-status-title" className="match_section_title">내 매치 현황</h2>
-          <Link className="match_more_link" to="/my/schedule" aria-label="내 매치 현황 더보기">
-            <More />
-          </Link>
+      <section className="match_home_my_matches" aria-labelledby="match-status-title">
+        <div className="my_matches_heading">
+          <h2 id="match-status-title" className="my_section_title">내 매치</h2>
+          <More
+            className="my_matches_more"
+            style={homeMatchMoreStyle}
+          />
         </div>
-        <div className="match_status_grid">
-          <article className="match_status_card">
-            <span className="match_status_content">
-              <strong>신청 중인 일정</strong>
-              <small>참가 신청한 매치를<br />확인하세요.</small>
-            </span>
-            <b>{Math.max(appliedMatchCount, 0)}건</b>
-          </article>
-          <article className="match_status_card">
-            <span className="match_status_content">
-              <strong>확정 일정</strong>
-              <small>확정된 경기 일정을<br />확인해요.</small>
-            </span>
-            <b>1건</b>
-          </article>
+
+        <div className="my_match_tabs" role="tablist" aria-label="내 매치 상태 탭">
+          {matchOverviewTabs.map((tab) => (
+            <button
+              key={tab.key}
+              className={`my_match_tab${matchOverviewTab === tab.key ? ' is_active' : ''}`}
+              type="button"
+              role="tab"
+              aria-selected={matchOverviewTab === tab.key}
+              onClick={() => setMatchOverviewTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="my_match_cards">
+          {visibleMatchOverviewCards.map((match) => (
+            <Link className="my_match_card" key={match.id} to={match.to}>
+              <div className="my_match_thumb" aria-hidden="true">
+                <img className="my_match_thumb_image" src={myMatchThumbImage} alt="" />
+              </div>
+              <div className="my_match_info">
+                <div className="my_match_title_row">
+                  <KeywordTag className={getMatchOverviewTagClassName(match.tagLabel)}>{match.tagLabel}</KeywordTag>
+                  <p className="my_match_title">{match.title}</p>
+                </div>
+                <p className="my_match_meta">{match.detail}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -538,7 +610,13 @@ export function MatchHome() {
           </article>
 
           <article className="match_selected_schedule">
-            <h3>{selectedDate.getMonth() + 1}월 {selectedDay}일 일정 {selectedMatches.length}건</h3>
+            <div className="match_selected_schedule_header">
+              <h3 aria-label={`${selectedDateLabel} 일정 ${selectedMatches.length}건`}>{selectedDateLabel}</h3>
+              <Link className="match_manage_button" to="/match/manage" aria-label="팀 관리로 이동">
+                <img src={settingsIcon} alt="" aria-hidden="true" />
+                <span>팀 관리</span>
+              </Link>
+            </div>
             {selectedMatches.length > 0 ? (
               <>
                 <div className="match_selected_list">
@@ -549,10 +627,13 @@ export function MatchHome() {
                       aria-label={`${match.title} 참가 안내 보기`}
                       key={match.id}
                     >
-                      <MainTag className="match_item_tag" style={{ backgroundColor: matchTypeColor[match.type], color: 'var(--color-white)' }}>
-                        {getMatchTypeLabel(match)}
-                      </MainTag>
-                      <div className="match_item_bottom">
+                      <div className="match_selected_item_main">
+                        <MainTag
+                          className="match_item_tag"
+                          style={{ padding: '3px 10px', backgroundColor: matchTypeColor[match.type], color: 'var(--color-white)' }}
+                        >
+                          {getMatchTypeLabel(match)}
+                        </MainTag>
                         <div className="match_item_media">
                           <img className="match_selected_thumb" src={match.imageSrc ?? matchList01} alt="" aria-hidden="true" />
                           <div className="match_selected_info">
@@ -573,14 +654,16 @@ export function MatchHome() {
                             </p>
                           </div>
                         </div>
-                        <span className="match_item_arrow_link" aria-hidden="true">
-                          <img className="match_item_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
-                        </span>
                       </div>
+                      <span className="match_item_arrow_link" aria-hidden="true">
+                        <img className="match_item_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
+                      </span>
                     </Link>
                   ))}
                 </div>
-                <button className="match_full_button match_dark_button" type="button">전체 보기</button>
+                <Link className="match_full_button match_dark_button" to="/match/list">
+                  전체 보기
+                </Link>
               </>
             ) : (
               <article className="match_empty_recommend_card">

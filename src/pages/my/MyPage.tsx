@@ -440,10 +440,8 @@ export function MyPage() {
         <div className="my_matches_heading">
           <h2 className="my_section_title">내 매치</h2>
           <More
-            ariaLabel="내 매치 더보기"
             className="my_matches_more"
             style={moreActionStyle}
-            to="/my/matches"
           />
         </div>
 
