@@ -60,7 +60,7 @@ const matches = [
 
 export function MvpVote() {
   const navigate = useNavigate()
-  const [selectedMatch, setSelectedMatch] = useState<string | null>(null)
+  const [selectedMatch, setSelectedMatch] = useState<string | null>('quarter-3')
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
