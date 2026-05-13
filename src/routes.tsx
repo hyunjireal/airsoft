@@ -124,7 +124,7 @@ export const router = createBrowserRouter([
           { path: '/match/list', element: <MatchList /> },
           { path: '/match/filter', element: <MatchFilter /> },
           { path: '/match/schedule/:matchId/join', element: <MatchScheduleJoin /> },
-          { path: '/match/:id', element: <MatchDetail /> },
+          { path: '/match/detail/:id', element: <MatchDetail /> },
           { path: '/match/:id/apply', element: <MatchApply /> },
           { path: '/match/:id/complete', element: <MatchApplyComplete /> },
           { path: '/team', element: <TeamHome /> },

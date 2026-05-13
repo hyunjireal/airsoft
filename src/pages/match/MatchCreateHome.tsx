@@ -396,23 +396,25 @@ export function MatchCreateHome() {
 
         <div className="match_edit_form_cta">
           <LoginButton
+            className="match_edit_cancel_button"
             style={{
-              background: 'var(--color-white)',
-              backgroundColor: 'var(--color-white)',
-              border: '1px solid var(--color-gray04)',
-              color: '#000000',
-              WebkitTextFillColor: '#000000',
+              background: 'var(--match-edit-cancel-bg, var(--color-white))',
+              backgroundColor: 'var(--match-edit-cancel-bg, var(--color-white))',
+              border: '1px solid var(--match-edit-cancel-border, var(--color-gray04))',
+              color: 'var(--match-edit-cancel-text, #000000)',
+              WebkitTextFillColor: 'var(--match-edit-cancel-text, #000000)',
             }}
             onClick={deleteMatch}
           >
             삭제
           </LoginButton>
           <LoginButton
+            className="match_edit_submit_button"
             style={{
-              background: '#000000',
-              backgroundColor: '#000000',
-              color: 'var(--color-white)',
-              WebkitTextFillColor: 'var(--color-white)',
+              background: 'var(--match-edit-submit-bg, #000000)',
+              backgroundColor: 'var(--match-edit-submit-bg, #000000)',
+              color: 'var(--match-edit-submit-text, var(--color-white))',
+              WebkitTextFillColor: 'var(--match-edit-submit-text, var(--color-white))',
             }}
             onClick={completeEdit}
           >

@@ -694,10 +694,43 @@
 }
 
 .my_schedule_page {
+  --my-schedule-bg: var(--tournament-light-bg);
+  --my-schedule-border: var(--color-black);
+  --my-schedule-text: var(--tournament-light-txt-main);
+  --my-schedule-text-sub: var(--tournament-light-txt-sub);
+  --my-schedule-card-bg: var(--tournament-light-card-bg);
+  --my-schedule-card-stroke: var(--color-gray04);
+  --my-schedule-card-title: var(--tournament-light-card-tit);
+  --my-schedule-card-text: var(--color-black);
+  --my-schedule-icon-filter: brightness(0) saturate(100%);
+  --my-schedule-action-icon-filter: brightness(0) saturate(100%) invert(39%) sepia(0%) saturate(0%) hue-rotate(193deg) brightness(94%) contrast(88%);
   min-height: 100vh;
   padding: 0;
-  background: var(--color-white);
-  color: var(--color-black);
+  background: var(--my-schedule-bg);
+  color: var(--my-schedule-text);
+}
+
+.mobile_frame:has(.my_schedule_page),
+.mobile_frame:has(.my_schedule_page) > main {
+  background: var(--tournament-light-bg);
+}
+
+:root[data-theme='dark'] .my_schedule_page {
+  --my-schedule-bg: var(--tournament-dark-bg);
+  --my-schedule-border: var(--color-gray03);
+  --my-schedule-text: var(--tournament-dark-txt-main);
+  --my-schedule-text-sub: var(--tournament-dark-txt-sub);
+  --my-schedule-card-bg: #000000;
+  --my-schedule-card-stroke: var(--color-black);
+  --my-schedule-card-title: var(--tournament-dark-card-tit);
+  --my-schedule-card-text: var(--tournament-dark-txt-main);
+  --my-schedule-icon-filter: brightness(0) invert(1);
+  --my-schedule-action-icon-filter: brightness(0) saturate(100%) invert(39%) sepia(0%) saturate(0%) hue-rotate(193deg) brightness(94%) contrast(88%);
+}
+
+:root[data-theme='dark'] .mobile_frame:has(.my_schedule_page),
+:root[data-theme='dark'] .mobile_frame:has(.my_schedule_page) > main {
+  background: var(--tournament-dark-bg);
 }
 
 .my_schedule_top {
@@ -733,6 +766,7 @@
   display: block;
   width: 24px;
   height: 24px;
+  filter: var(--my-schedule-icon-filter);
   object-fit: contain;
 }
 
@@ -743,7 +777,7 @@
 }
 
 .my_schedule_tit h1 {
-  color: #000000;
+  color: var(--my-schedule-text);
 }
 
 .my_schedule_tabs {
@@ -755,7 +789,7 @@
   width: 100%;
   height: fit-content;
   padding: 24px 24px 5px;
-  background: var(--color-white);
+  background: var(--my-schedule-bg);
 }
 
 .my_schedule_tab {
@@ -769,7 +803,7 @@
   border: 0;
   border-bottom: 1px solid transparent;
   background: transparent;
-  color: var(--color-gray03);
+  color: var(--my-schedule-text-sub);
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -778,8 +812,9 @@
 }
 
 .my_schedule_tab.is_active {
-  border-bottom-color: #000000;
-  color: #000000;
+  border-bottom-color: var(--my-schedule-text);
+  border-bottom-width: 2px;
+  color: var(--my-schedule-text);
 }
 
 .my_schedule_list_section {
@@ -797,9 +832,15 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border: 1px solid var(--color-gray04);
+  border: 1px solid var(--my-schedule-card-stroke);
   border-radius: 8px;
+  background: var(--my-schedule-card-bg);
   padding: 15px;
+}
+
+.my_schedule_match_item:first-child {
+  border-color: var(--my-schedule-border);
+  border-width: 2px;
 }
 
 .my_schedule_match_bottom {
@@ -841,7 +882,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
-  color: #111111;
+  color: var(--my-schedule-card-title);
 }
 
 .my_schedule_match_meta {
@@ -863,7 +904,7 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
-  color: #111111;
+  color: var(--my-schedule-card-title);
   white-space: nowrap;
 }
 
@@ -873,7 +914,7 @@
   font-weight: 300;
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
-  color: #111111;
+  color: var(--my-schedule-card-text);
 }
 
 .my_schedule_match_arrow_link {
@@ -888,7 +929,11 @@
   display: block;
   width: 22px;
   height: 22px;
-  filter: brightness(0) saturate(100%);
+  filter: var(--my-schedule-action-icon-filter);
+}
+
+.my_schedule_match_item:first-child .my_schedule_match_arrow {
+  filter: var(--my-schedule-icon-filter);
 }
 
 .my_schedule_empty {
@@ -896,18 +941,18 @@
   gap: 6px;
   padding: 28px 18px;
   border-radius: 10px;
-  background: #f5f5f5;
+  background: var(--my-schedule-card-bg);
   text-align: center;
 }
 
 .my_schedule_empty strong {
-  color: var(--color-black);
+  color: var(--my-schedule-text);
   font-size: 17px;
   line-height: 1.3;
 }
 
 .my_schedule_empty p {
-  color: var(--color-gray02);
+  color: var(--my-schedule-text-sub);
   font-size: 14px;
   line-height: 1.4;
 }

@@ -11,6 +11,7 @@ import writeIcon from "../../asset/icons/com_write.svg";
 import beginnerGuideBookImage from "../../asset/images/com_beginner_card_book.png";
 import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_question.png";
 import CategoryTag from "../../components/CategoryTag";
+import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
 import "./Community.css";
 
@@ -468,6 +469,20 @@ export function BeginnerBoard() {
                 <h3>초보자 가이드</h3>
                 <p>기본 규칙, 안전수칙, 용어를 먼저 익혀보세요.</p>
               </div>
+              <KeywordTag
+                style={{
+                  padding: '4px 8px',
+                  background: '#a7c068',
+                  color: '#5f6a19',
+                  fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  lineHeight: '1.3',
+                  letterSpacing: '-0.28px',
+                }}
+              >
+                가이드 보기
+              </KeywordTag>
               <span
                 className="beginner_start_icon_shell beginner_start_icon_shell_book"
                 aria-hidden="true"
@@ -489,6 +504,20 @@ export function BeginnerBoard() {
                 <h3>자주 묻는 질문</h3>
                 <p>많이 물어보는 질문들을 모아두었어요.</p>
               </div>
+              <KeywordTag
+                style={{
+                  padding: '4px 8px',
+                  background: '#86abff',
+                  color: '#212e4b',
+                  fontFamily: 'Pretendard Variable, Pretendard, system-ui, sans-serif',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  lineHeight: '1.3',
+                  letterSpacing: '-0.28px',
+                }}
+              >
+                자세히 보기
+              </KeywordTag>
               <span
                 className="beginner_start_icon_shell beginner_start_icon_shell_question"
                 aria-hidden="true"

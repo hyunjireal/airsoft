@@ -1814,22 +1814,22 @@
 
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_answer.is_wrong {
   border-color: #f0705f;
-  background: rgba(240, 112, 95, 0.12);
+  background: #000;
 }
 
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_answer.is_wrong .guide_quiz_answer_label {
-  background: #f0705f;
+  background: #ee2106;
   color: var(--color-white);
 }
 
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_answer.is_wrong strong,
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_answer.is_wrong .guide_quiz_answer_check {
-  color: #f0705f;
+  color: #ee2106;
 }
 
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_error_note {
-  border-color: rgba(240, 112, 95, 0.35);
-  background: #1a1a1a;
+  border-color: rgba(240, 112, 95, 0.15);
+  background: #282828;
   color: #f0705f;
 }
 

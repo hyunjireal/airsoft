@@ -2831,6 +2831,7 @@
 }
 
 .match_edit_text_input button {
+  position: relative;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
@@ -2839,14 +2840,34 @@
   height: 18px;
   padding: 0;
   border: 0;
-  background: transparent;
+  border-radius: 999px;
+  background: var(--color-white);
   cursor: pointer;
+}
+
+.match_edit_text_input button::before,
+.match_edit_text_input button::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--color-gray03);
+}
+
+.match_edit_text_input button::before {
+  transform: rotate(45deg);
+}
+
+.match_edit_text_input button::after {
+  transform: rotate(-45deg);
 }
 
 .match_edit_text_input img {
   flex: 0 0 auto;
   width: 18px;
   height: 18px;
+  opacity: 0;
 }
 
 .match_edit_place_input {
@@ -3140,6 +3161,110 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   padding: 50px 24px 0;
+}
+
+:root[data-theme='dark'] .mobile_frame:has(.match_edit_form_page),
+:root[data-theme='dark'] .mobile_frame:has(.match_edit_form_page) > main {
+  background: var(--color-black);
+}
+
+:root[data-theme='dark'] .match_edit_form_page {
+  --match-edit-cancel-bg: transparent;
+  --match-edit-cancel-border: var(--color-gray03);
+  --match-edit-cancel-text: var(--color-gray04);
+  --match-edit-submit-bg: var(--color-white);
+  --match-edit-submit-text: var(--color-black);
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_detail_top h1,
+:root[data-theme='dark'] .match_edit_form_section h2,
+:root[data-theme='dark'] .match_edit_extra_section h2,
+:root[data-theme='dark'] .match_edit_deadline h3,
+:root[data-theme='dark'] .match_edit_image_field h3,
+:root[data-theme='dark'] .match_edit_field,
+:root[data-theme='dark'] .match_edit_field > span,
+:root[data-theme='dark'] .match_edit_optional_title h2,
+:root[data-theme='dark'] .match_edit_optional_title span,
+:root[data-theme='dark'] .match_edit_radio_group label {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_back img {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .match_edit_alert_box {
+  background: var(--color-gray00);
+}
+
+:root[data-theme='dark'] .match_edit_alert_box p,
+:root[data-theme='dark'] .match_edit_description_head > span,
+:root[data-theme='dark'] .match_edit_count_hint,
+:root[data-theme='dark'] .match_edit_image_actions p {
+  color: var(--color-gray03);
+}
+
+:root[data-theme='dark'] .match_edit_alert_box img,
+:root[data-theme='dark'] .match_edit_text_input img,
+:root[data-theme='dark'] .match_edit_select_box img,
+:root[data-theme='dark'] .match_edit_image_thumb img {
+  filter: brightness(0) saturate(100%) invert(74%) sepia(0%) saturate(0%) hue-rotate(171deg) brightness(91%) contrast(87%);
+}
+
+:root[data-theme='dark'] .match_edit_text_input,
+:root[data-theme='dark'] .match_edit_select_box,
+:root[data-theme='dark'] .match_edit_description_section textarea {
+  border-color: var(--color-gray02);
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_text_input input,
+:root[data-theme='dark'] .match_edit_text_input select,
+:root[data-theme='dark'] .match_edit_select_box input,
+:root[data-theme='dark'] .match_edit_picker_value,
+:root[data-theme='dark'] .match_edit_time_select,
+:root[data-theme='dark'] .match_edit_description_section textarea {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_description_section textarea::placeholder {
+  color: var(--color-gray02);
+}
+
+:root[data-theme='dark'] .match_edit_count_row .mgc_count_control button,
+:root[data-theme='dark'] .match_edit_count_row .mgc_count_control span {
+  border-color: var(--color-gray02);
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_radio_group input {
+  accent-color: var(--color-white);
+}
+
+:root[data-theme='dark'] .match_edit_deadline_inputs .match_edit_select_box,
+:root[data-theme='dark'] .match_edit_image_thumb {
+  border-color: var(--color-gray01);
+  background: var(--color-gray02);
+}
+
+:root[data-theme='dark'] .match_edit_deadline_inputs .match_edit_select_box input,
+:root[data-theme='dark'] .match_edit_deadline_inputs .match_edit_picker_value,
+:root[data-theme='dark'] .match_edit_deadline_inputs .match_edit_time_select {
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .match_edit_deadline_inputs .match_edit_select_box img {
+  filter: brightness(0) saturate(100%);
+}
+
+:root[data-theme='dark'] .match_edit_image_actions button {
+  border-color: var(--color-gray01);
+  background: transparent;
+  color: var(--color-gray03);
 }
 
 .schedule_join_page {

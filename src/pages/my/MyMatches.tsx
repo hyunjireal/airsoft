@@ -19,7 +19,7 @@ const myMatches: Array<{
     date: '이번 주 토요일 14:00',
     place: '택티컬 필드',
     status: '확정',
-    route: '/match/match-001',
+    route: '/match/detail/match-001',
   },
   {
     id: 'my-match-2',
@@ -27,7 +27,7 @@ const myMatches: Array<{
     date: '이번 주 일요일 12:00',
     place: '어반 CQB',
     status: '신청 중',
-    route: '/match/match-003',
+    route: '/match/detail/match-003',
   },
   {
     id: 'my-match-3',
@@ -35,7 +35,7 @@ const myMatches: Array<{
     date: '이번 주 토요일 10:30',
     place: '포레스트 아레나',
     status: '신청 중',
-    route: '/match/match-002',
+    route: '/match/detail/match-002',
   },
   {
     id: 'my-match-4',

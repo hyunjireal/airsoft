@@ -5,7 +5,8 @@
       "Bash(Select-Object Name, FullName)",
       "Bash(npx tsc *)",
       "Bash(xargs grep -l \"type MatchEvent\\\\|interface MatchEvent\")",
-      "WebFetch(domain:www.figma.com)"
+      "WebFetch(domain:www.figma.com)",
+      "mcp__figma__get_design_context"
     ]
   }
 }

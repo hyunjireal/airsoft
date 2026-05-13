@@ -720,10 +720,14 @@
 .beginner_body {
   width: min(calc(100% - 48px), 720px);
   margin: 0 auto;
-  padding: 35px 0 0;
+  padding: 45px 0 0;
 }
 
-.beginner_start_section,
+.beginner_start_section {
+  height: fit-content;
+  padding: 0;
+}
+
 .beginner_questions_section {
   padding: 0;
 }
@@ -745,7 +749,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .beginner_start_card {
@@ -753,9 +757,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 22px;
   width: 100%;
-  min-height: 125px;
-  padding: 16px 12px 12px;
+  height: 100%;
+  padding: 12px;
   border: 0;
   border-radius: 8px;
   overflow: hidden;
@@ -800,7 +805,7 @@
   margin: 0;
   color: var(--color-black);
   font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 700;
   line-height: 1.3;
@@ -871,7 +876,7 @@
 }
 
 .beginner_questions_section {
-  padding-top: 35px;
+  padding-top: 45px;
 }
 
 .beginner_question_header {
@@ -2788,9 +2793,6 @@
     gap: 8px;
   }
 
-  .beginner_start_card {
-    min-height: 120px;
-  }
 
   .beginner_start_icon_shell_question {
     right: -3px;
@@ -2813,9 +2815,7 @@
     font-size: 30px;
   }
 
-  .beginner_start_card {
-    min-height: 114px;
-  }
+
 
   .beginner_start_icon_shell_question {
     right: -2px;
@@ -2824,4 +2824,158 @@
     height: 42px;
   }
 
+}
+
+/* =========================================
+   Community dark mode — Figma node 2776:3584
+   ========================================= */
+
+:root[data-theme='dark'] .community_page {
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .beginner_board_page {
+  background: #1a1a1a;
+}
+
+/* Hero */
+:root[data-theme='dark'] .beginner_hero {
+  background: #000;
+  border-bottom: 1px solid rgba(173, 173, 173, 0.5);
+  box-shadow: 0 0 18.8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tab pill container */
+:root[data-theme='dark'] .community_tabs {
+  background: #000;
+  border: 1px solid #e2fd34;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+:root[data-theme='dark'] .community_tabs a.active {
+  background: #e2fd34;
+  color: #1a1a1a;
+}
+
+/* Hero badge "입문자 전용 Q&A" */
+:root[data-theme='dark'] .beginner_hero_badge {
+  background: #e2fd34;
+  color: #000;
+}
+
+:root[data-theme='dark'] .beginner_hero_badge img {
+  filter: brightness(0);
+}
+
+/* Hero heading */
+:root[data-theme='dark'] .beginner_hero h1 {
+  color: var(--color-white);
+}
+
+/* AI search send button */
+:root[data-theme='dark'] .beginner_ai_search_send {
+  background: #e2fd34;
+}
+
+/* "추천 질문" label & hashtag chips */
+:root[data-theme='dark'] .beginner_hero_prompt {
+  color: #e9e9e9;
+}
+
+:root[data-theme='dark'] .beginner_hashtag {
+  background: #000 !important;
+  border-color: #e9e9e9 !important;
+  color: #e9e9e9 !important;
+}
+
+/* "처음이라면…" section title */
+:root[data-theme='dark'] .beginner_start_title {
+  color: var(--color-white);
+}
+
+/* Guide card (green) */
+:root[data-theme='dark'] .beginner_start_card_light {
+  background: #92a138;
+}
+
+:root[data-theme='dark'] .beginner_start_card_light h3 {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_start_card_light p {
+  color: #e7ff59;
+}
+
+/* FAQ card (blue) */
+:root[data-theme='dark'] .beginner_start_card_blue {
+  background: #344979;
+}
+
+:root[data-theme='dark'] .beginner_start_card_blue h3 {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_start_card_blue p,
+:root[data-theme='dark'] .beginner_start_card_question p {
+  color: #c0d3ff;
+}
+
+/* "최근 올라온 질문" heading */
+:root[data-theme='dark'] .beginner_question_heading h2 {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_question_heading p {
+  color: #d9d9d9;
+}
+
+/* Category filter chips */
+:root[data-theme='dark'] .beginner_question_chip.is-active {
+  background: #e2fd34;
+  border-color: #e2fd34;
+  color: #000;
+}
+
+:root[data-theme='dark'] .beginner_question_chip:not(.is-active) {
+  border-color: #e2fd34;
+  background: var(--color-white);
+  color: #282828;
+}
+
+/* Question cards */
+:root[data-theme='dark'] .beginner_question_card {
+  background: #000;
+}
+
+:root[data-theme='dark'] .beginner_question_card_category {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .beginner_question_card_tit {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_question_author {
+  color: #adadad;
+}
+
+:root[data-theme='dark'] .beginner_question_stats {
+  color: var(--color-gray03);
+}
+
+:root[data-theme='dark'] .beginner_question_info img {
+  filter: brightness(0) invert(0.6);
+}
+
+:root[data-theme='dark'] .beginner_question_stats img {
+  filter: brightness(0) invert(68%);
+}
+
+:root[data-theme='dark'] .beginner_question_bookmark img {
+  filter: brightness(0) saturate(100%) invert(88%) sepia(99%) saturate(973%) hue-rotate(16deg) brightness(110%) contrast(104%);
+}
+
+:root[data-theme='dark'] .beginner_ai_search_send img {
+  filter: brightness(0);
 }

@@ -200,7 +200,7 @@ export function MySchedule() {
         {filteredSchedules.length > 0 ? (
           <div className="my_schedule_match_list">
             {filteredSchedules.map((match) => {
-              const actionTo = match.isMine ? `/match/create?edit=${match.matchId}` : `/match/${match.matchId}`
+              const actionTo = match.isMine ? `/match/create?edit=${match.matchId}` : `/match/detail/${match.matchId}`
               const actionLabel = match.isMine ? `${match.title} 수정하기` : `${match.title} 상세 보기`
               const actionIcon = match.isMine ? matchPencilIcon : arrowRIcon
 

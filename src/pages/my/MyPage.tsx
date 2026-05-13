@@ -49,14 +49,14 @@ const matchCardsByTab: Record<MatchTab, MatchCard[]> = {
       title: '초보 환영 야외전',
       detail: '5/23 (토) 13:00 I 택티컬 필드',
       tagLabel: 'D-14',
-      to: '/match/match-001',
+      to: '/match/detail/match-001',
     },
     {
       id: 'waiting-2',
       title: '서울 CQB 입문 경기',
       detail: '5/31 (일) 12:00 I 어반 CQB',
       tagLabel: 'D-22',
-      to: '/match/match-003',
+      to: '/match/detail/match-003',
     },
   ],
   confirmed: [
@@ -65,7 +65,7 @@ const matchCardsByTab: Record<MatchTab, MatchCard[]> = {
       title: '초보 환영 야외전',
       detail: '5/23 (토) 13:00 I 택티컬 필드',
       tagLabel: 'D-14',
-      to: '/match/match-001',
+      to: '/match/detail/match-001',
     },
   ],
   past: [
