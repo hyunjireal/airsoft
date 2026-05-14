@@ -198,6 +198,15 @@ export function GuideQuiz() {
     setIsComplete(false)
   }
 
+  const skipToCompletePreview = () => {
+    setIsStarted(true)
+    setCurrentIndex(quizzes.length - 1)
+    setSelectedChoice(null)
+    setIsErrorNoteVisible(false)
+    setScore(quizzes.length)
+    setIsComplete(true)
+  }
+
   const finalScore = Math.round((score / quizzes.length) * 100)
   const correctRate = Math.round((score / quizzes.length) * 100)
   const finishMessage =
@@ -348,6 +357,10 @@ export function GuideQuiz() {
         </div>
         <strong>{progress}%</strong>
       </section>
+
+      <button className="guide_quiz_preview_skip" type="button" onClick={skipToCompletePreview}>
+        체험용 건너뛰기
+      </button>
 
       <main className="guide_quiz_figma_content">
         <article className="guide_quiz_question_box">

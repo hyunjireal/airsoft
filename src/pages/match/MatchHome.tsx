@@ -3,17 +3,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
-import { DayPicker } from 'react-day-picker'
-import { ko } from 'date-fns/locale'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
-import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import plusIcon from '../../asset/icons/plus.svg'
-import settingsIcon from '../../asset/icons/settings.svg'
-import myMatchThumbImage from '../../asset/images/my_match_img01.png'
+import matchPlusIcon from '../../asset/icons/match_plus.svg'
+import matchPresetIcon from '../../asset/icons/match_preset.svg'
+import matchNewIcon from '../../asset/icons/match_new.svg'
 import matchNolistImage from '../../asset/images/match_nolist01.png'
+import mainUserImage from '../../asset/images/main_user01.png'
 import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
 import matchList03 from '../../asset/images/match_list03.jpg'
@@ -59,12 +58,6 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '개인', value: 'personal' },
   { label: '팀', value: 'team' },
   { label: '용병', value: 'mercenary' },
-]
-
-const matchOverviewTabs: Array<{ key: MatchOverviewTab; label: string }> = [
-  { key: 'waiting', label: '대기 중' },
-  { key: 'confirmed', label: '확정' },
-  { key: 'past', label: '지난 매치' },
 ]
 
 const matchOverviewCardsByTab: Record<MatchOverviewTab, MatchOverviewCard[]> = {
@@ -351,6 +344,27 @@ function formatCalendarTitle(month: Date) {
   return `${month.getFullYear()}. ${String(month.getMonth() + 1).padStart(2, '0')}`
 }
 
+const weekDayLabels = ['일', '월', '화', '수', '목', '금', '토']
+
+function getWeekDates(date: Date) {
+  const start = new Date(date)
+  start.setDate(date.getDate() - date.getDay())
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const nextDate = new Date(start)
+    nextDate.setDate(start.getDate() + index)
+    return nextDate
+  })
+}
+
+function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
+
 function getMatchTypeLabel(match: MatchSchedule) {
   if (match.type === 'personal') return '개인'
   if (match.type === 'team') return '팀'
@@ -366,18 +380,6 @@ const matchTypeColor: Record<MatchType, string> = {
 
 function isMatchType(type: unknown): type is MatchType {
   return type === 'personal' || type === 'team' || type === 'mercenary'
-}
-
-function getMatchOverviewTagClassName(tagLabel: string) {
-  if (tagLabel === 'D-14') {
-    return 'my_match_tag my_match_tag_d14'
-  }
-
-  if (tagLabel === 'D-22') {
-    return 'my_match_tag my_match_tag_d22'
-  }
-
-  return 'my_match_tag'
 }
 
 function readCreatedMatches() {
@@ -437,7 +439,6 @@ export function MatchHome() {
   )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
-  const [matchOverviewTab, setMatchOverviewTab] = useState<MatchOverviewTab>('waiting')
   const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
@@ -465,12 +466,22 @@ export function MatchHome() {
     .map((match) => new Date(`${match.date}T00:00:00`))
     .filter((date) => !Number.isNaN(date.getTime()))
   const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
-  const visibleMatchOverviewCards = matchOverviewCardsByTab[matchOverviewTab]
-  const goPrevMonth = () => {
-    setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() - 1, 1))
+  const weekDates = getWeekDates(selectedDate)
+  const goPrevWeek = () => {
+    setSelectedDate((date) => {
+      const nextDate = new Date(date)
+      nextDate.setDate(date.getDate() - 7)
+      setCalendarMonth(new Date(nextDate.getFullYear(), nextDate.getMonth(), 1))
+      return nextDate
+    })
   }
-  const goNextMonth = () => {
-    setCalendarMonth((month) => new Date(month.getFullYear(), month.getMonth() + 1, 1))
+  const goNextWeek = () => {
+    setSelectedDate((date) => {
+      const nextDate = new Date(date)
+      nextDate.setDate(date.getDate() + 7)
+      setCalendarMonth(new Date(nextDate.getFullYear(), nextDate.getMonth(), 1))
+      return nextDate
+    })
   }
   const goBack = () => {
     if (window.history.length > 1) {
@@ -526,42 +537,85 @@ export function MatchHome() {
           />
         </div>
 
-        <div className="my_match_tabs" role="tablist" aria-label="내 매치 상태 탭">
-          {matchOverviewTabs.map((tab) => (
-            <button
-              key={tab.key}
-              className={`my_match_tab${matchOverviewTab === tab.key ? ' is_active' : ''}`}
-              type="button"
-              role="tab"
-              aria-selected={matchOverviewTab === tab.key}
-              onClick={() => setMatchOverviewTab(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="match_status_list">
+          <Link className="match_status_summary_card is_waiting" to="/my/applications">
+            <span>
+              <strong>승인대기 일정</strong>
+              <small>참가 신청한 매치를 확인하세요</small>
+            </span>
+            <b>{matchOverviewCardsByTab.waiting.length}건</b>
+          </Link>
+          <Link className="match_status_summary_card is_confirmed" to="/my/schedule">
+            <span>
+              <strong>확정 일정</strong>
+              <small>확정된 매치 일정을 확인하세요</small>
+            </span>
+            <b>{matchOverviewCardsByTab.confirmed.length}건</b>
+          </Link>
+        </div>
+      </section>
+
+      <section className="match_section match_ai_recommend_section" aria-labelledby="match-ai-title">
+        <div className="match_ai_heading">
+          <h2 id="match-ai-title" className="match_section_title">AI 추천 매치</h2>
+          <button className="match_ai_preset_button" type="button">
+            <img src={matchPresetIcon} alt="" aria-hidden="true" />
+            <span>프리셋</span>
+          </button>
         </div>
 
-        <div className="my_match_cards">
-          {visibleMatchOverviewCards.map((match) => (
-            <Link className="my_match_card" key={match.id} to={match.to}>
-              <div className="my_match_thumb" aria-hidden="true">
-                <img className="my_match_thumb_image" src={myMatchThumbImage} alt="" />
+        <div className="match_ai_recommend_group">
+          <div className="match_ai_preset_card">
+            <strong>적용된 프리셋</strong>
+            <p>
+              <span>주말 캐주얼</span>
+              가까운 거리 · 주말 경기 · 비슷한 실력
+            </p>
+          </div>
+
+          <article className="match_ai_match_card">
+            <img className="match_ai_match_bg" src={matchList01} alt="" aria-hidden="true" />
+            <div className="match_ai_match_top">
+              <div>
+                <h3>
+                  하남시 몬드필드
+                  <br />
+                  주말 정기전
+                </h3>
+                <p className="match_ai_match_meta">
+                  <span>5.17 (토) 12:00</span>
+                  <span>경기도 하남시</span>
+                </p>
               </div>
-              <div className="my_match_info">
-                <div className="my_match_title_row">
-                  <KeywordTag className={getMatchOverviewTagClassName(match.tagLabel)}>{match.tagLabel}</KeywordTag>
-                  <p className="my_match_title">{match.title}</p>
+              <div className="match_ai_percent">
+                <img src={matchNewIcon} alt="" aria-hidden="true" />
+                <div>
+                  <span>매칭률</span>
+                  <strong>100%</strong>
                 </div>
-                <p className="my_match_meta">{match.detail}</p>
               </div>
-            </Link>
-          ))}
+            </div>
+            <div className="match_ai_match_bottom">
+              <div className="match_ai_members">
+                <div className="match_ai_member_avatars" aria-hidden="true">
+                  <img src={mainUserImage} alt="" />
+                  <img src={mainUserImage} alt="" />
+                  <img src={mainUserImage} alt="" />
+                </div>
+                <span>+14명</span>
+              </div>
+              <strong>17 <small>/ 20</small></strong>
+            </div>
+          </article>
+          <Link className="match_full_button match_dark_button match_ai_join_button" to="/match/schedule/match-003/join">
+            참가하기
+          </Link>
         </div>
       </section>
 
       <section className="match_section match_schedule_section" aria-labelledby="match-schedule-title">
         <div>
-          <h2 id="match-schedule-title" className="match_section_title">매치 일정 둘러보기</h2>
+          <h2 id="match-schedule-title" className="match_section_title">매치 일정 탐색</h2>
           <p className="match_section_description">참가 방식을 고르고 날짜를 선택하면 해당 일정이 바로 이어져요.</p>
         </div>
 
@@ -582,39 +636,50 @@ export function MatchHome() {
         <div className="match_calendar_view">
           <article className="match_month_card">
             <div className="match_month_header">
-              <button type="button" aria-label="이전 달" onClick={goPrevMonth}>&lt;</button>
+              <button type="button" aria-label="이전 주" onClick={goPrevWeek}>&lt;</button>
               <h3>{formatCalendarTitle(calendarMonth)}</h3>
-              <button type="button" aria-label="다음 달" onClick={goNextMonth}>&gt;</button>
+              <button type="button" aria-label="다음 주" onClick={goNextWeek}>&gt;</button>
             </div>
 
-            <DayPicker
-              className="match_day_picker"
-              mode="single"
-              month={calendarMonth}
-              onMonthChange={setCalendarMonth}
-              selected={selectedDate}
-              onSelect={(date) => {
-                if (date) {
-                  setSelectedDate(date)
-                }
-              }}
-              locale={ko}
-              weekStartsOn={0}
-              showOutsideDays
-              fixedWeeks
-              hideNavigation
-              modifiers={{ hasMatch: filteredMatchDates }}
-              modifiersClassNames={{ hasMatch: 'hasMatch' }}
-            />
-            <p className="match_calendar_hint">점이 있는 날짜에는 선택한 조건에 맞는 일정이 있어요.</p>
+            <div className="match_week_calendar" role="list" aria-label="주간 매치 일정 달력">
+              {weekDates.map((date) => {
+                const isSelected = isSameDay(date, selectedDate)
+                const hasMatch = filteredMatchDates.some((matchDate) => isSameDay(matchDate, date))
+                const day = date.getDay()
+
+                return (
+                  <button
+                    className={[
+                      'match_week_day',
+                      isSelected ? 'is_selected' : '',
+                      hasMatch ? 'has_match' : '',
+                      day === 0 ? 'is_sunday' : '',
+                      day === 6 ? 'is_saturday' : '',
+                    ].filter(Boolean).join(' ')}
+                    type="button"
+                    key={date.toISOString()}
+                    onClick={() => {
+                      setSelectedDate(date)
+                      setCalendarMonth(new Date(date.getFullYear(), date.getMonth(), 1))
+                    }}
+                    aria-pressed={isSelected}
+                    aria-label={`${date.getMonth() + 1}월 ${date.getDate()}일 ${weekDayLabels[day]}요일`}
+                  >
+                    <i aria-hidden="true" />
+                    <strong>{date.getDate()}</strong>
+                    <span>{weekDayLabels[day]}</span>
+                  </button>
+                )
+              })}
+            </div>
           </article>
 
           <article className="match_selected_schedule">
             <div className="match_selected_schedule_header">
               <h3 aria-label={`${selectedDateLabel} 일정 ${selectedMatches.length}건`}>{selectedDateLabel}</h3>
-              <Link className="match_manage_button" to="/match/manage" aria-label="팀 관리로 이동">
-                <img src={settingsIcon} alt="" aria-hidden="true" />
-                <span>팀 관리</span>
+              <Link className="match_manage_button" to={`/match/create?date=${selectedDateKey}`} aria-label="일정 만들기">
+                <img src={matchPlusIcon} alt="" aria-hidden="true" />
+                <span>일정 만들기</span>
               </Link>
             </div>
             {selectedMatches.length > 0 ? (
@@ -655,9 +720,6 @@ export function MatchHome() {
                           </div>
                         </div>
                       </div>
-                      <span className="match_item_arrow_link" aria-hidden="true">
-                        <img className="match_item_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
-                      </span>
                     </Link>
                   ))}
                 </div>
