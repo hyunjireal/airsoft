@@ -8,6 +8,7 @@ import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowR from '../../asset/icons/arrow_r.svg'
+import mainAiIcon from '../../asset/icons/main_aiIcon.svg'
 import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
 import mainProfileIcon from '../../asset/icons/main_profile01.svg'
 import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
@@ -21,6 +22,8 @@ import matchImg04 from '../../asset/images/main_img06.jpg'
 import mainProfileTag01 from '../../asset/images/main_profile_tag01.png'
 import mainProfileTag02 from '../../asset/images/main_profile_tag02.png'
 import userAvatar from '../../asset/images/main_user01.png'
+import userAiBg from '../../asset/images/user_aiBG.png'
+import userAiBgDark from '../../asset/images/user_aiBG_d.png'
 import mainBuddy01 from '../../asset/images/main_buddy01.png'
 import mainBuddy02 from '../../asset/images/main_buddy02.png'
 import mainBuddy03 from '../../asset/images/main_buddy03.png'
@@ -343,6 +346,35 @@ export function Home() {
                   ) : null}
                 </div>
               </div>
+
+              <article
+                className="home_ai_recommend_card"
+                style={
+                  {
+                    '--home-ai-bg': `url(${userAiBg})`,
+                    '--home-ai-bg-dark': `url(${userAiBgDark})`,
+                  } as CSSProperties
+                }
+              >
+                <div className="home_ai_recommend_textbox">
+                  <KeywordTag className="home_ai_recommend_tag">
+                    <img src={mainAiIcon} alt="" className="home_ai_recommend_tag_icon" />
+                    <span className="body_b_14">AI 추천</span>
+                  </KeywordTag>
+                  <p className="home_ai_recommend_copy">
+                    돌진형 플레이어 <strong>삼삼오오님</strong>을 위한
+                    <br />
+                    이번 주 맞춤 추천
+                  </p>
+                </div>
+                <LoginButton
+                  className="home_ai_recommend_cta"
+                  style={{ WebkitTextFillColor: 'var(--home-ai-cta-color)' }}
+                  onClick={() => navigate('/my/schedule')}
+                >
+                  <span className="home_ai_recommend_cta_label body_m_16">일정 보러가기</span>
+                </LoginButton>
+              </article>
             </div>
 
             <div className="home_userinfo_match">
