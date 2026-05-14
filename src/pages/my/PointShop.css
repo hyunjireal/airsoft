@@ -16,17 +16,9 @@
 }
 
 .point_shop_header {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 24px 0 10px;
 }
 
 .point_shop_header_left {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
 }
 
 .point_shop_back_button,
@@ -40,18 +32,9 @@
 }
 
 .point_shop_back_button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
 }
 
 .point_shop_back_icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
 }
 
 .point_shop_title,
@@ -66,9 +49,6 @@
 
 .point_shop_title {
   color: var(--color-black);
-  font-size: var(--font-size-28);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-130);
 }
 
 .point_shop_coupon_button {
@@ -380,11 +360,6 @@
 @media (min-width: 640px) {
   .point_shop_page {
     padding-bottom: 36px;
-  }
-
-  .point_shop_header {
-    padding-top: 28px;
-    padding-bottom: 14px;
   }
 
   .point_shop_coupon_button {

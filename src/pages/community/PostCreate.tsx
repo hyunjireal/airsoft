@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import './Community.css'
 
@@ -99,17 +100,14 @@ export function PostCreate() {
 
   return (
     <div className="post_create_page">
-      <header className="post_create_header">
-        <button
-          className="post_create_back"
-          type="button"
-          aria-label="뒤로가기"
-          onClick={() => navigate(-1)}
-        >
-          ‹
-        </button>
-        <h1 className="post_create_title">글 작성하기</h1>
-      </header>
+      <PageHeader
+        className="post_create_header"
+        backButtonClassName="post_create_back"
+        backContent="‹"
+        title="글 작성하기"
+        titleClassName="post_create_title"
+        onBack={() => navigate(-1)}
+      />
 
       <div className="post_create_body">
         <div className="post_create_field">

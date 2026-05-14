@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import tournamentLockIcon from '../../asset/icons/tournament_lock.svg'
 import tournamentMainLightImg from '../../asset/images/tournament_main_light.png'
 import './Tournament.css'
@@ -104,12 +104,14 @@ export function MvpVote() {
         style={{ backgroundImage: `url(${tournamentMainLightImg})` }}
       >
         <div className="tournament_intro_tit">
-          <div className="tournament_intro_top">
-            <button type="button" aria-label="뒤로가기" onClick={() => navigate(-1)}>
-              <img src={arrowLIcon} alt="" aria-hidden="true" />
-            </button>
-            <span className="body_b_28">MVP 투표</span>
-          </div>
+          <PageHeader
+            className="tournament_intro_top"
+            title="MVP 투표"
+            titleAs="span"
+            titleClassName="body_b_28"
+            variant="overlay"
+            onBack={() => navigate(-1)}
+          />
           <div className="tournament_intro_bottom">
             <p className="body_sb_16">
               각 경기에서 <em>가장 인상 깊었던</em><br />

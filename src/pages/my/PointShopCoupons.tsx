@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import pointshopBestImg01 from '../../asset/images/pointshop_best_img01.png'
 import pointshopBestImg03 from '../../asset/images/pointshop_best_img03.png'
 import './PointShopCoupons.css'
@@ -141,14 +141,17 @@ export function PointShopCoupons() {
   return (
     <div className="point_shop_coupons_page">
       <div className="point_shop_coupons_content">
-        <header className="point_shop_coupons_header point_shop_coupons_shell">
-          <div className="point_shop_coupons_header_left">
-            <button className="point_shop_coupons_back_button" type="button" aria-label="뒤로 가기" onClick={goBack}>
-              <img className="point_shop_coupons_back_icon" src={arrowLeftIcon} alt="" aria-hidden="true" />
-            </button>
-            <h1 className="point_shop_coupons_title">내 쿠폰함</h1>
-          </div>
-        </header>
+        <PageHeader
+          className="point_shop_coupons_header point_shop_coupons_shell"
+          groupClassName="point_shop_coupons_header_left"
+          backButtonClassName="point_shop_coupons_back_button"
+          backIconClassName="point_shop_coupons_back_icon"
+          backLabel="뒤로 가기"
+          layout="section"
+          title="내 쿠폰함"
+          titleClassName="point_shop_coupons_title"
+          onBack={goBack}
+        />
 
         <div className="point_shop_coupons_tabs point_shop_coupons_shell" role="tablist" aria-label="쿠폰 상태">
           <CouponTabButton

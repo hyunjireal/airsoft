@@ -173,6 +173,19 @@ body.auth_body {
   color: var(--color-gray01);
 }
 
+.auth_field_error {
+  color: #ff6b6b;
+  font-family: var(--font-pretendard);
+  font-size: calc(12px + 2 * (var(--auth-fluid-range) / 631));
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.auth_input[aria-invalid='true'] {
+  border-color: #ff6b6b;
+}
+
 .auth_region_field_button {
   display: flex;
   align-items: center;

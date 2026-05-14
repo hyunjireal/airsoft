@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import More from '../../components/More'
-import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import pointshopBannerImage from '../../asset/images/pointshop_bannger_img.png'
 import pointshopBestImg01 from '../../asset/images/pointshop_best_img01.png'
@@ -281,17 +281,22 @@ export function PointShop() {
   return (
     <div className="point_shop_page">
       <div className="point_shop_content">
-        <header className="point_shop_header point_shop_shell">
-          <div className="point_shop_header_left">
-            <button className="point_shop_back_button" type="button" aria-label="뒤로 가기" onClick={goBack}>
-              <img className="point_shop_back_icon" src={arrowLeftIcon} alt="" aria-hidden="true" />
+        <PageHeader
+          className="point_shop_header point_shop_shell"
+          groupClassName="point_shop_header_left"
+          backButtonClassName="point_shop_back_button"
+          backIconClassName="point_shop_back_icon"
+          backLabel="뒤로 가기"
+          layout="section"
+          title="포인트 샵"
+          titleClassName="point_shop_title"
+          onBack={goBack}
+          rightSlot={(
+            <button className="point_shop_coupon_button" type="button" onClick={goToCoupons}>
+              내 쿠폰함
             </button>
-            <h1 className="point_shop_title">포인트 샵</h1>
-          </div>
-          <button className="point_shop_coupon_button" type="button" onClick={goToCoupons}>
-            내 쿠폰함
-          </button>
-        </header>
+          )}
+        />
 
         <section className="point_shop_shell">
           <button

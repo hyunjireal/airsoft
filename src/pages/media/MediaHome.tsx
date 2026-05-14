@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
+import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import rankingCheckIcon from '../../asset/icons/ranking_check.svg'
 import userIcon from '../../asset/icons/creator_profile.svg'
 import mediaMainBg from '../../asset/images/media_main01.png'
@@ -152,14 +152,14 @@ export function MediaHome() {
         className="media_hero"
         style={{ backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.5)), url(${mediaMainBg})` }}
       >
-        <header className="media_home_top">
-          <div className="media_home_title">
-            <button className="media_home_back" type="button" aria-label="뒤로가기" onClick={() => navigate(-1)}>
-              <img src={arrowLIcon} alt="" aria-hidden="true" />
-            </button>
-            <h1 className="body_b_24">크리에이터 랭킹</h1>
-          </div>
-        </header>
+        <PageHeader
+          className="media_home_top"
+          backButtonClassName="media_home_back"
+          layout="standard"
+          title="크리에이터 랭킹"
+          variant="overlay"
+          onBack={() => navigate(-1)}
+        />
 
         <div className="media_podium_row" aria-label="크리에이터 단상">
           {podiumCreators.map((creator) => (

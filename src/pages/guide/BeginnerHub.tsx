@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
@@ -51,12 +52,13 @@ export function BeginnerHub() {
 
   return (
     <div className="beginner_guide_page">
-      <header className="beginner_guide_header">
-        <button className="beginner_guide_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
-          <img src={arrowLeftIcon} alt="" aria-hidden="true" />
-        </button>
-        <h1>초보자 가이드</h1>
-      </header>
+      <PageHeader
+        className="beginner_guide_header"
+        backIcon={arrowLeftIcon}
+        backButtonClassName="beginner_guide_back_button"
+        title="초보자 가이드"
+        onBack={goBack}
+      />
 
       <section className="beginner_guide_tips" aria-labelledby="beginner-guide-tips-title">
         <div className="beginner_guide_tips_label" id="beginner-guide-tips-title">

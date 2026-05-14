@@ -14,17 +14,9 @@
 }
 
 .my_header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 12px;
 }
 
 .my_header_left {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
 }
 
 .my_header_button,
@@ -58,19 +50,10 @@
 }
 
 .my_header_button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
   color: var(--color-black);
 }
 
 .my_back_icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
 }
 
 .my_bell_button {
@@ -84,12 +67,7 @@
 }
 
 .my_page_title {
-  margin: 0;
   color: var(--color-black);
-  font-size: var(--font-size-28);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-130);
-  letter-spacing: var(--letter-spacing-tight);
 }
 
 .my_profile_section {
@@ -734,40 +712,17 @@
 }
 
 .my_schedule_top {
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
   height: fit-content;
-  padding: 86px 24px 10px;
 }
 
 .my_schedule_tit {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
-  min-width: 0;
 }
 
 .my_schedule_back {
-  display: inline-flex;
-  flex: 0 0 24px;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
 }
 
 .my_schedule_back img {
-  display: block;
-  width: 24px;
-  height: 24px;
   filter: var(--my-schedule-icon-filter);
-  object-fit: contain;
 }
 
 .my_schedule_tit h1,
@@ -987,10 +942,6 @@
 }
 
 @media (max-width: 359px) {
-  .my_page_title {
-    font-size: 24px;
-  }
-
   .my_profile_identity {
     gap: 12px;
   }

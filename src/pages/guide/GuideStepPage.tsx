@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import { beginnerGuideSections } from '../../data/beginnerGuideSections'
 import './Guide.css'
 
@@ -20,7 +21,7 @@ export function GuideStepPage({ stepId }: GuideStepPageProps) {
 
   return (
     <div className="guide_tutorial_page">
-      <header className="guide_tutorial_header">
+      <PageHeader className="guide_tutorial_header">
         <p>AIRSOFT TUTORIAL CHECK</p>
         <div className="guide_tutorial_steps" aria-label={`가이드 ${step.number}번 단계`}>
           {tutorialSteps.map((item, index) => (
@@ -29,7 +30,7 @@ export function GuideStepPage({ stepId }: GuideStepPageProps) {
             </span>
           ))}
         </div>
-      </header>
+      </PageHeader>
 
       <main className="guide_tutorial_card">
         <div className="guide_tutorial_badges">

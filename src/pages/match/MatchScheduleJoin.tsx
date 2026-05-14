@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import matchCalendarIcon from '../../asset/icons/match_calendar.svg'
 import matchCheckIcon from '../../asset/icons/match_check.svg'
@@ -48,13 +48,12 @@ export function MatchScheduleJoin() {
 
   return (
     <div className="schedule_join_page">
-      <header className="schedule_join_top">
-        <div className="schedule_join_tit">
-          <button className="schedule_join_back" type="button" aria-label="뒤로가기" onClick={goBack}>
-            <img src={arrowLIcon} alt="" aria-hidden="true" />
-          </button>
-        </div>
-      </header>
+      <PageHeader
+        className="schedule_join_top"
+        groupClassName="schedule_join_tit"
+        backButtonClassName="schedule_join_back"
+        onBack={goBack}
+      />
 
       <main className="schedule_join_main_body">
         <section className="schedule_join_summary_card" aria-labelledby="schedule-join-title">

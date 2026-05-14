@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import matchPencilIcon from '../../asset/icons/match_pencil.svg'
 import { getMyMatches, type MyMatchStatus } from './myMatchData'
@@ -42,14 +42,15 @@ export function MySchedule() {
 
   return (
     <div className="my_schedule_page">
-      <header className="my_schedule_top">
-        <div className="my_schedule_tit">
-          <button className="my_schedule_back" type="button" aria-label="뒤로가기" onClick={goBack}>
-            <img src={arrowLIcon} alt="" aria-hidden="true" />
-          </button>
-          <h1 className="body_b_28">내 매치 현황</h1>
-        </div>
-      </header>
+      <PageHeader
+        className="my_schedule_top"
+        groupClassName="my_schedule_tit"
+        backButtonClassName="my_schedule_back"
+        layout="standard"
+        title="내 매치 현황"
+        titleClassName="body_b_28"
+        onBack={goBack}
+      />
 
       <section className="my_schedule_tabs" aria-label="매치 현황 상태">
         {tabs.map((tab) => (

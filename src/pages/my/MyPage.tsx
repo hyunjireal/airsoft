@@ -2,6 +2,7 @@ import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import More from '../../components/More'
+import { PageHeader } from '../../components/PageHeader'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import matchPencilIcon from '../../asset/icons/match_pencil.svg'
@@ -201,17 +202,22 @@ function LoginRequired({ onLogin }: { onLogin: () => void }) {
 
 function MyPageHeader({ onBack }: { onBack: () => void }) {
   return (
-    <header className="my_header my_section_shell">
-      <div className="my_header_left">
-        <button className="my_header_button" type="button" aria-label="뒤로가기" onClick={onBack}>
-          <img alt="" aria-hidden="true" className="my_back_icon" src={arrowLeftIcon} />
-        </button>
-        <h1 className="my_page_title">마이페이지</h1>
-      </div>
-      <Link className="my_header_button my_bell_button" to="/notifications" aria-label="알림">
-        <BellIcon />
-      </Link>
-    </header>
+    <PageHeader
+      className="my_header my_section_shell"
+      groupClassName="my_header_left"
+      backIcon={arrowLeftIcon}
+      backButtonClassName="my_header_button"
+      backIconClassName="my_back_icon"
+      layout="section"
+      title="마이페이지"
+      titleClassName="my_page_title"
+      onBack={onBack}
+      rightSlot={(
+        <Link className="my_header_button my_bell_button" to="/notifications" aria-label="알림">
+          <BellIcon />
+        </Link>
+      )}
+    />
   )
 }
 

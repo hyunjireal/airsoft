@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import arrowUpIcon from '../../asset/icons/arrow_up.svg'
@@ -576,30 +577,27 @@ export function PostDetail() {
   return (
     <div className="post_detail_page">
       <article className="post_detail_top">
-        <div className="post_detail_icon_box">
-          <button
-            className="post_detail_icon_button post_detail_back_button"
-            type="button"
-            aria-label="뒤로가기"
-            onClick={() => navigate(-1)}
-          >
-            <img src={arrowLeftIcon} alt="" />
-          </button>
-
-          <div className="post_detail_icon_right">
-            <button className="post_detail_icon_button" type="button" aria-label="알림">
-              <img src={bellIcon} alt="" />
-            </button>
-            <button
-              className="post_detail_icon_button"
-              type="button"
-              aria-label="더보기"
-              onClick={() => setIsReportSheetOpen(true)}
-            >
-              <img src={verticalDotIcon} alt="" />
-            </button>
-          </div>
-        </div>
+        <PageHeader
+          className="post_detail_icon_box"
+          backIcon={arrowLeftIcon}
+          backButtonClassName="post_detail_icon_button post_detail_back_button"
+          onBack={() => navigate(-1)}
+          rightSlot={(
+            <div className="post_detail_icon_right">
+              <button className="post_detail_icon_button" type="button" aria-label="알림">
+                <img src={bellIcon} alt="" />
+              </button>
+              <button
+                className="post_detail_icon_button"
+                type="button"
+                aria-label="더보기"
+                onClick={() => setIsReportSheetOpen(true)}
+              >
+                <img src={verticalDotIcon} alt="" />
+              </button>
+            </div>
+          )}
+        />
 
         <div className="post_detail_content">
           <div className="post_detail_title_group">

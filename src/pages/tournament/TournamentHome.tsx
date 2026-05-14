@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import './Tournament.css'
 
 const ranking = [
@@ -10,10 +11,11 @@ const ranking = [
 export function TournamentHome() {
   return (
     <div className="tournament_page">
-      <header className="tournament_header">
-        <h1>토너먼트</h1>
-        <button type="button" aria-label="알림">♧</button>
-      </header>
+      <PageHeader
+        className="tournament_header"
+        title="토너먼트"
+        rightSlot={<button type="button" aria-label="알림">♧</button>}
+      />
 
       <section className="tournament_hero">
         <div className="tournament_hero_copy">

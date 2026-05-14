@@ -1,6 +1,7 @@
 import { useMemo, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
+import { PageHeader } from '../../components/PageHeader'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import quizErrorIcon from '../../asset/icons/quiz_error.svg'
 import quizFinishIcon from '../../asset/icons/quiz_finish.svg'
@@ -239,12 +240,14 @@ export function GuideQuiz() {
 
         <main className="guide_quiz_start_content">
           <section className="guide_quiz_start_title">
-            <div className="guide_quiz_start_heading">
-              <button className="guide_quiz_start_back" type="button" aria-label="뒤로가기" onClick={() => navigate('/home')}>
-                <img src={arrowLIcon} alt="" aria-hidden="true" />
-              </button>
-              <h1>초보자 퀴즈</h1>
-            </div>
+            <PageHeader
+              className="guide_quiz_start_heading"
+              backIcon={arrowLIcon}
+              backButtonClassName="guide_quiz_start_back"
+              title="초보자 퀴즈"
+              onBack={() => navigate('/home')}
+              variant="overlay"
+            />
             <p>
               안전과 기본 룰을 가볍게 익히고,
               <br />
@@ -269,12 +272,13 @@ export function GuideQuiz() {
   if (isComplete) {
     return (
       <div className="guide_quiz_page guide_quiz_figma_page guide_quiz_finish_page">
-        <header className="guide_quiz_figma_top">
-          <button className="guide_quiz_back" type="button" aria-label="뒤로가기" onClick={() => navigate('/home')}>
-            <img src={arrowLIcon} alt="" aria-hidden="true" />
-          </button>
-          <h1>초보자 퀴즈</h1>
-        </header>
+        <PageHeader
+          className="guide_quiz_figma_top"
+          backIcon={arrowLIcon}
+          backButtonClassName="guide_quiz_back"
+          title="초보자 퀴즈"
+          onBack={() => navigate('/home')}
+        />
 
         <main className="guide_quiz_finish">
           <section className="guide_quiz_finish_intro">
@@ -338,15 +342,15 @@ export function GuideQuiz() {
 
   return (
     <div className="guide_quiz_page guide_quiz_figma_page">
-      <header className="guide_quiz_figma_title">
-        <div className="guide_quiz_figma_top">
-          <button className="guide_quiz_back" type="button" aria-label="뒤로가기" onClick={() => navigate('/home')}>
-            <img src={arrowLIcon} alt="" aria-hidden="true" />
-          </button>
-          <h1>초보자 퀴즈</h1>
-        </div>
-        <p>퀴즈를 풀고 에어소프트 기본 상식을 익혀보세요!</p>
-      </header>
+      <PageHeader
+        className="guide_quiz_figma_title"
+        groupClassName="guide_quiz_figma_top"
+        backIcon={arrowLIcon}
+        backButtonClassName="guide_quiz_back"
+        title="초보자 퀴즈"
+        subtitle="퀴즈를 풀고 에어소프트 기본 상식을 익혀보세요!"
+        onBack={() => navigate('/home')}
+      />
 
       <section className="guide_quiz_progress_row" aria-label="퀴즈 진행률">
         <span>

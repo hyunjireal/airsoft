@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import sendIcon from '../../asset/icons/com_send.svg'
 import gaiImage from '../../asset/images/gai.png'
 import { requestChatAnswer, type ChatMessage } from '../../services/chatApi'
@@ -163,18 +163,20 @@ export function ChatbotPage() {
   return (
     <div className="chat_page">
       <div className="chat_con">
-        <header className="chat_top">
-          <div className="chat_tit">
-            <button className="chat_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
-              <img src={arrowLeftIcon} alt="" aria-hidden="true" />
-            </button>
-            <h1>
+        <PageHeader
+          className="chat_top"
+          groupClassName="chat_tit"
+          backButtonClassName="chat_back_button"
+          title={(
+            <>
               <span className="body_m_28">AI 챗봇 </span>
               <strong className="body_b_28">가이</strong>
-            </h1>
-          </div>
-          <p className="chat_subtitle body_m_16">가이에게 무엇이든 물어보세요!</p>
-        </header>
+            </>
+          )}
+          subtitle="가이에게 무엇이든 물어보세요!"
+          subtitleClassName="chat_subtitle body_m_16"
+          onBack={goBack}
+        />
 
         <main className="chat" ref={chatScrollRef}>
           <section className="chat_thread" aria-live="polite">

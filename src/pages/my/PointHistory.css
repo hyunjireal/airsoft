@@ -18,34 +18,18 @@
 }
 
 .point_history_header {
-  display: flex;
-  align-items: flex-end;
-  padding: 24px 0 10px;
 }
 
 .point_history_header_left {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
 }
 
 .point_history_back_button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
   border: 0;
   background: transparent;
   cursor: pointer;
 }
 
 .point_history_back_icon {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
 }
 
 .point_history_title,
@@ -67,9 +51,6 @@
 
 .point_history_title {
   color: var(--color-black);
-  font-size: var(--font-size-28);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-130);
 }
 
 .point_history_hero {
@@ -348,11 +329,6 @@
 
   .point_history_content {
     gap: 22px;
-  }
-
-  .point_history_header {
-    padding-top: 28px;
-    padding-bottom: 12px;
   }
 
   .point_history_hero {

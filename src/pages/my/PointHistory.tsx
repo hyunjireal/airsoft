@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
-import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import './PointHistory.css'
 
 type PointHistoryEntry = {
@@ -192,14 +192,17 @@ export function PointHistory() {
     <div className="point_history_page">
       <div className="point_history_shell">
         <div className="point_history_content">
-          <header className="point_history_header">
-            <div className="point_history_header_left">
-              <button className="point_history_back_button" type="button" aria-label="뒤로 가기" onClick={goBack}>
-                <img className="point_history_back_icon" src={arrowLeftIcon} alt="" aria-hidden="true" />
-              </button>
-              <h1 className="point_history_title">포인트 적립내역</h1>
-            </div>
-          </header>
+          <PageHeader
+            className="point_history_header"
+            groupClassName="point_history_header_left"
+            backButtonClassName="point_history_back_button"
+            backIconClassName="point_history_back_icon"
+            backLabel="뒤로 가기"
+            layout="section"
+            title="포인트 적립내역"
+            titleClassName="point_history_title"
+            onBack={goBack}
+          />
 
           <section className="point_history_hero" aria-label="포인트 요약">
             <div className="point_history_hero_copy">

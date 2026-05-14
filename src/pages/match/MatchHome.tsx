@@ -6,7 +6,7 @@ import { MatchTypeSheet } from './MatchTypeSheet'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import matchPlusIcon from '../../asset/icons/match_plus.svg'
 import matchPresetIcon from '../../asset/icons/match_preset.svg'
 import matchNewIcon from '../../asset/icons/match_new.svg'
@@ -529,12 +529,14 @@ export function MatchHome() {
 
   return (
     <div className="match_page">
-      <header className="match_page_header">
-        <button className="match_page_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
-          <img src={arrowLIcon} alt="" aria-hidden="true" />
-        </button>
-        <h1 className="match_page_title">매치</h1>
-      </header>
+      <PageHeader
+        className="match_page_header"
+        backButtonClassName="match_page_back_button"
+        layout="standard"
+        title="매치"
+        titleClassName="match_page_title"
+        onBack={goBack}
+      />
 
       <section className="match_home_my_matches" aria-labelledby="match-status-title">
         <div className="my_matches_heading">

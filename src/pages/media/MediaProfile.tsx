@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import iconArrowLeft from '../../asset/icons/arrow_l.svg'
 import iconInstagram from '../../asset/icons/creator_instagram.svg'
 import iconShorts from '../../asset/icons/creator_shorts.svg'
@@ -245,39 +246,34 @@ export function MediaProfile() {
           backgroundPositionY: `${profile.heroOffsetY ?? 0}px`,
         }}
       >
-        <div className="creator_detail_topbar">
-          <button
-            className="creator_detail_back_button"
-            type="button"
-            aria-label="뒤로가기"
-            onClick={() => navigate(-1)}
-          >
-            <img src={iconArrowLeft} alt="" aria-hidden="true" />
-          </button>
-
-          <button
-            className={`creator_detail_like_button ${liked ? 'is_liked' : ''}`}
-            type="button"
-            aria-label={`${profile.name} 좋아요 ${liked ? '취소' : '선택'}`}
-            aria-pressed={liked}
-            onClick={handleLikeToggle}
-          >
-            <span className="creator_detail_like_icon_shell">
-              {liked && likeBurstKey > 0 ? (
-                <span className="creator_detail_like_burst" key={likeBurstKey} aria-hidden="true">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                </span>
-              ) : null}
-              <CreatorHeartIcon liked={liked} />
-            </span>
-            <span>{profile.likes}</span>
-          </button>
-        </div>
+        <PageHeader
+          className="creator_detail_topbar"
+          backIcon={iconArrowLeft}
+          backButtonClassName="creator_detail_back_button"
+          onBack={() => navigate(-1)}
+          variant="overlay"
+          rightSlot={(
+            <button
+              className={`creator_detail_like_button ${liked ? 'is_liked' : ''}`}
+              type="button"
+              aria-label={`${profile.name} 좋아요 ${liked ? '취소' : '선택'}`}
+              aria-pressed={liked}
+              onClick={handleLikeToggle}
+            >
+              <span className="creator_detail_like_icon_shell">
+                {liked && likeBurstKey > 0 ? (
+                  <span className="creator_detail_like_burst" key={likeBurstKey} aria-hidden="true">
+                    <span />
+                    <span />
+                    <span />
+                  </span>
+                ) : null}
+                <CreatorHeartIcon liked={liked} />
+              </span>
+              <span>{profile.likes}</span>
+            </button>
+          )}
+        />
 
         <div className="creator_detail_hero_content">
           <div className="creator_detail_name_row">

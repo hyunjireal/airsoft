@@ -14,45 +14,11 @@
 }
 
 .media_home_top {
-  display: flex;
-  align-items: flex-end;
-  width: 100%;
   height: fit-content;
-  padding: 86px 24px 10px;
-}
-
-.media_home_title {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
-  min-width: 0;
-}
-
-.media_home_back {
-  display: inline-flex;
-  flex: 0 0 24px;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
 }
 
 .media_home_back img {
-  display: block;
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
   filter: brightness(0) invert(1);
-}
-
-.media_home_title h1 {
-  margin: 0;
-  color: var(--color-white);
 }
 
 .media_podium_row {

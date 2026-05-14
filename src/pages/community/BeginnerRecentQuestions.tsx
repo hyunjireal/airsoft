@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { PageHeader } from '../../components/PageHeader'
 import './Community.css'
 import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
@@ -61,10 +62,11 @@ export function BeginnerRecentQuestions() {
       </div>
 
       <section className="beginner_recent_content">
-        <header className="beginner_recent_header">
-          <h1>최근 올라온 질문</h1>
-          <p>다른 초보자들의 질문을 보고 도움을 받아보세요</p>
-        </header>
+        <PageHeader
+          className="beginner_recent_header"
+          title="최근 올라온 질문"
+          subtitle="다른 초보자들의 질문을 보고 도움을 받아보세요"
+        />
 
         <label className="beginner_search beginner_recent_search" aria-label="검색">
           <span className="beginner_search_icon" aria-hidden="true" />

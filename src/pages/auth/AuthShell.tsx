@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import type { ReactNode } from 'react'
+import { PageHeader } from '../../components/PageHeader'
 import iconArrowLeft from '../../asset/icons/arrow_l.svg'
 import './Auth.css'
 
@@ -22,11 +23,13 @@ export function AuthShell({ children, onBack }: AuthShellProps) {
       <div className="auth_screen__inner">
         <div className="auth_screen__status" aria-hidden="true" />
 
-        <div className="auth_screen__topbar">
-          <button className="auth_screen__back" type="button" aria-label="뒤로가기" onClick={onBack}>
-            <img src={iconArrowLeft} alt="" aria-hidden="true" />
-          </button>
-        </div>
+        <PageHeader
+          className="auth_screen__topbar"
+          backIcon={iconArrowLeft}
+          backButtonClassName="auth_screen__back"
+          onBack={onBack}
+          variant="dark"
+        />
 
         {children}
       </div>

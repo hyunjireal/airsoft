@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { markMatchRegistrationToastPending } from './MatchRegistrationToast'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import guestLocaIcon from '../../asset/icons/guest_loca.svg'
 import guestScheduleIcon from '../../asset/icons/guest_schedule.svg'
@@ -67,12 +67,14 @@ export function MatchGuestJoinCreate() {
 
   return (
     <div className="match_guest_create_page match_guest_join_create_page">
-      <header className="match_page_header">
-        <button className="match_page_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
-          <img src={arrowLIcon} alt="" aria-hidden="true" />
-        </button>
-        <h1 className="match_page_title match_guest_create_title">용병 지원글</h1>
-      </header>
+      <PageHeader
+        className="match_page_header"
+        backButtonClassName="match_page_back_button"
+        layout="standard"
+        title="용병 지원글"
+        titleClassName="match_page_title match_guest_create_title"
+        onBack={goBack}
+      />
 
       <main className="match_guest_create_body">
         <section className="mgc_level_card" aria-labelledby="mgj-level-1">

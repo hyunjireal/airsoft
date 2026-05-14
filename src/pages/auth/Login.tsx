@@ -3,9 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import iconEyeOff from '../../asset/icons/login_eye_off.svg'
 import { AuthShell } from './AuthShell'
 
-const DUMMY_EMAIL = 'demo@3355.com'
-const DUMMY_PASSWORD = 'airsoft1234'
-
 function GoogleIcon() {
   return (
     <svg aria-hidden="true" className="auth_provider_icon" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -42,10 +39,14 @@ function AppleIcon() {
 
 export function Login() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState(DUMMY_EMAIL)
-  const [password, setPassword] = useState(DUMMY_PASSWORD)
+  const [userId, setUserId] = useState('')
+  const [password, setPassword] = useState('')
   const [rememberLogin, setRememberLogin] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const userIdError = submitted && userId.trim() === '' ? '아이디를 입력하세요.' : ''
+  const passwordError = submitted && password.trim() === '' ? '비밀번호를 입력하세요.' : ''
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -57,8 +58,14 @@ export function Login() {
   }
 
   const login = () => {
+    setSubmitted(true)
+
+    if (userId.trim() === '' || password.trim() === '') {
+      return
+    }
+
     localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem('email', email || DUMMY_EMAIL)
+    localStorage.setItem('email', userId)
     localStorage.setItem('nickname', localStorage.getItem('nickname') || '삼삼오오 유저')
     if (rememberLogin) {
       localStorage.setItem('rememberLogin', 'true')
@@ -73,18 +80,25 @@ export function Login() {
       <section className="auth_page_body auth_login_page">
         <div className="auth_page_header auth_page_header_left">
           <h1 className="auth_page_title">로그인</h1>
-          <p className="auth_page_description">이메일과 비밀번호를 입력하여 로그인하세요</p>
+          <p className="auth_page_description">아이디와 비밀번호를 입력하세요</p>
         </div>
 
         <div className="auth_form_block auth_form_block_login">
           <label className="auth_field">
-            <span className="auth_field__label">이메일</span>
+            <span className="auth_field__label">아이디</span>
             <input
               className="auth_input"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              type="text"
+              value={userId}
+              onChange={(event) => setUserId(event.target.value)}
+              aria-invalid={userIdError ? 'true' : undefined}
+              aria-describedby={userIdError ? 'login-user-id-error' : undefined}
             />
+            {userIdError ? (
+              <span id="login-user-id-error" className="auth_field_error">
+                {userIdError}
+              </span>
+            ) : null}
           </label>
 
           <label className="auth_field">
@@ -95,6 +109,8 @@ export function Login() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                aria-invalid={passwordError ? 'true' : undefined}
+                aria-describedby={passwordError ? 'login-password-error' : undefined}
               />
               <button
                 className="auth_input_icon_button"
@@ -105,6 +121,11 @@ export function Login() {
                 <img src={iconEyeOff} alt="" aria-hidden="true" />
               </button>
             </span>
+            {passwordError ? (
+              <span id="login-password-error" className="auth_field_error">
+                {passwordError}
+              </span>
+            ) : null}
           </label>
 
           <div className="auth_helper_row">
@@ -151,7 +172,7 @@ export function Login() {
           </Link>
           <span className="auth_bottom_links__divider" aria-hidden="true" />
           <Link className="auth_bottom_links__accent" to="/signup">
-            회원가입
+            아직 회원이 아니신가요? 회원가입
           </Link>
         </div>
       </section>

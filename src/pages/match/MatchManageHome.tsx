@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import './match.css'
 
 type CreatedMatch = {
@@ -206,12 +206,14 @@ export function MatchManageHome() {
 
   return (
     <div className="match_page match_manage_page">
-      <header className="match_page_header match_manage_page_header">
-        <button className="match_page_back_button" type="button" aria-label="뒤로가기" onClick={goBack}>
-          <img src={arrowLIcon} alt="" aria-hidden="true" />
-        </button>
-        <h1 className="match_page_title">팀 관리</h1>
-      </header>
+      <PageHeader
+        className="match_page_header match_manage_page_header"
+        backButtonClassName="match_page_back_button"
+        layout="standard"
+        title="팀 관리"
+        titleClassName="match_page_title"
+        onBack={goBack}
+      />
 
       <section className="match_manage_list_section" aria-live="polite">
         {schedules.length > 0 ? (

@@ -17,6 +17,7 @@ export function AppShell() {
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
+  const showGlobalThemeToggle = location.pathname === '/home'
   const showBottomNav =
     !isCommunityPostDetail &&
     !isChatPage &&
@@ -72,7 +73,7 @@ export function AppShell() {
           ‹
         </button>
       ) : null}
-      <ThemeToggle />
+      {showGlobalThemeToggle ? <ThemeToggle /> : null}
       <main>
         <Outlet />
       </main>

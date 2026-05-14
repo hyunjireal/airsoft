@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
+import { PageHeader } from '../../components/PageHeader'
 import { matches } from '../../data/mockData'
 import './match.css'
 
@@ -46,14 +46,14 @@ export function MatchApply() {
 
   return (
     <div className="match_apply_page match_flow_page">
-      <header className="schedule_join_top match_apply_top">
-        <div className="schedule_join_tit match_apply_tit">
-          <button className="schedule_join_back" type="button" aria-label="뒤로가기" onClick={goBack}>
-            <img src={arrowLIcon} alt="" aria-hidden="true" />
-          </button>
-          <h1 className="body_b_28">참가신청</h1>
-        </div>
-      </header>
+      <PageHeader
+        className="schedule_join_top match_apply_top"
+        groupClassName="schedule_join_tit match_apply_tit"
+        backButtonClassName="schedule_join_back"
+        title="참가신청"
+        titleClassName="body_b_28"
+        onBack={goBack}
+      />
 
       <main className="match_apply_main">
         <p className="match_apply_description body_m_16">서울 CQB 입문 경기에 신청할 정보를 입력해주세요.</p>
