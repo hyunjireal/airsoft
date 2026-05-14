@@ -723,11 +723,18 @@ export function PostDetail() {
           >
             <div className="post_detail_report_sheet_group">
               <button
+                className="post_detail_report_sheet_button post_detail_report_sheet_button--edit"
+                type="button"
+                onClick={() => setIsReportSheetOpen(false)}
+              >
+                수정하기
+              </button>
+              <button
                 className="post_detail_report_sheet_button post_detail_report_sheet_button--danger"
                 type="button"
                 onClick={() => setIsReportSheetOpen(false)}
               >
-                신고하기
+                삭제하기
               </button>
               <button
                 className="post_detail_report_sheet_button"
