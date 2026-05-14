@@ -1897,10 +1897,6 @@
   color: var(--color-white);
 }
 
-:root[data-theme='dark'] .home_banner_inner {
-  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.45);
-}
-
 :root[data-theme='dark'] .home_banner_label {
   color: #a8918e;
 }

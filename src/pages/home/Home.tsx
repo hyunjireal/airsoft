@@ -221,6 +221,8 @@ function useDragScroll() {
   })
 
   const stopDrag = (event: PointerEvent<HTMLDivElement>) => {
+    if (!dragState.current.isDown) return
+
     dragState.current.isDown = false
     event.currentTarget.classList.remove('is_dragging')
   }
@@ -252,6 +254,9 @@ function useDragScroll() {
 
 export function Home() {
   const navigate = useNavigate()
+  const teamScrollRef = useRef<HTMLDivElement>(null)
+  const isTeamAutoPausedRef = useRef(false)
+  const teamAutoResumeTimerRef = useRef<number | null>(null)
   const matchDragScroll = useDragScroll()
   const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
@@ -274,6 +279,67 @@ export function Home() {
       }
     }
   }, [profileObjectUrl])
+
+  useEffect(() => {
+    const scrollElement = teamScrollRef.current
+    if (!scrollElement) return undefined
+
+    let frameId = 0
+    let previousTime = performance.now()
+    let virtualScrollLeft = scrollElement.scrollLeft
+    const speed = 14
+
+    const animate = (time: number) => {
+      const deltaSeconds = (time - previousTime) / 1000
+      previousTime = time
+
+      const loopWidth = scrollElement.scrollWidth / 2
+
+      if (!isTeamAutoPausedRef.current && loopWidth > 0) {
+        virtualScrollLeft += speed * deltaSeconds
+
+        if (virtualScrollLeft >= loopWidth) {
+          virtualScrollLeft -= loopWidth
+        }
+
+        scrollElement.scrollLeft = virtualScrollLeft
+      } else {
+        virtualScrollLeft = scrollElement.scrollLeft
+      }
+
+      frameId = window.requestAnimationFrame(animate)
+    }
+
+    frameId = window.requestAnimationFrame(animate)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+
+      if (teamAutoResumeTimerRef.current) {
+        window.clearTimeout(teamAutoResumeTimerRef.current)
+      }
+    }
+  }, [])
+
+  const pauseTeamAutoScroll = () => {
+    isTeamAutoPausedRef.current = true
+
+    if (teamAutoResumeTimerRef.current) {
+      window.clearTimeout(teamAutoResumeTimerRef.current)
+      teamAutoResumeTimerRef.current = null
+    }
+  }
+
+  const resumeTeamAutoScrollSoon = () => {
+    if (teamAutoResumeTimerRef.current) {
+      window.clearTimeout(teamAutoResumeTimerRef.current)
+    }
+
+    teamAutoResumeTimerRef.current = window.setTimeout(() => {
+      isTeamAutoPausedRef.current = false
+      teamAutoResumeTimerRef.current = null
+    }, 900)
+  }
 
   const updateProfileImage = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -544,9 +610,29 @@ export function Home() {
               </h2>
             </div>
             <div className="home_team_con">
-              <div className="home_team_scroll" {...teamDragScroll}>
-                {teamCards.map((team) => (
-                  <article key={team.id} className="home_team_card">
+              <div
+                className="home_team_scroll"
+                ref={teamScrollRef}
+                {...teamDragScroll}
+                onPointerDown={(event) => {
+                  pauseTeamAutoScroll()
+                  teamDragScroll.onPointerDown(event)
+                }}
+                onPointerUp={(event) => {
+                  teamDragScroll.onPointerUp(event)
+                  resumeTeamAutoScrollSoon()
+                }}
+                onPointerCancel={(event) => {
+                  teamDragScroll.onPointerCancel(event)
+                  resumeTeamAutoScrollSoon()
+                }}
+                onPointerLeave={(event) => {
+                  teamDragScroll.onPointerLeave(event)
+                  resumeTeamAutoScrollSoon()
+                }}
+              >
+                {[...teamCards, ...teamCards].map((team, index) => (
+                  <article key={`${team.id}-${index}`} className="home_team_card" aria-hidden={index >= teamCards.length}>
                     <div className="home_team_card_logo">
                       <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
                     </div>
