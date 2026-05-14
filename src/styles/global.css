@@ -334,6 +334,19 @@ body {
   background: var(--color-white);
 }
 
+html.app_bottom_sheet_locked {
+  overscroll-behavior: none;
+}
+
+.home_profile_sheet_backdrop,
+.buddy_process_sheet_backdrop,
+.post_detail_report_sheet_backdrop,
+.auth_region_sheet_backdrop,
+.mts_backdrop {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
 button,
 input,
 select,

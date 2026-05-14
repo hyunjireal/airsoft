@@ -1,5 +1,6 @@
 import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom'
 import { AppShell } from './layout/AppShell'
+import { GlobalBottomSheetEffects } from './layout/GlobalBottomSheetEffects'
 import { ScrollToTop } from './layout/ScrollToTop'
 import { GuestStart } from './pages/auth/GuestStart'
 import { Login } from './pages/auth/Login'
@@ -74,6 +75,7 @@ export const router = createBrowserRouter([
   {
     element: (
       <>
+        <GlobalBottomSheetEffects />
         <ScrollToTop />
         <Outlet />
       </>

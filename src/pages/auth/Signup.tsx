@@ -111,18 +111,15 @@ export function Signup() {
       return undefined
     }
 
-    const previousOverflow = document.body.style.overflow
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setRegionSheetOpen(false)
       }
     }
 
-    document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.body.style.overflow = previousOverflow
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [regionSheetOpen])

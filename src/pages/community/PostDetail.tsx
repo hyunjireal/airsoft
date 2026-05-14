@@ -374,17 +374,6 @@ export function PostDetail() {
   }, [])
 
   useEffect(() => {
-    if (!isReportSheetOpen) return
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-    }
-  }, [isReportSheetOpen])
-
-  useEffect(() => {
     if (!highlightedCommentId) return
 
     const scrollTimerId = window.setTimeout(() => {

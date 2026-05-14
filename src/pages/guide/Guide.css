@@ -335,6 +335,87 @@
   }
 }
 
+/* Beginner guide dark mode colors - Figma node 2916:15725 */
+:root[data-theme='dark'] .beginner_guide_page {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_guide_back_button img {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .beginner_guide_header h1 {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_guide_tips_label {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .beginner_guide_tips_label img,
+:root[data-theme='dark'] .beginner_guide_help_icon {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(92%) saturate(1197%) hue-rotate(11deg) brightness(106%) contrast(107%);
+}
+
+:root[data-theme='dark'] .beginner_guide_tip_image {
+  border: 1px solid #e2fd34;
+  border-radius: 999px;
+  background: #000000;
+}
+
+:root[data-theme='dark'] .beginner_guide_tip_card strong {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .beginner_guide_tip_card p {
+  color: #e9e9e9;
+}
+
+:root[data-theme='dark'] .beginner_guide_section_card {
+  background: #000000;
+}
+
+:root[data-theme='dark'] .beginner_guide_section_number,
+:root[data-theme='dark'] .beginner_guide_section_title {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_guide_section_chevron {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .beginner_guide_section_summary,
+:root[data-theme='dark'] .beginner_guide_section_points {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_guide_section_points li {
+  color: #e9e9e9;
+}
+
+:root[data-theme='dark'] .beginner_guide_section_points li::before {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .beginner_guide_help_card {
+  border: 1px solid #e2fd34;
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .beginner_guide_help_copy strong {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .beginner_guide_help_copy p {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_guide_help_arrow {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(92%) saturate(1197%) hue-rotate(11deg) brightness(106%) contrast(107%);
+}
+
 .guide_sticky_progress {
   position: sticky;
   top: 0;
