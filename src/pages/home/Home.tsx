@@ -7,6 +7,7 @@ import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
+import { PageHeader } from '../../components/PageHeader'
 import arrowR from '../../asset/icons/arrow_r.svg'
 import buddyAlertIcon from '../../asset/icons/match_alert.svg'
 import buddyCalendarIcon from '../../asset/icons/match_calendar.svg'
@@ -372,6 +373,7 @@ export function Home() {
 
   return (
     <div className="home_page">
+      <PageHeader className="home_page_header" layout="standard" hideLeft />
       <section className="home_main">
         {/* ① 히어로 섹션 */}
         <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>

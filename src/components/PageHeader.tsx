@@ -40,6 +40,7 @@ type PageHeaderProps = {
   titleAs?: ElementType
   variant?: PageHeaderVariant
   layout?: PageHeaderLayout
+  hideLeft?: boolean
 }
 
 export function PageHeader({
@@ -61,9 +62,10 @@ export function PageHeader({
   titleAs: TitleTag = 'h1',
   variant = 'default',
   layout = 'custom',
+  hideLeft = false,
 }: PageHeaderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
-  const hasTitleContent = Boolean(leftSlot || onBack || title)
+  const hasTitleContent = !hideLeft && Boolean(leftSlot || onBack || title)
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode
@@ -118,6 +120,7 @@ export function PageHeader({
         'page_header',
         `page_header--${variant}`,
         `page_header--${layout}`,
+        hideLeft ? 'page_header--hide-left' : '',
         className,
       ].filter(Boolean).join(' ')}
     >

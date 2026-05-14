@@ -1,5 +1,4 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { ThemeToggle } from '../components/ThemeToggle'
 import { BottomNav } from './BottomNav'
 
 export function AppShell() {
@@ -17,7 +16,6 @@ export function AppShell() {
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
-  const showGlobalThemeToggle = location.pathname === '/home'
   const showBottomNav =
     !isCommunityPostDetail &&
     !isChatPage &&
@@ -73,7 +71,6 @@ export function AppShell() {
           ‹
         </button>
       ) : null}
-      {showGlobalThemeToggle ? <ThemeToggle /> : null}
       <main>
         <Outlet />
       </main>

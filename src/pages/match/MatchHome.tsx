@@ -43,6 +43,7 @@ type MatchSchedule = {
 
 type MatchTypeFilter = 'all' | MatchType
 type MatchPresetId = 'beginner' | 'weekend' | 'team' | 'cqb' | 'custom'
+type WeekSlideDirection = 'prev' | 'next' | null
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
@@ -410,13 +411,15 @@ function readCreatedMatches() {
 }
 
 function readFocusedMatchDate() {
-  const defaultDate = new Date(2026, 4, 18)
+  const today = new Date()
+  const defaultDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
   if (typeof window === 'undefined') {
     return defaultDate
   }
 
   const savedDate = localStorage.getItem(CREATED_MATCH_FOCUS_DATE_KEY)
+  localStorage.removeItem(CREATED_MATCH_FOCUS_DATE_KEY)
 
   if (!savedDate) {
     return defaultDate
@@ -438,6 +441,7 @@ export function MatchHome() {
   const [showPresetSheet, setShowPresetSheet] = useState(false)
   const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>('weekend')
   const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>('weekend')
+  const [weekSlideDirection, setWeekSlideDirection] = useState<WeekSlideDirection>(null)
   const myMatchGroups = getMyMatchGroups()
   const appliedPreset = matchPresetOptions.find((preset) => preset.id === appliedPresetId) ?? matchPresetOptions[0]
   const selectedDay = String(selectedDate.getDate())
@@ -467,21 +471,20 @@ export function MatchHome() {
     .filter((date) => !Number.isNaN(date.getTime()))
   const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
   const weekDates = getWeekDates(selectedDate)
-  const goPrevWeek = () => {
+  const moveWeek = (direction: Exclude<WeekSlideDirection, null>) => {
+    setWeekSlideDirection(direction)
     setSelectedDate((date) => {
       const nextDate = new Date(date)
-      nextDate.setDate(date.getDate() - 7)
+      nextDate.setDate(date.getDate() + (direction === 'next' ? 7 : -7))
       setCalendarMonth(new Date(nextDate.getFullYear(), nextDate.getMonth(), 1))
       return nextDate
     })
   }
+  const goPrevWeek = () => {
+    moveWeek('prev')
+  }
   const goNextWeek = () => {
-    setSelectedDate((date) => {
-      const nextDate = new Date(date)
-      nextDate.setDate(date.getDate() + 7)
-      setCalendarMonth(new Date(nextDate.getFullYear(), nextDate.getMonth(), 1))
-      return nextDate
-    })
+    moveWeek('next')
   }
   const goBack = () => {
     if (window.history.length > 1) {
@@ -651,7 +654,17 @@ export function MatchHome() {
               <button type="button" aria-label="다음 주" onClick={goNextWeek}>&gt;</button>
             </div>
 
-            <div className="match_week_calendar" role="list" aria-label="주간 매치 일정 달력">
+            <div className="match_week_calendar_view">
+              <div
+                className={[
+                  'match_week_calendar',
+                  weekSlideDirection === 'prev' ? 'is_sliding_prev' : '',
+                  weekSlideDirection === 'next' ? 'is_sliding_next' : '',
+                ].filter(Boolean).join(' ')}
+                role="list"
+                aria-label="주간 매치 일정 달력"
+                onAnimationEnd={() => setWeekSlideDirection(null)}
+              >
               {weekDates.map((date) => {
                 const isSelected = isSameDay(date, selectedDate)
                 const hasMatch = filteredMatchDates.some((matchDate) => isSameDay(matchDate, date))
@@ -681,6 +694,7 @@ export function MatchHome() {
                   </button>
                 )
               })}
+              </div>
             </div>
           </article>
 

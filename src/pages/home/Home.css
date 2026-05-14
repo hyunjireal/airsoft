@@ -13,6 +13,16 @@
   background: #fff;
 }
 
+.home_page_header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 20;
+  width: min(100%, var(--app-max-width));
+  background: transparent;
+  transform: translateX(-50%);
+}
+
 .home_tag {
   display: inline-flex;
   align-items: center;

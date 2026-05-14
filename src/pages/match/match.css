@@ -961,10 +961,24 @@
   cursor: pointer;
 }
 
+.match_week_calendar_view {
+  width: 100%;
+  overflow: hidden;
+}
+
 .match_week_calendar {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   width: 100%;
+  will-change: transform, opacity;
+}
+
+.match_week_calendar.is_sliding_prev {
+  animation: match_week_slide_prev 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.match_week_calendar.is_sliding_next {
+  animation: match_week_slide_next 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .match_week_day {
@@ -990,7 +1004,7 @@
 }
 
 .match_week_day.has_match i {
-  background: var(--color-lime);
+  background: var(--color-orange-red);
 }
 
 .match_week_day strong {
@@ -1037,6 +1051,30 @@
 
 .match_week_day.is_selected i {
   background: transparent;
+}
+
+@keyframes match_week_slide_prev {
+  0% {
+    opacity: 0.35;
+    transform: translateX(-28px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes match_week_slide_next {
+  0% {
+    opacity: 0.35;
+    transform: translateX(28px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .match_day_picker {

@@ -682,8 +682,12 @@
   --my-schedule-card-text: var(--color-black);
   --my-schedule-icon-filter: brightness(0) saturate(100%);
   --my-schedule-action-icon-filter: brightness(0) saturate(100%) invert(39%) sepia(0%) saturate(0%) hue-rotate(193deg) brightness(94%) contrast(88%);
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - var(--app-bottom-nav-space));
+  min-height: 0;
   padding: 0;
+  overflow: hidden;
   background: var(--my-schedule-bg);
   color: var(--my-schedule-text);
 }
@@ -691,6 +695,12 @@
 .mobile_frame:has(.my_schedule_page),
 .mobile_frame:has(.my_schedule_page) > main {
   background: var(--tournament-light-bg);
+}
+
+.mobile_frame.has_app_bottom_nav:has(.my_schedule_page) > main {
+  height: 100dvh;
+  padding-bottom: 0;
+  overflow: hidden;
 }
 
 :root[data-theme='dark'] .my_schedule_page {
@@ -773,8 +783,12 @@
 }
 
 .my_schedule_list_section {
+  flex: 1 1 auto;
+  min-height: 0;
   width: 100%;
   padding: 24px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .my_schedule_match_list {
