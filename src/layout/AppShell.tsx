@@ -1,4 +1,5 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { ThemeToggle } from '../components/ThemeToggle'
 import { BottomNav } from './BottomNav'
 
 export function AppShell() {
@@ -65,6 +66,7 @@ export function AppShell() {
           ‹
         </button>
       ) : null}
+      <ThemeToggle />
       <main>
         <Outlet />
       </main>
