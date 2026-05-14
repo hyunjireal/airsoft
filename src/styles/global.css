@@ -142,6 +142,7 @@
   --app-edge-offset: max(16px, calc((100vw - var(--app-max-width)) / 2 + 16px));
   --app-header-height: 140px;
   --app-bottom-safe-area: calc(var(--app-header-height) + env(safe-area-inset-bottom, 0px) + 24px);
+  --app-bottom-nav-space: calc(112px + env(safe-area-inset-bottom, 0px) + 16px);
   --floating-header-gap: 12px;
   --floating-stack-gap: 52px;
   --nav-my-center-x: calc(100vw - var(--app-edge-offset) - 44px);
@@ -433,7 +434,10 @@ a {
   }
 }
 
-
+.mobile_frame.has_app_bottom_nav > main {
+  padding-bottom: var(--app-bottom-nav-space);
+}
+  
 .media_profile_frame > main {
   padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
 }

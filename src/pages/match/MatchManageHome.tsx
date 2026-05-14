@@ -187,7 +187,7 @@ export function MatchManageHome() {
     }
 
     writeDeletedScheduleIds(readDeletedScheduleIds().filter((item) => item !== schedule.id))
-    navigate(`/match/create?edit=${schedule.id}`)
+    navigate(`/match/detail/${schedule.id}`)
   }
 
   const handleDelete = (schedule: ManagedTeamSchedule) => {
@@ -260,7 +260,7 @@ export function MatchManageHome() {
           <article className="match_manage_empty">
             <strong>관리 중인 팀 일정이 없어요.</strong>
             <p>새 팀 매치를 만들고 일정 변경이 필요할 때 이곳에서 바로 관리해 보세요.</p>
-            <Link className="match_full_button match_dark_button" to="/match/create?kind=team">
+            <Link className="match_full_button match_dark_button" to="/match">
               팀 일정 만들기
             </Link>
           </article>

@@ -27,7 +27,6 @@ import { MatchApply } from './pages/match/MatchApply'
 import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
 import { FieldInfo } from './pages/match/FieldInfo'
 import { MatchCreateGame } from './pages/match/MatchCreateGame'
-import { MatchCreateHome } from './pages/match/MatchCreateHome'
 import { MatchDetail } from './pages/match/MatchDetail'
 import { MatchFilter } from './pages/match/MatchFilter'
 import { MatchGuestJoinCreate } from './pages/match/MatchGuestJoinCreate'
@@ -40,7 +39,6 @@ import { MatchScheduleJoin } from './pages/match/MatchScheduleJoin'
 import { TeamMatchApply } from './pages/match/TeamMatchApply'
 import { TeamMatchDetail } from './pages/match/TeamMatchDetail'
 import { TeamMatchJoinList } from './pages/match/TeamMatchJoinList'
-import { MyApplications } from './pages/my/MyApplications'
 import { MyMatches } from './pages/my/MyMatches'
 import { MyPage } from './pages/my/MyPage'
 import { PointHistory } from './pages/my/PointHistory'
@@ -115,7 +113,6 @@ export const router = createBrowserRouter([
           { path: '/match/join/team', element: <TeamMatchJoinList /> },
           { path: '/match/join/team/:teamMatchId', element: <TeamMatchDetail /> },
           { path: '/match/join/team/:teamMatchId/apply', element: <TeamMatchApply /> },
-          { path: '/match/create', element: <MatchCreateHome /> },
           { path: '/match/create/guest-join', element: <MatchGuestJoinCreate /> },
           { path: '/match/create/guest-wanted', element: <MatchGuestWantedCreate /> },
           { path: '/match/create/game', element: <MatchCreateGame /> },
@@ -171,7 +168,6 @@ export const router = createBrowserRouter([
           { path: '/my/matches', element: <MyMatches /> },
           { path: '/my/profile', element: <ProfileEdit /> },
           { path: '/my/schedule', element: <MySchedule /> },
-          { path: '/my/applications', element: <MyApplications /> },
           { path: '/my/posts', element: <MyPosts /> },
           { path: '/my/notifications', element: <NotificationSettings /> },
           { path: '/search', element: <Search /> },

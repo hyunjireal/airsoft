@@ -7,7 +7,6 @@ import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
-import plusIcon from '../../asset/icons/plus.svg'
 import matchPlusIcon from '../../asset/icons/match_plus.svg'
 import matchPresetIcon from '../../asset/icons/match_preset.svg'
 import matchNewIcon from '../../asset/icons/match_new.svg'
@@ -19,10 +18,10 @@ import matchList03 from '../../asset/images/match_list03.jpg'
 import matchList04 from '../../asset/images/match_list04.jpg'
 import matchList05 from '../../asset/images/match_list05.jpg'
 import { LoginButton } from '../../components/LoginButton'
+import { getMyMatchGroups } from '../my/myMatchData'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
-type MatchOverviewTab = 'waiting' | 'confirmed' | 'past'
 
 type MatchSchedule = {
   id: string
@@ -40,14 +39,6 @@ type MatchSchedule = {
   imageSrc?: string
 }
 
-type MatchOverviewCard = {
-  id: string
-  title: string
-  detail: string
-  tagLabel: string
-  to: string
-}
-
 type MatchTypeFilter = 'all' | MatchType
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
@@ -59,43 +50,6 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '팀', value: 'team' },
   { label: '용병', value: 'mercenary' },
 ]
-
-const matchOverviewCardsByTab: Record<MatchOverviewTab, MatchOverviewCard[]> = {
-  waiting: [
-    {
-      id: 'waiting-1',
-      title: '초보 환영 야외전',
-      detail: '5/23 (토) 13:00 I 택티컬 필드',
-      tagLabel: 'D-14',
-      to: '/match/detail/match-001',
-    },
-    {
-      id: 'waiting-2',
-      title: '서울 CQB 입문 경기',
-      detail: '5/31 (일) 12:00 I 어반 CQB',
-      tagLabel: 'D-22',
-      to: '/match/detail/match-003',
-    },
-  ],
-  confirmed: [
-    {
-      id: 'confirmed-1',
-      title: '초보 환영 야외전',
-      detail: '5/23 (토) 13:00 I 택티컬 필드',
-      tagLabel: 'D-14',
-      to: '/match/detail/match-001',
-    },
-  ],
-  past: [
-    {
-      id: 'past-1',
-      title: '2026 5월 입문전 경기',
-      detail: '5/2 (토) 10:00 I 하남 실내 필드',
-      tagLabel: '종료',
-      to: '/my/schedule',
-    },
-  ],
-}
 
 const homeMatchMoreStyle = {
   gap: 4,
@@ -440,6 +394,7 @@ export function MatchHome() {
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
   const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
+  const myMatchGroups = getMyMatchGroups()
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
@@ -515,8 +470,6 @@ export function MatchHome() {
       navigate(`/match/create/guest-join?date=${selectedDateKey}`)
       return
     }
-
-    navigate(`/match/create?kind=${kind}&date=${selectedDateKey}`)
   }
 
   return (
@@ -538,19 +491,19 @@ export function MatchHome() {
         </div>
 
         <div className="match_status_list">
-          <Link className="match_status_summary_card is_waiting" to="/my/applications">
+          <Link className="match_status_summary_card is_waiting" to="/my/schedule?tab=applied">
             <span>
               <strong>승인대기 일정</strong>
               <small>참가 신청한 매치를 확인하세요</small>
             </span>
-            <b>{matchOverviewCardsByTab.waiting.length}건</b>
+            <b>{myMatchGroups.applied.length}건</b>
           </Link>
-          <Link className="match_status_summary_card is_confirmed" to="/my/schedule">
+          <Link className="match_status_summary_card is_confirmed" to="/my/schedule?tab=confirmed">
             <span>
               <strong>확정 일정</strong>
               <small>확정된 매치 일정을 확인하세요</small>
             </span>
-            <b>{matchOverviewCardsByTab.confirmed.length}건</b>
+            <b>{myMatchGroups.confirmed.length}건</b>
           </Link>
         </div>
       </section>
@@ -677,10 +630,15 @@ export function MatchHome() {
           <article className="match_selected_schedule">
             <div className="match_selected_schedule_header">
               <h3 aria-label={`${selectedDateLabel} 일정 ${selectedMatches.length}건`}>{selectedDateLabel}</h3>
-              <Link className="match_manage_button" to={`/match/create?date=${selectedDateKey}`} aria-label="일정 만들기">
+              <button
+                className="match_manage_button"
+                type="button"
+                aria-label="일정 만들기"
+                onClick={() => setShowTypeSheet(true)}
+              >
                 <img src={matchPlusIcon} alt="" aria-hidden="true" />
                 <span>일정 만들기</span>
-              </Link>
+              </button>
             </div>
             {selectedMatches.length > 0 ? (
               <>
@@ -801,10 +759,6 @@ export function MatchHome() {
       />
 
       <MatchRegistrationToast open={registrationToastOpen} onClose={() => setRegistrationToastOpen(false)} />
-
-      <button className="match_create_fab" type="button" aria-label="매치 만들기" onClick={() => setShowTypeSheet(true)}>
-        <img src={plusIcon} alt="" aria-hidden="true" />
-      </button>
     </div>
   )
 }

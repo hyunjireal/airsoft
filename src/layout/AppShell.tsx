@@ -17,6 +17,11 @@ export function AppShell() {
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
+  const showBottomNav =
+    !isCommunityPostDetail &&
+    !isChatPage &&
+    !isGuideQuizPage &&
+    !location.pathname.startsWith('/match/schedule/')
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
@@ -35,6 +40,7 @@ export function AppShell() {
 
   const frameClassName = [
     'mobile_frame',
+    showBottomNav ? 'has_app_bottom_nav' : '',
     isChatPage ? 'chat_frame' : '',
     isGuideHubPage ? 'guide_hub_frame' : '',
     isMediaProfile
@@ -70,10 +76,7 @@ export function AppShell() {
       <main>
         <Outlet />
       </main>
-      {isCommunityPostDetail ||
-      isChatPage ||
-      isGuideQuizPage ||
-      location.pathname.startsWith('/match/schedule/') ? null : <BottomNav />}
+      {showBottomNav ? <BottomNav /> : null}
     </div>
   )
 }

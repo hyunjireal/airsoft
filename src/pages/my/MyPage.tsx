@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import More from '../../components/More'
@@ -12,18 +12,11 @@ import quickWriteIcon from '../../asset/icons/my_quick_write.svg'
 import myMatchThumbImage from '../../asset/images/my_match_img01.png'
 import profileImage from '../../asset/images/main_user01.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
+import { getMyMatchGroups, type MyMatchItem } from './myMatchData'
 import './my.css'
 
 type MatchTab = 'waiting' | 'confirmed' | 'past'
 type QuickMenuIconKind = 'team' | 'buddy' | 'posts' | 'saved'
-
-type MatchCard = {
-  id: string
-  title: string
-  detail: string
-  tagLabel: string
-  to: string
-}
 
 type QuickMenuItem = {
   label: string
@@ -41,43 +34,6 @@ const matchTabs: Array<{ key: MatchTab; label: string }> = [
   { key: 'confirmed', label: '확정' },
   { key: 'past', label: '지난 매치' },
 ]
-
-const matchCardsByTab: Record<MatchTab, MatchCard[]> = {
-  waiting: [
-    {
-      id: 'waiting-1',
-      title: '초보 환영 야외전',
-      detail: '5/23 (토) 13:00 I 택티컬 필드',
-      tagLabel: 'D-14',
-      to: '/match/detail/match-001',
-    },
-    {
-      id: 'waiting-2',
-      title: '서울 CQB 입문 경기',
-      detail: '5/31 (일) 12:00 I 어반 CQB',
-      tagLabel: 'D-22',
-      to: '/match/detail/match-003',
-    },
-  ],
-  confirmed: [
-    {
-      id: 'confirmed-1',
-      title: '초보 환영 야외전',
-      detail: '5/23 (토) 13:00 I 택티컬 필드',
-      tagLabel: 'D-14',
-      to: '/match/detail/match-001',
-    },
-  ],
-  past: [
-    {
-      id: 'past-1',
-      title: '2026 5월 입문자 경기',
-      detail: '5/2 (토) 10:00 I 하남 실내 필드',
-      tagLabel: '종료',
-      to: '/my/schedule',
-    },
-  ],
-}
 
 const quickMenuItems: QuickMenuItem[] = [
   { label: '내 소속 팀', to: '/team/team-001', icon: 'team' },
@@ -213,7 +169,7 @@ function getMatchTagClassName(tagLabel: string) {
   return 'my_match_tag'
 }
 
-function MatchCardLink({ match }: { match: MatchCard }) {
+function MatchCardLink({ match }: { match: MyMatchItem }) {
   return (
     <Link className="my_match_card" to={match.to}>
       <div className="my_match_thumb" aria-hidden="true">
@@ -371,7 +327,12 @@ export function MyPage() {
   const savedNickname = localStorage.getItem('nickname')
   const profileName = resolveProfileName(savedNickname)
   const profileStatusLabel = localStorage.getItem('skillAlias')?.trim() || '안전제일 뉴비'
-  const visibleMatches = matchCardsByTab[matchTab]
+  const myMatchGroups = useMemo(() => getMyMatchGroups(), [])
+  const visibleMatches = {
+    waiting: myMatchGroups.applied,
+    confirmed: myMatchGroups.confirmed,
+    past: myMatchGroups.past,
+  }[matchTab]
 
   useEffect(() => {
     if (!logoutModalOpen) {

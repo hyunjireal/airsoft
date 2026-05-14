@@ -107,7 +107,7 @@ export function MatchTypeSheet({ open, onClose, onSelect }: Props) {
             key={step}
             onAnimationEnd={() => setIsAnimatingNext(false)}
           >
-            <h2 className="mts_title sub_kr">유형 선택</h2>
+            <h2 className="mts_title">유형 선택</h2>
             <div className="mts_info" aria-label="매치 유형">
               {currentOptions.map((opt) => (
                 <button

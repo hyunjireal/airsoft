@@ -12,7 +12,7 @@ export function TeamMatchApply() {
     if (teamMatchId && !stored.includes(teamMatchId)) {
       localStorage.setItem('teamMatchApplications', JSON.stringify([...stored, teamMatchId]))
     }
-    navigate('/my/applications')
+    navigate('/my/schedule?tab=applied')
   }
 
   return (
