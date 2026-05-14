@@ -433,9 +433,6 @@ a {
   }
 }
 
-.mobile_frame > main {
-  padding-bottom: var(--app-bottom-safe-area);
-}
 
 .media_profile_frame > main {
   padding-bottom: calc(var(--app-bottom-safe-area) - 48px);
