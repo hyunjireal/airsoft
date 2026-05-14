@@ -8,6 +8,11 @@ import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import arrowR from '../../asset/icons/arrow_r.svg'
+import buddyAlertIcon from '../../asset/icons/match_alert.svg'
+import buddyCalendarIcon from '../../asset/icons/match_calendar.svg'
+import buddyInfoIcon from '../../asset/icons/buddy_info.svg'
+import buddyPinIcon from '../../asset/icons/match_pin.svg'
+import buddyUsersIcon from '../../asset/icons/com_user.svg'
 import mainAiIcon from '../../asset/icons/main_aiIcon.svg'
 import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
 import mainProfileIcon from '../../asset/icons/main_profile01.svg'
@@ -114,6 +119,35 @@ const buddyItems = [
     title: '첫 라운드 동행',
   },
 ]
+
+const buddyProcessSteps = [
+  {
+    id: 1,
+    icon: buddyCalendarIcon,
+    title: '일정 선택',
+    description: '다가올 게임 선택',
+  },
+  {
+    id: 2,
+    icon: buddyPinIcon,
+    title: '버디 필요 체크',
+    description: '도움 필요 여부 입력',
+  },
+  {
+    id: 3,
+    icon: buddyAlertIcon,
+    title: '참여자 추천',
+    description: '같은 게임에 참여하는 사람 중 버디를 추천받아요.',
+  },
+  {
+    id: 4,
+    icon: buddyUsersIcon,
+    title: '요청 후 확인',
+    description: '상대가 수락하면 내 매칭 현황에서 확인하고 채팅할 수 있어요.',
+  },
+]
+
+const BUDDY_SHEET_CLOSE_DURATION = 280
 
 const sortedMatchCards = [...matchCards].sort((a, b) => {
   const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
@@ -225,6 +259,8 @@ export function Home() {
   const albumInputRef = useRef<HTMLInputElement>(null)
   const [isAchievementExpanded, setIsAchievementExpanded] = useState(false)
   const [isProfileSheetOpen, setIsProfileSheetOpen] = useState(false)
+  const [isBuddySheetOpen, setIsBuddySheetOpen] = useState(false)
+  const [isBuddySheetClosing, setIsBuddySheetClosing] = useState(false)
   const [profilePreview, setProfilePreview] = useState(userAvatar)
   const [profileObjectUrl, setProfileObjectUrl] = useState<string | null>(null)
   const achievementBadges = isAchievementExpanded
@@ -252,6 +288,21 @@ export function Home() {
     setProfilePreview(nextPreview)
     setIsProfileSheetOpen(false)
     event.target.value = ''
+  }
+
+  const openBuddyProcessSheet = () => {
+    setIsBuddySheetClosing(false)
+    setIsBuddySheetOpen(true)
+  }
+
+  const closeBuddyProcessSheet = () => {
+    if (isBuddySheetClosing) return
+
+    setIsBuddySheetClosing(true)
+    window.setTimeout(() => {
+      setIsBuddySheetOpen(false)
+      setIsBuddySheetClosing(false)
+    }, BUDDY_SHEET_CLOSE_DURATION)
   }
 
   return (
@@ -447,7 +498,7 @@ export function Home() {
               >
                 <span className="body_b_18">버디 찾기</span>
               </LoginButton>
-              <button className="buddy_process" type="button">
+              <button className="buddy_process" type="button" onClick={openBuddyProcessSheet}>
                 <span className="body_sb_14">어떻게 진행되나요?</span>
                 <img src={arrowR} alt="" className="buddy_process_icon" />
               </button>
@@ -617,6 +668,56 @@ export function Home() {
             >
               취소
             </button>
+          </section>
+        </div>
+      ) : null}
+      {isBuddySheetOpen ? (
+        <div
+          className={`buddy_process_sheet_layer${isBuddySheetClosing ? ' is_closing' : ''}`}
+          role="presentation"
+        >
+          <button
+            className="buddy_process_sheet_backdrop"
+            type="button"
+            aria-label="버디 진행 안내 닫기"
+            onClick={closeBuddyProcessSheet}
+          />
+          <section
+            className="buddy_process_sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="buddy_process_sheet_title"
+          >
+            <div className="buddy_process_sheet_handle" aria-hidden="true" />
+            <div className="buddy_process_sheet_titlebox">
+              <h2 id="buddy_process_sheet_title">버디찾기, 이렇게 진행돼요</h2>
+              <p>
+                다가올 일정에서 버디 필요를 체크하면,
+                <br />
+                같은 게임 참여자 중 함께할 버디를 연결해드려요.
+              </p>
+            </div>
+            <div className="buddy_process_sheet_grid">
+              {buddyProcessSteps.map((step) => (
+                <article key={step.id} className="buddy_process_step_card">
+                  <img src={step.icon} alt="" className="buddy_process_step_icon" />
+                  <div className="buddy_process_step_text">
+                    <p className="buddy_process_step_title">
+                      <span>{String(step.id).padStart(2, '0')}</span>
+                      <span>{step.title}</span>
+                    </p>
+                    <p className="buddy_process_step_desc">{step.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <p className="buddy_process_sheet_notice">
+              <img src={buddyInfoIcon} alt="" />
+              <span>버디는 같은 게임 참여자끼리만 연결돼요.</span>
+            </p>
+            <LoginButton className="buddy_process_sheet_start" onClick={() => navigate('/my/schedule')}>
+              버디 찾으러 가기
+            </LoginButton>
           </section>
         </div>
       ) : null}
