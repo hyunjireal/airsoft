@@ -163,11 +163,13 @@ function CommentMeta({
 function ReplyItem({
   now,
   onLike,
+  onOpenReportSheet,
   onReply,
   reply,
 }: {
   now: number
   onLike: () => void
+  onOpenReportSheet: () => void
   onReply: (author: string) => void
   reply: ReplyData
 }) {
@@ -183,9 +185,14 @@ function ReplyItem({
           </span>
           <span className="post_detail_comment_time">{getRelativeTime(reply.dateTime, now)}</span>
         </div>
-        <span className="post_detail_comment_more">
+        <button
+          className="post_detail_comment_more"
+          type="button"
+          aria-label="답글 더보기"
+          onClick={onOpenReportSheet}
+        >
           <img src={verticalDotIcon} alt="" />
-        </span>
+        </button>
       </div>
       <p>
         {mentionMatch ? (
@@ -218,6 +225,7 @@ function ThreadComment({
   onAddReply,
   onCollapse,
   onExpand,
+  onOpenReportSheet,
   onLikeComment,
   onLikeReply,
   onReplyTo,
@@ -229,6 +237,7 @@ function ThreadComment({
   onAddReply: (commentId: string, body: string, mentionTarget: string) => void
   onCollapse: () => void
   onExpand: () => void
+  onOpenReportSheet: () => void
   onLikeComment: () => void
   onLikeReply: (replyId: string) => void
   onReplyTo: (author: string) => void
@@ -269,9 +278,14 @@ function ThreadComment({
               </span>
             ) : null}
           </div>
-          <div className="post_detail_comment_more">
+          <button
+            className="post_detail_comment_more"
+            type="button"
+            aria-label="댓글 더보기"
+            onClick={onOpenReportSheet}
+          >
             <img src={verticalDotIcon} alt="" />
-          </div>
+          </button>
         </div>
 
         <div className="post_detail_comment_bottom">
@@ -314,6 +328,7 @@ function ThreadComment({
             <ReplyItem
               key={reply.id}
               now={now}
+              onOpenReportSheet={onOpenReportSheet}
               reply={reply}
               onLike={() => onLikeReply(reply.id)}
               onReply={(author) => onReplyTo(author)}
@@ -343,11 +358,23 @@ export function PostDetail() {
   const [postBookmarked, setPostBookmarked] = useState(false)
   const [postLiked, setPostLiked] = useState(false)
   const [postLikeCount, setPostLikeCount] = useState(18)
+  const [isReportSheetOpen, setIsReportSheetOpen] = useState(false)
 
   useEffect(() => {
     const timerId = window.setInterval(() => setNow(Date.now()), 30000)
     return () => window.clearInterval(timerId)
   }, [])
+
+  useEffect(() => {
+    if (!isReportSheetOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [isReportSheetOpen])
 
   useEffect(() => {
     if (!highlightedCommentId) return
@@ -505,7 +532,12 @@ export function PostDetail() {
             <button className="post_detail_icon_button" type="button" aria-label="알림">
               <img src={bellIcon} alt="" />
             </button>
-            <button className="post_detail_icon_button" type="button" aria-label="더보기">
+            <button
+              className="post_detail_icon_button"
+              type="button"
+              aria-label="더보기"
+              onClick={() => setIsReportSheetOpen(true)}
+            >
               <img src={verticalDotIcon} alt="" />
             </button>
           </div>
@@ -597,6 +629,7 @@ export function PostDetail() {
               onAddReply={addReply}
               onCollapse={() => collapseReplies(comment.id)}
               onExpand={() => expandReplies(comment.id)}
+              onOpenReportSheet={() => setIsReportSheetOpen(true)}
               onLikeComment={() => toggleCommentLike(comment.id)}
               onLikeReply={(replyId) => toggleReplyLike(comment.id, replyId)}
               onReplyTo={(author) => setReplyTarget(comment.id, author)}
@@ -604,6 +637,47 @@ export function PostDetail() {
           ))}
         </div>
       </section>
+
+      {isReportSheetOpen ? (
+        <div className="post_detail_report_sheet_layer" role="presentation">
+          <button
+            className="post_detail_report_sheet_backdrop"
+            type="button"
+            aria-label="신고 메뉴 닫기"
+            onClick={() => setIsReportSheetOpen(false)}
+          />
+          <div
+            className="post_detail_report_sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label="게시글 신고 메뉴"
+          >
+            <div className="post_detail_report_sheet_group">
+              <button
+                className="post_detail_report_sheet_button post_detail_report_sheet_button--danger"
+                type="button"
+                onClick={() => setIsReportSheetOpen(false)}
+              >
+                신고하기
+              </button>
+              <button
+                className="post_detail_report_sheet_button"
+                type="button"
+                onClick={() => setIsReportSheetOpen(false)}
+              >
+                차단하기
+              </button>
+            </div>
+            <button
+              className="post_detail_report_sheet_button post_detail_report_sheet_cancel"
+              type="button"
+              onClick={() => setIsReportSheetOpen(false)}
+            >
+              취소
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
