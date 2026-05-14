@@ -342,7 +342,8 @@ html.app_bottom_sheet_locked {
 .buddy_process_sheet_backdrop,
 .post_detail_report_sheet_backdrop,
 .auth_region_sheet_backdrop,
-.mts_backdrop {
+.mts_backdrop,
+.match_preset_sheet_backdrop {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }

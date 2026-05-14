@@ -415,6 +415,7 @@
   flex: 1 1 auto;
   min-width: 0;
   flex-wrap: wrap;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .home_userinfo_category_tag {
@@ -438,6 +439,13 @@
   box-sizing: border-box;
   cursor: pointer;
   flex-shrink: 0;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.home_userinfo_category_more.is_expanded {
+  border-color: var(--color-khaki);
+  background: var(--color-khaki);
+  color: var(--color-white);
 }
 
 .home_userinfo_category_icon {
@@ -449,19 +457,27 @@
 
 .home_ai_recommend_card {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 13px;
   width: 100%;
-  height: fit-content;
-  padding: 16px 18px;
-  border-radius: 16px;
-  background-color: #f4f6ef;
+  min-height: 96px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--color-black);
   background-image: var(--home-ai-bg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.home_ai_recommend_image {
+  flex: 0 0 74px;
+  width: 74px;
+  height: 72px;
+  object-fit: contain;
+  mix-blend-mode: difference;
 }
 
 .home_ai_recommend_textbox {
@@ -469,102 +485,64 @@
   flex: 1 1 auto;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  width: 100%;
+  gap: 4px;
   min-width: 0;
 }
 
 .home_ai_recommend_tag {
-  gap: 3px;
-  background: var(--color-khaki);
-  color: var(--color-white);
-}
-
-.home_ai_recommend_tag_icon {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-  object-fit: contain;
-}
-
-.home_ai_recommend_copy {
-  margin: 0;
-  color: var(--color-black);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 21px;
+  padding: 0 4px;
+  border: 1px solid var(--color-lime);
+  border-radius: 6px;
+  color: var(--color-lime);
   font-family: var(--font-pretendard);
-  font-size: var(--font-size-16);
-  font-weight: var(--font-weight-medium);
+  font-size: 12px;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.home_ai_recommend_title {
+  margin: 0;
+  color: var(--color-white);
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-18);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  white-space: nowrap;
+}
+
+.home_ai_recommend_match_rate {
+  display: flex;
+  flex: 0 0 43px;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  width: 43px;
+  text-align: right;
+  font-family: var(--font-pretendard);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
 }
 
-.home_ai_recommend_copy strong {
-  color: var(--color-khaki);
-  font-weight: var(--font-weight-bold);
-}
-
-.home_ai_recommend_cta {
-  --home-ai-cta-color: var(--color-black);
-  align-self: flex-end;
-  flex: 0 0 auto;
-  width: fit-content;
-  min-width: 128px;
-  min-height: 40px;
-  padding: 6px 12px;
-  border: 1px solid var(--color-khaki);
-  border-radius: 5px;
-  background: transparent;
-  background-color: transparent;
-  color: var(--home-ai-cta-color);
-  -webkit-text-fill-color: var(--home-ai-cta-color);
-}
-
-.home_ai_recommend_cta .app_action_button__label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.home_ai_recommend_cta_label {
-  color: var(--color-black);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_card {
-  background-image: var(--home-ai-bg-dark);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_tag {
-  background: var(--color-lime);
-  color: var(--color-black);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_tag_icon {
-  filter: brightness(0) saturate(100%);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_copy {
+.home_ai_recommend_match_label {
   color: var(--color-white);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
 }
 
-:root[data-theme='dark'] .home_ai_recommend_copy strong {
+.home_ai_recommend_match_rate strong {
   color: var(--color-lime);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_cta {
-  --home-ai-cta-color: var(--color-white);
-  border-color: var(--color-lime);
-}
-
-:root[data-theme='dark'] .home_ai_recommend_cta_label {
-  color: var(--color-white);
-}
-
-.home_ai_recommend_cta_icon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  object-fit: contain;
-  filter: brightness(0) saturate(100%);
+  font-size: var(--font-size-20);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
 }
 
 /* 경기 일정 */
@@ -1810,6 +1788,18 @@
 
 :root[data-theme='dark'] .home_userinfo_badge_icon {
   filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .home_userinfo_category_more {
+  border-color: var(--color-gray03);
+  background: var(--color-gray00);
+  color: var(--color-gray04);
+}
+
+:root[data-theme='dark'] .home_userinfo_category_more.is_expanded {
+  border-color: var(--color-lime);
+  background: var(--color-lime);
+  color: var(--color-black);
 }
 
 :root[data-theme='dark'] .home_match_card {

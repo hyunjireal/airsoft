@@ -10,6 +10,8 @@ import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import matchPlusIcon from '../../asset/icons/match_plus.svg'
 import matchPresetIcon from '../../asset/icons/match_preset.svg'
 import matchNewIcon from '../../asset/icons/match_new.svg'
+import presetCheckIcon from '../../asset/icons/preset_check.svg'
+import presetPlusIcon from '../../asset/icons/preset_plus.svg'
 import matchNolistImage from '../../asset/images/match_nolist01.png'
 import mainUserImage from '../../asset/images/main_user01.png'
 import matchList01 from '../../asset/images/match_list01.jpg'
@@ -40,6 +42,7 @@ type MatchSchedule = {
 }
 
 type MatchTypeFilter = 'all' | MatchType
+type MatchPresetId = 'beginner' | 'weekend' | 'team' | 'cqb' | 'custom'
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
@@ -49,6 +52,44 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '개인', value: 'personal' },
   { label: '팀', value: 'team' },
   { label: '용병', value: 'mercenary' },
+]
+
+const matchPresetOptions: Array<{
+  id: MatchPresetId
+  title: string
+  description: string
+  icon: string
+}> = [
+  {
+    id: 'beginner',
+    title: '초보 입문자',
+    description: '입문하는 플레이어를 위한\n부담 없는 초보형 프리셋',
+    icon: presetCheckIcon,
+  },
+  {
+    id: 'weekend',
+    title: '주말 캐주얼',
+    description: '주말 위주로 가볍게 즐기는\n부담 없는 캐주얼 프리셋',
+    icon: presetCheckIcon,
+  },
+  {
+    id: 'team',
+    title: '팀플 선호',
+    description: '팀원과 협동하며 움직이는\n팀 중심 플레이 프리셋',
+    icon: presetCheckIcon,
+  },
+  {
+    id: 'cqb',
+    title: 'CQB 선호',
+    description: '근거리 교전을 즐기는\n실내 CQB 중심 프리셋',
+    icon: presetCheckIcon,
+  },
+  {
+    id: 'custom',
+    title: '커스텀 프리셋',
+    description: '직접 설정하는 맞춤 프리셋',
+    icon: presetPlusIcon,
+  },
 ]
 
 const homeMatchMoreStyle = {
@@ -394,7 +435,11 @@ export function MatchHome() {
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
   const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
+  const [showPresetSheet, setShowPresetSheet] = useState(false)
+  const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>('weekend')
+  const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>('weekend')
   const myMatchGroups = getMyMatchGroups()
+  const appliedPreset = matchPresetOptions.find((preset) => preset.id === appliedPresetId) ?? matchPresetOptions[0]
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
@@ -472,6 +517,16 @@ export function MatchHome() {
     }
   }
 
+  const openPresetSheet = () => {
+    setSelectedPresetId(appliedPresetId)
+    setShowPresetSheet(true)
+  }
+
+  const applyPreset = () => {
+    setAppliedPresetId(selectedPresetId)
+    setShowPresetSheet(false)
+  }
+
   return (
     <div className="match_page">
       <header className="match_page_header">
@@ -511,7 +566,7 @@ export function MatchHome() {
       <section className="match_section match_ai_recommend_section" aria-labelledby="match-ai-title">
         <div className="match_ai_heading">
           <h2 id="match-ai-title" className="match_section_title">AI 추천 매치</h2>
-          <button className="match_ai_preset_button" type="button">
+          <button className="match_ai_preset_button" type="button" onClick={openPresetSheet}>
             <img src={matchPresetIcon} alt="" aria-hidden="true" />
             <span>프리셋</span>
           </button>
@@ -521,7 +576,7 @@ export function MatchHome() {
           <div className="match_ai_preset_card">
             <strong>적용된 프리셋</strong>
             <p>
-              <span>주말 캐주얼</span>
+              <span>{appliedPreset.title}</span>
               가까운 거리 · 주말 경기 · 비슷한 실력
             </p>
           </div>
@@ -757,6 +812,61 @@ export function MatchHome() {
         onClose={() => setShowTypeSheet(false)}
         onSelect={handleTypeSelect}
       />
+
+      {showPresetSheet ? (
+        <div className="match_preset_sheet_layer" role="presentation">
+          <div className="match_preset_sheet_backdrop" onClick={() => setShowPresetSheet(false)} aria-hidden="true" />
+          <section
+            className="match_preset_sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="match-preset-sheet-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="match_preset_sheet_top">
+              <span className="match_preset_sheet_handle" aria-hidden="true" />
+              <h2 id="match-preset-sheet-title" className="match_preset_sheet_title">
+                프리셋 변경
+              </h2>
+            </div>
+
+            <div className="match_preset_sheet_body">
+              <div className="match_preset_option_list">
+                {matchPresetOptions.map((preset) => {
+                  const isSelected = selectedPresetId === preset.id
+                  return (
+                    <button
+                      className={`match_preset_option${isSelected ? ' is_selected' : ''}`}
+                      type="button"
+                      key={preset.id}
+                      onClick={() => setSelectedPresetId(preset.id)}
+                    >
+                      <span className="match_preset_option_text">
+                        <strong>{preset.title}</strong>
+                        <span>{preset.description}</span>
+                      </span>
+                      <span className="match_preset_option_icon_wrap" aria-hidden="true">
+                        {isSelected || preset.id === 'custom' ? (
+                          <img src={preset.icon} alt="" className="match_preset_option_icon" />
+                        ) : (
+                          <span className="match_preset_option_empty_icon" />
+                        )}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="match_preset_sheet_bottom">
+                <LoginButton className="match_preset_apply_button" onClick={applyPreset}>
+                  적용하기
+                </LoginButton>
+                <p className="match_preset_manage_text">프리셋 관리</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      ) : null}
 
       <MatchRegistrationToast open={registrationToastOpen} onClose={() => setRegistrationToastOpen(false)} />
     </div>

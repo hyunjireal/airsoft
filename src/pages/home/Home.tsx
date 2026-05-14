@@ -13,7 +13,6 @@ import buddyCalendarIcon from '../../asset/icons/match_calendar.svg'
 import buddyInfoIcon from '../../asset/icons/buddy_info.svg'
 import buddyPinIcon from '../../asset/icons/match_pin.svg'
 import buddyUsersIcon from '../../asset/icons/com_user.svg'
-import mainAiIcon from '../../asset/icons/main_aiIcon.svg'
 import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
 import mainProfileIcon from '../../asset/icons/main_profile01.svg'
 import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
@@ -27,8 +26,8 @@ import matchImg04 from '../../asset/images/main_img06.jpg'
 import mainProfileTag01 from '../../asset/images/main_profile_tag01.png'
 import mainProfileTag02 from '../../asset/images/main_profile_tag02.png'
 import userAvatar from '../../asset/images/main_user01.png'
-import userAiBg from '../../asset/images/user_aiBG.png'
-import userAiBgDark from '../../asset/images/user_aiBG_d.png'
+import mainAiBg from '../../asset/images/main_aiBG.png'
+import mainAiImg from '../../asset/images/main_aiImg.png'
 import mainBuddy01 from '../../asset/images/main_buddy01.png'
 import mainBuddy02 from '../../asset/images/main_buddy02.png'
 import mainBuddy03 from '../../asset/images/main_buddy03.png'
@@ -451,16 +450,15 @@ export function Home() {
                       </CategoryTag>
                     ))}
                   </div>
-                  {!isAchievementExpanded ? (
-                    <button
-                      className="home_userinfo_category_more body_m_14"
-                      type="button"
-                      onClick={() => setIsAchievementExpanded(true)}
-                      aria-label="숨겨진 보유 뱃지 5개 더 보기"
-                    >
-                      +5
-                    </button>
-                  ) : null}
+                  <button
+                    className={`home_userinfo_category_more body_m_14${isAchievementExpanded ? ' is_expanded' : ''}`}
+                    type="button"
+                    onClick={() => setIsAchievementExpanded((current) => !current)}
+                    aria-label={isAchievementExpanded ? '보유 뱃지 접기' : '숨겨진 보유 뱃지 5개 더 보기'}
+                    aria-expanded={isAchievementExpanded}
+                  >
+                    {isAchievementExpanded ? '−' : '+5'}
+                  </button>
                 </div>
               </div>
 
@@ -468,29 +466,23 @@ export function Home() {
                 className="home_ai_recommend_card"
                 style={
                   {
-                    '--home-ai-bg': `url(${userAiBg})`,
-                    '--home-ai-bg-dark': `url(${userAiBgDark})`,
+                    '--home-ai-bg': `url(${mainAiBg})`,
                   } as CSSProperties
                 }
               >
+                <img src={mainAiImg} alt="" className="home_ai_recommend_image" aria-hidden="true" />
                 <div className="home_ai_recommend_textbox">
-                  <KeywordTag className="home_ai_recommend_tag">
-                    <img src={mainAiIcon} alt="" className="home_ai_recommend_tag_icon" />
-                    <span className="body_b_14">AI 추천</span>
-                  </KeywordTag>
-                  <p className="home_ai_recommend_copy">
-                    돌진형 플레이어 <strong>삼삼오오님</strong>을 위한
+                  <span className="home_ai_recommend_tag">AI 추천</span>
+                  <p className="home_ai_recommend_title">
+                    하남시 몬드필드
                     <br />
-                    이번 주 맞춤 추천
+                    주말 정기전
                   </p>
                 </div>
-                <LoginButton
-                  className="home_ai_recommend_cta"
-                  style={{ WebkitTextFillColor: 'var(--home-ai-cta-color)' }}
-                  onClick={() => navigate('/my/schedule')}
-                >
-                  <span className="home_ai_recommend_cta_label body_m_16">일정 보러가기</span>
-                </LoginButton>
+                <div className="home_ai_recommend_match_rate" aria-label="매칭률 87%">
+                  <span className="home_ai_recommend_match_label">매칭률</span>
+                  <strong>87%</strong>
+                </div>
               </article>
             </div>
 
