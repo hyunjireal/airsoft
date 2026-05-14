@@ -176,7 +176,7 @@ function ReplyItem({
   const mentionMatch = reply.body.match(/^(@\S+)\s*(.*)$/)
 
   return (
-    <div className="post_detail_reply">
+    <div className="post_detail_reply" data-reply-id={reply.id}>
       <div className="post_detail_reply_head">
         <div className="post_detail_reply_head_left">
           <span className="post_detail_comment_author">
@@ -232,9 +232,9 @@ function ThreadComment({
 }: {
   comment: ThreadCommentData
   expanded: boolean
-  mentionTarget: string
+  mentionTarget?: string
   now: number
-  onAddReply: (commentId: string, body: string, mentionTarget: string) => void
+  onAddReply: (commentId: string, body: string, mentionTarget?: string) => void
   onCollapse: () => void
   onExpand: () => void
   onOpenReportSheet: () => void
@@ -297,7 +297,7 @@ function ThreadComment({
             liked={comment.liked}
             now={now}
             onLike={onLikeComment}
-            onReply={() => onReplyTo(comment.author)}
+            onReply={() => onReplyTo('')}
           />
         </div>
       </div>
@@ -310,8 +310,14 @@ function ThreadComment({
                 <span>답글 닫기</span>
                 <img src={arrowUpIcon} alt="" />
               </button>
-              <form className="post_detail_reply_input" onSubmit={submitReply}>
-                <span className="post_detail_reply_mention">@{mentionTarget}</span>
+              <form
+                className="post_detail_reply_input"
+                data-reply-input-id={comment.id}
+                onSubmit={submitReply}
+              >
+                {mentionTarget ? (
+                  <span className="post_detail_reply_mention">@{mentionTarget}</span>
+                ) : null}
                 <input
                   value={replyInput}
                   placeholder="답글을 달아보세요."
@@ -353,6 +359,8 @@ export function PostDetail() {
   const [commentInput, setCommentInput] = useState('')
   const [expandedReplyIds, setExpandedReplyIds] = useState<string[]>([])
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
+  const [highlightedReplyId, setHighlightedReplyId] = useState<string | null>(null)
+  const [focusedReplyInputId, setFocusedReplyInputId] = useState<string | null>(null)
   const [mentionTargets, setMentionTargets] = useState<Record<string, string>>({})
   const [now, setNow] = useState(() => Date.now())
   const [postBookmarked, setPostBookmarked] = useState(false)
@@ -398,6 +406,58 @@ export function PostDetail() {
     }
   }, [highlightedCommentId])
 
+  useEffect(() => {
+    if (!highlightedReplyId) return
+
+    const scrollTimerId = window.setTimeout(() => {
+      const replyElement = document.querySelector<HTMLElement>(
+        `[data-reply-id="${highlightedReplyId}"]`,
+      )
+      replyElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 80)
+
+    const clearTimerId = window.setTimeout(() => {
+      setHighlightedReplyId((currentId) =>
+        currentId === highlightedReplyId ? null : currentId,
+      )
+    }, 1800)
+
+    return () => {
+      window.clearTimeout(scrollTimerId)
+      window.clearTimeout(clearTimerId)
+    }
+  }, [highlightedReplyId])
+
+  useEffect(() => {
+    if (!focusedReplyInputId) return
+
+    const scrollTimerId = window.setTimeout(() => {
+      const replyInputElement = document.querySelector<HTMLElement>(
+        `[data-reply-input-id="${focusedReplyInputId}"]`,
+      )
+      replyInputElement?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }, 80)
+
+    const focusTimerId = window.setTimeout(() => {
+      const replyInput = document.querySelector<HTMLInputElement>(
+        `[data-reply-input-id="${focusedReplyInputId}"] input`,
+      )
+      replyInput?.focus({ preventScroll: true })
+    }, 220)
+
+    const clearTimerId = window.setTimeout(() => {
+      setFocusedReplyInputId((currentId) =>
+        currentId === focusedReplyInputId ? null : currentId,
+      )
+    }, 800)
+
+    return () => {
+      window.clearTimeout(scrollTimerId)
+      window.clearTimeout(focusTimerId)
+      window.clearTimeout(clearTimerId)
+    }
+  }, [focusedReplyInputId])
+
   const postCommentCount = comments.reduce(
     (total, comment) => total + 1 + comment.replies.length,
     0,
@@ -430,9 +490,17 @@ export function PostDetail() {
     setExpandedReplyIds((ids) => ids.filter((id) => id !== commentId))
   }
 
-  const setReplyTarget = (commentId: string, author: string) => {
-    setMentionTargets((targets) => ({ ...targets, [commentId]: author }))
+  const setReplyTarget = (commentId: string, author?: string) => {
+    setMentionTargets((targets) => {
+      if (!author) {
+        const { [commentId]: _removedTarget, ...nextTargets } = targets
+        return nextTargets
+      }
+
+      return { ...targets, [commentId]: author }
+    })
     expandReplies(commentId)
+    setFocusedReplyInputId(commentId)
   }
 
   const togglePostLike = () => {
@@ -494,9 +562,9 @@ export function PostDetail() {
     setCommentInput('')
   }
 
-  const addReply = (commentId: string, body: string, mentionTarget: string) => {
+  const addReply = (commentId: string, body: string, mentionTarget?: string) => {
     const { dateTime, time } = formatNow()
-    const replyBody = `@${mentionTarget} ${body}`
+    const replyBody = mentionTarget ? `@${mentionTarget} ${body}` : body
     const reply: ReplyData = {
       id: `reply-user-${Date.now()}`,
       author: '삼삼오오',
@@ -513,6 +581,7 @@ export function PostDetail() {
       ),
     )
     expandReplies(commentId)
+    setHighlightedReplyId(reply.id)
   }
 
   return (
@@ -624,7 +693,7 @@ export function PostDetail() {
               comment={comment}
               expanded={expandedReplyIds.includes(comment.id)}
               key={comment.id}
-              mentionTarget={mentionTargets[comment.id] ?? comment.author}
+              mentionTarget={mentionTargets[comment.id]}
               now={now}
               onAddReply={addReply}
               onCollapse={() => collapseReplies(comment.id)}
