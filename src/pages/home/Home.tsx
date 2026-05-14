@@ -316,7 +316,7 @@ export function Home() {
                 <MainTag className="home_hero_tag">MVP 투표중</MainTag>
               </div>
               <div className="home_hero_txt">
-                <p className="home_hero_title">총알이 눈보다 빠르다<br />뭔가 멋잇는 말</p>
+                <p className="home_hero_title">승부를 바꾼 플레이,<br />당신의 선택은?</p>
                 <span className="home_hero_pagination">1 / 4</span>
               </div>
             </div>

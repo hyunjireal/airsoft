@@ -26,11 +26,12 @@ const welcomeMessage: TimedChatMessage = {
   time: '오전 10:30',
 }
 
-const sampleUserMessage: TimedChatMessage = {
-  id: 'sample-user',
-  role: 'user',
-  text: '이번주 미션 보상은 뭐야?',
-  time: '오전 10:31',
+function getTypingDelay(character: string) {
+  if (/\s/.test(character)) return 18
+  if (/[.!?。！？,，:;]\s?$/.test(character)) return 110
+  if (character === '\n') return 160
+
+  return 28
 }
 
 function getCurrentTime() {
@@ -55,9 +56,51 @@ export function ChatbotPage() {
   const [searchParams] = useSearchParams()
   const initialQuestionSent = useRef(false)
   const chatScrollRef = useRef<HTMLElement | null>(null)
+  const typingTimerRef = useRef<number | null>(null)
   const [input, setInput] = useState('')
-  const [messages, setMessages] = useState<TimedChatMessage[]>([welcomeMessage, sampleUserMessage])
+  const [messages, setMessages] = useState<TimedChatMessage[]>([welcomeMessage])
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
+
+  const typeAssistantAnswer = (answer: string) =>
+    new Promise<void>((resolve) => {
+      const assistantMessage = createMessage('assistant', '')
+      const characters = Array.from(answer)
+      let index = 0
+
+      setTypingMessageId(assistantMessage.id)
+      setMessages((current) => [...current, assistantMessage])
+
+      const typeNextCharacter = () => {
+        index += 1
+        const nextText = characters.slice(0, index).join('')
+
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === assistantMessage.id
+              ? {
+                  ...message,
+                  text: nextText,
+                }
+              : message,
+          ),
+        )
+
+        if (index >= characters.length) {
+          setTypingMessageId(null)
+          typingTimerRef.current = null
+          resolve()
+          return
+        }
+
+        typingTimerRef.current = window.setTimeout(
+          typeNextCharacter,
+          getTypingDelay(characters[index - 1]),
+        )
+      }
+
+      typeNextCharacter()
+    })
 
   const send = async (text = input) => {
     const trimmed = text.trim()
@@ -72,7 +115,7 @@ export function ChatbotPage() {
     setIsSending(true)
 
     const answer = await requestChatAnswer(nextMessages)
-    setMessages((current) => [...current, createMessage('assistant', answer)])
+    await typeAssistantAnswer(answer)
     setIsSending(false)
   }
 
@@ -99,6 +142,14 @@ export function ChatbotPage() {
     initialQuestionSent.current = true
     void send(question)
   }, [searchParams])
+
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) {
+        window.clearTimeout(typingTimerRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const chat = chatScrollRef.current
@@ -128,31 +179,18 @@ export function ChatbotPage() {
         <main className="chat" ref={chatScrollRef}>
           <section className="chat_thread" aria-live="polite">
             {messages.map((message) => (
-              <article className={`chat_message_frame ${message.role}`} key={message.id}>
+              <article className={`chat_message_frame ${message.role} is_entering`} key={message.id}>
                 {message.role === 'assistant' ? (
                   <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
                 ) : null}
                 <div className="chat_message_stack">
-                  <div className="chat_bubble">
-                    {message.text.split('\n').map((line) => (
-                      <span key={line}>{line}</span>
-                    ))}
+                  <div className={`chat_bubble${message.id === typingMessageId ? ' is_typing' : ''}`}>
+                    {message.text}
                   </div>
                   <time>{message.time}</time>
                 </div>
               </article>
             ))}
-            {isSending ? (
-              <article className="chat_message_frame assistant">
-                <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
-                <div className="chat_message_stack">
-                  <div className="chat_bubble">
-                    <span>답변을 정리하고 있어요.</span>
-                  </div>
-                  <time>{getCurrentTime()}</time>
-                </div>
-              </article>
-            ) : null}
           </section>
         </main>
 
@@ -161,7 +199,13 @@ export function ChatbotPage() {
             <p className="body_m_14">자주 묻는 질문</p>
             <div className="chat_faq_tags">
               {frequentQuestions.map((question) => (
-                <button className="chat_faq_tag" key={question} type="button" onClick={() => void send(question)}>
+                <button
+                  className="chat_faq_tag"
+                  key={question}
+                  type="button"
+                  onClick={() => void send(question)}
+                  disabled={isSending}
+                >
                   {question}
                 </button>
               ))}
@@ -173,9 +217,10 @@ export function ChatbotPage() {
                 value={input}
                 placeholder="메세지를 입력하세요"
                 onChange={(event) => setInput(event.target.value)}
+                disabled={isSending}
               />
               <button type="submit" aria-label="보내기" disabled={isSending}>
-                <img src={sendIcon} alt="" />
+                {isSending ? <span className="chat_send_loading" aria-hidden="true" /> : <img src={sendIcon} alt="" />}
               </button>
             </div>
           </form>
