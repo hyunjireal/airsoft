@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import rankingCheckIcon from '../../asset/icons/ranking_check.svg'
 import userIcon from '../../asset/icons/creator_profile.svg'
+import mediaMainLightBg from '../../asset/images/media_main.png'
 import mediaMainBg from '../../asset/images/media_main01.png'
 import mediaRankingIcon from '../../asset/images/media_ranking.svg'
 import mediaFrame1 from '../../asset/images/media_1.png'
@@ -150,7 +151,10 @@ export function MediaHome() {
     <div className="media_page">
       <section
         className="media_hero"
-        style={{ backgroundImage: `url(${mediaMainBg})` }}
+        style={{
+          '--media-hero-light-bg': `url(${mediaMainLightBg})`,
+          '--media-hero-dark-bg': `url(${mediaMainBg})`,
+        } as CSSProperties}
       >
         <PageHeader
           className="media_home_top"

@@ -15,6 +15,7 @@
   display: flex;
   flex-direction: column;
   min-height: 360px;
+  background-image: var(--media-hero-light-bg);
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -400,6 +401,10 @@
 
 :root[data-theme='dark'] .media_home_top {
   background: transparent;
+}
+
+:root[data-theme='dark'] .media_hero {
+  background-image: var(--media-hero-dark-bg);
 }
 
 :root[data-theme='dark'] .media_home_top .page_header__title {
