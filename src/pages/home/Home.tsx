@@ -580,6 +580,7 @@ export function Home() {
                   color: '#fff',
                   WebkitTextFillColor: '#fff',
                 }}
+                onClick={() => navigate('/buddy')}
               >
                 <span className="body_b_18">버디 찾기</span>
               </LoginButton>

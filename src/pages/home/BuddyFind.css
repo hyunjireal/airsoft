@@ -1,0 +1,414 @@
+.buddy_find_page {
+  min-height: 100vh;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-pretendard);
+}
+
+.buddy_find_page .buddy_find_header {
+  background: var(--color-black);
+}
+
+.buddy_find_page .page_header__title {
+  color: var(--color-gray05);
+}
+
+.buddy_find_page .page_header__circle_button {
+  background: var(--color-black);
+  border-color: var(--color-gray02);
+}
+
+.buddy_find_page .page_header__profile_link {
+  border-color: var(--color-gray01);
+}
+
+.buddy_find_hero {
+  position: relative;
+  min-height: 238px;
+  overflow: hidden;
+  padding: 112px 24px 32px;
+  background: var(--color-black);
+}
+
+.buddy_find_hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    40deg,
+    rgba(0, 0, 0, 0.32) 21%,
+    rgba(27, 27, 27, 0.3) 44%,
+    rgba(102, 102, 102, 0.28) 62%
+  );
+  pointer-events: none;
+}
+
+.buddy_find_hero__art {
+  position: absolute;
+  right: -34px;
+  bottom: -16px;
+  width: min(88%, 346px);
+  max-width: none;
+  pointer-events: none;
+}
+
+.buddy_find_hero__info {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 345px;
+}
+
+.buddy_find_hero__title {
+  margin: 0;
+  font-family: var(--font-pretendard);
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: -0.48px;
+  color: var(--color-white);
+  white-space: nowrap;
+}
+
+.buddy_find_section {
+  padding: 36px 24px 24px;
+}
+
+.buddy_find_section__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.buddy_find_section__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--color-lime);
+  color: var(--color-black);
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.buddy_find_section__title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-white);
+}
+
+.buddy_find_section__desc {
+  margin: 7px 0 0;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-gray03);
+}
+
+.buddy_find_section__desc span {
+  color: var(--color-lime);
+}
+
+.buddy_find_section__desc--stacked {
+  max-width: 229px;
+}
+
+.buddy_find_schedule_list {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-top: 7px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.buddy_find_schedule_list::-webkit-scrollbar {
+  display: none;
+}
+
+.buddy_find_schedule_card {
+  flex: 0 0 165px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 15px 13px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  background: #000000;
+  box-shadow: 0 4px 18.8px rgba(0, 0, 0, 0.1);
+}
+
+.buddy_find_schedule_card--selected {
+  box-shadow:
+    0 4px 18.8px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(226, 253, 52, 0.18);
+}
+
+.buddy_find_schedule_card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buddy_find_schedule_card__icon_wrap,
+.buddy_find_more__icon_wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 60px;
+  background: rgba(226, 253, 52, 0.2);
+}
+
+.buddy_find_schedule_card__icon_wrap img,
+.buddy_find_more__icon_wrap img {
+  display: block;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+}
+
+.buddy_find_schedule_card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.buddy_find_schedule_card__date,
+.buddy_find_schedule_card__place,
+.buddy_find_schedule_card__count {
+  margin: 0;
+}
+
+.buddy_find_schedule_card__date {
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.6;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-white);
+}
+
+.buddy_find_schedule_card__place {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-gray03);
+}
+
+.buddy_find_schedule_card__count {
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-gray03);
+}
+
+.buddy_find_schedule_card__divider {
+  border-top: 1px dashed var(--color-gray04);
+}
+
+.buddy_find_schedule_card__action {
+  height: 30px;
+  border: 0;
+  border-radius: 5px;
+  background: rgba(226, 253, 52, 0.15);
+  color: var(--color-lime);
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  cursor: pointer;
+}
+
+.buddy_find_schedule_card__action:active {
+  background: rgba(226, 253, 52, 0.22);
+}
+
+.buddy_find_more {
+  padding: 0 24px 24px;
+}
+
+.buddy_find_more__button {
+  width: 100%;
+  min-height: 69px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 24px;
+  border: 0;
+  border-radius: 6px;
+  background: #282827;
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.buddy_find_more__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.buddy_find_more__label {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.buddy_find_more__arrow {
+  width: 24px;
+  height: 24px;
+  transform: rotate(180deg);
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+.buddy_find_section--filters,
+.buddy_find_section--summary {
+  padding-top: 36px;
+}
+
+.buddy_find_filter_card,
+.buddy_find_summary_card {
+  width: 100%;
+  border-radius: 10px;
+  background: #000000;
+}
+
+.buddy_find_filter_card {
+  margin-top: 12px;
+  padding: 13px 21px;
+}
+
+.buddy_find_filter_group {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.buddy_find_filter_title {
+  margin: 0;
+  font-size: 15.72px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-white);
+}
+
+.buddy_find_filter_title span {
+  margin-left: 4px;
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray01);
+}
+
+.buddy_find_filter_grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8.734px;
+}
+
+.buddy_find_filter_button {
+  min-height: 39.304px;
+  padding: 10px 8px;
+  border: 1px solid var(--color-gray01);
+  border-radius: 8.734px;
+  background: #212120;
+  color: var(--color-white);
+  font-size: 13.975px;
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  cursor: pointer;
+}
+
+.buddy_find_filter_button--active {
+  border-color: var(--color-lime);
+  background: #000000;
+}
+
+.buddy_find_summary_card {
+  min-height: 150px;
+  margin-top: 12px;
+  padding: 32px 21px;
+}
+
+.buddy_find_summary_chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--color-gray01);
+  border-radius: 6px;
+  background: #202020;
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.buddy_find_summary_chip--schedule {
+  margin-bottom: 10px;
+}
+
+.buddy_find_summary_chip__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.buddy_find_summary_chip__left img {
+  display: block;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+}
+
+.buddy_find_summary_chip__close {
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-gray05);
+}
+
+.buddy_find_summary_row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.buddy_find_footer {
+  padding: 30px 24px 60px;
+}
+
+.buddy_find_start_button {
+  width: 100%;
+  height: 50px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--color-lime);
+  color: var(--color-black);
+  font-size: 18px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  cursor: pointer;
+}
+
+.buddy_find_start_button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
