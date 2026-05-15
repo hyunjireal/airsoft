@@ -16,11 +16,15 @@ export function AppShell() {
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
+  const isMatchPresetEditPage = /^\/match\/presets\/[^/]+\/edit$/.test(location.pathname)
+  const isMatchPresetFinishPage = location.pathname === '/match/presets/finish'
   const showBottomNav =
     !isCommunityPostDetail &&
     !isChatPage &&
     !isGuideQuizPage &&
-    !location.pathname.startsWith('/match/schedule/')
+    !location.pathname.startsWith('/match/schedule/') &&
+    !isMatchPresetEditPage &&
+    !isMatchPresetFinishPage
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&

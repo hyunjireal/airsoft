@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import type { CSSProperties } from 'react'
 import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
+import AnimatedList from '../../components/AnimatedList'
 import KeywordTag from '../../components/KeywordTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
@@ -850,15 +851,20 @@ export function MatchHome() {
             </div>
 
             <div className="match_preset_sheet_body">
-              <div className="match_preset_option_list">
-                {matchPresetOptions.map((preset) => {
+              <AnimatedList
+                items={matchPresetOptions}
+                className="match_preset_option_list"
+                displayScrollbar={false}
+                showGradients={false}
+                enableArrowNavigation={false}
+                initialSelectedIndex={matchPresetOptions.findIndex((preset) => preset.id === selectedPresetId)}
+                onItemSelect={(preset) => setSelectedPresetId(preset.id)}
+                renderItem={(preset) => {
                   const isSelected = selectedPresetId === preset.id
                   return (
                     <button
                       className={`match_preset_option${isSelected ? ' is_selected' : ''}`}
                       type="button"
-                      key={preset.id}
-                      onClick={() => setSelectedPresetId(preset.id)}
                     >
                       <span className="match_preset_option_text">
                         <strong>{preset.title}</strong>
@@ -873,14 +879,23 @@ export function MatchHome() {
                       </span>
                     </button>
                   )
-                })}
-              </div>
+                }}
+              />
 
               <div className="match_preset_sheet_bottom">
                 <LoginButton className="match_preset_apply_button" onClick={applyPreset}>
                   적용하기
                 </LoginButton>
-                <p className="match_preset_manage_text">프리셋 관리</p>
+                <button
+                  className="match_preset_manage_text"
+                  type="button"
+                  onClick={() => {
+                    setShowPresetSheet(false)
+                    navigate('/match/presets')
+                  }}
+                >
+                  프리셋 관리
+                </button>
               </div>
             </div>
           </section>

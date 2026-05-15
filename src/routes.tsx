@@ -36,6 +36,9 @@ import { MatchHome } from './pages/match/MatchHome'
 import { MatchJoinHome } from './pages/match/MatchJoinHome'
 import { MatchList } from './pages/match/MatchList'
 import { MatchManageHome } from './pages/match/MatchManageHome'
+import { MatchPresetEdit } from './pages/match/MatchPresetEdit'
+import { MatchPresetFinish } from './pages/match/MatchPresetFinish'
+import { MatchPresetManage } from './pages/match/MatchPresetManage'
 import { MatchScheduleJoin } from './pages/match/MatchScheduleJoin'
 import { TeamMatchApply } from './pages/match/TeamMatchApply'
 import { TeamMatchDetail } from './pages/match/TeamMatchDetail'
@@ -119,6 +122,9 @@ export const router = createBrowserRouter([
           { path: '/match/create/guest-wanted', element: <MatchGuestWantedCreate /> },
           { path: '/match/create/game', element: <MatchCreateGame /> },
           { path: '/match/manage', element: <MatchManageHome /> },
+          { path: '/match/presets', element: <MatchPresetManage /> },
+          { path: '/match/presets/:presetId/edit', element: <MatchPresetEdit /> },
+          { path: '/match/presets/finish', element: <MatchPresetFinish /> },
           { path: '/match/fields', element: <FieldInfo /> },
           { path: '/match/list', element: <MatchList /> },
           { path: '/match/filter', element: <MatchFilter /> },
