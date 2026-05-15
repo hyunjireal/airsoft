@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import type { CSSProperties } from 'react'
 import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
 import KeywordTag from '../../components/KeywordTag'
@@ -471,6 +472,7 @@ export function MatchHome() {
     .filter((date) => !Number.isNaN(date.getTime()))
   const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
   const weekDates = getWeekDates(selectedDate)
+  const selectedWeekDayIndex = Math.max(weekDates.findIndex((date) => isSameDay(date, selectedDate)), 0)
   const moveWeek = (direction: Exclude<WeekSlideDirection, null>) => {
     setWeekSlideDirection(direction)
     setSelectedDate((date) => {
@@ -661,6 +663,7 @@ export function MatchHome() {
                   weekSlideDirection === 'prev' ? 'is_sliding_prev' : '',
                   weekSlideDirection === 'next' ? 'is_sliding_next' : '',
                 ].filter(Boolean).join(' ')}
+                style={{ '--selected-day-index': selectedWeekDayIndex } as CSSProperties}
                 role="list"
                 aria-label="주간 매치 일정 달력"
                 onAnimationEnd={() => setWeekSlideDirection(null)}

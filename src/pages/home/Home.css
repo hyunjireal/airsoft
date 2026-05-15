@@ -1247,6 +1247,8 @@
   position: relative;
   z-index: 1;
   gap: 5px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   background: var(--color-khaki);
   color: #fff;
   font-family: var(--font-pretendard);

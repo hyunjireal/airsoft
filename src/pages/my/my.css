@@ -292,10 +292,15 @@
 }
 
 .my_section_title {
-  color: #000000;
-  font-size: var(--font-size-20);
-  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-24);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-130);
+}
+
+:root[data-theme='dark'] .my_section_title {
+  color: var(--color-white);
 }
 
 .my_matches_more {
