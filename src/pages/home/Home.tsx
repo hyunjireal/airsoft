@@ -1,5 +1,5 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
@@ -22,10 +22,6 @@ import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
 import mainStarIcon from '../../asset/icons/main_star.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
 import heroImg from '../../asset/images/main_img02.png'
-import matchImg01 from '../../asset/images/main_img03.jpg'
-import matchImg02 from '../../asset/images/main_img04.jpg'
-import matchImg03 from '../../asset/images/main_img05.jpg'
-import matchImg04 from '../../asset/images/main_img06.jpg'
 import mainProfileTag01 from '../../asset/images/main_profile_tag01.png'
 import mainProfileTag02 from '../../asset/images/main_profile_tag02.png'
 import userAvatar from '../../asset/images/main_user01.png'
@@ -45,40 +41,20 @@ import mainTeamImg01 from '../../asset/images/main_teamImg01.png'
 import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
 import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
 import mainTeamImg04 from '../../asset/images/main_teamImg04.png'
+import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
 import './Home.css'
 
-const matchCards = [
-  {
-    id: 1,
-    dday: '경기 25일 전',
-    notice: '초보자 브리핑과 장비 점검이 함께 진행돼요',
-    place: '경기도 하남시 밀리터리 필드',
-    datetime: '2026.08.08 오후 06:30',
-    img: matchImg01,
-  },{
-    id: 2,
-    dday: '경기 18일 전',
-    notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 파주시 CQB 아레나',
-    datetime: '2026.08.15 오전 10:00',
-    img: matchImg02,
-  },{
-    id: 3,
-    dday: '경기 12일 전',
-    notice: '팀 밸런스 매칭 후 라운드가 배정돼요',
-    place: '서울 강서 실내 필드',
-    datetime: '2026.08.21 오후 02:00',
-    img: matchImg03,
-  },{
-    id: 4,
-    dday: '경기 5일 전',
-    notice: '야간전 참여 전 라이트 규정을 확인해주세요',
-    place: '인천 서구 야외 필드',
-    datetime: '2026.08.28 오후 07:30',
-    img: matchImg04,
-  },
-  
-] 
+type HomeMatchCard = {
+  id: string | number
+  dday: string
+  notice: string
+  place: string
+  datetime: string
+  img: string
+  sortTime?: number
+}
+
+const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
 const teamCards = [
   { id: 1, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
@@ -150,14 +126,91 @@ const buddyProcessSteps = [
   },
 ]
 
+const HOME_PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 const BUDDY_SHEET_CLOSE_DURATION = 280
 
-const sortedMatchCards = [...matchCards].sort((a, b) => {
-  const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
-  const bDay = Number(b.dday.match(/\d+/)?.[0] ?? 0)
+function normalizeDateValue(value?: string) {
+  const matchedDate = value?.trim().replaceAll('.', '-').match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
+  if (!matchedDate) return null
 
-  return aDay - bDay
-})
+  const [, year, month, day] = matchedDate
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+}
+
+function normalizeTimeValue(value?: string) {
+  const matchedTime = value?.match(/(\d{1,2}):(\d{2})/)
+  if (!matchedTime) return '00:00'
+
+  const [, hour, minute] = matchedTime
+  return `${hour.padStart(2, '0')}:${minute}`
+}
+
+function getScheduleDate(match: MyMatchItem) {
+  const dateValue = normalizeDateValue(match.dateValue ?? match.time)
+  if (!dateValue) return null
+
+  const timeValue = normalizeTimeValue(match.time)
+  const date = new Date(`${dateValue}T${timeValue}:00`)
+
+  return Number.isNaN(date.getTime()) ? null : date
+}
+
+function getDaysUntil(date: Date) {
+  const today = new Date()
+  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
+  const targetStart = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+
+  return Math.ceil((targetStart - todayStart) / ONE_DAY_MS)
+}
+
+function formatDday(daysUntil: number) {
+  if (daysUntil === 0) return '오늘 경기'
+  return `경기 ${daysUntil}일 전`
+}
+
+function formatKoreanTime(timeValue?: string) {
+  const [hourString, minuteString] = normalizeTimeValue(timeValue).split(':')
+  const hour = Number(hourString)
+  const period = hour < 12 ? '오전' : '오후'
+  const displayHour = hour % 12 || 12
+
+  return `${period} ${String(displayHour).padStart(2, '0')}:${minuteString}`
+}
+
+function formatScheduleDateTime(date: Date, timeValue?: string) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}.${month}.${day} ${formatKoreanTime(timeValue)}`
+}
+
+function createHomeScheduleCards() {
+  return getMyMatches()
+    .filter((match) => match.status !== 'past')
+    .map((match): HomeMatchCard | null => {
+      const date = getScheduleDate(match)
+      if (!date) return null
+
+      const daysUntil = getDaysUntil(date)
+      if (daysUntil < 0) return null
+
+      const place = [match.region, match.fieldName].filter(Boolean).join(' · ') || '장소 미정'
+
+      return {
+        id: match.id,
+        dday: formatDday(daysUntil),
+        notice: match.title,
+        place,
+        datetime: formatScheduleDateTime(date, match.time),
+        img: match.imageSrc,
+        sortTime: date.getTime(),
+      }
+    })
+    .filter((card): card is HomeMatchCard => Boolean(card))
+    .sort((a, b) => (a.sortTime ?? 0) - (b.sortTime ?? 0))
+    .slice(0, 5)
+}
 
 const homeAchievementTagStyle: CSSProperties = {
   border: 0,
@@ -265,12 +318,16 @@ export function Home() {
   const bannerDragScroll = useDragScroll()
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const albumInputRef = useRef<HTMLInputElement>(null)
+  const cameraVideoRef = useRef<HTMLVideoElement>(null)
   const [isAchievementExpanded, setIsAchievementExpanded] = useState(false)
   const [isProfileSheetOpen, setIsProfileSheetOpen] = useState(false)
+  const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [isBuddySheetOpen, setIsBuddySheetOpen] = useState(false)
   const [isBuddySheetClosing, setIsBuddySheetClosing] = useState(false)
-  const [profilePreview, setProfilePreview] = useState(userAvatar)
-  const [profileObjectUrl, setProfileObjectUrl] = useState<string | null>(null)
+  const [profilePreview, setProfilePreview] = useState(() => localStorage.getItem(HOME_PROFILE_IMAGE_KEY) || userAvatar)
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
+  const [cameraError, setCameraError] = useState('')
+  const [scheduleRevision, setScheduleRevision] = useState(0)
   const savedProfileBadge = localStorage.getItem('homeProfileBadge')
   const savedProfileTitle = localStorage.getItem('homeProfileTitle')
   const savedLevel = localStorage.getItem('level')
@@ -280,14 +337,43 @@ export function Home() {
     savedProfileBadge === 'badge03' || savedLevel === '숙련자' || savedSkillAlias === '베테랑'
   const homeProfileBadge = isVeteranProfile ? badge03 : symbolBeginner
   const homeProfileTitle = savedProfileTitle || (isVeteranProfile ? '베테랑 숙련자' : '안전제일 뉴비')
+  const homeScheduleCards = useMemo(() => {
+    return createHomeScheduleCards()
+  }, [scheduleRevision])
+
+  useEffect(() => {
+    const videoElement = cameraVideoRef.current
+    if (!videoElement || !cameraStream) return undefined
+
+    videoElement.srcObject = cameraStream
+    void videoElement.play()
+
+    return () => {
+      videoElement.srcObject = null
+    }
+  }, [cameraStream])
 
   useEffect(() => {
     return () => {
-      if (profileObjectUrl) {
-        URL.revokeObjectURL(profileObjectUrl)
-      }
+      cameraStream?.getTracks().forEach((track) => track.stop())
     }
-  }, [profileObjectUrl])
+  }, [cameraStream])
+
+  useEffect(() => {
+    const refreshSchedules = () => {
+      setScheduleRevision((revision) => revision + 1)
+    }
+
+    window.addEventListener('focus', refreshSchedules)
+    window.addEventListener('storage', refreshSchedules)
+    window.addEventListener('pageshow', refreshSchedules)
+
+    return () => {
+      window.removeEventListener('focus', refreshSchedules)
+      window.removeEventListener('storage', refreshSchedules)
+      window.removeEventListener('pageshow', refreshSchedules)
+    }
+  }, [])
 
   useEffect(() => {
     const scrollElement = teamScrollRef.current
@@ -354,15 +440,73 @@ export function Home() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const nextPreview = URL.createObjectURL(file)
-    if (profileObjectUrl) {
-      URL.revokeObjectURL(profileObjectUrl)
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') return
+
+      setProfilePreview(reader.result)
+      try {
+        localStorage.setItem(HOME_PROFILE_IMAGE_KEY, reader.result)
+      } catch {
+        localStorage.removeItem(HOME_PROFILE_IMAGE_KEY)
+      }
+      setIsProfileSheetOpen(false)
+      setCameraError('')
+    }
+    reader.readAsDataURL(file)
+    event.target.value = ''
+  }
+
+  const closeProfileCamera = () => {
+    cameraStream?.getTracks().forEach((track) => track.stop())
+    setCameraStream(null)
+    setIsCameraOpen(false)
+  }
+
+  const openProfileCamera = async () => {
+    setCameraError('')
+
+    if (!navigator.mediaDevices?.getUserMedia) {
+      cameraInputRef.current?.click()
+      return
     }
 
-    setProfileObjectUrl(nextPreview)
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user' },
+        audio: false,
+      })
+      setCameraStream(stream)
+      setIsProfileSheetOpen(false)
+      setIsCameraOpen(true)
+    } catch {
+      setCameraError('카메라 권한을 확인해주세요.')
+      cameraInputRef.current?.click()
+    }
+  }
+
+  const captureProfilePhoto = () => {
+    const video = cameraVideoRef.current
+    if (!video || !video.videoWidth || !video.videoHeight) {
+      setCameraError('카메라 화면을 불러오는 중이에요.')
+      return
+    }
+
+    const canvas = document.createElement('canvas')
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    const context = canvas.getContext('2d')
+    if (!context) return
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const nextPreview = canvas.toDataURL('image/jpeg', 0.9)
     setProfilePreview(nextPreview)
-    setIsProfileSheetOpen(false)
-    event.target.value = ''
+    try {
+      localStorage.setItem(HOME_PROFILE_IMAGE_KEY, nextPreview)
+    } catch {
+      localStorage.removeItem(HOME_PROFILE_IMAGE_KEY)
+    }
+    closeProfileCamera()
   }
 
   const openBuddyProcessSheet = () => {
@@ -526,12 +670,12 @@ export function Home() {
             <div className="home_userinfo_match">
               <div className="home_userinfo_match_header">
                 <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-                <Link className="home_more_link" to="/my/matches" aria-label="내 경기 일정 더보기">
+                <Link className="home_more_link" to="/my/schedule" aria-label="내 경기 일정 더보기">
                   <More />
                 </Link>
               </div>
               <div className="home_match_scroll" {...matchDragScroll}>
-                {sortedMatchCards.map((card) => (
+                {homeScheduleCards.map((card) => (
                   <article key={card.id} className="home_match_card" style={{ backgroundImage: `url(${card.img})` }}>
                     <div className="home_match_card_top">
                       <MainTag className="home_match_dday_tag">{card.dday}</MainTag>
@@ -748,7 +892,7 @@ export function Home() {
         className="home_profile_file_input"
         type="file"
         accept="image/*"
-        capture="environment"
+        capture="user"
         onChange={updateProfileImage}
       />
       <input
@@ -773,7 +917,7 @@ export function Home() {
               <button
                 className="home_profile_sheet_action"
                 type="button"
-                onClick={() => cameraInputRef.current?.click()}
+                onClick={openProfileCamera}
               >
                 카메라로 촬영
               </button>
@@ -792,6 +936,31 @@ export function Home() {
             >
               취소
             </button>
+          </section>
+        </div>
+      ) : null}
+      {isCameraOpen ? (
+        <div className="home_camera_layer" role="presentation">
+          <div className="home_camera_backdrop" aria-hidden="true" />
+          <section className="home_camera_sheet" role="dialog" aria-modal="true" aria-label="프로필 사진 촬영">
+            <div className="home_camera_preview">
+              <video
+                ref={cameraVideoRef}
+                className="home_camera_video"
+                autoPlay
+                muted
+                playsInline
+              />
+            </div>
+            {cameraError ? <p className="home_camera_error">{cameraError}</p> : null}
+            <div className="home_camera_actions">
+              <button className="home_camera_button home_camera_button--capture" type="button" onClick={captureProfilePhoto}>
+                촬영
+              </button>
+              <button className="home_camera_button" type="button" onClick={closeProfileCamera}>
+                취소
+              </button>
+            </div>
           </section>
         </div>
       ) : null}

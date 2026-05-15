@@ -13,6 +13,7 @@ export type MyMatchItem = {
   status: MyMatchStatus
   type: MyMatchType
   title: string
+  dateValue?: string
   time: string
   detail: string
   region: string
@@ -28,75 +29,175 @@ export type MyMatchItem = {
 const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
 const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
-const defaultMyMatches: MyMatchItem[] = [
+type DefaultMyMatchTemplate = {
+  id: string
+  matchId: string
+  status: Extract<MyMatchStatus, 'applied' | 'confirmed'>
+  type: MyMatchType
+  title: string
+  offsetDays: number
+  time: string
+  region: string
+  fieldName: string
+  currentParticipants: number
+  maxParticipants: number
+  imageSrc: string
+  to: string
+}
+
+const defaultMyMatchTemplates: DefaultMyMatchTemplate[] = [
   {
-    id: 'default-applied-001',
+    id: 'seed-applied-001',
     matchId: 'match-003',
     status: 'applied',
     type: 'personal',
     title: '서울 CQB 입문 스크림',
-    time: '2026.05.10 · 12:00',
-    detail: '5/10 (일) 12:00 I 어반 CQB',
+    offsetDays: 2,
+    time: '12:00',
     region: '서울',
     fieldName: '어반 CQB',
     currentParticipants: 14,
     maxParticipants: 16,
     imageSrc: matchList01,
-    tagLabel: 'D-22',
     to: '/match/detail/match-003',
   },
   {
-    id: 'default-applied-002',
+    id: 'seed-applied-002',
     matchId: 'match-002',
     status: 'applied',
     type: 'team',
     title: '주말 포레스트 매치',
-    time: '2026.05.09 · 10:30',
-    detail: '5/9 (토) 10:30 I 포레스트 아레나',
+    offsetDays: 5,
+    time: '10:30',
     region: '경기 북부',
     fieldName: '포레스트 아레나',
     currentParticipants: 22,
     maxParticipants: 30,
     imageSrc: matchList02,
-    tagLabel: 'D-21',
     to: '/match/detail/match-002',
   },
   {
-    id: 'default-confirmed-001',
+    id: 'seed-confirmed-001',
     matchId: 'match-001',
     status: 'confirmed',
     type: 'personal',
     title: '초보 환영 야외전',
-    time: '2026.05.23 · 14:00',
-    detail: '5/23 (토) 14:00 I 택티컬 필드',
+    offsetDays: 9,
+    time: '14:00',
     region: '경기 남부',
     fieldName: '택티컬 필드',
     currentParticipants: 18,
     maxParticipants: 24,
     imageSrc: matchList03,
-    tagLabel: 'D-14',
     to: '/match/detail/match-001',
   },
   {
-    id: 'default-past-001',
-    matchId: 'past-001',
-    status: 'past',
+    id: 'seed-applied-003',
+    matchId: 'match-004',
+    status: 'applied',
     type: 'personal',
-    title: '2026 5월 입문전 경기',
-    time: '2026.05.02 · 10:00',
-    detail: '5/2 (토) 10:00 I 하남 실내 필드',
-    region: '경기 하남',
-    fieldName: '하남 실내 필드',
-    currentParticipants: 12,
-    maxParticipants: 12,
+    title: '입문자 장비 체크 매치',
+    offsetDays: 13,
+    time: '16:00',
+    region: '인천',
+    fieldName: '서구 실내 필드',
+    currentParticipants: 10,
+    maxParticipants: 18,
     imageSrc: matchList01,
-    tagLabel: '종료',
-    to: '/my/schedule',
+    to: '/match/detail/match-004',
   },
 ]
 
+const defaultPastMatchTemplate: DefaultMyMatchTemplate = {
+  id: 'seed-past-001',
+  matchId: 'seed-past-001',
+  status: 'confirmed',
+  type: 'personal',
+  title: '최근 완료한 입문전',
+  offsetDays: -4,
+  time: '10:00',
+  region: '경기 하남',
+  fieldName: '하남 실내 필드',
+  currentParticipants: 12,
+  maxParticipants: 12,
+  imageSrc: matchList01,
+  to: '/my/schedule',
+}
+
+function canUseLocalStorage() {
+  return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
+}
+
+function getTodayStart() {
+  const today = new Date()
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate())
+}
+
+function addDays(date: Date, days: number) {
+  const nextDate = new Date(date)
+  nextDate.setDate(nextDate.getDate() + days)
+  return nextDate
+}
+
+function normalizeDateValue(value?: string) {
+  const matchedDate = value?.trim().replaceAll('.', '-').match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
+  if (!matchedDate) return undefined
+
+  const [, year, month, day] = matchedDate
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+}
+
+function formatDateValue(date: Date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
+}
+
+function formatDateLabel(dateValue: string) {
+  return dateValue.replaceAll('-', '.')
+}
+
+function normalizeTimeValue(value?: string) {
+  const matchedTime = value?.match(/(\d{1,2}):(\d{2})/)
+  if (!matchedTime) return '00:00'
+
+  const [, hour, minute] = matchedTime
+  return `${hour.padStart(2, '0')}:${minute}`
+}
+
+function getDaysUntil(dateValue?: string) {
+  const normalizedDate = normalizeDateValue(dateValue)
+  if (!normalizedDate) return 0
+
+  const date = new Date(`${normalizedDate}T00:00:00`)
+  if (Number.isNaN(date.getTime())) return 0
+
+  return Math.ceil((date.getTime() - getTodayStart().getTime()) / ONE_DAY_MS)
+}
+
+function getStatusByDate(dateValue: string, fallbackStatus: Extract<MyMatchStatus, 'applied' | 'confirmed'>) {
+  return getDaysUntil(dateValue) < 0 ? 'past' : fallbackStatus
+}
+
+function getTagLabel(dateValue?: string) {
+  const daysUntil = getDaysUntil(dateValue)
+  if (daysUntil < 0) return '완료'
+  if (daysUntil === 0) return 'D-DAY'
+  return `D-${daysUntil}`
+}
+
+function createDetail(dateValue: string, time: string, fieldName: string) {
+  const [, month, day] = dateValue.split('-')
+  return `${Number(month)}/${Number(day)} ${time} I ${fieldName}`
+}
+
 function readStringList(key: string) {
+  if (!canUseLocalStorage()) return []
+
   try {
     const value = JSON.parse(localStorage.getItem(key) ?? '[]')
     return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []
@@ -105,7 +206,35 @@ function readStringList(key: string) {
   }
 }
 
+function createDefaultMatch(template: DefaultMyMatchTemplate): MyMatchItem {
+  const dateValue = formatDateValue(addDays(getTodayStart(), template.offsetDays))
+
+  return {
+    id: template.id,
+    matchId: template.matchId,
+    status: getStatusByDate(dateValue, template.status),
+    type: template.type,
+    title: template.title,
+    dateValue,
+    time: `${formatDateLabel(dateValue)} · ${template.time}`,
+    detail: createDetail(dateValue, template.time, template.fieldName),
+    region: template.region,
+    fieldName: template.fieldName,
+    currentParticipants: template.currentParticipants,
+    maxParticipants: template.maxParticipants,
+    imageSrc: template.imageSrc,
+    tagLabel: getTagLabel(dateValue),
+    to: template.to,
+  }
+}
+
+function createDefaultMyMatches() {
+  return [...defaultMyMatchTemplates, defaultPastMatchTemplate].map(createDefaultMatch)
+}
+
 function readCreatedMatches(): MyMatchItem[] {
+  if (!canUseLocalStorage()) return []
+
   try {
     const value = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
     if (!Array.isArray(value)) return []
@@ -122,9 +251,8 @@ function readCreatedMatches(): MyMatchItem[] {
               : type === 'mercenary'
                 ? matchList03
                 : matchList01
-        const rawDate = typeof match.date === 'string' ? match.date : '2026-05-18'
-        const dateLabel = rawDate.replaceAll('-', '.')
-        const time = typeof match.time === 'string' ? match.time : '14:00'
+        const rawDate = normalizeDateValue(typeof match.date === 'string' ? match.date : undefined) ?? formatDateValue(addDays(getTodayStart(), 2))
+        const time = normalizeTimeValue(typeof match.time === 'string' ? match.time : undefined)
         const region = typeof match.region === 'string' ? match.region : '서울'
         const fieldName = typeof match.fieldName === 'string' ? match.fieldName : '어반 CQB'
         const title = typeof match.title === 'string' ? match.title : '내가 만든 매치'
@@ -132,17 +260,18 @@ function readCreatedMatches(): MyMatchItem[] {
         return {
           id: `created-${match.id}`,
           matchId: match.id,
-          status: 'applied',
+          status: getStatusByDate(rawDate, 'applied'),
           type,
           title,
-          time: `${dateLabel} · ${time}`,
-          detail: `${dateLabel} ${time} I ${fieldName}`,
+          dateValue: rawDate,
+          time: `${formatDateLabel(rawDate)} · ${time}`,
+          detail: createDetail(rawDate, time, fieldName),
           region,
           fieldName,
           currentParticipants: Number(match.currentParticipants) || 1,
           maxParticipants: Number(match.maxParticipants) || 12,
           imageSrc,
-          tagLabel: '모집 중',
+          tagLabel: getTagLabel(rawDate),
           to: '/match/manage',
           isMine: true,
         }
@@ -157,22 +286,28 @@ function createJoinedMatches(canceledIds: string[], existingMatchIds: string[]) 
     .filter((id) => !canceledIds.includes(id) && !existingMatchIds.includes(id))
     .map((matchId) => matches.find((match) => match.id === matchId))
     .filter((match): match is NonNullable<typeof match> => Boolean(match))
-    .map((match): MyMatchItem => ({
-      id: `joined-${match.id}`,
-      matchId: match.id,
-      status: 'applied',
-      type: 'personal',
-      title: match.title,
-      time: `${match.dateValue?.replaceAll('-', '.') ?? match.date} · ${match.time}`,
-      detail: `${match.date} ${match.time} I ${match.fieldName}`,
-      region: match.region,
-      fieldName: match.fieldName,
-      currentParticipants: match.currentParticipants,
-      maxParticipants: match.maxParticipants,
-      imageSrc: matchList01,
-      tagLabel: '신청 중',
-      to: `/match/detail/${match.id}`,
-    }))
+    .map((match): MyMatchItem => {
+      const dateValue = normalizeDateValue(match.dateValue ?? match.date) ?? formatDateValue(addDays(getTodayStart(), 2))
+      const time = normalizeTimeValue(match.time)
+
+      return {
+        id: `joined-${match.id}`,
+        matchId: match.id,
+        status: getStatusByDate(dateValue, 'applied'),
+        type: 'personal',
+        title: match.title,
+        dateValue,
+        time: `${formatDateLabel(dateValue)} · ${time}`,
+        detail: createDetail(dateValue, time, match.fieldName),
+        region: match.region,
+        fieldName: match.fieldName,
+        currentParticipants: match.currentParticipants,
+        maxParticipants: match.maxParticipants,
+        imageSrc: matchList01,
+        tagLabel: getTagLabel(dateValue),
+        to: `/match/detail/${match.id}`,
+      }
+    })
 }
 
 function createStoredJoinedMatches(canceledIds: string[], existingMatchIds: string[]) {
@@ -183,22 +318,28 @@ function createStoredJoinedMatches(canceledIds: string[], existingMatchIds: stri
   const defaultIds = new Set(defaultItems.map((match) => match.matchId))
   const snapshotItems = readMatchSnapshots(joinedIds)
     .filter((match) => !defaultIds.has(match.id))
-    .map((match): MyMatchItem => ({
-      id: `joined-${match.id}`,
-      matchId: match.id,
-      status: 'applied',
-      type: match.type === 'team' || match.type === 'mercenary' ? match.type : 'personal',
-      title: match.title,
-      time: `${(match.dateValue ?? match.date ?? '2026-05-18').replaceAll('-', '.')} · ${match.time}`,
-      detail: `${match.dateValue ?? match.date ?? ''} ${match.time} · ${match.fieldName}`,
-      region: match.region,
-      fieldName: match.fieldName,
-      currentParticipants: match.currentParticipants,
-      maxParticipants: match.maxParticipants,
-      imageSrc: match.imageSrc || matchList01,
-      tagLabel: '신청 중',
-      to: `/match/detail/${match.id}`,
-    }))
+    .map((match): MyMatchItem => {
+      const dateValue = normalizeDateValue(match.dateValue ?? match.date) ?? formatDateValue(addDays(getTodayStart(), 2))
+      const time = normalizeTimeValue(match.time)
+
+      return {
+        id: `joined-${match.id}`,
+        matchId: match.id,
+        status: getStatusByDate(dateValue, 'applied'),
+        type: match.type === 'team' || match.type === 'mercenary' ? match.type : 'personal',
+        title: match.title,
+        dateValue,
+        time: `${formatDateLabel(dateValue)} · ${time}`,
+        detail: createDetail(dateValue, time, match.fieldName),
+        region: match.region,
+        fieldName: match.fieldName,
+        currentParticipants: match.currentParticipants,
+        maxParticipants: match.maxParticipants,
+        imageSrc: match.imageSrc || matchList01,
+        tagLabel: getTagLabel(dateValue),
+        to: `/match/detail/${match.id}`,
+      }
+    })
 
   return [...defaultItems, ...snapshotItems]
 }
@@ -206,7 +347,7 @@ function createStoredJoinedMatches(canceledIds: string[], existingMatchIds: stri
 export function getMyMatches() {
   const canceledIds = readStringList(CANCELED_MATCH_IDS_KEY)
   const joinedIds = readStringList(JOINED_MATCH_IDS_KEY)
-  const baseMatches = defaultMyMatches
+  const baseMatches = createDefaultMyMatches()
     .filter((match) => !canceledIds.includes(match.matchId))
     .map((match) =>
       joinedIds.includes(match.matchId) && match.status !== 'past'
@@ -219,7 +360,11 @@ export function getMyMatches() {
   )
   const createdMatches = readCreatedMatches()
 
-  return [...baseMatches, ...joinedMatches, ...createdMatches]
+  return [...baseMatches, ...joinedMatches, ...createdMatches].sort((a, b) => {
+    const aTime = new Date(`${a.dateValue ?? '9999-12-31'}T${normalizeTimeValue(a.time)}:00`).getTime()
+    const bTime = new Date(`${b.dateValue ?? '9999-12-31'}T${normalizeTimeValue(b.time)}:00`).getTime()
+    return aTime - bTime
+  })
 }
 
 export function getMyMatchGroups() {

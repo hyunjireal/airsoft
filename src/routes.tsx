@@ -42,7 +42,6 @@ import { MatchScheduleJoin } from './pages/match/MatchScheduleJoin'
 import { TeamMatchApply } from './pages/match/TeamMatchApply'
 import { TeamMatchDetail } from './pages/match/TeamMatchDetail'
 import { TeamMatchJoinList } from './pages/match/TeamMatchJoinList'
-import { MyMatches } from './pages/my/MyMatches'
 import { MyPage } from './pages/my/MyPage'
 import { PointHistory } from './pages/my/PointHistory'
 import { PointShop } from './pages/my/PointShop'
@@ -171,7 +170,7 @@ export const router = createBrowserRouter([
           { path: '/my/point-shop', element: <PointShop /> },
           { path: '/my/point-shop/history', element: <PointHistory /> },
           { path: '/my/point-shop/coupons', element: <PointShopCoupons /> },
-          { path: '/my/matches', element: <MyMatches /> },
+          { path: '/my/matches', element: <Navigate to="/my/schedule" replace /> },
           { path: '/my/profile', element: <ProfileEdit /> },
           { path: '/my/schedule', element: <MySchedule /> },
           { path: '/my/posts', element: <MyPosts /> },
