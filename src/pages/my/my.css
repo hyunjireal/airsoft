@@ -13,11 +13,7 @@
   margin: 0 auto;
 }
 
-.my_header {
-}
 
-.my_header_left {
-}
 
 .my_header_button,
 .my_profile_edit,
@@ -53,8 +49,6 @@
   color: var(--color-black);
 }
 
-.my_back_icon {
-}
 
 .my_bell_button {
   width: 28px;
@@ -730,11 +724,6 @@
   height: fit-content;
 }
 
-.my_schedule_tit {
-}
-
-.my_schedule_back {
-}
 
 .my_schedule_back img {
   filter: var(--my-schedule-icon-filter);
