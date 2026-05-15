@@ -99,12 +99,18 @@ export function Signup() {
   const [nickname, setNickname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [region, setRegion] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
   const [regionSheetOpen, setRegionSheetOpen] = useState(false)
 
   const selectedMode = signupModes.find((mode) => mode.id === selectedModeId) ?? signupModes[0]
+  const nicknameError = submitted && nickname.trim() === '' ? '닉네임을 입력하세요' : ''
+  const emailError = submitted && email.trim() === '' ? '이메일을 입력하세요' : ''
+  const passwordError = submitted && password.trim() === '' ? '비밀번호를 입력하세요' : ''
+  const passwordConfirmError = submitted && passwordConfirm.trim() === '' ? '비밀번호 확인을 입력하세요' : ''
 
   useEffect(() => {
     if (!regionSheetOpen) {
@@ -150,20 +156,30 @@ export function Signup() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setSubmitted(true)
+    const isVeteran = selectedMode.id === 'veteran'
+    const trimmedNickname = nickname.trim()
+    const trimmedEmail = email.trim()
+
+    if (!trimmedNickname || !trimmedEmail || !password || !passwordConfirm) {
+      return
+    }
 
     localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem('nickname', nickname || '에어스쿼드 유저')
-    localStorage.setItem('email', email || 'rookie@airsoft.test')
+    localStorage.setItem('nickname', trimmedNickname)
+    localStorage.setItem('email', trimmedEmail)
     localStorage.setItem('region', region || '서울')
-    localStorage.setItem('level', selectedMode.label)
-    localStorage.setItem('skillAlias', selectedMode.alias)
+    localStorage.setItem('level', isVeteran ? '숙련자' : '입문자')
+    localStorage.setItem('skillAlias', isVeteran ? '베테랑' : '뉴비')
     localStorage.setItem('homePreset', selectedMode.homePreset)
+    localStorage.setItem('homeProfileBadge', isVeteran ? 'badge03' : 'symbol_beginner')
+    localStorage.setItem('homeProfileTitle', isVeteran ? '베테랑 숙련자' : '안전제일 뉴비')
 
     navigate('/home')
   }
 
   return (
-    <AuthShell onBack={goBack}>
+    <AuthShell onBack={goBack} showTopbar={false} scrollLock={step === 'profile'}>
       {step === 'level' ? (
         <section className="auth_page_body auth_signup_level_page">
           <div className="auth_page_header auth_page_header_center">
@@ -194,32 +210,48 @@ export function Signup() {
         </section>
       ) : (
         <form className="auth_page_body auth_signup_form_page" onSubmit={handleSubmit}>
-          <div className="auth_page_header auth_page_header_left">
-            <h1 className="auth_page_title">회원가입</h1>
-            <p className="auth_page_description">{selectedMode.formSubtitle}</p>
-          </div>
+          <div className="auth_signup_scroll_area">
+            <div className="auth_page_header auth_page_header_left">
+              <h1 className="auth_page_title">회원가입</h1>
+              <p className="auth_page_description">{selectedMode.formSubtitle}</p>
+            </div>
 
-          <div className="auth_form_block auth_form_block_signup">
-            <label className="auth_field">
-              <span className="auth_field__label">닉네임</span>
-              <input
-                className="auth_input"
-                type="text"
-                value={nickname}
-                placeholder="닉네임을 입력해주세요"
-                onChange={(event) => setNickname(event.target.value)}
-              />
-            </label>
+            <div className="auth_form_block auth_form_block_signup">
+              <label className="auth_field">
+                <span className="auth_field__label">닉네임</span>
+                <input
+                  className="auth_input"
+                  type="text"
+                  value={nickname}
+                  placeholder="닉네임을 입력해주세요"
+                  onChange={(event) => setNickname(event.target.value)}
+                  aria-invalid={nicknameError ? 'true' : undefined}
+                  aria-describedby={nicknameError ? 'signup-nickname-error' : undefined}
+                />
+                {nicknameError ? (
+                  <span id="signup-nickname-error" className="auth_field_error">
+                    {nicknameError}
+                  </span>
+                ) : null}
+              </label>
 
             <label className="auth_field">
               <span className="auth_field__label">이메일</span>
               <input
                 className="auth_input"
-                type="email"
+                type="text"
+                inputMode="email"
                 value={email}
                 placeholder="이메일을 입력해주세요"
                 onChange={(event) => setEmail(event.target.value)}
+                aria-invalid={emailError ? 'true' : undefined}
+                aria-describedby={emailError ? 'signup-email-error' : undefined}
               />
+              {emailError ? (
+                <span id="signup-email-error" className="auth_field_error">
+                  {emailError}
+                </span>
+              ) : null}
             </label>
 
             <label className="auth_field">
@@ -231,6 +263,8 @@ export function Signup() {
                   value={password}
                   placeholder="비밀번호를 입력해주세요"
                   onChange={(event) => setPassword(event.target.value)}
+                  aria-invalid={passwordError ? 'true' : undefined}
+                  aria-describedby={passwordError ? 'signup-password-error' : undefined}
                 />
                 <button
                   className="auth_input_icon_button"
@@ -241,10 +275,43 @@ export function Signup() {
                   <img src={iconEyeOff} alt="" aria-hidden="true" />
                 </button>
               </span>
+              {passwordError ? (
+                <span id="signup-password-error" className="auth_field_error">
+                  {passwordError}
+                </span>
+              ) : null}
             </label>
 
             <label className="auth_field">
-              <span className="auth_field__label">활동지역</span>
+              <span className="auth_field__label">비밀번호 확인</span>
+              <span className="auth_input_wrap">
+                <input
+                  className="auth_input"
+                  type={showPassword ? 'text' : 'password'}
+                  value={passwordConfirm}
+                  placeholder="비밀번호를 한 번 더 입력해주세요"
+                  onChange={(event) => setPasswordConfirm(event.target.value)}
+                  aria-invalid={passwordConfirmError ? 'true' : undefined}
+                  aria-describedby={passwordConfirmError ? 'signup-password-confirm-error' : undefined}
+                />
+                <button
+                  className="auth_input_icon_button"
+                  type="button"
+                  aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
+                  onClick={() => setShowPassword((current) => !current)}
+                >
+                  <img src={iconEyeOff} alt="" aria-hidden="true" />
+                </button>
+              </span>
+              {passwordConfirmError ? (
+                <span id="signup-password-confirm-error" className="auth_field_error">
+                  {passwordConfirmError}
+                </span>
+              ) : null}
+            </label>
+
+            <label className="auth_field">
+              <span className="auth_field__label">활동지역 (선택)</span>
               <button
                 className="auth_region_field_button"
                 type="button"
@@ -263,7 +330,7 @@ export function Signup() {
             </label>
 
             <label className="auth_field">
-              <span className="auth_field__label">전화번호</span>
+              <span className="auth_field__label">전화번호 (선택)</span>
               <span className="auth_phone_input">
                 <span className="auth_phone_prefix" aria-hidden="true">
                   <img className="auth_phone_flag" src={phoneNumberImage} alt="" />
@@ -278,6 +345,7 @@ export function Signup() {
                 />
               </span>
             </label>
+            </div>
           </div>
 
           <button className="auth_primary_button auth_page_footer_button" type="submit">

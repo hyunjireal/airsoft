@@ -37,6 +37,7 @@ import mainBuddy03 from '../../asset/images/main_buddy03.png'
 import mainBuddy04 from '../../asset/images/main_buddy04.png'
 import mainQnaImg from '../../asset/images/main_qna01.png'
 import mainQuizImg from '../../asset/images/main_quizImg01.png'
+import badge03 from '../../asset/images/badge03.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import mainTeam01 from '../../asset/images/main_team01.png'
 import mainTeam02 from '../../asset/images/main_team02.png'
@@ -270,6 +271,15 @@ export function Home() {
   const [isBuddySheetClosing, setIsBuddySheetClosing] = useState(false)
   const [profilePreview, setProfilePreview] = useState(userAvatar)
   const [profileObjectUrl, setProfileObjectUrl] = useState<string | null>(null)
+  const savedProfileBadge = localStorage.getItem('homeProfileBadge')
+  const savedProfileTitle = localStorage.getItem('homeProfileTitle')
+  const savedLevel = localStorage.getItem('level')
+  const savedSkillAlias = localStorage.getItem('skillAlias')
+  const savedNickname = localStorage.getItem('nickname')
+  const isVeteranProfile =
+    savedProfileBadge === 'badge03' || savedLevel === '숙련자' || savedSkillAlias === '베테랑'
+  const homeProfileBadge = isVeteranProfile ? badge03 : symbolBeginner
+  const homeProfileTitle = savedProfileTitle || (isVeteranProfile ? '베테랑 숙련자' : '안전제일 뉴비')
 
   useEffect(() => {
     return () => {
@@ -408,8 +418,8 @@ export function Home() {
                 <div className="home_userinfo_tit">
                   <div className="home_userinfo_icons">
                     <div className="home_userinfo_user_icon">
-                      <img src={symbolBeginner} alt="" className="home_userinfo_symbol" />
-                      <span className="body_m_14">안전제일 뉴비</span>
+                      <img src={homeProfileBadge} alt="" className="home_userinfo_symbol" />
+                      <span className="body_m_14">{homeProfileTitle}</span>
                     </div>
                     <button
                       className="home_userinfo_settings"
@@ -421,7 +431,7 @@ export function Home() {
                     </button>
                   </div>
                   <p className="home_userinfo_name">
-                    <span className="home_userinfo_name_user">삼삼오오</span>
+                    <span className="home_userinfo_name_user">{savedNickname || '삼삼오오'}</span>
                     <span className="home_userinfo_name_suffix">님</span>
                     <br />
                     <span className="home_userinfo_greeting body_m_16">오늘도 안전한 슈팅 하세요!</span>

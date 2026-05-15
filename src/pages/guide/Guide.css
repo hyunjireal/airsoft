@@ -1064,7 +1064,7 @@
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  padding: 110px 28px 174px;
+  padding: 110px 28px 100px;
 }
 
 .guide_quiz_start_title {
@@ -1157,7 +1157,7 @@
   justify-content: center;
   width: 100%;
   max-width: var(--app-max-width);
-  height: calc(124px + env(safe-area-inset-bottom, 0px));
+  height: calc(100px + env(safe-area-inset-bottom, 0px));
   padding: 0 24px;
   transform: translateX(50%);
 }

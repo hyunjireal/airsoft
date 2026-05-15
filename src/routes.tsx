@@ -2,7 +2,6 @@ import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom'
 import { AppShell } from './layout/AppShell'
 import { GlobalBottomSheetEffects } from './layout/GlobalBottomSheetEffects'
 import { ScrollToTop } from './layout/ScrollToTop'
-import { GuestStart } from './pages/auth/GuestStart'
 import { Login } from './pages/auth/Login'
 import { Signup } from './pages/auth/Signup'
 import { ChatbotPage } from './pages/chat/ChatbotPage'
@@ -90,7 +89,6 @@ export const router = createBrowserRouter([
           { path: '/onboarding', element: <Onboarding /> },
           { path: '/login', element: <Login /> },
           { path: '/signup', element: <Signup /> },
-          { path: '/guest-start', element: <GuestStart /> },
         ],
       },
       {

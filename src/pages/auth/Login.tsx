@@ -39,14 +39,18 @@ function AppleIcon() {
 
 export function Login() {
   const navigate = useNavigate()
-  const [userId, setUserId] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberLogin, setRememberLogin] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const userIdError = submitted && userId.trim() === '' ? '아이디를 입력하세요.' : ''
-  const passwordError = submitted && password.trim() === '' ? '비밀번호를 입력하세요.' : ''
+  const emailError = submitted && email.trim() === '' ? '이메일을 입력하세요' : ''
+  const passwordError = submitted && password.trim() === '' ? '비밀번호를 입력하세요' : ''
+  const loginError =
+    submitted && email.trim() !== '' && password.trim() !== ''
+      ? '아이디 또는 비밀번호가 틀렸습니다'
+      : ''
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -59,44 +63,32 @@ export function Login() {
 
   const login = () => {
     setSubmitted(true)
-
-    if (userId.trim() === '' || password.trim() === '') {
-      return
-    }
-
-    localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem('email', userId)
-    localStorage.setItem('nickname', localStorage.getItem('nickname') || '삼삼오오 유저')
-    if (rememberLogin) {
-      localStorage.setItem('rememberLogin', 'true')
-    } else {
-      localStorage.removeItem('rememberLogin')
-    }
-    navigate('/home')
   }
 
   return (
-    <AuthShell onBack={goBack}>
+    <AuthShell onBack={goBack} showTopbar={false}>
       <section className="auth_page_body auth_login_page">
         <div className="auth_page_header auth_page_header_left">
           <h1 className="auth_page_title">로그인</h1>
-          <p className="auth_page_description">아이디와 비밀번호를 입력하세요</p>
+          <p className="auth_page_description">이메일과 비밀번호를 입력하세요</p>
         </div>
 
         <div className="auth_form_block auth_form_block_login">
           <label className="auth_field">
-            <span className="auth_field__label">아이디</span>
+            <span className="auth_field__label">이메일</span>
             <input
               className="auth_input"
-              type="text"
-              value={userId}
-              onChange={(event) => setUserId(event.target.value)}
-              aria-invalid={userIdError ? 'true' : undefined}
-              aria-describedby={userIdError ? 'login-user-id-error' : undefined}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              aria-invalid={emailError || loginError ? 'true' : undefined}
+              aria-describedby={emailError ? 'login-email-error' : loginError ? 'login-submit-error' : undefined}
             />
-            {userIdError ? (
-              <span id="login-user-id-error" className="auth_field_error">
-                {userIdError}
+            {emailError ? (
+              <span id="login-email-error" className="auth_field_error">
+                {emailError}
               </span>
             ) : null}
           </label>
@@ -107,10 +99,11 @@ export function Login() {
               <input
                 className="auth_input"
                 type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                aria-invalid={passwordError ? 'true' : undefined}
-                aria-describedby={passwordError ? 'login-password-error' : undefined}
+                aria-invalid={passwordError || loginError ? 'true' : undefined}
+                aria-describedby={passwordError ? 'login-password-error' : loginError ? 'login-submit-error' : undefined}
               />
               <button
                 className="auth_input_icon_button"
@@ -128,6 +121,12 @@ export function Login() {
             ) : null}
           </label>
 
+          {loginError ? (
+            <p id="login-submit-error" className="auth_field_error auth_login_error">
+              {loginError}
+            </p>
+          ) : null}
+
           <div className="auth_helper_row">
             <button
               className={`auth_checkbox_button ${rememberLogin ? 'is_checked' : ''}`}
@@ -144,9 +143,21 @@ export function Login() {
           </div>
         </div>
 
-        <button className="auth_primary_button" type="button" onClick={login}>
-          로그인
-        </button>
+        <div className="auth_login_actions">
+          <button className="auth_primary_button" type="button" onClick={login}>
+            로그인
+          </button>
+
+          <div className="auth_bottom_links">
+            <button className="auth_bottom_links__default auth_bottom_links__disabled" type="button" disabled>
+              비회원으로 둘러보기
+            </button>
+            <span className="auth_bottom_links__divider" aria-hidden="true" />
+            <Link className="auth_bottom_links__accent" to="/signup">
+              아직 회원이 아니신가요? 회원가입
+            </Link>
+          </div>
+        </div>
 
         <div className="auth_provider_group">
           <div className="auth_divider" aria-hidden="true">
@@ -164,16 +175,6 @@ export function Login() {
             <AppleIcon />
             <span>Apple로 계속하기</span>
           </button>
-        </div>
-
-        <div className="auth_bottom_links">
-          <Link className="auth_bottom_links__default" to="/guest-start">
-            비회원으로 둘러보기
-          </Link>
-          <span className="auth_bottom_links__divider" aria-hidden="true" />
-          <Link className="auth_bottom_links__accent" to="/signup">
-            아직 회원이 아니신가요? 회원가입
-          </Link>
         </div>
       </section>
     </AuthShell>
