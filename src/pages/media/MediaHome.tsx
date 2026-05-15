@@ -150,7 +150,7 @@ export function MediaHome() {
     <div className="media_page">
       <section
         className="media_hero"
-        style={{ backgroundImage: `linear-gradient(180deg, rgba(0, 0, 0, 0.46), rgba(0, 0, 0, 0.5)), url(${mediaMainBg})` }}
+        style={{ backgroundImage: `url(${mediaMainBg})` }}
       >
         <PageHeader
           className="media_home_top"
