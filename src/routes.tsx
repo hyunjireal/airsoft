@@ -26,7 +26,6 @@ import { GuideStepPage } from './pages/guide/GuideStepPage'
 import { Home } from './pages/home/Home'
 import { MatchApply } from './pages/match/MatchApply'
 import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
-import { FieldInfo } from './pages/match/FieldInfo'
 import { MatchCreateGame } from './pages/match/MatchCreateGame'
 import { MatchDetail } from './pages/match/MatchDetail'
 import { MatchEdit } from './pages/match/MatchEdit'
@@ -126,7 +125,6 @@ export const router = createBrowserRouter([
           { path: '/match/presets', element: <MatchPresetManage /> },
           { path: '/match/presets/:presetId/edit', element: <MatchPresetEdit /> },
           { path: '/match/presets/finish', element: <MatchPresetFinish /> },
-          { path: '/match/fields', element: <FieldInfo /> },
           { path: '/match/filter', element: <MatchFilter /> },
           { path: '/match/schedule/:matchId/join', element: <MatchScheduleJoin /> },
           { path: '/match/detail/:id', element: <MatchDetail /> },

@@ -16,8 +16,14 @@ export function MatchApply() {
   const { id } = useParams()
   const navigate = useNavigate()
   const match = matches.find((item) => item.id === id)
+  const [nickname, setNickname] = useState('')
+  const [phone, setPhone] = useState('')
+  const [rental, setRental] = useState('')
+  const [buddyMatching, setBuddyMatching] = useState('')
   const [checked, setChecked] = useState<string[]>([])
+  const [submitAttempted, setSubmitAttempted] = useState(false)
   const allChecked = checked.length === checks.length
+  const canSubmit = Boolean(nickname.trim() && phone.trim() && rental && buddyMatching && allChecked)
 
   const toggleAll = () => {
     setChecked((prev) => (prev.length === checks.length ? [] : checks))
@@ -33,6 +39,12 @@ export function MatchApply() {
       localStorage.setItem(CANCELED_MATCH_IDS_KEY, JSON.stringify(canceled.filter((matchId) => matchId !== id)))
     }
     navigate(`/match/${id}/complete`)
+  }
+
+  const handleSubmit = () => {
+    setSubmitAttempted(true)
+    if (!canSubmit) return
+    complete()
   }
 
   const goBack = () => {
@@ -66,30 +78,63 @@ export function MatchApply() {
         <section className="match_apply_form" aria-label="신청자 정보">
           <label>
             <span className="match_apply_label">이름 또는 닉네임</span>
-            <input className="input" name="nickname" placeholder="예 : 홍길동" />
+            <input
+              className="input"
+              name="nickname"
+              placeholder="예 : 홍길동"
+              required
+              value={nickname}
+              onChange={(event) => setNickname(event.target.value)}
+              aria-invalid={submitAttempted && !nickname.trim()}
+            />
+            {submitAttempted && !nickname.trim() ? <p className="match_apply_error">이름 또는 닉네임을 입력하시오.</p> : null}
           </label>
           <label>
             <span className="match_apply_label">연락처</span>
-            <input className="input" name="phone" inputMode="tel" placeholder="예 : 010-1234-5678" />
+            <input
+              className="input"
+              name="phone"
+              inputMode="tel"
+              placeholder="예 : 010-1234-5678"
+              required
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              aria-invalid={submitAttempted && !phone.trim()}
+            />
+            {submitAttempted && !phone.trim() ? <p className="match_apply_error">연락처를 입력하시오.</p> : null}
           </label>
           <label>
             <span className="match_apply_label">장비 렌탈 필요 여부</span>
-            <select className="select" name="rental" defaultValue="">
+            <select
+              className="select"
+              name="rental"
+              required
+              value={rental}
+              onChange={(event) => setRental(event.target.value)}
+              aria-invalid={submitAttempted && !rental}
+            >
               <option value="" disabled>선택해주세요</option>
               <option>렌탈 필요 없음</option>
               <option disabled={!match?.rentalAvailable}>렌탈 필요</option>
             </select>
+            {submitAttempted && !rental ? <p className="match_apply_error">장비 렌탈 필요 여부를 선택하시오.</p> : null}
           </label>
-          {match?.beginnerFriendly ? (
-            <label>
-              <span className="match_apply_label">1:1 멘토링 필요 여부</span>
-              <select className="select" name="mentoring" defaultValue="">
-                <option value="" disabled>선택해주세요</option>
-                <option>멘토링 필요 없음</option>
-                <option>멘토링 필요</option>
-              </select>
-            </label>
-          ) : null}
+          <label>
+            <span className="match_apply_label">버디 매칭 필요 여부</span>
+            <select
+              className="select"
+              name="buddyMatching"
+              required
+              value={buddyMatching}
+              onChange={(event) => setBuddyMatching(event.target.value)}
+              aria-invalid={submitAttempted && !buddyMatching}
+            >
+              <option value="" disabled>선택해주세요</option>
+              <option>필요없음</option>
+              <option>필요</option>
+            </select>
+            {submitAttempted && !buddyMatching ? <p className="match_apply_error">버디 매칭 필요 여부를 선택하시오.</p> : null}
+          </label>
         </section>
 
         <section className="match_checklist" aria-label="신청 전 체크리스트">
@@ -110,8 +155,9 @@ export function MatchApply() {
             </label>
           ))}
         </section>
-        <button className="button primary_button" type="button" onClick={complete} disabled={!allChecked}>
-          신청 완료하기
+        {submitAttempted && !allChecked ? <p className="match_apply_error match_apply_check_error">신청 전 체크리스트를 모두 확인하시오.</p> : null}
+        <button className="button primary_button" type="button" onClick={handleSubmit}>
+          신청하러가기
         </button>
       </main>
     </div>

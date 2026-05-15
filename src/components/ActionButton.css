@@ -20,6 +20,11 @@
   box-shadow: none;
   filter: none;
   mix-blend-mode: normal;
+  overflow: hidden;
+  outline: none;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
   cursor: pointer;
   font-family: var(--font-pretendard);
   font-size: var(--app-action-font-size);
@@ -32,16 +37,19 @@
 .app_action_button--light {
   background: var(--color-white);
   color: var(--color-black);
+  -webkit-text-fill-color: var(--color-black);
 }
 
 .app_action_button--accent {
   background: var(--color-lime);
   color: var(--color-black);
+  -webkit-text-fill-color: var(--color-black);
 }
 
 .app_action_button__label {
   color: inherit;
   text-decoration: none;
+  -webkit-text-fill-color: inherit;
 }
 
 .onboarding_flow .app_action_button,

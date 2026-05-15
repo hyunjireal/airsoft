@@ -1,17 +1,9 @@
-import type { ButtonHTMLAttributes, CSSProperties, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import './ActionButton.css'
 
 type LoginButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   children?: ReactNode
-}
-
-const loginButtonStyle: CSSProperties = {
-  overflow: 'hidden',
-  outline: 'none',
-  position: 'relative',
-  zIndex: 1,
-  isolation: 'isolate',
-  WebkitTextFillColor: 'var(--color-black)',
+  variant?: 'light' | 'accent'
 }
 
 export function LoginButton({
@@ -19,14 +11,15 @@ export function LoginButton({
   className,
   style,
   type = 'button',
+  variant = 'light',
   ...props
 }: LoginButtonProps) {
   return (
     <button
       {...props}
-      className={['app_action_button', 'app_action_button--light', className].filter(Boolean).join(' ')}
+      className={['app_action_button', `app_action_button--${variant}`, className].filter(Boolean).join(' ')}
       type={type}
-      style={{ ...loginButtonStyle, ...style }}
+      style={style}
     >
       <span className="app_action_button__label">{children}</span>
     </button>

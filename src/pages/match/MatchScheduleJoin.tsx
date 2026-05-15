@@ -1,8 +1,9 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
+import matchBagIcon from '../../asset/icons/match_bag.svg'
 import matchCalendarIcon from '../../asset/icons/match_calendar.svg'
 import matchCheckIcon from '../../asset/icons/match_check.svg'
 import matchFieldIcon from '../../asset/icons/match_field.svg'
@@ -52,6 +53,8 @@ export function MatchScheduleJoin() {
         className="schedule_join_top"
         groupClassName="schedule_join_tit"
         backButtonClassName="schedule_join_back"
+        title="매치 상세"
+        titleClassName="schedule_join_header_title"
         onBack={goBack}
       />
 
@@ -80,12 +83,12 @@ export function MatchScheduleJoin() {
                 <strong className="body_sb_20">어반 CQB</strong>
                 <p className="body_m_14">서울 금천구 디지털로 실내 CQB 아레나</p>
               </div>
-              <Link className="schedule_join_tag_link" to="/match/fields">
+              <div className="schedule_join_tag_link" aria-hidden="true">
                 <KeywordTag className="schedule_join_soft_tag">
                   필드 정보 보기
                   <img src={arrowRIcon} alt="" aria-hidden="true" />
                 </KeywordTag>
-              </Link>
+              </div>
             </article>
 
             <article className="schedule_join_info_card">
@@ -107,7 +110,7 @@ export function MatchScheduleJoin() {
           <article className="schedule_join_info_card schedule_join_prepare_card">
             <div className="schedule_join_info_head">
               <span className="schedule_join_info_icon">
-                <img src={matchFieldIcon} alt="" aria-hidden="true" />
+                <img src={matchBagIcon} alt="" aria-hidden="true" />
               </span>
               <span className="body_sb_22">준비물</span>
             </div>
@@ -150,26 +153,20 @@ export function MatchScheduleJoin() {
             </article>
           ))}
         </section>
+      </main>
 
+      <div className="schedule_join_cta">
         <LoginButton
-          className="schedule_join_apply_button"
           onClick={() => navigate(`/match/${targetMatchId}/apply`)}
           style={{
             background: 'var(--color-khaki)',
-            backgroundColor: 'var(--color-khaki)',
             color: 'var(--color-white)',
             WebkitTextFillColor: 'var(--color-white)',
-            borderRadius: 5,
-            height: 40,
-            minHeight: 40,
-            fontSize: 14,
-            fontWeight: 500,
-            letterSpacing: '-0.02em',
           }}
         >
           참가 신청하기
         </LoginButton>
-      </main>
+      </div>
     </div>
   )
 }

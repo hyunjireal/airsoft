@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
+import matchPencilIcon from '../../asset/icons/preset_pencil.svg'
+import presetTrashIcon from '../../asset/icons/preset_trash.svg'
+import matchList01 from '../../asset/images/match_list01.jpg'
+import matchList02 from '../../asset/images/match_list02.jpg'
+import matchList03 from '../../asset/images/match_list03.jpg'
 import './match.css'
 
 type CreatedMatch = {
@@ -14,6 +19,7 @@ type CreatedMatch = {
   currentParticipants?: number
   maxParticipants?: number
   recruitType?: string
+  imageSrc?: string
 }
 
 type ManagedTeamSchedule = {
@@ -25,6 +31,7 @@ type ManagedTeamSchedule = {
   fieldName: string
   currentParticipants: number
   maxParticipants: number
+  imageSrc: string
 }
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
@@ -37,9 +44,10 @@ const defaultTeamSchedules: ManagedTeamSchedule[] = [
     title: '주말 포레스트 매치',
     time: '15:30',
     region: '경기 북부',
-    fieldName: '포레스트 아레나',
+    fieldName: '포레스트 필드',
     currentParticipants: 22,
     maxParticipants: 30,
+    imageSrc: matchList01,
   },
   {
     id: 'team-manage-002',
@@ -50,6 +58,7 @@ const defaultTeamSchedules: ManagedTeamSchedule[] = [
     fieldName: '어반 CQB',
     currentParticipants: 20,
     maxParticipants: 28,
+    imageSrc: matchList02,
   },
   {
     id: 'team-manage-003',
@@ -60,10 +69,9 @@ const defaultTeamSchedules: ManagedTeamSchedule[] = [
     fieldName: '강남 CQB',
     currentParticipants: 10,
     maxParticipants: 16,
+    imageSrc: matchList03,
   },
 ]
-
-const weekdays = ['일', '월', '화', '수', '목', '금', '토']
 
 function readCreatedMatches(): CreatedMatch[] {
   try {
@@ -107,6 +115,7 @@ function toManagedSchedule(match: CreatedMatch): ManagedTeamSchedule | null {
     fieldName: typeof match.fieldName === 'string' ? match.fieldName : '어반 CQB',
     currentParticipants: Number(match.currentParticipants) || 1,
     maxParticipants: Number(match.maxParticipants) || 16,
+    imageSrc: typeof match.imageSrc === 'string' && match.imageSrc ? match.imageSrc : matchList01,
   }
 }
 
@@ -122,6 +131,7 @@ function toCreatedMatch(schedule: ManagedTeamSchedule): CreatedMatch {
     fieldName: schedule.fieldName,
     currentParticipants: schedule.currentParticipants,
     maxParticipants: schedule.maxParticipants,
+    imageSrc: schedule.imageSrc,
   }
 }
 
@@ -151,20 +161,6 @@ function buildManagedSchedules() {
   return [...mergedDefaults, ...extraSavedSchedules].sort(sortSchedules)
 }
 
-function formatDisplayDate(dateValue: string) {
-  const date = new Date(`${dateValue}T00:00:00`)
-  if (Number.isNaN(date.getTime())) {
-    return dateValue.replaceAll('-', '.')
-  }
-
-  const weekday = weekdays[date.getDay()]
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-
-  return `${year}.${month}.${day} (${weekday})`
-}
-
 export function MatchManageHome() {
   const navigate = useNavigate()
   const [schedules, setSchedules] = useState<ManagedTeamSchedule[]>(() => buildManagedSchedules())
@@ -187,7 +183,7 @@ export function MatchManageHome() {
     }
 
     writeDeletedScheduleIds(readDeletedScheduleIds().filter((item) => item !== schedule.id))
-    navigate(`/match/detail/${schedule.id}`)
+    navigate(`/match/edit/${schedule.id}`)
   }
 
   const handleDelete = (schedule: ManagedTeamSchedule) => {
@@ -210,7 +206,7 @@ export function MatchManageHome() {
         className="match_page_header match_manage_page_header"
         backButtonClassName="match_page_back_button"
         layout="standard"
-        title="팀 관리"
+        title="내가 올린 모집글"
         titleClassName="match_page_title"
         onBack={goBack}
       />
@@ -220,22 +216,26 @@ export function MatchManageHome() {
           <div className="match_manage_list">
             {schedules.map((schedule) => (
               <article className="match_manage_card" key={schedule.id}>
-                <div className="match_manage_card_body">
-                  <p className="match_manage_card_date">{formatDisplayDate(schedule.date)}</p>
-                  <h2 className="match_manage_card_title">{schedule.title}</h2>
-                  <div className="match_manage_meta_list">
-                    <p className="match_manage_meta_row">
-                      <span className="match_manage_meta_label">시간</span>
-                      <span className="match_manage_meta_value">{schedule.time}</span>
-                    </p>
-                    <p className="match_manage_meta_row">
-                      <span className="match_manage_meta_label">장소</span>
-                      <span className="match_manage_meta_value">{schedule.region} · {schedule.fieldName}</span>
-                    </p>
-                    <p className="match_manage_meta_row">
-                      <span className="match_manage_meta_label">인원</span>
-                      <span className="match_manage_meta_value">{schedule.currentParticipants}/{schedule.maxParticipants}명</span>
-                    </p>
+                <div className="match_manage_card_left">
+                  <img className="match_manage_card_thumb" src={schedule.imageSrc} alt="" aria-hidden="true" />
+                  <div className="match_manage_card_body">
+                    <h2 className="match_manage_card_title">{schedule.title}</h2>
+                    <div className="match_manage_meta_list">
+                      <p className="match_manage_meta_row">
+                        <span className="match_manage_meta_label">시간</span>
+                        <span className="match_manage_meta_value">{schedule.time}</span>
+                      </p>
+                      <p className="match_manage_meta_row">
+                        <span className="match_manage_meta_label">장소</span>
+                        <span className="match_manage_meta_value">{schedule.region} · {schedule.fieldName}</span>
+                      </p>
+                      <p className="match_manage_meta_row">
+                        <span className="match_manage_meta_label">인원</span>
+                        <span className="match_manage_meta_value">
+                          {schedule.currentParticipants} / {schedule.maxParticipants}명
+                        </span>
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -243,16 +243,18 @@ export function MatchManageHome() {
                   <button
                     className="match_manage_action_button is_edit"
                     type="button"
+                    aria-label={`${schedule.title} 수정`}
                     onClick={() => handleEdit(schedule)}
                   >
-                    수정
+                    <img src={matchPencilIcon} alt="" aria-hidden="true" />
                   </button>
                   <button
                     className="match_manage_action_button is_delete"
                     type="button"
+                    aria-label={`${schedule.title} 삭제`}
                     onClick={() => handleDelete(schedule)}
                   >
-                    삭제
+                    <img src={presetTrashIcon} alt="" aria-hidden="true" />
                   </button>
                 </div>
               </article>
@@ -260,8 +262,8 @@ export function MatchManageHome() {
           </div>
         ) : (
           <article className="match_manage_empty">
-            <strong>관리 중인 팀 일정이 없어요.</strong>
-            <p>새 팀 매치를 만들고 일정 변경이 필요할 때 이곳에서 바로 관리해 보세요.</p>
+            <strong>관리 중인 팀 일정이 없어요</strong>
+            <p>팀 매치를 만들고 일정 변경이 필요할 때 이곳에서 바로 관리해 보세요.</p>
             <Link className="match_full_button match_dark_button" to="/match">
               팀 일정 만들기
             </Link>

@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
-import matchPencilIcon from '../../asset/icons/match_pencil.svg'
+import matchPencilIcon from '../../asset/icons/preset_pencil.svg'
+import presetTrashIcon from '../../asset/icons/preset_trash.svg'
 import { getMyMatches, type MyMatchStatus } from './myMatchData'
 import './my.css'
 
@@ -12,6 +13,8 @@ type ScheduleTab = {
   label: string
   value: ScheduleStatus
 }
+
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 
 const tabs: ScheduleTab[] = [
   { label: '신청 중', value: 'applied' },
@@ -23,8 +26,9 @@ export function MySchedule() {
   const [searchParams] = useSearchParams()
   const initialTab = searchParams.get('tab') === 'confirmed' ? 'confirmed' : 'applied'
   const [selectedTab, setSelectedTab] = useState<ScheduleStatus>(initialTab)
+  const [scheduleRevision, setScheduleRevision] = useState(0)
 
-  const schedules = useMemo(() => getMyMatches().filter((match) => match.status !== 'past'), [])
+  const schedules = useMemo(() => getMyMatches().filter((match) => match.status !== 'past'), [scheduleRevision])
 
   const filteredSchedules = useMemo(
     () => schedules.filter((schedule) => schedule.status === selectedTab),
@@ -38,6 +42,24 @@ export function MySchedule() {
     }
 
     navigate('/my')
+  }
+
+  const deleteMyMatch = (matchId: string, title: string) => {
+    const shouldDelete = window.confirm(`"${title}" 모집글을 삭제할까요?`)
+    if (!shouldDelete) return
+
+    try {
+      const savedMatches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
+      const nextMatches = Array.isArray(savedMatches)
+        ? savedMatches.filter((match) => !match || typeof match !== 'object' || match.id !== matchId)
+        : []
+
+      localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify(nextMatches))
+      setScheduleRevision((value) => value + 1)
+    } catch {
+      localStorage.setItem(CREATED_MATCHES_KEY, '[]')
+      setScheduleRevision((value) => value + 1)
+    }
   }
 
   return (
@@ -69,12 +91,66 @@ export function MySchedule() {
         {filteredSchedules.length > 0 ? (
           <div className="my_schedule_match_list">
             {filteredSchedules.map((match) => {
-              const actionTo = match.isMine ? '/match/manage' : `/match/detail/${match.matchId}`
-              const actionLabel = match.isMine ? `${match.title} 관리하기` : `${match.title} 상세 보기`
-              const actionIcon = match.isMine ? matchPencilIcon : arrowRIcon
+              if (match.isMine) {
+                return (
+                  <article className="my_schedule_match_item my_schedule_match_item_mine" key={match.id}>
+                    <div className="my_schedule_match_bottom">
+                      <div className="my_schedule_match_media">
+                        <img className="my_schedule_match_thumb" src={match.imageSrc} alt="" aria-hidden="true" />
+                        <div className="my_schedule_match_info">
+                          <strong className="my_schedule_match_title">{match.title}</strong>
+                          <div className="my_schedule_match_meta">
+                            <p className="my_schedule_match_meta_row">
+                              <span className="my_schedule_match_meta_label">시간</span>
+                              <span className="my_schedule_match_meta_value">{match.time}</span>
+                            </p>
+                            <p className="my_schedule_match_meta_row">
+                              <span className="my_schedule_match_meta_label">장소</span>
+                              <span className="my_schedule_match_meta_value">
+                                {match.region} · {match.fieldName}
+                              </span>
+                            </p>
+                            <p className="my_schedule_match_meta_row">
+                              <span className="my_schedule_match_meta_label">인원</span>
+                              <span className="my_schedule_match_meta_value">
+                                {match.currentParticipants} / {match.maxParticipants}명
+                              </span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="my_schedule_match_mine_actions">
+                        <button
+                          className="my_schedule_match_mine_action"
+                          type="button"
+                          aria-label={`${match.title} 수정`}
+                          onClick={() => navigate(`/match/edit/${match.matchId}`)}
+                        >
+                          <img src={matchPencilIcon} alt="" aria-hidden="true" />
+                        </button>
+                        <button
+                          className="my_schedule_match_mine_action"
+                          type="button"
+                          aria-label={`${match.title} 삭제`}
+                          onClick={() => deleteMyMatch(match.matchId, match.title)}
+                        >
+                          <img src={presetTrashIcon} alt="" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              }
 
               return (
-                <Link className="my_schedule_match_item" to={actionTo} aria-label={actionLabel} key={match.id}>
+                <Link
+                  className="my_schedule_match_item"
+                  to={`/match/detail/${match.matchId}`}
+                  state={{ hideCancelApplication: selectedTab === 'confirmed' }}
+                  aria-label={`${match.title} 상세 보기`}
+                  key={match.id}
+                >
                   <div className="my_schedule_match_bottom">
                     <div className="my_schedule_match_media">
                       <img className="my_schedule_match_thumb" src={match.imageSrc} alt="" aria-hidden="true" />
@@ -101,12 +177,7 @@ export function MySchedule() {
                       </div>
                     </div>
                     <span className="my_schedule_match_arrow_link" aria-hidden="true">
-                      <img
-                        className={`my_schedule_match_arrow ${match.isMine ? 'is_pencil' : ''}`}
-                        src={actionIcon}
-                        alt=""
-                        aria-hidden="true"
-                      />
+                      <img className="my_schedule_match_arrow" src={arrowRIcon} alt="" aria-hidden="true" />
                     </span>
                   </div>
                 </Link>

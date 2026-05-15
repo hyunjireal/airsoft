@@ -30,12 +30,17 @@ export function MatchApplyComplete() {
         className="schedule_join_top match_apply_top"
         groupClassName="schedule_join_tit"
         backButtonClassName="schedule_join_back"
+        title="신청 완료"
+        titleClassName="schedule_join_header_title"
         onBack={goBack}
       />
 
       <main className="match_apply_complete_main">
         <section className="match_complete_panel">
-          <span aria-hidden="true">✓</span>
+          <div className="match_complete_success_circle_mark" aria-hidden="true">
+            <div className="match_complete_success_background" />
+            <div className="match_complete_success_draw" />
+          </div>
           <h1>참가 신청이 완료되었습니다</h1>
           <div className="match_complete_copy">
             <p>팀장의 승낙 여부를 기다려주세요.</p>
@@ -62,6 +67,7 @@ export function MatchApplyComplete() {
 
         <div className="match_complete_actions">
           <LoginButton
+            className="match_complete_schedule_button"
             onClick={() => navigate('/my/schedule')}
             style={{
               background: '#111111',
@@ -73,6 +79,7 @@ export function MatchApplyComplete() {
             내 경기 일정 보기
           </LoginButton>
           <LoginButton
+            className="match_complete_home_button"
             onClick={() => navigate('/home')}
             style={{
               border: '1px solid #111111',

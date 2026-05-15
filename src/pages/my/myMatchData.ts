@@ -82,7 +82,7 @@ const defaultMyMatches: MyMatchItem[] = [
     matchId: 'past-001',
     status: 'past',
     type: 'personal',
-    title: '2026 5월 입문자 경기',
+    title: '2026 5월 입문전 경기',
     time: '2026.05.02 · 10:00',
     detail: '5/2 (토) 10:00 I 하남 실내 필드',
     region: '경기 하남',
@@ -113,7 +113,14 @@ function readCreatedMatches(): MyMatchItem[] {
       .filter((match) => match && typeof match === 'object' && typeof match.id === 'string')
       .map((match): MyMatchItem => {
         const type: MyMatchType = match.type === 'team' || match.type === 'mercenary' ? match.type : 'personal'
-        const imageSrc = type === 'team' ? matchList02 : type === 'mercenary' ? matchList03 : matchList01
+        const imageSrc =
+          typeof match.imageSrc === 'string' && match.imageSrc
+            ? match.imageSrc
+            : type === 'team'
+              ? matchList02
+              : type === 'mercenary'
+                ? matchList03
+                : matchList01
         const rawDate = typeof match.date === 'string' ? match.date : '2026-05-18'
         const dateLabel = rawDate.replaceAll('-', '.')
         const time = typeof match.time === 'string' ? match.time : '14:00'
