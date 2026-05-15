@@ -5935,12 +5935,3 @@
   background: rgba(255, 255, 255, 0.13);
 }
 
-:root[data-theme='dark'] .match_tournament_cta {
-  background:
-    linear-gradient(-145deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.18) 18%, rgba(255, 255, 255, 0.06) 38%, rgba(255, 255, 255, 0) 42%),
-    rgba(238, 33, 6, 0.15) !important;
-  background-color: rgba(238, 33, 6, 0.15) !important;
-  color: var(--color-white) !important;
-  -webkit-text-fill-color: var(--color-white) !important;
-}
-
