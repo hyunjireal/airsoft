@@ -64,35 +64,35 @@ export function MatchApplyComplete() {
           <strong>서울 CQB 입문 경기</strong>
           <p>서울 · 어반 CQB · 40,000원</p>
         </section>
-
-        <div className="match_complete_actions">
-          <LoginButton
-            className="match_complete_schedule_button"
-            onClick={() => navigate('/my/schedule')}
-            style={{
-              background: '#111111',
-              backgroundColor: '#111111',
-              color: 'var(--color-white)',
-              WebkitTextFillColor: 'var(--color-white)',
-            }}
-          >
-            내 경기 일정 보기
-          </LoginButton>
-          <LoginButton
-            className="match_complete_home_button"
-            onClick={() => navigate('/home')}
-            style={{
-              border: '1px solid #111111',
-              background: 'var(--color-white)',
-              backgroundColor: 'var(--color-white)',
-              color: '#111111',
-              WebkitTextFillColor: '#111111',
-            }}
-          >
-            홈으로
-          </LoginButton>
-        </div>
       </main>
+
+      <div className="match_complete_actions">
+        <LoginButton
+          className="match_complete_schedule_button"
+          onClick={() => navigate('/my/schedule')}
+          style={{
+            background: '#111111',
+            backgroundColor: '#111111',
+            color: 'var(--color-white)',
+            WebkitTextFillColor: 'var(--color-white)',
+          }}
+        >
+          내 경기 일정 보기
+        </LoginButton>
+        <LoginButton
+          className="match_complete_home_button"
+          onClick={() => navigate('/home')}
+          style={{
+            border: '1px solid #111111',
+            background: 'var(--color-white)',
+            backgroundColor: 'var(--color-white)',
+            color: '#111111',
+            WebkitTextFillColor: '#111111',
+          }}
+        >
+          홈으로
+        </LoginButton>
+      </div>
     </div>
   )
 }

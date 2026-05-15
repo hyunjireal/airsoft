@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import { matches } from '../../data/mockData'
 import './match.css'
@@ -156,9 +157,9 @@ export function MatchApply() {
           ))}
         </section>
         {submitAttempted && !allChecked ? <p className="match_apply_error match_apply_check_error">신청 전 체크리스트를 모두 확인하시오.</p> : null}
-        <button className="button primary_button" type="button" onClick={handleSubmit}>
-          신청하러가기
-        </button>
+        <LoginButton className="match_apply_submit_button" onClick={handleSubmit}>
+          신청하기
+        </LoginButton>
       </main>
     </div>
   )
