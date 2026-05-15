@@ -2,6 +2,7 @@ import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
 import matchList03 from '../../asset/images/match_list03.jpg'
 import { matches } from '../../data/mockData'
+import { readMatchSnapshots } from '../match/matchApplicationStorage'
 
 export type MyMatchStatus = 'applied' | 'confirmed' | 'past'
 export type MyMatchType = 'personal' | 'team' | 'mercenary'
@@ -174,10 +175,45 @@ function createJoinedMatches(canceledIds: string[], existingMatchIds: string[]) 
     }))
 }
 
+function createStoredJoinedMatches(canceledIds: string[], existingMatchIds: string[]) {
+  const joinedIds = readStringList(JOINED_MATCH_IDS_KEY).filter(
+    (id) => !canceledIds.includes(id) && !existingMatchIds.includes(id),
+  )
+  const defaultItems = createJoinedMatches(canceledIds, existingMatchIds)
+  const defaultIds = new Set(defaultItems.map((match) => match.matchId))
+  const snapshotItems = readMatchSnapshots(joinedIds)
+    .filter((match) => !defaultIds.has(match.id))
+    .map((match): MyMatchItem => ({
+      id: `joined-${match.id}`,
+      matchId: match.id,
+      status: 'applied',
+      type: match.type === 'team' || match.type === 'mercenary' ? match.type : 'personal',
+      title: match.title,
+      time: `${(match.dateValue ?? match.date ?? '2026-05-18').replaceAll('-', '.')} · ${match.time}`,
+      detail: `${match.dateValue ?? match.date ?? ''} ${match.time} · ${match.fieldName}`,
+      region: match.region,
+      fieldName: match.fieldName,
+      currentParticipants: match.currentParticipants,
+      maxParticipants: match.maxParticipants,
+      imageSrc: match.imageSrc || matchList01,
+      tagLabel: '신청 중',
+      to: `/match/detail/${match.id}`,
+    }))
+
+  return [...defaultItems, ...snapshotItems]
+}
+
 export function getMyMatches() {
   const canceledIds = readStringList(CANCELED_MATCH_IDS_KEY)
-  const baseMatches = defaultMyMatches.filter((match) => !canceledIds.includes(match.matchId))
-  const joinedMatches = createJoinedMatches(
+  const joinedIds = readStringList(JOINED_MATCH_IDS_KEY)
+  const baseMatches = defaultMyMatches
+    .filter((match) => !canceledIds.includes(match.matchId))
+    .map((match) =>
+      joinedIds.includes(match.matchId) && match.status !== 'past'
+        ? { ...match, id: `joined-${match.matchId}`, status: 'applied' as const }
+        : match,
+    )
+  const joinedMatches = createStoredJoinedMatches(
     canceledIds,
     baseMatches.map((match) => match.matchId),
   )

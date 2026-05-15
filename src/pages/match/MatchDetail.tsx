@@ -5,6 +5,7 @@ import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import refreshIcon from '../../asset/icons/match_new.svg'
 import { matches } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
+import { markMatchCanceled, readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
 const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
@@ -43,10 +44,6 @@ function readStringList(key: string) {
   }
 }
 
-function writeStringList(key: string, value: string[]) {
-  localStorage.setItem(key, JSON.stringify(Array.from(new Set(value))))
-}
-
 function readCreatedMatches(): CreatedMatchDetail[] {
   try {
     const value = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
@@ -82,6 +79,7 @@ export function MatchDetail() {
     (location.state as { hideCancelApplication?: boolean } | null)?.hideCancelApplication,
   )
   const createdMatch = readCreatedMatches().find((item) => item.id === id)
+  const cachedMatch = readMatchSnapshot(id)
   const defaultMatch = matches.find((item) => item.id === id)
   const match = createdMatch
     ? {
@@ -98,6 +96,20 @@ export function MatchDetail() {
         body: createdMatch.body,
         recruitTypeLabel: getRecruitTypeLabel(createdMatch.type),
       }
+    : cachedMatch
+      ? {
+          id: cachedMatch.id,
+          title: cachedMatch.title,
+          date: cachedMatch.date ?? cachedMatch.dateValue ?? '2026-05-18',
+          dateValue: cachedMatch.dateValue ?? cachedMatch.date,
+          time: cachedMatch.time,
+          region: cachedMatch.region,
+          fieldName: cachedMatch.fieldName,
+          difficulty: cachedMatch.difficulty ?? getRecruitTypeLabel(cachedMatch.type),
+          currentParticipants: cachedMatch.currentParticipants,
+          maxParticipants: cachedMatch.maxParticipants,
+          recruitTypeLabel: getRecruitTypeLabel(cachedMatch.type),
+        }
     : defaultMatch
 
   const isApplied = useMemo(() => {
@@ -138,11 +150,7 @@ export function MatchDetail() {
   }
 
   const cancelApplication = () => {
-    const joinedIds = readStringList(JOINED_MATCH_IDS_KEY).filter((matchId) => matchId !== match.id)
-    const canceledIds = readStringList(CANCELED_MATCH_IDS_KEY)
-
-    writeStringList(JOINED_MATCH_IDS_KEY, joinedIds)
-    writeStringList(CANCELED_MATCH_IDS_KEY, [...canceledIds, match.id])
+    markMatchCanceled(match.id)
     navigate('/my/schedule')
   }
 

@@ -806,6 +806,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
+  min-width: 0;
   border: 1px solid var(--my-schedule-card-stroke);
   border-radius: 8px;
   background: var(--my-schedule-card-bg);
@@ -821,13 +823,15 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-width: 0;
 }
 
 .my_schedule_match_media {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .my_schedule_match_thumb {
@@ -846,22 +850,27 @@
   flex-direction: column;
   gap: 8px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .my_schedule_match_title {
   margin: 0;
+  overflow: hidden;
   font-family: var(--font-pretendard);
   font-size: 16px;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
   color: var(--my-schedule-card-title);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .my_schedule_match_meta {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
 }
 
 .my_schedule_match_meta_row {
@@ -869,6 +878,7 @@
   align-items: center;
   gap: 6px;
   margin: 0;
+  min-width: 0;
 }
 
 .my_schedule_match_meta_label {
@@ -882,12 +892,16 @@
 }
 
 .my_schedule_match_meta_value {
+  min-width: 0;
+  overflow: hidden;
   font-family: var(--font-pretendard);
   font-size: 14px;
   font-weight: 300;
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
   color: var(--my-schedule-card-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .my_schedule_match_arrow_link {

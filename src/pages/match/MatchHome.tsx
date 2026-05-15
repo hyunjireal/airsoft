@@ -24,6 +24,7 @@ import matchList04 from '../../asset/images/match_list04.jpg'
 import matchList05 from '../../asset/images/match_list05.jpg'
 import { LoginButton } from '../../components/LoginButton'
 import { getMyMatchGroups } from '../my/myMatchData'
+import { cacheMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
@@ -456,6 +457,21 @@ function getMatchTypeLabel(match: MatchSchedule) {
   return match.difficulty
 }
 
+function getAiMatchFieldName(match: AiRecommendedMatch) {
+  return match.title.split('\n')[0] || match.region
+}
+
+function getAiMatchDateValue(match: AiRecommendedMatch) {
+  const dateMatch = match.time.match(/(\d{1,2})\.(\d{1,2})/)
+  if (!dateMatch) return undefined
+
+  return `2026-${dateMatch[1].padStart(2, '0')}-${dateMatch[2].padStart(2, '0')}`
+}
+
+function getAiMatchTime(match: AiRecommendedMatch) {
+  return match.time.match(/\d{1,2}:\d{2}/)?.[0] ?? match.time
+}
+
 const matchTypeColor: Record<MatchType, string> = {
   team: 'var(--color-navy)',
   personal: 'var(--color-teal)',
@@ -654,6 +670,23 @@ export function MatchHome() {
     }, 420)
   }
 
+  const cacheScheduleMatch = (match: MatchSchedule) => {
+    cacheMatchSnapshot({
+      id: match.id,
+      type: match.type,
+      title: match.title,
+      date: selectedDateKey,
+      dateValue: selectedDateKey,
+      time: match.time,
+      region: match.region,
+      fieldName: match.fieldName,
+      difficulty: match.difficulty,
+      currentParticipants: match.currentParticipants,
+      maxParticipants: match.maxParticipants,
+      imageSrc: match.imageSrc,
+    })
+  }
+
   return (
     <div className="match_page">
       <PageHeader
@@ -750,7 +783,26 @@ export function MatchHome() {
               <strong>{aiRecommendedMatch.currentMembers} <small>/ {aiRecommendedMatch.maxMembers}</small></strong>
             </div>
           </article>
-          <Link className="match_full_button match_dark_button match_ai_join_button" to={`/match/schedule/${aiRecommendedMatch.id}/join`}>
+          <Link
+            className="match_full_button match_dark_button match_ai_join_button"
+            to={`/match/schedule/${aiRecommendedMatch.id}/join`}
+            onClick={() =>
+              cacheMatchSnapshot({
+                id: aiRecommendedMatch.id,
+                type: 'personal',
+                title: aiRecommendedMatch.title.replace(/\n/g, ' '),
+                date: getAiMatchDateValue(aiRecommendedMatch) ?? selectedDateKey,
+                dateValue: getAiMatchDateValue(aiRecommendedMatch) ?? selectedDateKey,
+                time: getAiMatchTime(aiRecommendedMatch),
+                region: aiRecommendedMatch.region,
+                fieldName: getAiMatchFieldName(aiRecommendedMatch),
+                difficulty: 'AI 추천',
+                currentParticipants: aiRecommendedMatch.currentMembers,
+                maxParticipants: aiRecommendedMatch.maxMembers,
+                imageSrc: aiRecommendedMatch.imageSrc,
+              })
+            }
+          >
             참가하기
           </Link>
         </div>
@@ -869,6 +921,11 @@ export function MatchHome() {
                         onClick={(event) => {
                           if (isPastMatch) {
                             event.preventDefault()
+                            return
+                          }
+
+                          if (!isMine) {
+                            cacheScheduleMatch(match)
                           }
                         }}
                         key={match.id}

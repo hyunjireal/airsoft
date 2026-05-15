@@ -23,6 +23,10 @@
   transform: translateX(-50%);
 }
 
+:root[data-theme='dark'] .home_page_header {
+  background: transparent;
+}
+
 .home_tag {
   display: inline-flex;
   align-items: center;

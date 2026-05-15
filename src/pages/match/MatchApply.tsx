@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
+import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import { matches } from '../../data/mockData'
+import { cacheMatchSnapshot, markMatchJoined, readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
-
-const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
 
 const checks = [
   '안전수칙과 현장 규정을 확인했어요.',
@@ -16,7 +16,9 @@ const checks = [
 export function MatchApply() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const match = matches.find((item) => item.id === id)
+  const cachedMatch = readMatchSnapshot(id)
+  const defaultMatch = matches.find((item) => item.id === id)
+  const match = cachedMatch ?? defaultMatch
   const [nickname, setNickname] = useState('')
   const [phone, setPhone] = useState('')
   const [rental, setRental] = useState('')
@@ -25,19 +27,36 @@ export function MatchApply() {
   const [submitAttempted, setSubmitAttempted] = useState(false)
   const allChecked = checked.length === checks.length
   const canSubmit = Boolean(nickname.trim() && phone.trim() && rental && buddyMatching && allChecked)
+  const rentalAvailable = match && 'rentalAvailable' in match ? match.rentalAvailable : true
+  const matchTitle = match?.title ?? '서울 CQB 입문 경기'
+  const matchRegion = match?.region ?? '서울'
+  const matchFieldName = match?.fieldName ?? '어반 CQB'
+  const matchTime = match?.time ?? '12:00'
+  const matchDate = cachedMatch?.dateValue ?? cachedMatch?.date ?? defaultMatch?.dateValue ?? defaultMatch?.date
 
   const toggleAll = () => {
     setChecked((prev) => (prev.length === checks.length ? [] : checks))
   }
 
   const complete = () => {
-    const stored = JSON.parse(localStorage.getItem('joinedMatchIds') || '[]') as string[]
-    if (id && !stored.includes(id)) {
-      localStorage.setItem('joinedMatchIds', JSON.stringify([...stored, id]))
-    }
     if (id) {
-      const canceled = JSON.parse(localStorage.getItem(CANCELED_MATCH_IDS_KEY) || '[]') as string[]
-      localStorage.setItem(CANCELED_MATCH_IDS_KEY, JSON.stringify(canceled.filter((matchId) => matchId !== id)))
+      if (match) {
+        cacheMatchSnapshot({
+          id,
+          type: cachedMatch?.type,
+          title: match.title,
+          date: cachedMatch?.date ?? defaultMatch?.date,
+          dateValue: cachedMatch?.dateValue ?? defaultMatch?.dateValue,
+          time: match.time,
+          region: match.region,
+          fieldName: match.fieldName,
+          difficulty: match.difficulty,
+          currentParticipants: match.currentParticipants,
+          maxParticipants: match.maxParticipants,
+          imageSrc: cachedMatch?.imageSrc,
+        })
+      }
+      markMatchJoined(id)
     }
     navigate(`/match/${id}/complete`)
   }
@@ -69,11 +88,11 @@ export function MatchApply() {
       />
 
       <main className="match_apply_main">
-        <p className="match_apply_description body_m_16">서울 CQB 입문 경기에 신청할 정보를 입력해주세요.</p>
+        <p className="match_apply_description body_m_16">{matchTitle}에 신청할 정보를 입력해주세요.</p>
 
         <section className="match_apply_summary match_apply_intro_summary">
-          <strong>어반 CQB</strong>
-          <p>이번 주 일요일 12:00 서울</p>
+          <strong>{matchFieldName}</strong>
+          <p>{[matchDate, matchTime, matchRegion].filter(Boolean).join(' · ')}</p>
         </section>
 
         <section className="match_apply_form" aria-label="신청자 정보">
@@ -106,34 +125,40 @@ export function MatchApply() {
           </label>
           <label>
             <span className="match_apply_label">장비 렌탈 필요 여부</span>
-            <select
-              className="select"
-              name="rental"
-              required
-              value={rental}
-              onChange={(event) => setRental(event.target.value)}
-              aria-invalid={submitAttempted && !rental}
-            >
-              <option value="" disabled>선택해주세요</option>
-              <option>렌탈 필요 없음</option>
-              <option disabled={!match?.rentalAvailable}>렌탈 필요</option>
-            </select>
+            <span className="match_apply_select_wrap">
+              <select
+                className="select"
+                name="rental"
+                required
+                value={rental}
+                onChange={(event) => setRental(event.target.value)}
+                aria-invalid={submitAttempted && !rental}
+              >
+                <option value="" disabled>선택해주세요</option>
+                <option>렌탈 필요 없음</option>
+                <option disabled={!rentalAvailable}>렌탈 필요</option>
+              </select>
+              <img src={arrowDownIcon} alt="" aria-hidden="true" />
+            </span>
             {submitAttempted && !rental ? <p className="match_apply_error">장비 렌탈 필요 여부를 선택하시오.</p> : null}
           </label>
           <label>
             <span className="match_apply_label">버디 매칭 필요 여부</span>
-            <select
-              className="select"
-              name="buddyMatching"
-              required
-              value={buddyMatching}
-              onChange={(event) => setBuddyMatching(event.target.value)}
-              aria-invalid={submitAttempted && !buddyMatching}
-            >
-              <option value="" disabled>선택해주세요</option>
-              <option>필요없음</option>
-              <option>필요</option>
-            </select>
+            <span className="match_apply_select_wrap">
+              <select
+                className="select"
+                name="buddyMatching"
+                required
+                value={buddyMatching}
+                onChange={(event) => setBuddyMatching(event.target.value)}
+                aria-invalid={submitAttempted && !buddyMatching}
+              >
+                <option value="" disabled>선택해주세요</option>
+                <option>필요없음</option>
+                <option>필요</option>
+              </select>
+              <img src={arrowDownIcon} alt="" aria-hidden="true" />
+            </span>
             {submitAttempted && !buddyMatching ? <p className="match_apply_error">버디 매칭 필요 여부를 선택하시오.</p> : null}
           </label>
         </section>
@@ -160,7 +185,7 @@ export function MatchApply() {
       </main>
 
       <div className="match_apply_actions">
-        <LoginButton className="match_apply_submit_button" onClick={handleSubmit}>
+        <LoginButton variant="apply" onClick={handleSubmit}>
           신청하기
         </LoginButton>
       </div>

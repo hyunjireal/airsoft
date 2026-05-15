@@ -15,8 +15,15 @@ const items = [
 
 export function BottomNav() {
   const location = useLocation()
+  const pathname = location.pathname
   const activeIndex = Math.max(
-    items.findIndex((item) => location.pathname === item.to || location.pathname.startsWith(`${item.to}/`)),
+    items.findIndex((item) => {
+      if (pathname === '/my/schedule' && item.to === '/match') {
+        return true
+      }
+
+      return pathname === item.to || pathname.startsWith(`${item.to}/`)
+    }),
     0,
   )
   const navStyle = { '--active-index': activeIndex } as CSSProperties

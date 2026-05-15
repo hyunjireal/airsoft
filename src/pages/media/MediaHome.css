@@ -15,6 +15,11 @@
 
 .media_home_top {
   height: fit-content;
+  background: transparent;
+}
+
+:root[data-theme='dark'] .media_home_top {
+  background: transparent;
 }
 
 .media_home_back img {

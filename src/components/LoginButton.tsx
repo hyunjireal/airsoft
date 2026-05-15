@@ -3,7 +3,7 @@ import './ActionButton.css'
 
 type LoginButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   children?: ReactNode
-  variant?: 'light' | 'accent'
+  variant?: 'light' | 'accent' | 'apply'
 }
 
 export function LoginButton({

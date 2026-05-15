@@ -36,12 +36,7 @@ export function MySchedule() {
   )
 
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
-    navigate('/my')
+    navigate('/match')
   }
 
   const deleteMyMatch = (matchId: string, title: string) => {

@@ -44,6 +44,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: transparent;
+}
+
+:root[data-theme='dark'] .creator_detail_topbar {
+  background: transparent;
 }
 
 .creator_detail_back_button,

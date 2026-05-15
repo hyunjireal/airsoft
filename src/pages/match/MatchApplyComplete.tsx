@@ -2,10 +2,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import matchCheckIcon from '../../asset/icons/match_check.svg'
+import { matches } from '../../data/mockData'
+import { readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
-const noticeItems = [
-  '이번 주 일요일 12:00까지 어반 CQB에 도착해주세요.',
+const baseNoticeItems = [
   '현장에서는 고글을 벗지 않고, 세이프존 규칙을 먼저 확인해주세요.',
   '참석이 어려워지면 팀장 승인 전이라도 빠르게 취소 연락을 남겨주세요.',
   '렌탈을 신청했다면 신분증과 렌탈 비용을 준비해주세요.',
@@ -14,14 +15,21 @@ const noticeItems = [
 export function MatchApplyComplete() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const cachedMatch = readMatchSnapshot(id)
+  const defaultMatch = matches.find((match) => match.id === id)
+  const match = cachedMatch ?? defaultMatch
+  const matchTitle = match?.title ?? '서울 CQB 입문 경기'
+  const matchRegion = match?.region ?? '서울'
+  const matchFieldName = match?.fieldName ?? '어반 CQB'
+  const matchTime = match?.time ?? '12:00'
+  const matchDate = cachedMatch?.dateValue ?? cachedMatch?.date ?? defaultMatch?.dateValue ?? defaultMatch?.date
+  const noticeItems = [
+    `${[matchDate, matchTime].filter(Boolean).join(' ')}까지 ${matchFieldName}에 도착해주세요.`,
+    ...baseNoticeItems,
+  ]
 
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
-    navigate(`/match/${id ?? 'match-003'}/apply`)
+    navigate('/match')
   }
 
   return (
@@ -61,8 +69,8 @@ export function MatchApplyComplete() {
         </section>
 
         <section className="match_apply_summary match_complete_summary">
-          <strong>서울 CQB 입문 경기</strong>
-          <p>서울 · 어반 CQB · 40,000원</p>
+          <strong>{matchTitle}</strong>
+          <p>{[matchRegion, matchFieldName, matchDate, matchTime].filter(Boolean).join(' · ')}</p>
         </section>
       </main>
 
