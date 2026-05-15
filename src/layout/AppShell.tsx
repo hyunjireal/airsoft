@@ -11,7 +11,11 @@ export function AppShell() {
   const isBeginnerBoardHome = location.pathname === '/community'
   const isGeneralBoardHome = location.pathname === '/community/free'
   const isCommunityPostDetail = location.pathname.startsWith('/community/post/')
+  const isTournamentMain = location.pathname === '/tournament'
   const isTournamentMvpVote = location.pathname === '/tournament/mvp-vote'
+  const isTournamentMvpComplete = location.pathname === '/tournament/mvp-complete'
+  const isTournamentExperience = isTournamentMain || isTournamentMvpVote || isTournamentMvpComplete
+  const hasTournamentBottomNav = isTournamentMain || isTournamentMvpVote
   const isChatPage = location.pathname === '/chat'
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
@@ -20,6 +24,7 @@ export function AppShell() {
   const isMatchPresetFinishPage = location.pathname === '/match/presets/finish'
   const showBottomNav =
     !isCommunityPostDetail &&
+    !isTournamentMvpComplete &&
     !isChatPage &&
     !isGuideQuizPage &&
     !location.pathname.startsWith('/match/schedule/') &&
@@ -33,7 +38,7 @@ export function AppShell() {
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&
     !isCommunityPostDetail &&
-    !isTournamentMvpVote &&
+    !isTournamentExperience &&
     !isChatPage &&
     !isGuideHubPage &&
     !isMySchedulePage &&
@@ -44,6 +49,7 @@ export function AppShell() {
   const frameClassName = [
     'mobile_frame',
     showBottomNav ? 'has_app_bottom_nav' : '',
+    hasTournamentBottomNav ? 'tournament_bottom_nav_frame' : '',
     isChatPage ? 'chat_frame' : '',
     isGuideHubPage ? 'guide_hub_frame' : '',
     isMediaProfile

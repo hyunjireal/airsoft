@@ -945,7 +945,7 @@ export function MatchHome() {
       </section>
 
       <section className="match_section match_tournament_section" aria-labelledby="match-tournament-title">
-        <article className="match_tournament_card">
+        <Link className="match_tournament_card" to="/tournament" aria-labelledby="match-tournament-title">
           <MainTag className="match_tournament_tag" style={{ padding: '3px 8px', background: 'var(--color-orange-red)' }}>
             <span className="match_tournament_tag_dot" aria-hidden="true" />
             <span>토너먼트 진행중</span>
@@ -963,7 +963,7 @@ export function MatchHome() {
               <p className="match_tournament_matchup">바주카 VS 블랙워터</p>
             </div>
           </div>
-        </article>
+        </Link>
       </section>
 
       <MatchTypeSheet

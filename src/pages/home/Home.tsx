@@ -692,9 +692,9 @@ export function Home() {
           <div className="home_tournament_join_button_wrap">
             <LoginButton
               className="home_tournament_join_button"
-              onClick={() => navigate('/tournament/mvp-vote')}
+              onClick={() => navigate('/tournament')}
             >
-              <span className="body_m_16">투표하러가기</span>
+              <span className="body_m_16">토너먼트 입장</span>
             </LoginButton>
           </div>
         </section>

@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import { PageHeader } from '../../components/PageHeader'
+import { useThemeMode } from '../../hooks/useThemeMode'
 import tournamentLockIcon from '../../asset/icons/tournament_lock.svg'
+import tournamentMainDarkImg from '../../asset/images/tournament_main01.png'
 import tournamentMainLightImg from '../../asset/images/tournament_main_light.png'
 import './Tournament.css'
 
@@ -60,9 +62,11 @@ const matches = [
 
 export function MvpVote() {
   const navigate = useNavigate()
+  const themeMode = useThemeMode()
   const [selectedMatch, setSelectedMatch] = useState<string | null>('quarter-3')
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
+  const heroImage = themeMode === 'dark' ? tournamentMainDarkImg : tournamentMainLightImg
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)
   const currentCandidates = selectedTeamData?.candidates ?? matches[0].teams[0].candidates
@@ -98,10 +102,10 @@ export function MvpVote() {
   }
 
   return (
-    <div className="tournament_page is_light">
+    <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}`}>
       <section
         className="tournament_intro_card"
-        style={{ backgroundImage: `url(${tournamentMainLightImg})` }}
+        style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="tournament_intro_tit">
           <PageHeader
@@ -109,7 +113,7 @@ export function MvpVote() {
             title="MVP 투표"
             titleAs="span"
             titleClassName="body_b_28"
-            variant="overlay"
+            variant={themeMode === 'dark' ? 'overlay' : 'transparent'}
             onBack={() => navigate(-1)}
           />
           <div className="tournament_intro_bottom">

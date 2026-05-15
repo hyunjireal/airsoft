@@ -451,6 +451,10 @@ a {
 .mobile_frame.has_app_bottom_nav > main {
   padding-bottom: var(--app-bottom-nav-space);
 }
+
+.mobile_frame.has_app_bottom_nav.tournament_bottom_nav_frame > main {
+  padding-bottom: 0;
+}
   
 .media_profile_frame > main {
   padding-bottom: calc(var(--app-bottom-safe-area) - 48px);

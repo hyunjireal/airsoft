@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import MainTag from '../../components/MainTag'
+import { useThemeMode } from '../../hooks/useThemeMode'
 import tournamentHighlightIcon from '../../asset/icons/tournament_highlight.svg'
 import tournamentInfoIcon from '../../asset/icons/tournament_info.svg'
 import tournamentTourIcon from '../../asset/icons/tournament_tour.svg'
@@ -8,8 +9,6 @@ import tournamentCheckImg from '../../asset/images/tournament_check.png'
 import tournamentMainCompleteDarkImg from '../../asset/images/tournament03_dark.png'
 import tournamentMainCompleteImg from '../../asset/images/tournament_main02.png'
 import './Tournament.css'
-
-type ThemeMode = 'light' | 'dark'
 
 type RankItem = { rank: number; name: string; votes: number; percent: number }
 
@@ -136,27 +135,12 @@ const candidateMap: Record<string, CandidateInfo> = {
 const defaultCandidate = candidateMap['bazooka-01']
 
 export function MvpVoteComplete() {
-  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
-    const savedTheme = localStorage.getItem('airsoft-theme')
-    return savedTheme === 'dark' ? 'dark' : 'light'
-  })
+  const themeMode = useThemeMode()
   const voted = useMemo<CandidateInfo>(() => {
     const id = localStorage.getItem('votedMvpId') ?? ''
     return candidateMap[id] ?? defaultCandidate
   }, [])
   const heroImage = themeMode === 'dark' ? tournamentMainCompleteDarkImg : tournamentMainCompleteImg
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = themeMode
-
-    const handleThemeStorage = (event: StorageEvent) => {
-      if (event.key !== 'airsoft-theme') return
-      setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
-    }
-
-    window.addEventListener('storage', handleThemeStorage)
-    return () => window.removeEventListener('storage', handleThemeStorage)
-  }, [themeMode])
 
   return (
     <div className={`tournament_page is_${themeMode}`}>

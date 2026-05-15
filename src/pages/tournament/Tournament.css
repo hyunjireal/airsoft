@@ -4,6 +4,10 @@
   color: var(--tournament-dark-btn-txt);
 }
 
+.tournament_mvp_vote_page {
+  padding-bottom: 200px;
+}
+
 .tournament_header {
   position: relative;
   display: grid;
