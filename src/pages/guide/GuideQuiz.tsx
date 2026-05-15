@@ -1,10 +1,9 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import quizErrorIcon from '../../asset/icons/quiz_error.svg'
-import quizFinishIcon from '../../asset/icons/quiz_finish.svg'
 import quizInfoIcon from '../../asset/icons/quiz_info.svg'
 import quizRepostIcon from '../../asset/icons/quiz_repost.svg'
 import quizShieldIcon from '../../asset/icons/quiz_shield.svg'
@@ -94,6 +93,8 @@ const quizzes: Quiz[] = [
 
 const choiceLabels = ['A', 'B', 'C', 'D']
 
+type QuizSlideDirection = 'forward' | 'backward'
+
 const quizButtonStyle: CSSProperties = {
   width: '100%',
   height: 50,
@@ -151,6 +152,9 @@ export function GuideQuiz() {
   const [isErrorNoteVisible, setIsErrorNoteVisible] = useState(false)
   const [score, setScore] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [animatedFinalScore, setAnimatedFinalScore] = useState(0)
+  const [animatedCorrectCount, setAnimatedCorrectCount] = useState(0)
+  const [slideDirection, setSlideDirection] = useState<QuizSlideDirection>('forward')
 
   const currentQuiz = quizzes[currentIndex]
   const progress = useMemo(
@@ -172,6 +176,8 @@ export function GuideQuiz() {
       setScore((currentScore) => currentScore + 1)
     }
 
+    setSlideDirection('forward')
+
     if (currentIndex === quizzes.length - 1) {
       setIsComplete(true)
       return
@@ -185,6 +191,7 @@ export function GuideQuiz() {
   const goPrevious = () => {
     if (currentIndex === 0) return
 
+    setSlideDirection('backward')
     setCurrentIndex((index) => index - 1)
     setSelectedChoice(null)
     setIsErrorNoteVisible(false)
@@ -192,6 +199,7 @@ export function GuideQuiz() {
 
   const restartQuiz = () => {
     setIsStarted(true)
+    setSlideDirection('backward')
     setCurrentIndex(0)
     setSelectedChoice(null)
     setIsErrorNoteVisible(false)
@@ -201,15 +209,53 @@ export function GuideQuiz() {
 
   const skipToCompletePreview = () => {
     setIsStarted(true)
+    setSlideDirection('forward')
     setCurrentIndex(quizzes.length - 1)
     setSelectedChoice(null)
     setIsErrorNoteVisible(false)
-    setScore(quizzes.length)
+    setScore(Math.round(quizzes.length * 0.3))
     setIsComplete(true)
   }
 
   const finalScore = Math.round((score / quizzes.length) * 100)
-  const correctRate = Math.round((score / quizzes.length) * 100)
+  const animatedCorrectRate = Math.round((animatedCorrectCount / quizzes.length) * 100)
+
+  useEffect(() => {
+    if (!isComplete) {
+      setAnimatedFinalScore(0)
+      setAnimatedCorrectCount(0)
+      return
+    }
+
+    let frameId = 0
+    let startTime = 0
+    const duration = 700
+    const delay = 1050
+
+    const timeoutId = window.setTimeout(() => {
+      const animateCount = (timestamp: number) => {
+        if (!startTime) startTime = timestamp
+
+        const progressValue = Math.min((timestamp - startTime) / duration, 1)
+        const easedProgress = 1 - Math.pow(1 - progressValue, 3)
+
+        setAnimatedFinalScore(Math.round(finalScore * easedProgress))
+        setAnimatedCorrectCount(Math.round(score * easedProgress))
+
+        if (progressValue < 1) {
+          frameId = window.requestAnimationFrame(animateCount)
+        }
+      }
+
+      frameId = window.requestAnimationFrame(animateCount)
+    }, delay)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [finalScore, isComplete, score])
+
   const finishMessage =
     finalScore <= 30
       ? {
@@ -259,7 +305,10 @@ export function GuideQuiz() {
         <section className="guide_quiz_start_cta">
           <LoginButton
             className="guide_quiz_start_button"
-            onClick={() => setIsStarted(true)}
+            onClick={() => {
+              setSlideDirection('forward')
+              setIsStarted(true)
+            }}
             style={startQuizButtonStyle}
           >
             시작하기
@@ -271,19 +320,21 @@ export function GuideQuiz() {
 
   if (isComplete) {
     return (
-      <div className="guide_quiz_page guide_quiz_figma_page guide_quiz_finish_page">
+      <div className={`guide_quiz_page guide_quiz_figma_page guide_quiz_finish_page guide_quiz_slide_page guide_quiz_slide_${slideDirection}`}>
         <PageHeader
-          className="guide_quiz_figma_top"
           backIcon={arrowLIcon}
-          backButtonClassName="guide_quiz_back"
           title="초보자 퀴즈"
           onBack={() => navigate('/home')}
+          hideRight
         />
 
         <main className="guide_quiz_finish">
           <section className="guide_quiz_finish_intro">
             <div className="guide_quiz_finish_complete">
-              <img src={quizFinishIcon} alt="" aria-hidden="true" />
+              <div className="guide_quiz_success_circle_mark" aria-hidden="true">
+                <div className="guide_quiz_success_background" />
+                <div className="guide_quiz_success_draw" />
+              </div>
               <strong>퀴즈 완료!</strong>
             </div>
             <div className="guide_quiz_finish_message">
@@ -296,7 +347,7 @@ export function GuideQuiz() {
             <article className="guide_quiz_finish_score_left">
               <span>최종점수</span>
               <strong>
-                {finalScore}
+                {animatedFinalScore}
                 <small>점</small>
               </strong>
             </article>
@@ -304,8 +355,8 @@ export function GuideQuiz() {
             <article className="guide_quiz_finish_score_right">
               <span>정답률</span>
               <div>
-                <strong>{score} / {quizzes.length}</strong>
-                <em>{correctRate}%</em>
+                <strong>{animatedCorrectCount} / {quizzes.length}</strong>
+                <em>{animatedCorrectRate}%</em>
               </div>
             </article>
           </section>
@@ -341,32 +392,38 @@ export function GuideQuiz() {
   }
 
   return (
-    <div className="guide_quiz_page guide_quiz_figma_page">
-      <PageHeader
-        className="guide_quiz_figma_title"
-        groupClassName="guide_quiz_figma_top"
-        backIcon={arrowLIcon}
-        backButtonClassName="guide_quiz_back"
-        title="초보자 퀴즈"
-        subtitle="퀴즈를 풀고 에어소프트 기본 상식을 익혀보세요!"
-        onBack={() => navigate('/home')}
-      />
+    <div className={`guide_quiz_page guide_quiz_figma_page guide_quiz_slide_page guide_quiz_slide_${slideDirection}`}>
+      <div className="guide_quiz_sticky_top">
+        <PageHeader
+          className="guide_quiz_figma_title"
+          backIcon={arrowLIcon}
+          title="초보자 퀴즈"
+          onBack={() => navigate('/home')}
+          rightSlot={(
+            <button className="guide_quiz_header_skip" type="button" onClick={skipToCompletePreview}>
+              체험용 건너뛰기
+            </button>
+          )}
+        />
+        <p className="page_header__subtitle guide_quiz_figma_subtitle">
+          퀴즈를 풀고 에어소프트 기본 상식을 익혀보세요!
+        </p>
 
-      <section className="guide_quiz_progress_row" aria-label="퀴즈 진행률">
-        <span>
-          <strong>{currentIndex + 1}</strong> / {quizzes.length}
-        </span>
-        <div className="guide_quiz_figma_progress" aria-hidden="true">
-          <span style={{ width: `${progress}%` }} />
-        </div>
-        <strong>{progress}%</strong>
-      </section>
+        <section className="guide_quiz_progress_row" aria-label="퀴즈 진행률">
+          <span>
+            <strong>{currentIndex + 1}</strong> / {quizzes.length}
+          </span>
+          <div className="guide_quiz_figma_progress" aria-hidden="true">
+            <span style={{ width: `${progress}%` }} />
+          </div>
+          <strong>{progress}%</strong>
+        </section>
+      </div>
 
-      <button className="guide_quiz_preview_skip" type="button" onClick={skipToCompletePreview}>
-        체험용 건너뛰기
-      </button>
-
-      <main className="guide_quiz_figma_content">
+      <main
+        className={`guide_quiz_figma_content guide_quiz_slide_panel guide_quiz_slide_${slideDirection}`}
+        key={currentIndex}
+      >
         <article className="guide_quiz_question_box">
           <div className="guide_quiz_question_head">
             <span className="guide_quiz_number">{String(currentIndex + 1).padStart(2, '0')}.</span>

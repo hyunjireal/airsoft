@@ -41,6 +41,7 @@ type PageHeaderProps = {
   variant?: PageHeaderVariant
   layout?: PageHeaderLayout
   hideLeft?: boolean
+  hideRight?: boolean
 }
 
 export function PageHeader({
@@ -63,6 +64,7 @@ export function PageHeader({
   variant = 'default',
   layout = 'custom',
   hideLeft = false,
+  hideRight = false,
 }: PageHeaderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
   const hasTitleContent = !hideLeft && Boolean(leftSlot || onBack || title)
@@ -130,27 +132,32 @@ export function PageHeader({
             {titleContent}
           </div>
         ) : null}
-        <div className="page_header__right" aria-label="테마와 프로필 바로가기">
-          <button
-            className="page_header__circle_button"
-            type="button"
-            aria-label={`${themeMode === 'dark' ? '라이트' : '다크'} 모드로 전환`}
-            aria-pressed={themeMode === 'dark'}
-            onClick={toggleThemeMode}
-          >
-            <img
-              className="page_header__theme_icon"
-              src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
-          <Link className="page_header__circle_button page_header__profile_link" to="/my" aria-label="마이페이지로 이동">
-            <img className="page_header__profile_image" src={userAvatar} alt="" aria-hidden="true" />
-          </Link>
-        </div>
+        {rightSlot ? (
+          <div className="page_header__right">
+            {rightSlot}
+          </div>
+        ) : !hideRight ? (
+          <div className="page_header__right" aria-label="테마와 프로필 바로가기">
+            <button
+              className="page_header__circle_button"
+              type="button"
+              aria-label={`${themeMode === 'dark' ? '라이트' : '다크'} 모드로 전환`}
+              aria-pressed={themeMode === 'dark'}
+              onClick={toggleThemeMode}
+            >
+              <img
+                className="page_header__theme_icon"
+                src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
+                alt=""
+                aria-hidden="true"
+              />
+            </button>
+            <Link className="page_header__circle_button page_header__profile_link" to="/my" aria-label="마이페이지로 이동">
+              <img className="page_header__profile_image" src={userAvatar} alt="" aria-hidden="true" />
+            </Link>
+          </div>
+        ) : null}
       </div>
-      {rightSlot ? <div className="page_header__extra_slot">{rightSlot}</div> : null}
       {subtitle ? (
         <p className={['page_header__subtitle', subtitleClassName].filter(Boolean).join(' ')}>
           {subtitle}

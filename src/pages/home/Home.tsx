@@ -8,7 +8,9 @@ import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
 import { PageHeader } from '../../components/PageHeader'
+import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowR from '../../asset/icons/arrow_r.svg'
+import arrowUpIcon from '../../asset/icons/arrow_up.svg'
 import buddyAlertIcon from '../../asset/icons/match_alert.svg'
 import buddyCalendarIcon from '../../asset/icons/match_calendar.svg'
 import buddyInfoIcon from '../../asset/icons/buddy_info.svg'
@@ -268,9 +270,6 @@ export function Home() {
   const [isBuddySheetClosing, setIsBuddySheetClosing] = useState(false)
   const [profilePreview, setProfilePreview] = useState(userAvatar)
   const [profileObjectUrl, setProfileObjectUrl] = useState<string | null>(null)
-  const achievementBadges = isAchievementExpanded
-    ? [...visibleAchievementBadges, ...hiddenAchievementBadges]
-    : visibleAchievementBadges
 
   useEffect(() => {
     return () => {
@@ -436,21 +435,42 @@ export function Home() {
                   <p className="home_userinfo_badge_title body_sb_16">보유 뱃지</p>
                 </div>
                 <div className="home_userinfo_tag_row">
-                  <div className="home_userinfo_category_tags">
-                    {achievementBadges.map((badge) => (
-                      <CategoryTag
-                        key={badge.label}
-                        className="home_userinfo_category_tag body_m_14"
-                        style={{
-                          ...homeAchievementTagStyle,
-                          background: badge.background,
-                          color: badge.color,
-                        }}
-                      >
-                        <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
-                        <span>{badge.label}</span>
-                      </CategoryTag>
-                    ))}
+                  <div className="home_userinfo_category_group">
+                    <div className="home_userinfo_category_tags">
+                      {visibleAchievementBadges.map((badge) => (
+                        <CategoryTag
+                          key={badge.label}
+                          className="home_userinfo_category_tag body_m_14"
+                          style={{
+                            ...homeAchievementTagStyle,
+                            background: badge.background,
+                            color: badge.color,
+                          }}
+                        >
+                          <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
+                          <span>{badge.label}</span>
+                        </CategoryTag>
+                      ))}
+                    </div>
+                    <div className={`home_userinfo_hidden_badges${isAchievementExpanded ? ' is_expanded' : ''}`}>
+                      <div className="home_userinfo_hidden_badges_inner">
+                        {hiddenAchievementBadges.map((badge, index) => (
+                          <CategoryTag
+                            key={badge.label}
+                            className="home_userinfo_category_tag body_m_14"
+                            style={{
+                              ...homeAchievementTagStyle,
+                              background: badge.background,
+                              color: badge.color,
+                              '--home-badge-index': index,
+                            } as CSSProperties}
+                          >
+                            <img src={badge.icon} alt="" className="home_userinfo_category_icon" />
+                            <span>{badge.label}</span>
+                          </CategoryTag>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                   <button
                     className={`home_userinfo_category_more body_m_14${isAchievementExpanded ? ' is_expanded' : ''}`}
@@ -459,7 +479,12 @@ export function Home() {
                     aria-label={isAchievementExpanded ? '보유 뱃지 접기' : '숨겨진 보유 뱃지 5개 더 보기'}
                     aria-expanded={isAchievementExpanded}
                   >
-                    {isAchievementExpanded ? '−' : '+5'}
+                    <img
+                      src={isAchievementExpanded ? arrowUpIcon : arrowDownIcon}
+                      alt=""
+                      className="home_userinfo_category_more_icon"
+                      aria-hidden="true"
+                    />
                   </button>
                 </div>
               </div>
@@ -574,7 +599,7 @@ export function Home() {
                 <span className="bottom_title_semibold">안전한 슈팅의</span> 첫 걸음
               </p>
             </div>
-            <KeywordTag className="bottom_quiz_tag">
+            <KeywordTag className="bottom_quiz_tag" style={{ padding: '5px 8px' }}>
               <span>퀴즈 풀기</span>
               <img src={mainQuizRIcon} alt="" className="bottom_quiz_tag_icon" aria-hidden="true" />
             </KeywordTag>
