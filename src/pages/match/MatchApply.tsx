@@ -157,10 +157,13 @@ export function MatchApply() {
           ))}
         </section>
         {submitAttempted && !allChecked ? <p className="match_apply_error match_apply_check_error">신청 전 체크리스트를 모두 확인하시오.</p> : null}
+      </main>
+
+      <div className="match_apply_actions">
         <LoginButton className="match_apply_submit_button" onClick={handleSubmit}>
           신청하기
         </LoginButton>
-      </main>
+      </div>
     </div>
   )
 }

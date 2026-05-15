@@ -22,6 +22,7 @@ export function AppShell() {
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
   const isMatchEditPage = /^\/match\/edit\/[^/]+$/.test(location.pathname)
+  const isMatchApplyPage = /^\/match\/[^/]+\/apply$/.test(location.pathname)
   const isMatchApplyCompletePage = /^\/match\/[^/]+\/complete$/.test(location.pathname)
   const isMatchPresetEditPage = /^\/match\/presets\/[^/]+\/edit$/.test(location.pathname)
   const isMatchPresetFinishPage = location.pathname === '/match/presets/finish'
@@ -33,6 +34,7 @@ export function AppShell() {
     !isGuideQuizPage &&
     !location.pathname.startsWith('/match/schedule/') &&
     !isMatchEditPage &&
+    !isMatchApplyPage &&
     !isMatchApplyCompletePage &&
     !isMatchPresetEditPage &&
     !isMatchPresetFinishPage

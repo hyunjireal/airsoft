@@ -68,27 +68,27 @@ export function MatchApplyComplete() {
 
       <div className="match_complete_actions">
         <LoginButton
-          className="match_complete_schedule_button"
-          onClick={() => navigate('/my/schedule')}
-          style={{
-            background: '#111111',
-            backgroundColor: '#111111',
-            color: 'var(--color-white)',
-            WebkitTextFillColor: 'var(--color-white)',
-          }}
+            className="match_complete_schedule_button"
+            onClick={() => navigate('/my/schedule')}
+            style={{
+              background: 'var(--color-khaki)',
+              backgroundColor: 'var(--color-khaki)',
+              color: 'var(--color-white)',
+              WebkitTextFillColor: 'var(--color-white)',
+            }}
         >
           내 경기 일정 보기
         </LoginButton>
         <LoginButton
-          className="match_complete_home_button"
-          onClick={() => navigate('/home')}
-          style={{
-            border: '1px solid #111111',
-            background: 'var(--color-white)',
-            backgroundColor: 'var(--color-white)',
-            color: '#111111',
-            WebkitTextFillColor: '#111111',
-          }}
+            className="match_complete_home_button"
+            onClick={() => navigate('/home')}
+            style={{
+              border: '1px solid var(--color-khaki)',
+              background: 'var(--color-white)',
+              backgroundColor: 'var(--color-white)',
+              color: 'var(--color-khaki)',
+              WebkitTextFillColor: 'var(--color-khaki)',
+            }}
         >
           홈으로
         </LoginButton>
