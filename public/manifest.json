@@ -6,17 +6,13 @@
   "display": "standalone",
   "background_color": "#0B1118",
   "theme_color": "#0B1118",
-  "description": "에어소프트 게임 일정, 용병 모집, 초보자 가이드를 연결하는 커뮤니티 앱",
+  "description": "에어소프트 게임 일정, 팀원 모집, 초보자 가이드를 연결하는 커뮤니티 앱",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/launcherIcon.png",
+      "sizes": "2048x2048",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
