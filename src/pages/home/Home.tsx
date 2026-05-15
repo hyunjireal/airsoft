@@ -554,8 +554,16 @@ export function Home() {
                 </KeywordTag>
               </div>
               <div className="buddy_info">
-                <p className="buddy_info_title">첫 매치가 걱정된다면<br />필드 버디와 함께 시작해보세요</p>
-                <p className="buddy_info_desc">예약할 때 멘토링 필요 여부를 선택하면 숙련자 버디를 매칭해드려요.</p>
+                <p className="buddy_info_title">
+                  첫 게임이 걱정된다면
+                  <br />
+                  함께할 버디를 연결해드려요
+                </p>
+                <p className="buddy_info_desc">
+                  예약 시 버디 필요를 체크하면
+                  <br />
+                  함께할 버디를 연결해드려요
+                </p>
               </div>
             </div>
           </div>
@@ -821,8 +829,8 @@ export function Home() {
               <img src={buddyInfoIcon} alt="" />
               <span>버디는 같은 게임 참여자끼리만 연결돼요.</span>
             </p>
-            <LoginButton className="buddy_process_sheet_start" onClick={() => navigate('/my/schedule')}>
-              버디 찾으러 가기
+            <LoginButton className="buddy_process_sheet_start" onClick={() => navigate('/buddy')}>
+              버디 찾기
             </LoginButton>
           </section>
         </div>
