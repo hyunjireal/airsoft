@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useRef } from 'react'
 import type { CSSProperties } from 'react'
 import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
@@ -46,6 +47,17 @@ type MatchSchedule = {
 type MatchTypeFilter = 'all' | MatchType
 type MatchPresetId = 'beginner' | 'weekend' | 'team' | 'cqb' | 'custom'
 type WeekSlideDirection = 'prev' | 'next' | null
+
+type AiRecommendedMatch = {
+  id: string
+  title: string
+  time: string
+  region: string
+  matchRate: number
+  currentMembers: number
+  maxMembers: number
+  imageSrc: string
+}
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
@@ -103,6 +115,59 @@ const homeMatchMoreStyle = {
   lineHeight: '130%',
   letterSpacing: '-0.02em',
 } as const
+
+const aiRecommendedMatches: AiRecommendedMatch[] = [
+  {
+    id: 'match-003',
+    title: '하남시 몬드필드\n주말 정기전',
+    time: '5.17 (토) 12:00',
+    region: '경기도 하남시',
+    matchRate: 100,
+    currentMembers: 17,
+    maxMembers: 20,
+    imageSrc: matchList01,
+  },
+  {
+    id: 'match-011',
+    title: '파주 택티컬 필드\n입문 환영전',
+    time: '5.18 (일) 10:30',
+    region: '경기도 파주시',
+    matchRate: 94,
+    currentMembers: 12,
+    maxMembers: 16,
+    imageSrc: matchList02,
+  },
+  {
+    id: 'match-018',
+    title: '인천 CQB 아레나\n근거리 스크림',
+    time: '5.21 (수) 19:00',
+    region: '인천 서구',
+    matchRate: 88,
+    currentMembers: 9,
+    maxMembers: 12,
+    imageSrc: matchList03,
+  },
+  {
+    id: 'match-024',
+    title: '용인 워게임 파크\n팀플 매치',
+    time: '5.24 (토) 14:00',
+    region: '경기도 용인시',
+    matchRate: 97,
+    currentMembers: 22,
+    maxMembers: 28,
+    imageSrc: matchList04,
+  },
+  {
+    id: 'match-031',
+    title: '김포 서바이벌존\n캐주얼 오픈전',
+    time: '5.25 (일) 13:30',
+    region: '경기도 김포시',
+    matchRate: 91,
+    currentMembers: 15,
+    maxMembers: 20,
+    imageSrc: matchList05,
+  },
+]
 
 const calendarDays: Array<{ label: string; muted?: boolean; types?: MatchType[] }> = [
   { label: '27', muted: true },
@@ -363,6 +428,27 @@ function isSameDay(a: Date, b: Date) {
   )
 }
 
+function getStartOfDay(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+function isPastDate(date: Date) {
+  return getStartOfDay(date).getTime() < getStartOfDay(new Date()).getTime()
+}
+
+function isPastSchedule(match: Pick<MatchSchedule, 'time'>, date: Date) {
+  const [hourText, minuteText] = match.time.split(':')
+  const hour = Number(hourText)
+  const minute = Number(minuteText)
+
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) {
+    return isPastDate(date)
+  }
+
+  const scheduleDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), hour, minute)
+  return scheduleDate.getTime() < Date.now()
+}
+
 function getMatchTypeLabel(match: MatchSchedule) {
   if (match.type === 'personal') return '개인'
   if (match.type === 'team') return '팀'
@@ -378,6 +464,10 @@ const matchTypeColor: Record<MatchType, string> = {
 
 function isMatchType(type: unknown): type is MatchType {
   return type === 'personal' || type === 'team' || type === 'mercenary'
+}
+
+function isMyCreatedMatch(match: MatchSchedule) {
+  return match.id.startsWith('created-')
 }
 
 function readCreatedMatches() {
@@ -433,6 +523,7 @@ function readFocusedMatchDate() {
 
 export function MatchHome() {
   const navigate = useNavigate()
+  const scheduleSectionRef = useRef<HTMLElement | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
   const [calendarMonth, setCalendarMonth] = useState<Date>(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
@@ -444,8 +535,12 @@ export function MatchHome() {
   const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>('weekend')
   const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>('weekend')
   const [weekSlideDirection, setWeekSlideDirection] = useState<WeekSlideDirection>(null)
+  const [aiMatchIndex, setAiMatchIndex] = useState(0)
+  const [isAiMatchRefreshing, setIsAiMatchRefreshing] = useState(false)
   const myMatchGroups = getMyMatchGroups()
   const appliedPreset = matchPresetOptions.find((preset) => preset.id === appliedPresetId) ?? matchPresetOptions[0]
+  const aiRecommendedMatch = aiRecommendedMatches[aiMatchIndex]
+  const hiddenAiMemberCount = Math.max(aiRecommendedMatch.currentMembers - 3, 0)
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
   const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
@@ -454,6 +549,7 @@ export function MatchHome() {
     String(selectedDate.getMonth() + 1).padStart(2, '0'),
     String(selectedDate.getDate()).padStart(2, '0'),
   ].join('-')
+  const isSelectedDatePast = isPastDate(selectedDate)
   const selectedDayCreatedMatches = createdMatches.filter((match) => match.date === selectedDateKey)
   const selectedDayMatches = isSelectedMatchMonth
     ? [...(matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay)), ...selectedDayCreatedMatches]
@@ -503,6 +599,9 @@ export function MatchHome() {
   useEffect(() => {
     if (consumeMatchRegistrationToastPending()) {
       setRegistrationToastOpen(true)
+      window.setTimeout(() => {
+        scheduleSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 180)
     }
   }, [])
 
@@ -531,6 +630,28 @@ export function MatchHome() {
   const applyPreset = () => {
     setAppliedPresetId(selectedPresetId)
     setShowPresetSheet(false)
+  }
+
+  const refreshAiRecommendedMatch = () => {
+    if (isAiMatchRefreshing) return
+
+    setIsAiMatchRefreshing(true)
+    window.setTimeout(() => {
+      setAiMatchIndex((currentIndex) => {
+        if (aiRecommendedMatches.length <= 1) return currentIndex
+
+        let nextIndex = currentIndex
+
+        while (nextIndex === currentIndex) {
+          nextIndex = Math.floor(Math.random() * aiRecommendedMatches.length)
+        }
+
+        return nextIndex
+      })
+    }, 160)
+    window.setTimeout(() => {
+      setIsAiMatchRefreshing(false)
+    }, 420)
   }
 
   return (
@@ -589,27 +710,33 @@ export function MatchHome() {
             </p>
           </div>
 
-          <article className="match_ai_match_card">
-            <img className="match_ai_match_bg" src={matchList01} alt="" aria-hidden="true" />
+          <article className={`match_ai_match_card${isAiMatchRefreshing ? ' is_refreshing' : ''}`} key={aiRecommendedMatch.id}>
+            <img className="match_ai_match_bg" src={aiRecommendedMatch.imageSrc} alt="" aria-hidden="true" />
             <div className="match_ai_match_top">
               <div>
                 <h3>
-                  하남시 몬드필드
-                  <br />
-                  주말 정기전
+                  {aiRecommendedMatch.title.split('\n').map((line) => (
+                    <span key={line}>{line}</span>
+                  ))}
                 </h3>
                 <p className="match_ai_match_meta">
-                  <span>5.17 (토) 12:00</span>
-                  <span>경기도 하남시</span>
+                  <span>{aiRecommendedMatch.time}</span>
+                  <span>{aiRecommendedMatch.region}</span>
                 </p>
               </div>
-              <div className="match_ai_percent">
+              <button
+                className="match_ai_percent"
+                type="button"
+                aria-label="AI 추천 매치 새로고침"
+                disabled={isAiMatchRefreshing}
+                onClick={refreshAiRecommendedMatch}
+              >
                 <img src={matchNewIcon} alt="" aria-hidden="true" />
                 <div>
                   <span>매칭률</span>
-                  <strong>100%</strong>
+                  <strong>{aiRecommendedMatch.matchRate}%</strong>
                 </div>
-              </div>
+              </button>
             </div>
             <div className="match_ai_match_bottom">
               <div className="match_ai_members">
@@ -618,18 +745,18 @@ export function MatchHome() {
                   <img src={mainUserImage} alt="" />
                   <img src={mainUserImage} alt="" />
                 </div>
-                <span>+14명</span>
+                <span>+{hiddenAiMemberCount}명</span>
               </div>
-              <strong>17 <small>/ 20</small></strong>
+              <strong>{aiRecommendedMatch.currentMembers} <small>/ {aiRecommendedMatch.maxMembers}</small></strong>
             </div>
           </article>
-          <Link className="match_full_button match_dark_button match_ai_join_button" to="/match/schedule/match-003/join">
+          <Link className="match_full_button match_dark_button match_ai_join_button" to={`/match/schedule/${aiRecommendedMatch.id}/join`}>
             참가하기
           </Link>
         </div>
       </section>
 
-      <section className="match_section match_schedule_section" aria-labelledby="match-schedule-title">
+      <section ref={scheduleSectionRef} className="match_section match_schedule_section" aria-labelledby="match-schedule-title">
         <div>
           <h2 id="match-schedule-title" className="match_section_title">매치 일정 탐색</h2>
           <p className="match_section_description">참가 방식을 고르고 날짜를 선택하면 해당 일정이 바로 이어져요.</p>
@@ -673,6 +800,7 @@ export function MatchHome() {
                 const isSelected = isSameDay(date, selectedDate)
                 const hasMatch = filteredMatchDates.some((matchDate) => isSameDay(matchDate, date))
                 const day = date.getDay()
+                const isPast = isPastDate(date)
 
                 return (
                   <button
@@ -680,6 +808,7 @@ export function MatchHome() {
                       'match_week_day',
                       isSelected ? 'is_selected' : '',
                       hasMatch ? 'has_match' : '',
+                      isPast ? 'is_past' : '',
                       day === 0 ? 'is_sunday' : '',
                       day === 6 ? 'is_saturday' : '',
                     ].filter(Boolean).join(' ')}
@@ -702,80 +831,113 @@ export function MatchHome() {
             </div>
           </article>
 
-          <article className="match_selected_schedule">
+          <article className={`match_selected_schedule${isSelectedDatePast ? ' is_past' : ''}`}>
             <div className="match_selected_schedule_header">
               <h3 aria-label={`${selectedDateLabel} 일정 ${selectedMatches.length}건`}>{selectedDateLabel}</h3>
-              <button
-                className="match_manage_button"
-                type="button"
-                aria-label="일정 만들기"
-                onClick={() => setShowTypeSheet(true)}
-              >
-                <img src={matchPlusIcon} alt="" aria-hidden="true" />
-                <span>일정 만들기</span>
-              </button>
+              {isSelectedDatePast ? (
+                <span className="match_past_date_label">지난 날짜</span>
+              ) : (
+                <button
+                  className="match_manage_button"
+                  type="button"
+                  aria-label="일정 만들기"
+                  onClick={() => setShowTypeSheet(true)}
+                >
+                  <img src={matchPlusIcon} alt="" aria-hidden="true" />
+                  <span>일정 만들기</span>
+                </button>
+              )}
             </div>
             {selectedMatches.length > 0 ? (
               <>
                 <div className="match_selected_list">
-                  {selectedMatches.map((match) => (
-                    <Link
-                      className="match_selected_item"
-                      to={`/match/schedule/${match.id}/join`}
-                      aria-label={`${match.title} 참가 안내 보기`}
-                      key={match.id}
-                    >
-                      <div className="match_selected_item_main">
-                        <MainTag
-                          className="match_item_tag"
-                          style={{ padding: '3px 10px', backgroundColor: matchTypeColor[match.type], color: 'var(--color-white)' }}
-                        >
-                          {getMatchTypeLabel(match)}
-                        </MainTag>
-                        <div className="match_item_media">
-                          <img className="match_selected_thumb" src={match.imageSrc ?? matchList01} alt="" aria-hidden="true" />
-                          <div className="match_selected_info">
-                            <strong className="match_item_title">{match.title}</strong>
-                            <div className="match_item_meta">
+                  {selectedMatches.map((match) => {
+                    const isMine = isMyCreatedMatch(match)
+                    const isPastMatch = isPastSchedule(match, selectedDate)
+
+                    return (
+                      <Link
+                        className={[
+                          'match_selected_item',
+                          isMine ? 'is_mine' : '',
+                          isPastMatch ? 'is_past' : '',
+                        ].filter(Boolean).join(' ')}
+                        to={isPastMatch ? '#' : isMine ? `/match/edit/${match.id}` : `/match/schedule/${match.id}/join`}
+                        aria-label={isPastMatch ? `${match.title} 지난 일정` : isMine ? `${match.title} 수정하기` : `${match.title} 참가 안내 보기`}
+                        aria-disabled={isPastMatch}
+                        tabIndex={isPastMatch ? -1 : undefined}
+                        onClick={(event) => {
+                          if (isPastMatch) {
+                            event.preventDefault()
+                          }
+                        }}
+                        key={match.id}
+                      >
+                        <div className="match_selected_item_main">
+                          <MainTag
+                            className="match_item_tag"
+                            style={{ padding: '3px 10px', backgroundColor: matchTypeColor[match.type], color: 'var(--color-white)' }}
+                          >
+                            {getMatchTypeLabel(match)}
+                          </MainTag>
+                          {isPastMatch ? <span className="match_past_schedule_badge">지난 일정</span> : null}
+                          {isMine ? <span className="match_my_schedule_badge">내가 올린 일정</span> : null}
+                          <div className="match_item_media">
+                            <img className="match_selected_thumb" src={match.imageSrc ?? matchList01} alt="" aria-hidden="true" />
+                            <div className="match_selected_info">
+                              <strong className="match_item_title">{match.title}</strong>
+                              <div className="match_item_meta">
+                                <p className="match_meta_row">
+                                  <span className="match_meta_label">시간</span>
+                                  <span className="match_meta_value">{match.time}</span>
+                                </p>
+                                <p className="match_meta_row">
+                                  <span className="match_meta_label">장소</span>
+                                  <span className="match_meta_value">{match.region} · {match.fieldName}</span>
+                                </p>
+                              </div>
                               <p className="match_meta_row">
-                                <span className="match_meta_label">시간</span>
-                                <span className="match_meta_value">{match.time}</span>
-                              </p>
-                              <p className="match_meta_row">
-                                <span className="match_meta_label">장소</span>
-                                <span className="match_meta_value">{match.region} · {match.fieldName}</span>
+                                <span className="match_meta_label">인원</span>
+                                <span className="match_meta_value">{match.currentParticipants}/{match.maxParticipants}명</span>
                               </p>
                             </div>
-                            <p className="match_meta_row">
-                              <span className="match_meta_label">인원</span>
-                              <span className="match_meta_value">{match.currentParticipants}/{match.maxParticipants}명</span>
-                            </p>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    )
+                  })}
                 </div>
-                <Link className="match_full_button match_dark_button" to="/match/list">
+                <Link className="match_full_button match_dark_button" to="/match">
                   전체 보기
                 </Link>
               </>
             ) : (
               <article className="match_empty_recommend_card">
                 <div className="match_empty_recommend_copy">
-                  <h3>일정이 없나요?</h3>
-                  <p>다른 날짜를 보거나<br />AI가 추천하는<br />맞춤 일정을 찾아보세요.</p>
+                  {isSelectedDatePast ? (
+                    <>
+                      <h3>지난 날짜예요</h3>
+                      <p>이 날짜에는<br />확인할 수 있는<br />일정이 없어요.</p>
+                    </>
+                  ) : (
+                    <>
+                      <h3>일정이 없나요?</h3>
+                      <p>다른 날짜를 보거나<br />AI가 추천하는<br />맞춤 일정을 찾아보세요.</p>
+                    </>
+                  )}
                 </div>
                 <img className="match_empty_recommend_img" src={matchNolistImage} alt="" aria-hidden="true" />
-                <div className="match_empty_recommend_actions">
-                  <LoginButton
-                    className="match_empty_login_btn"
-                    style={{ background: 'rgba(0,0,0,0.55)', color: 'var(--color-white)', fontSize: 16, fontWeight: 500 }}
-                    onClick={() => setShowTypeSheet(true)}
-                  >
-                    일정 만들러 가기
-                  </LoginButton>
-                </div>
+                {!isSelectedDatePast ? (
+                  <div className="match_empty_recommend_actions">
+                    <LoginButton
+                      className="match_empty_login_btn"
+                      style={{ background: 'rgba(0,0,0,0.55)', color: 'var(--color-white)', fontSize: 16, fontWeight: 500 }}
+                      onClick={() => setShowTypeSheet(true)}
+                    >
+                      일정 만들러 가기
+                    </LoginButton>
+                  </div>
+                ) : null}
               </article>
             )}
           </article>
@@ -801,29 +963,6 @@ export function MatchHome() {
               <p className="match_tournament_matchup">바주카 VS 블랙워터</p>
             </div>
           </div>
-
-          <LoginButton
-            className="match_tournament_cta"
-            style={{
-              border: '0',
-              background:
-                'linear-gradient(-145deg, rgba(255, 255, 255, 0.32) 0%, rgba(255, 255, 255, 0.18) 18%, rgba(255, 255, 255, 0.06) 38%, rgba(255, 255, 255, 0) 42%), rgba(238, 33, 6, 0.15)',
-              backgroundColor: 'rgba(238, 33, 6, 0.15)',
-              backdropFilter: 'blur(2.8px) saturate(140%)',
-              WebkitBackdropFilter: 'blur(2.8px) saturate(140%)',
-              color: '#fff',
-              WebkitTextFillColor: '#fff',
-              fontSize: 16,
-              fontWeight: 500,
-              lineHeight: 1.3,
-              letterSpacing: '-0.02em',
-              boxShadow:
-                'inset 0 1px 1px rgba(255, 255, 255, 0.47), inset 0 -20px 50px rgba(238, 33, 6, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.08), 0 10px 28px rgba(0, 0, 0, 0.14)',
-            }}
-            onClick={() => navigate('/tournament/mvp-vote')}
-          >
-            투표하기
-          </LoginButton>
         </article>
       </section>
 

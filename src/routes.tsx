@@ -29,12 +29,12 @@ import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
 import { FieldInfo } from './pages/match/FieldInfo'
 import { MatchCreateGame } from './pages/match/MatchCreateGame'
 import { MatchDetail } from './pages/match/MatchDetail'
+import { MatchEdit } from './pages/match/MatchEdit'
 import { MatchFilter } from './pages/match/MatchFilter'
 import { MatchGuestJoinCreate } from './pages/match/MatchGuestJoinCreate'
 import { MatchGuestWantedCreate } from './pages/match/MatchGuestWantedCreate'
 import { MatchHome } from './pages/match/MatchHome'
 import { MatchJoinHome } from './pages/match/MatchJoinHome'
-import { MatchList } from './pages/match/MatchList'
 import { MatchManageHome } from './pages/match/MatchManageHome'
 import { MatchPresetEdit } from './pages/match/MatchPresetEdit'
 import { MatchPresetFinish } from './pages/match/MatchPresetFinish'
@@ -121,12 +121,12 @@ export const router = createBrowserRouter([
           { path: '/match/create/guest-join', element: <MatchGuestJoinCreate /> },
           { path: '/match/create/guest-wanted', element: <MatchGuestWantedCreate /> },
           { path: '/match/create/game', element: <MatchCreateGame /> },
+          { path: '/match/edit/:id', element: <MatchEdit /> },
           { path: '/match/manage', element: <MatchManageHome /> },
           { path: '/match/presets', element: <MatchPresetManage /> },
           { path: '/match/presets/:presetId/edit', element: <MatchPresetEdit /> },
           { path: '/match/presets/finish', element: <MatchPresetFinish /> },
           { path: '/match/fields', element: <FieldInfo /> },
-          { path: '/match/list', element: <MatchList /> },
           { path: '/match/filter', element: <MatchFilter /> },
           { path: '/match/schedule/:matchId/join', element: <MatchScheduleJoin /> },
           { path: '/match/detail/:id', element: <MatchDetail /> },

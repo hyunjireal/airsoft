@@ -19,7 +19,7 @@ export function GuideComplete() {
           <h2>초보 질문방으로 가기</h2>
           <span aria-hidden="true">›</span>
         </Link>
-        <Link className="card guide_next_card" to="/match/list?beginner=true">
+        <Link className="card guide_next_card" to="/match">
           <h2>매치 찾으러 가기</h2>
           <span aria-hidden="true">›</span>
         </Link>

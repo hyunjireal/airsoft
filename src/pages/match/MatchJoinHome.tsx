@@ -6,7 +6,7 @@ export function MatchJoinHome() {
     <div className="page">
       <h1 className="page_title">참여하기</h1>
       <section className="section">
-        <Link className="card" to="/match/list">
+        <Link className="card" to="/match">
           <h2>개인</h2>
           <p>팀이 없어도 참여 가능한 경기를 찾아요.</p>
         </Link>
