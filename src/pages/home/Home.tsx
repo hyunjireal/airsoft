@@ -21,7 +21,7 @@ import mainProfileIcon from '../../asset/icons/main_profile01.svg'
 import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
 import mainStarIcon from '../../asset/icons/main_star.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
-import heroImg from '../../asset/images/main_img02.png'
+import { TournamentHero } from './TournamentHero'
 import mainProfileTag01 from '../../asset/images/main_profile_tag01.png'
 import mainProfileTag02 from '../../asset/images/main_profile_tag02.png'
 import userAvatar from '../../asset/images/main_user01.png'
@@ -159,6 +159,7 @@ function saveProfileImage(dataUrl: string) {
   window.dispatchEvent(new StorageEvent('storage', { key: HOME_PROFILE_IMAGE_KEY, newValue: dataUrl }))
 }
 const BUDDY_SHEET_CLOSE_DURATION = 280
+const HOME_OPENING_DURATION = 2050
 
 function normalizeDateValue(value?: string) {
   const matchedDate = value?.trim().replaceAll('.', '-').match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
@@ -369,6 +370,10 @@ export function Home() {
   const [isFlashing, setIsFlashing] = useState(false)
   const [pendingAlbumImage, setPendingAlbumImage] = useState<string | null>(null)
   const [scheduleRevision, setScheduleRevision] = useState(0)
+  const [isHomeOpeningDone, setIsHomeOpeningDone] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  })
   const [visibleHomeSections, setVisibleHomeSections] = useState({
     match: false,
     buddy: false,
@@ -392,6 +397,18 @@ export function Home() {
   const homeScheduleCards = useMemo(() => {
     return createHomeScheduleCards()
   }, [scheduleRevision])
+
+  useEffect(() => {
+    if (isHomeOpeningDone) return undefined
+
+    const timer = window.setTimeout(() => {
+      setIsHomeOpeningDone(true)
+    }, HOME_OPENING_DURATION)
+
+    return () => {
+      window.clearTimeout(timer)
+    }
+  }, [isHomeOpeningDone])
 
   useEffect(() => {
     const videoElement = cameraVideoRef.current
@@ -669,23 +686,11 @@ export function Home() {
   }
 
   return (
-    <div className="home_page">
+    <div className={`home_page ${isHomeOpeningDone ? 'is_home_opening_done' : ''}`}>
       <PageHeader className="home_page_header" layout="standard" hideLeft />
       <section className="home_main">
         {/* ① 히어로 섹션 */}
-        <section className="home_hero" style={{ backgroundImage: `url(${heroImg})` }}>
-          <div className="home_hero_inner">
-            <div className="home_hero_tit">
-              <div className="home_hero_tag_row">
-                <MainTag className="home_hero_tag">MVP 투표중</MainTag>
-              </div>
-              <div className="home_hero_txt">
-                <p className="home_hero_title">승부를 바꾼 플레이,<br />당신의 선택은?</p>
-                <span className="home_hero_pagination">1 / 4</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        <TournamentHero />
 
         {/* ② 사용자 정보 + 경기 일정 */}
         <div className="home_userinfo_bg">

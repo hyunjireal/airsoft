@@ -155,6 +155,7 @@
   width: 100%;
   margin-top: -35px;
   padding-top: 35px;
+  background-color: #fff;
   background:
     linear-gradient(to bottom, transparent 0, transparent 35px, #fff 35px, #fff 100%),
     var(--home-userinfo-bg-image, none);
@@ -175,6 +176,13 @@
   border-radius: 35px;
   background: #fff;
   box-shadow: 0 0 9.4px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translate3d(0, 32px, 0) scale(0.98);
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+.home_page.is_home_opening_done .home_userinfo {
   animation: home_userinfo_card_reveal 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -193,7 +201,8 @@
   width: 100%;
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  animation: home_userinfo_piece_reveal 520ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
 }
 
 .home_userinfo_pic_wrap {
@@ -201,7 +210,16 @@
   flex-shrink: 0;
   width: 80px;
   height: 80px;
-  animation: home_userinfo_avatar_reveal 520ms cubic-bezier(0.22, 1, 0.36, 1) 240ms both;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0) scale(0.97);
+}
+
+.home_page.is_home_opening_done .home_userinfo_profile {
+  animation: home_userinfo_piece_reveal 440ms cubic-bezier(0.22, 1, 0.36, 1) 110ms both;
+}
+
+.home_page.is_home_opening_done .home_userinfo_pic_wrap {
+  animation: home_userinfo_avatar_reveal 440ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
 }
 
 .home_userinfo_pic {
@@ -607,7 +625,12 @@
   flex-direction: column;
   gap: 10px;
   min-width: 0;
-  animation: home_userinfo_piece_reveal 560ms cubic-bezier(0.22, 1, 0.36, 1) 430ms both;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+
+.home_page.is_home_opening_done .home_userinfo_tit {
+  animation: home_userinfo_piece_reveal 440ms cubic-bezier(0.22, 1, 0.36, 1) 250ms both;
 }
 
 .home_userinfo_name {
@@ -652,7 +675,12 @@
   align-items: center;
   justify-content: flex-start;
   gap: 7px;
-  animation: home_userinfo_piece_reveal 500ms cubic-bezier(0.22, 1, 0.36, 1) 680ms both;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+}
+
+.home_page.is_home_opening_done .home_userinfo_badge_top {
+  animation: home_userinfo_piece_reveal 420ms cubic-bezier(0.22, 1, 0.36, 1) 390ms both;
 }
 
 .home_userinfo_badge_icon {
@@ -744,19 +772,24 @@
 }
 
 .home_userinfo_category_tags > .home_userinfo_category_tag {
-  animation: home_userinfo_chip_reveal 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0) scale(0.98);
+}
+
+.home_page.is_home_opening_done .home_userinfo_category_tags > .home_userinfo_category_tag {
+  animation: home_userinfo_chip_reveal 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home_userinfo_category_tags > .home_userinfo_category_tag:nth-child(1) {
-  animation-delay: 800ms;
+  animation-delay: 470ms;
 }
 
 .home_userinfo_category_tags > .home_userinfo_category_tag:nth-child(2) {
-  animation-delay: 910ms;
+  animation-delay: 540ms;
 }
 
 .home_userinfo_category_tags > .home_userinfo_category_tag:nth-child(3) {
-  animation-delay: 1020ms;
+  animation-delay: 610ms;
 }
 
 .home_userinfo_category_more {
@@ -781,7 +814,12 @@
     border-color 180ms ease,
     background 180ms ease,
     transform 220ms ease;
-  animation: home_userinfo_chip_reveal 480ms cubic-bezier(0.22, 1, 0.36, 1) 1130ms both;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0) scale(0.98);
+}
+
+.home_page.is_home_opening_done .home_userinfo_category_more {
+  animation: home_userinfo_chip_reveal 380ms cubic-bezier(0.22, 1, 0.36, 1) 620ms both;
 }
 
 .home_userinfo_category_more:hover {
@@ -844,7 +882,12 @@
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  animation: home_userinfo_ai_banner_reveal 620ms cubic-bezier(0.22, 1, 0.36, 1) 1280ms both;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+}
+
+.home_page.is_home_opening_done .home_ai_recommend_card {
+  animation: home_userinfo_ai_banner_reveal 460ms cubic-bezier(0.22, 1, 0.36, 1) 760ms both;
 }
 
 .home_ai_recommend_image {
@@ -923,11 +966,11 @@
 @keyframes home_userinfo_card_reveal {
   from {
     opacity: 0;
-    transform: translate3d(0, 12px, 0);
+    transform: translate3d(0, 32px, 0) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 8px, 0) scale(1);
   }
 }
 
@@ -2417,6 +2460,7 @@
 }
 
 :root[data-theme='dark'] .home_userinfo_bg {
+  background-color: #000;
   background:
     linear-gradient(to bottom, transparent 0, transparent 35px, var(--color-black) 35px, var(--color-black) 100%),
     var(--home-userinfo-bg-image, none);
