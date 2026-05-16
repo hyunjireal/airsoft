@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { LazyMotion, domAnimation, m } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
 import buddyHeroDark from '../../asset/images/buddy_bg_d.png'
@@ -47,6 +47,14 @@ type BuddyRecommendation = {
   manner: string
   rating: string
   image: string
+}
+
+type BuddyReview = {
+  id: string
+  author: string
+  tag: string
+  body: string
+  date: string
 }
 
 const MOCK_SCHEDULES: ScheduleItem[] = [
@@ -139,6 +147,32 @@ const BUDDY_RECOMMENDATIONS: BuddyRecommendation[] = [
     image: buddyProfileFive,
   },
 ]
+
+const BUDDY_DETAIL_REVIEWS: BuddyReview[] = [
+  {
+    id: 'review-01',
+    author: '화가난빵아리',
+    tag: 'CQB',
+    body: '입문자인데 끝까지 잘 알려줬어요.\n덕분에 정말 재미있게 플레이했습니다!',
+    date: '2026.05.11',
+  },
+  {
+    id: 'review-02',
+    author: '착한사람',
+    tag: '팀플레이',
+    body: '팀 분위기를 잘 이끌어줘서 편하게\n집중할 수 있었어요. 최고!',
+    date: '2026.05.09',
+  },
+  {
+    id: 'review-03',
+    author: '에어소프트초보',
+    tag: '필드적응',
+    body: '처음 가는 필드였는데 지형이랑 전략까지\n세심하게 케어해줘서 든든했어요.',
+    date: '2026.05.08',
+  },
+]
+
+const BUDDY_DETAIL_TAGS = ['공격형', '팀플레이', 'CQB 전문', '입문자 친화', '커뮤니케이션 우수', '전략적 플레이']
 
 export function BuddyFind() {
   const navigate = useNavigate()
@@ -541,11 +575,13 @@ export function BuddyLoading() {
 
 export function BuddyRecommend() {
   const navigate = useNavigate()
+  const themeMode = useThemeMode()
+  const isLightMode = themeMode === 'light'
 
   return (
-    <article className="buddy_recommend_page">
+    <article className={`buddy_recommend_page${isLightMode ? ' buddy_recommend_page--light' : ''}`}>
       <PageHeader
-        variant="dark"
+        variant={isLightMode ? 'default' : 'dark'}
         className="buddy_recommend_header"
         onBack={() => navigate('/buddy')}
         backLabel="버디 찾기로 돌아가기"
@@ -559,7 +595,12 @@ export function BuddyRecommend() {
       <section className="buddy_recommend_list_section" aria-label="추천 버디 목록">
         <div className="buddy_recommend_list">
           {BUDDY_RECOMMENDATIONS.map((buddy) => (
-            <button className="buddy_recommend_card" type="button" key={buddy.id}>
+            <button
+              className="buddy_recommend_card"
+              type="button"
+              key={buddy.id}
+              onClick={() => navigate(`/buddy/recommend/${buddy.id}`)}
+            >
               <span className="buddy_recommend_card__main">
                 <img className="buddy_recommend_card__avatar" src={buddy.image} alt="" />
                 <span className="buddy_recommend_card__info">
@@ -589,6 +630,115 @@ export function BuddyRecommend() {
           ))}
         </div>
       </section>
+    </article>
+  )
+}
+
+export function BuddyDetail() {
+  const navigate = useNavigate()
+  const { buddyId } = useParams()
+  const buddy =
+    BUDDY_RECOMMENDATIONS.find((recommendation) => recommendation.id === buddyId) ??
+    BUDDY_RECOMMENDATIONS[0]
+
+  return (
+    <article className="buddy_detail_page">
+      <PageHeader
+        variant="dark"
+        className="buddy_detail_header"
+        onBack={() => navigate('/buddy/recommend')}
+        backLabel="추천 버디로 돌아가기"
+        title="버디 상세"
+      />
+
+      <main className="buddy_detail_content">
+        <section className="buddy_detail_profile" aria-label={`${buddy.name} 프로필`}>
+          <div className="buddy_detail_avatar_wrap">
+            <img className="buddy_detail_avatar" src={buddy.image} alt="" />
+          </div>
+
+          <div className="buddy_detail_identity">
+            <h1>{buddy.name}</h1>
+            <p className="buddy_detail_rating">
+              <span aria-hidden="true">★</span>
+              {buddy.rating}
+            </p>
+          </div>
+        </section>
+
+        <section className="buddy_detail_styles" aria-labelledby="buddy_detail_styles_title">
+          <h2 id="buddy_detail_styles_title">버디의 플레이 스타일</h2>
+          <div className="buddy_detail_tag_list">
+            {BUDDY_DETAIL_TAGS.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </section>
+
+        <section className="buddy_detail_quote">
+          <span aria-hidden="true">“</span>
+          <p>
+            저와 함께 다니면
+            <br />
+            모든 분들이 행복하고 즐거워합니다.
+          </p>
+          <span aria-hidden="true">”</span>
+        </section>
+
+        <section className="buddy_detail_stats" aria-label="버디 활동 정보">
+          <div>
+            <p>안내 완료</p>
+            <strong>9회</strong>
+          </div>
+          <div>
+            <p>선호 플레이</p>
+            <strong>CQB</strong>
+          </div>
+          <div>
+            <p>매너도</p>
+            <strong>우수</strong>
+          </div>
+          <div>
+            <p>응답 속도</p>
+            <strong>빠름</strong>
+          </div>
+        </section>
+
+        <section className="buddy_detail_reviews" aria-labelledby="buddy_detail_reviews_title">
+          <div className="buddy_detail_section_header">
+            <h2 id="buddy_detail_reviews_title">최근 플레이 후기</h2>
+          </div>
+          <div className="buddy_detail_review_list">
+            {BUDDY_DETAIL_REVIEWS.map((review) => (
+              <article className="buddy_detail_review_card" key={review.id}>
+                <div className="buddy_detail_review_top">
+                  <div className="buddy_detail_reviewer">
+                    <span aria-hidden="true" />
+                    <strong>{review.author}</strong>
+                  </div>
+                  <span className="buddy_detail_review_stars" aria-label="별점 5점">
+                    ★★★★★
+                  </span>
+                </div>
+                <span className="buddy_detail_review_tag">{review.tag}</span>
+                <p>
+                  {review.body.split('\n').map((line) => (
+                    <span key={line}>
+                      {line}
+                      <br />
+                    </span>
+                  ))}
+                </p>
+                <time>{review.date}</time>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <button className="buddy_detail_request" type="button">
+          버디 요청하기
+        </button>
+      </main>
     </article>
   )
 }

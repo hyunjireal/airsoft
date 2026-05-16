@@ -19,6 +19,7 @@ export function AppShell() {
   const isChatPage = location.pathname === '/chat'
   const isBuddyPage = location.pathname === '/buddy' || location.pathname === '/buddy/loading'
   const isBuddyRecommendPage = location.pathname === '/buddy/recommend'
+  const isBuddyDetailPage = /^\/buddy\/recommend\/[^/]+$/.test(location.pathname)
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
@@ -31,6 +32,7 @@ export function AppShell() {
     !isCommunityPostDetail &&
     !isTournamentMvpComplete &&
     !isChatPage &&
+    !isBuddyDetailPage &&
     !isBuddyPage &&
     !isGuideQuizPage &&
     !location.pathname.startsWith('/match/schedule/') &&
@@ -45,6 +47,7 @@ export function AppShell() {
     !isMediaPage &&
     !isBuddyPage &&
     !isBuddyRecommendPage &&
+    !isBuddyDetailPage &&
     !isMediaProfile &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&

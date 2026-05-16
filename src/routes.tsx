@@ -22,7 +22,7 @@ import { MediaProfile } from './pages/media/MediaProfile'
 import { GuideComplete } from './pages/guide/GuideComplete'
 import { GuideQuiz } from './pages/guide/GuideQuiz'
 import { GuideStepPage } from './pages/guide/GuideStepPage'
-import { BuddyFind, BuddyLoading, BuddyRecommend } from './pages/home/BuddyFind'
+import { BuddyDetail, BuddyFind, BuddyLoading, BuddyRecommend } from './pages/home/BuddyFind'
 import { Home } from './pages/home/Home'
 import { MatchApply } from './pages/match/MatchApply'
 import { MatchApplyComplete } from './pages/match/MatchApplyComplete'
@@ -94,6 +94,7 @@ export const router = createBrowserRouter([
           { path: '/buddy', element: <BuddyFind /> },
           { path: '/buddy/loading', element: <BuddyLoading /> },
           { path: '/buddy/recommend', element: <BuddyRecommend /> },
+          { path: '/buddy/recommend/:buddyId', element: <BuddyDetail /> },
           { path: '/guide', element: <BeginnerHub /> },
           { path: '/guide/safety', element: <GuideStepPage stepId="safety-gear" /> },
           { path: '/guide/rules', element: <GuideStepPage stepId="safe-zone" /> },
