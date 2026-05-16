@@ -3698,8 +3698,8 @@
 
 .beginner_write_floating {
   left: auto;
-  right: max(24px, calc((100vw - var(--app-max-width)) / 2 + 24px));
-  bottom: var(--app-header-height);
+  right: max(11.5px, calc((100vw - var(--app-max-width)) / 2 + 11.5px));
+  bottom: calc(var(--app-bottom-nav-space) - 4px);
   gap: 0;
   width: 60px;
   min-width: 60px;
@@ -3744,6 +3744,14 @@
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .beginner_write_floating {
+  background: var(--color-white);
+}
+
+:root[data-theme='dark'] .beginner_write_floating img {
+  filter: brightness(0) saturate(100%);
 }
 
 .post_create_page {

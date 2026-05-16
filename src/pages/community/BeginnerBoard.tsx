@@ -9,6 +9,7 @@ import guyFaceSmileIcon from "../../asset/icons/guy-face-caret-circle-caret.svg"
 import guyFaceTalkIcon from "../../asset/icons/guy-face-owo.svg";
 import guyFaceThinkIcon from "../../asset/icons/guy-face-plus-underscore-plus.svg";
 import guyFaceArcSmileIcon from "../../asset/icons/guy-face-arc-smile.svg";
+import guyFaceHeartSmileIcon from "../../asset/icons/guy-face-heart-smile.svg";
 import safetyIcon from "../../asset/icons/com_safety.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
 import writeIcon from "../../asset/icons/com_write.svg";
@@ -55,7 +56,7 @@ const gaiPromptStates = [
   { placeholder: "장비 추천이 궁금한가요?", face: guyFaceThinkIcon },
   { placeholder: "필드 매너를 물어보세요", face: guyFaceSmileIcon },
   { placeholder: "초보자 규칙부터 확인해볼까요?", face: guyFaceArcSmileIcon },
-  { placeholder: "오늘 바로 갈 수 있는 게임은?", face: guyFaceTalkIcon },
+  { placeholder: "오늘 바로 갈 수 있는 게임은?", face: guyFaceHeartSmileIcon },
 ];
 
 const INITIAL_VISIBLE_QUESTION_COUNT = 5;
