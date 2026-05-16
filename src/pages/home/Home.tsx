@@ -864,7 +864,7 @@ export function Home() {
                 <p className="buddy_info_title">
                   첫 게임이 걱정된다면
                   <br />
-                  함께할 버디를 연결해드려요
+                  <span className="buddy_lime_text">함께할 버디</span>를 연결해드려요
                 </p>
                 <p className="buddy_info_desc">
                   예약 시 버디 필요를 체크하면

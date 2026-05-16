@@ -2540,6 +2540,10 @@
   color: var(--color-white);
 }
 
+:root[data-theme='dark'] .buddy_lime_text {
+  color: var(--color-lime);
+}
+
 :root[data-theme='dark'] .buddy_info_desc {
   color: #e9e9e9;
 }
