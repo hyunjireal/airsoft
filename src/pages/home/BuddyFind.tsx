@@ -637,14 +637,16 @@ export function BuddyRecommend() {
 export function BuddyDetail() {
   const navigate = useNavigate()
   const { buddyId } = useParams()
+  const themeMode = useThemeMode()
+  const isLightMode = themeMode === 'light'
   const buddy =
     BUDDY_RECOMMENDATIONS.find((recommendation) => recommendation.id === buddyId) ??
     BUDDY_RECOMMENDATIONS[0]
 
   return (
-    <article className="buddy_detail_page">
+    <article className={`buddy_detail_page${isLightMode ? ' buddy_detail_page--light' : ''}`}>
       <PageHeader
-        variant="dark"
+        variant={isLightMode ? 'default' : 'dark'}
         className="buddy_detail_header"
         onBack={() => navigate('/buddy/recommend')}
         backLabel="추천 버디로 돌아가기"
