@@ -18,16 +18,25 @@ type ClientChatMessage = {
   attachments?: ChatAttachment[]
 }
 
-type OpenRouterMessage = {
-  role: ChatRole
-  content: string
+type GeminiPart = {
+  text?: string
+  inline_data?: {
+    mime_type: string
+    data: string
+  }
 }
 
-type OpenRouterResponse = {
-  choices?: Array<{
-    message?: {
-      role?: string
-      content?: string
+type GeminiContent = {
+  role: 'user' | 'model'
+  parts: GeminiPart[]
+}
+
+type GeminiResponse = {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{
+        text?: string
+      }>
     }
   }>
   error?: {
@@ -35,8 +44,8 @@ type OpenRouterResponse = {
   }
 }
 
-const OPENROUTER_CHAT_URL = 'https://openrouter.ai/api/v1/chat/completions'
-const OPENROUTER_MODEL = 'deepseek/deepseek-chat:free'
+const GEMINI_API_BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
+const DEFAULT_GEMINI_MODEL = 'gemini-2.5-flash'
 
 const GAI_SYSTEM_PROMPT = `
 당신은 건잇(GUNIT)의 AI 챗봇 가이(GAI)입니다.
@@ -105,6 +114,11 @@ function isChatMessage(value: unknown): value is ClientChatMessage {
   )
 }
 
+function stripDataUrl(dataUrl = '') {
+  const commaIndex = dataUrl.indexOf(',')
+  return commaIndex >= 0 ? dataUrl.slice(commaIndex + 1) : dataUrl
+}
+
 function formatAttachmentForPrompt(attachment: ChatAttachment, index: number) {
   const sizeKb = typeof attachment.size === 'number' ? Math.round(attachment.size / 1024) : 0
   return [
@@ -115,36 +129,46 @@ function formatAttachmentForPrompt(attachment: ChatAttachment, index: number) {
   ].join(', ')
 }
 
-function toOpenRouterMessages(messages: ClientChatMessage[]): OpenRouterMessage[] {
-  return [
-    {
-      role: 'system',
-      content: GAI_SYSTEM_PROMPT,
-    },
-    ...messages.map((message) => {
-      const attachments = message.attachments ?? []
-      const attachmentContext = attachments.length
-        ? `\n\n[첨부 이미지 정보]\n${attachments.map(formatAttachmentForPrompt).join('\n')}\n현재 모델은 텍스트 기반 MVP이므로, 이미지가 첨부된 장비 점검 상황으로 보고 보호장비/안전/규제/관리 체크리스트 중심으로 코칭하세요.`
-        : ''
+function toGeminiContents(messages: ClientChatMessage[]): GeminiContent[] {
+  return messages.map((message) => {
+    const attachments = message.attachments ?? []
+    const attachmentContext = attachments.length
+      ? `\n\n[첨부 이미지 정보]\n${attachments.map(formatAttachmentForPrompt).join('\n')}\n첨부 이미지를 함께 참고해서 보호장비/안전/규제/관리 체크리스트 중심으로 코칭하세요.`
+      : ''
+    const text = `${message.content || '장비 사진을 올렸어요. 입문자 기준으로 점검해주세요.'}${attachmentContext}`
+    const parts: GeminiPart[] = [{ text }]
 
-      return {
-        role: message.role,
-        content: `${message.content || '장비 사진을 올렸어요. 입문자 기준으로 점검해주세요.'}${attachmentContext}`,
+    attachments.forEach((attachment) => {
+      if (!attachment.dataUrl) {
+        return
       }
-    }),
-  ]
+
+      parts.push({
+        inline_data: {
+          mime_type: attachment.type || 'image/jpeg',
+          data: stripDataUrl(attachment.dataUrl),
+        },
+      })
+    })
+
+    return {
+      role: message.role === 'assistant' ? 'model' : 'user',
+      parts,
+    }
+  })
 }
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const chatApiKey = env.CHAT_API_KEY || env.OPENROUTER_API_KEY
+  const geminiApiKey = env.GEMINI_API_KEY || env.CHAT_API_KEY
+  const geminiModel = env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL
 
   return {
     plugins: [
       react(),
       {
-        name: 'openrouter-chat-api',
+        name: 'gemini-chat-api',
         configureServer(server) {
           server.middlewares.use('/api/chat', async (request, response) => {
             if (request.method !== 'POST') {
@@ -152,8 +176,8 @@ export default defineConfig(({ mode }) => {
               return
             }
 
-            if (!chatApiKey) {
-              sendJson(response, 500, { error: 'CHAT_API_KEY가 설정되어 있지 않습니다.' })
+            if (!geminiApiKey) {
+              sendJson(response, 500, { error: 'GEMINI_API_KEY가 설정되어 있지 않습니다.' })
               return
             }
 
@@ -166,41 +190,45 @@ export default defineConfig(({ mode }) => {
                 return
               }
 
-              const openRouterResponse = await fetch(OPENROUTER_CHAT_URL, {
+              const geminiResponse = await fetch(`${GEMINI_API_BASE_URL}/${geminiModel}:generateContent`, {
                 method: 'POST',
                 headers: {
-                  Authorization: `Bearer ${chatApiKey}`,
+                  'x-goog-api-key': geminiApiKey,
                   'Content-Type': 'application/json',
-                  'HTTP-Referer': request.headers.origin || 'http://localhost:5173',
-                  'X-Title': 'GUNIT GAI',
                 },
                 body: JSON.stringify({
-                  model: OPENROUTER_MODEL,
-                  messages: toOpenRouterMessages(messages),
-                  temperature: 0.7,
+                  system_instruction: {
+                    parts: [{ text: GAI_SYSTEM_PROMPT }],
+                  },
+                  contents: toGeminiContents(messages),
+                  generationConfig: {
+                    temperature: 0.7,
+                  },
                 }),
               })
 
-              const data = (await openRouterResponse.json()) as OpenRouterResponse
+              const data = (await geminiResponse.json()) as GeminiResponse
 
-              if (!openRouterResponse.ok) {
-                sendJson(response, openRouterResponse.status, {
-                  error: data?.error?.message || 'OpenRouter 요청에 실패했습니다.',
+              if (!geminiResponse.ok) {
+                sendJson(response, geminiResponse.status, {
+                  error: data?.error?.message || 'Gemini 요청에 실패했습니다.',
                 })
                 return
               }
 
-              const message = data?.choices?.[0]?.message
-              const content = typeof message?.content === 'string' ? message.content : ''
+              const content = data?.candidates?.[0]?.content?.parts
+                ?.map((part) => part.text || '')
+                .join('')
+                .trim() || ''
 
               if (!content) {
-                sendJson(response, 502, { error: 'OpenRouter 응답에 message.content가 없습니다.' })
+                sendJson(response, 502, { error: 'Gemini 응답에 텍스트가 없습니다.' })
                 return
               }
 
               sendJson(response, 200, {
                 message: {
-                  role: message?.role || 'assistant',
+                  role: 'assistant',
                   content,
                 },
                 answer: content,

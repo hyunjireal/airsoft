@@ -3,6 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
+import chatbotCalendarIcon from '../../asset/icons/chatbot_cal.svg'
 import imageIcon from '../../asset/icons/match_img.svg'
 import sendIcon from '../../asset/icons/com_send.svg'
 import gaiImage from '../../asset/images/gai.png'
@@ -20,6 +21,9 @@ const frequentQuestions = [
   '국내 규제에서 조심할 점',
   '첫 게임 전 체크리스트',
 ]
+
+const MAX_UPLOAD_IMAGE_SIDE = 1400
+const MAX_UPLOAD_IMAGE_BYTES = 1.4 * 1024 * 1024
 
 const welcomeMessage: TimedChatMessage = {
   id: 'welcome',
@@ -42,6 +46,7 @@ function getCurrentTime() {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
+    timeZone: 'Asia/Seoul',
   }).format(new Date())
 }
 
@@ -71,13 +76,63 @@ function dataUrlToAttachment(dataUrl: string, name = 'gai-equipment-photo.jpg'):
   }
 }
 
-function readImageAsDataUrl(file: File) {
+function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(String(reader.result))
     reader.onerror = () => reject(new Error('사진을 불러오지 못했어요. 다시 시도해주세요.'))
     reader.readAsDataURL(file)
   })
+}
+
+function loadImage(dataUrl: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error('사진을 처리하지 못했어요. 다른 사진으로 다시 시도해주세요.'))
+    image.src = dataUrl
+  })
+}
+
+function getDataUrlBytes(dataUrl: string) {
+  return Math.round((dataUrl.length * 3) / 4)
+}
+
+function drawCompressedImage(
+  source: CanvasImageSource,
+  sourceWidth: number,
+  sourceHeight: number,
+  initialQuality = 0.82,
+) {
+  const scale = Math.min(1, MAX_UPLOAD_IMAGE_SIDE / Math.max(sourceWidth, sourceHeight))
+  const width = Math.max(1, Math.round(sourceWidth * scale))
+  const height = Math.max(1, Math.round(sourceHeight * scale))
+  const canvas = document.createElement('canvas')
+  canvas.width = width
+  canvas.height = height
+
+  const context = canvas.getContext('2d')
+  if (!context) {
+    throw new Error('사진을 압축하지 못했어요. 다시 시도해주세요.')
+  }
+
+  context.drawImage(source, 0, 0, width, height)
+
+  let quality = initialQuality
+  let dataUrl = canvas.toDataURL('image/jpeg', quality)
+
+  while (getDataUrlBytes(dataUrl) > MAX_UPLOAD_IMAGE_BYTES && quality > 0.54) {
+    quality -= 0.08
+    dataUrl = canvas.toDataURL('image/jpeg', quality)
+  }
+
+  return dataUrl
+}
+
+async function readCompressedImageAsDataUrl(file: File) {
+  const dataUrl = await readFileAsDataUrl(file)
+  const image = await loadImage(dataUrl)
+  return drawCompressedImage(image, image.naturalWidth || image.width, image.naturalHeight || image.height)
 }
 
 function isAnalysisLine(line: string) {
@@ -133,13 +188,20 @@ export function ChatbotPage() {
   const [searchParams] = useSearchParams()
   const initialQuestionSent = useRef(false)
   const chatScrollRef = useRef<HTMLElement | null>(null)
+  const pageRef = useRef<HTMLDivElement | null>(null)
+  const bottomRef = useRef<HTMLDivElement | null>(null)
   const typingTimerRef = useRef<number | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
   const [input, setInput] = useState('')
-  const [messages, setMessages] = useState<TimedChatMessage[]>([welcomeMessage])
+  const [messages, setMessages] = useState<TimedChatMessage[]>(() => [
+    {
+      ...welcomeMessage,
+      time: getCurrentTime(),
+    },
+  ])
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
@@ -308,7 +370,7 @@ export function ChatbotPage() {
     }
 
     context.drawImage(video, 0, 0, width, height)
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.86)
+    const dataUrl = drawCompressedImage(video, width, height, 0.82)
     closeCamera()
     await sendEquipmentPhoto(dataUrlToAttachment(dataUrl))
   }
@@ -326,9 +388,15 @@ export function ChatbotPage() {
       return
     }
 
-    const dataUrl = await readImageAsDataUrl(file)
-    closeCamera()
-    await sendEquipmentPhoto(dataUrlToAttachment(dataUrl, file.name))
+    try {
+      const dataUrl = await readCompressedImageAsDataUrl(file)
+      closeCamera()
+      await sendEquipmentPhoto(dataUrlToAttachment(dataUrl, file.name))
+    } catch (error) {
+      await typeAssistantAnswer(
+        error instanceof Error ? error.message : '사진을 처리하지 못했어요. 다시 시도해주세요.',
+      )
+    }
   }
 
   const goBack = () => {
@@ -368,8 +436,37 @@ export function ChatbotPage() {
     chat.scrollTop = chat.scrollHeight
   }, [messages, isSending])
 
+  useEffect(() => {
+    const page = pageRef.current
+    const bottom = bottomRef.current
+
+    if (!page || !bottom) {
+      return
+    }
+
+    const updateBottomSpace = () => {
+      const height = Math.ceil(bottom.getBoundingClientRect().height + 44)
+      page.style.setProperty('--chat-bottom-height', `${height}px`)
+
+      if (chatScrollRef.current) {
+        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight
+      }
+    }
+
+    updateBottomSpace()
+
+    const observer = new ResizeObserver(updateBottomSpace)
+    observer.observe(bottom)
+    window.addEventListener('resize', updateBottomSpace)
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', updateBottomSpace)
+    }
+  }, [])
+
   return (
-    <div className="chat_page">
+    <div className="chat_page" ref={pageRef}>
       <div className="chat_con">
         <PageHeader
           className="chat_top"
@@ -381,7 +478,7 @@ export function ChatbotPage() {
         <main className="chat" ref={chatScrollRef}>
           <section className="chat_thread" aria-live="polite">
             <div className="chat_day_marker">
-              <span aria-hidden="true">▣</span>
+              <img src={chatbotCalendarIcon} alt="" aria-hidden="true" />
               오늘
             </div>
 
@@ -393,7 +490,7 @@ export function ChatbotPage() {
               </div>
               <button type="button" onClick={openCamera} disabled={isSending}>
                 <img src={imageIcon} alt="" aria-hidden="true" />
-                사진 보내기
+                사진 촬영하기
               </button>
             </div>
 
@@ -441,7 +538,7 @@ export function ChatbotPage() {
           </section>
         </main>
 
-        <div className="chat_bottom chat_bottom_scan">
+        <div className="chat_bottom chat_bottom_scan" ref={bottomRef}>
           <div className="chat_faq">
             <p className="body_m_14">자주 묻는 질문</p>
             <div className="chat_faq_tags">
