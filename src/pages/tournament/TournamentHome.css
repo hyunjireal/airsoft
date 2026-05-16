@@ -387,6 +387,32 @@
   grid-template-columns: minmax(60px, 82px) minmax(0, 1fr) auto;
 }
 
+.tournament_main_bracket_card.is_coming_soon {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(96px, calc(60px + 9vw), 132px);
+  border-color: rgba(187, 226, 28, 0.62);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(187, 226, 28, 0.16), transparent 42%),
+    linear-gradient(135deg, rgba(26, 26, 26, 0.92), rgba(76, 85, 52, 0.64));
+  box-shadow: 0 18px 42px rgba(26, 26, 26, 0.16);
+}
+
+.tournament_main_bracket_card.is_coming_soon::before {
+  content: '';
+  position: absolute;
+  inset: -60% -20%;
+  background: linear-gradient(115deg, transparent 34%, rgba(226, 253, 52, 0.16) 48%, transparent 62%);
+  transform: translateX(-28%) rotate(4deg);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.tournament_main_bracket_card.is_coming_soon > * {
+  position: relative;
+  z-index: 1;
+}
+
 .tournament_main_bracket_label {
   color: var(--tournament-stage-card-label);
   font-size: clamp(14px, calc(10px + 1vw), 18px);
@@ -453,6 +479,44 @@
   font-size: clamp(12px, calc(9px + 0.75vw), 15px);
   font-weight: 500;
   line-height: 1.3;
+}
+
+.tournament_main_coming_soon {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-width: 0;
+  text-align: center;
+}
+
+.tournament_main_coming_soon span,
+.tournament_main_coming_soon strong,
+.tournament_main_coming_soon p {
+  margin: 0;
+  font-family: var(--font-pretendard);
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.tournament_main_coming_soon span {
+  color: rgba(226, 253, 52, 0.78);
+  font-size: clamp(11px, calc(8px + 0.8vw), 14px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.tournament_main_coming_soon strong {
+  color: #ffffff;
+  font-size: clamp(18px, calc(12px + 1.7vw), 28px);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.tournament_main_coming_soon p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: clamp(12px, calc(9px + 0.75vw), 15px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 
 .tournament_main_bracket_pill {

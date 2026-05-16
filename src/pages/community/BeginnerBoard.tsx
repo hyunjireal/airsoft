@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+﻿import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import bookmarkIcon from "../../asset/icons/com_bookmark.svg";
 import bookmarkOnIcon from "../../asset/icons/com_bookmark_on.svg";
 import chatSmallIcon from "../../asset/icons/com_chat02.svg";
@@ -18,13 +18,14 @@ import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_que
 import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
-import { PageHeader } from "../../components/PageHeader";
+import { CommunityTopbar } from "./CommunityTopbar";
 import {
   hasCommunityBookmarkStore,
   readCommunityBookmarks,
   toggleCommunityBookmark,
   writeCommunityBookmarks,
 } from "./communityBookmarkStore";
+import { getCommunityRelativeTime, readCommunityPosts } from "./communityPostStore";
 import "./Community.css";
 
 const categoryTabs = [
@@ -49,6 +50,10 @@ type RecentQuestion = {
   views: string;
   comments: string;
   recommended?: boolean;
+};
+
+type BeginnerBoardLocationState = {
+  focusPostId?: string;
 };
 
 const quickQuestions = [
@@ -334,10 +339,6 @@ export const recentQuestions: RecentQuestion[] = [
   },
 ];
 
-const recentQuestionOrder = new Map(
-  recentQuestions.map((question, index) => [question.id, index]),
-);
-
 const questionCategoryToneClass: Record<QuestionCategory, string> = {
   "법규/규정": "is-rules",
   장비: "is-equipment",
@@ -352,12 +353,16 @@ function chatQuestionUrl(question: string) {
 
 export function BeginnerBoard() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const focusPostId = (location.state as BeginnerBoardLocationState | null)?.focusPostId;
   const switchTimerRef = useRef<number | null>(null);
   const introTimerRef = useRef<number | null>(null);
   const [activeCommunityTab, setActiveCommunityTab] = useState<"beginner" | "free">("beginner");
   const [switchingBoard, setSwitchingBoard] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
+  const [heroCollapsed, setHeroCollapsed] = useState(false);
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
+  const questionListRef = useRef<HTMLDivElement | null>(null);
   const [expandedTabs, setExpandedTabs] = useState<Set<CategoryTab>>(
     () => new Set(),
   );
@@ -378,18 +383,39 @@ export function BeginnerBoard() {
   const [aiQuestion, setAiQuestion] = useState("");
   const [aiFocused, setAiFocused] = useState(false);
   const [gaiPromptIndex, setGaiPromptIndex] = useState(0);
+  const [storedPosts, setStoredPosts] = useState(() => readCommunityPosts());
+
+  const allRecentQuestions = useMemo<RecentQuestion[]>(() => {
+    const storedQuestions = storedPosts
+      .filter((post) => post.boardContext === "beginner")
+      .map((post) => ({
+        id: post.id,
+        title: post.title,
+        category: post.category as QuestionCategory,
+        author: post.author,
+        time: getCommunityRelativeTime(post.createdAtISO),
+        views: String(post.views),
+        comments: String(post.commentsCount),
+      }));
+
+    return [...storedQuestions, ...recentQuestions];
+  }, [storedPosts]);
 
   const filteredQuestions = useMemo(() => {
     if (activeCategory === "전체") {
-      return recentQuestions;
+      return allRecentQuestions;
     }
 
-    return recentQuestions.filter(
+    return allRecentQuestions.filter(
       (question) => question.category === activeCategory,
     );
-  }, [activeCategory]);
+  }, [activeCategory, allRecentQuestions]);
 
   const orderedQuestions = useMemo(() => {
+    const questionOrder = new Map(
+      allRecentQuestions.map((question, index) => [question.id, index]),
+    );
+
     return [...filteredQuestions].sort((a, b) => {
       const aBookmarked = bookmarkedIds.has(a.id);
       const bBookmarked = bookmarkedIds.has(b.id);
@@ -399,11 +425,11 @@ export function BeginnerBoard() {
       }
 
       return (
-        (recentQuestionOrder.get(a.id) ?? 0) -
-        (recentQuestionOrder.get(b.id) ?? 0)
+        (questionOrder.get(a.id) ?? 0) -
+        (questionOrder.get(b.id) ?? 0)
       );
     });
-  }, [bookmarkedIds, filteredQuestions]);
+  }, [allRecentQuestions, bookmarkedIds, filteredQuestions]);
 
   const activeTabExpanded = expandedTabs.has(activeCategory);
   const visibleQuestions = activeTabExpanded
@@ -470,25 +496,58 @@ export function BeginnerBoard() {
     };
   }, [aiFocused, aiQuestion]);
 
+  useEffect(() => {
+    const syncStoredPosts = () => {
+      setStoredPosts(readCommunityPosts());
+    };
+
+    window.addEventListener("focus", syncStoredPosts);
+    window.addEventListener("storage", syncStoredPosts);
+
+    return () => {
+      window.removeEventListener("focus", syncStoredPosts);
+      window.removeEventListener("storage", syncStoredPosts);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!focusPostId) return;
+
+    const frameId = window.requestAnimationFrame(() => {
+      const questionCard = document.querySelector<HTMLElement>(`[data-community-post-id="${focusPostId}"]`);
+      questionCard?.scrollIntoView({ behavior: "smooth", block: "center" });
+      questionCard?.focus({ preventScroll: true });
+      navigate(location.pathname, { replace: true, state: null });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [focusPostId, location.pathname, navigate, visibleQuestions]);
+
+  useEffect(() => {
+    const questionList = questionListRef.current;
+    if (!questionList) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHeroCollapsed(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "-128px 0px -84% 0px",
+        threshold: 0.01,
+      },
+    );
+
+    observer.observe(questionList);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={`beginner_board_page${switchingBoard ? " is_switching_content" : ""}`}>
-      <PageHeader className="community_topbar" hideLeft hideRight>
-        <nav
-          className={`community_tabs community_tabs--${activeCommunityTab}`}
-          aria-label="커뮤니티 게시판 탭"
-        >
-          <NavLink className={() => (activeCommunityTab === "beginner" ? "active" : "")} to="/community" end>
-            초보 질문방
-          </NavLink>
-          <NavLink
-            className={() => (activeCommunityTab === "free" ? "active" : "")}
-            to="/community/free"
-            onClick={switchToFreeBoard}
-          >
-            일반 게시판
-          </NavLink>
-        </nav>
-      </PageHeader>
+    <div
+      className={`beginner_board_page${switchingBoard ? " is_switching_content" : ""}${heroCollapsed ? " is_hero_collapsed" : ""}`}
+    >
+      <CommunityTopbar activeTab={activeCommunityTab} onFreeClick={switchToFreeBoard} />
 
       <section className="beginner_hero" aria-label="초보 질문방 소개">
         <div className="beginner_hero_content">
@@ -675,7 +734,7 @@ export function BeginnerBoard() {
               ))}
             </div>
 
-            <div className="beginner_question_card_list">
+            <div className="beginner_question_card_list" ref={questionListRef}>
               {visibleQuestions.map((question, questionIndex) => {
                 const bookmarked = bookmarkedIds.has(question.id);
 
@@ -683,6 +742,8 @@ export function BeginnerBoard() {
 	                  <article
 	                    className="beginner_question_card"
 	                    key={question.id}
+                      data-community-post-id={question.id}
+                      tabIndex={-1}
                       style={{
                         animationDelay: introComplete
                           ? `${questionIndex * 0.045}s`
@@ -769,3 +830,4 @@ export function BeginnerBoard() {
     </div>
   );
 }
+

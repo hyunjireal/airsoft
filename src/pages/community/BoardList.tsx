@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+﻿import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import './Community.css'
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
 import bookmarkOnIcon from '../../asset/icons/com_bookmark_on.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
@@ -15,17 +15,18 @@ import hotFieldSix from '../../asset/images/match_list03.jpg'
 import CategoryTag from '../../components/CategoryTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
-import { PageHeader } from '../../components/PageHeader'
 import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 import type { BoardPost } from '../../types'
+import { CommunityTopbar } from './CommunityTopbar'
 import {
   hasCommunityBookmarkStore,
   readCommunityBookmarks,
   toggleCommunityBookmark,
   writeCommunityBookmarks,
 } from './communityBookmarkStore'
+import { getCommunityRelativeTime, readCommunityPosts } from './communityPostStore'
 
 const freeBoardCategories = ['전체', '자유수다', '팀원모집', '경기후기', '장비', '정보', '이벤트']
 const freeBoardTypes: BoardPost['boardType'][] = ['free', 'tip', 'review']
@@ -40,6 +41,10 @@ interface GeneralPostItem {
   views: number
   commentsCount: number
   saved?: boolean
+}
+
+type BoardListLocationState = {
+  focusPostId?: string
 }
 
 const hotPosts = [
@@ -342,6 +347,8 @@ function getPostCategory(post: BoardPost) {
 export function BoardList() {
   const { boardType = 'free' } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const focusPostId = (location.state as BoardListLocationState | null)?.focusPostId
   const switchTimerRef = useRef<number | null>(null)
   const introTimerRef = useRef<number | null>(null)
   const [activeCommunityTab, setActiveCommunityTab] = useState<'beginner' | 'free'>('free')
@@ -351,6 +358,7 @@ export function BoardList() {
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
+  const [storedPosts, setStoredPosts] = useState(() => readCommunityPosts())
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     const savedBookmarks = readCommunityBookmarks()
 
@@ -365,6 +373,17 @@ export function BoardList() {
   })
   const typedBoard = boardType as BoardPost['boardType']
   const isFreeBoard = typedBoard === 'free'
+  const storedGeneralPosts: GeneralPostItem[] = storedPosts
+    .filter((post) => post.boardContext === 'general')
+    .map((post) => ({
+      id: post.id,
+      category: post.category,
+      title: post.title,
+      author: post.author,
+      createdAt: getCommunityRelativeTime(post.createdAtISO),
+      views: post.views,
+      commentsCount: post.commentsCount,
+    }))
   const posts = boardPosts.filter((post) => {
     const matchesBoard = isFreeBoard ? freeBoardTypes.includes(post.boardType) : post.boardType === typedBoard
     const matchesCategory = !isFreeBoard || selectedCategory === '전체' || getPostCategory(post) === selectedCategory
@@ -372,7 +391,7 @@ export function BoardList() {
     return matchesBoard && matchesCategory
   })
   const displayPosts: GeneralPostItem[] = isFreeBoard
-    ? generalPosts.filter((post) => selectedCategory === '전체' || post.category === selectedCategory)
+    ? [...storedGeneralPosts, ...generalPosts].filter((post) => selectedCategory === '전체' || post.category === selectedCategory)
     : posts.map((post) => ({
         id: post.id,
         category: getPostCategory(post),
@@ -441,27 +460,37 @@ export function BoardList() {
     }
   }, [])
 
+  useEffect(() => {
+    const syncStoredPosts = () => {
+      setStoredPosts(readCommunityPosts())
+    }
+
+    window.addEventListener('focus', syncStoredPosts)
+    window.addEventListener('storage', syncStoredPosts)
+
+    return () => {
+      window.removeEventListener('focus', syncStoredPosts)
+      window.removeEventListener('storage', syncStoredPosts)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!focusPostId) return
+
+    const frameId = window.requestAnimationFrame(() => {
+      const postCard = document.querySelector<HTMLElement>(`[data-community-post-id="${focusPostId}"]`)
+      postCard?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      postCard?.focus({ preventScroll: true })
+      navigate(location.pathname, { replace: true, state: null })
+    })
+
+    return () => window.cancelAnimationFrame(frameId)
+  }, [focusPostId, location.pathname, navigate, visiblePosts])
+
   if (isFreeBoard) {
     return (
       <div className={`general_board_page${switchingBoard ? ' is_switching_content' : ''}`}>
-        <PageHeader className="community_topbar" hideLeft hideRight>
-          <nav
-            className={`community_tabs community_tabs--${activeCommunityTab}`}
-            aria-label="커뮤니티 게시판 탭"
-          >
-            <NavLink
-              className={() => (activeCommunityTab === 'beginner' ? 'active' : '')}
-              to="/community"
-              end
-              onClick={switchToBeginnerBoard}
-            >
-              초보 질문방
-            </NavLink>
-            <NavLink className={() => (activeCommunityTab === 'free' ? 'active' : '')} to="/community/free">
-              일반 게시판
-            </NavLink>
-          </nav>
-        </PageHeader>
+        <CommunityTopbar activeTab={activeCommunityTab} onBeginnerClick={switchToBeginnerBoard} />
 
         <section className="general_board_hero">
           <div className="general_board_hero_copy">
@@ -555,6 +584,7 @@ export function BoardList() {
               className="general_post_card"
               key={post.id}
               type="button"
+              data-community-post-id={post.id}
               style={{
                 animationDelay: introComplete
                   ? `${postIndex * 0.045}s`
@@ -649,3 +679,4 @@ export function BoardList() {
     </div>
   )
 }
+

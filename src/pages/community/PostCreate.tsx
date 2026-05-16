@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
+import { createCommunityPost } from './communityPostStore'
 import './Community.css'
 
 const beginnerPostCategories = ['법규/규정', '장비', '안전', '게임/전술', '수리/튜닝'] as const
@@ -14,6 +15,14 @@ type PostBoardContext = 'beginner' | 'general'
 
 type PostCreateLocationState = {
   boardContext?: PostBoardContext
+}
+
+const isVeteranUser = () => {
+  if (typeof window === 'undefined') {
+    return false
+  }
+
+  return localStorage.getItem('level') === '숙련자'
 }
 
 const boardOptions: {
@@ -38,7 +47,9 @@ const boardOptions: {
 export function PostCreate() {
   const location = useLocation()
   const navigate = useNavigate()
+  const beginnerBoardDisabled = isVeteranUser()
   const initialBoardContext: PostBoardContext =
+    !beginnerBoardDisabled &&
     (location.state as PostCreateLocationState | null)?.boardContext === 'beginner'
       ? 'beginner'
       : 'general'
@@ -92,11 +103,39 @@ export function PostCreate() {
   }
 
   const handleBoardSelect = (nextBoard: PostBoardContext) => {
+    if (beginnerBoardDisabled && nextBoard === 'beginner') {
+      return
+    }
+
     setBoardContext(nextBoard)
     setBoardMenuOpen(false)
   }
 
-  const submitDestination = boardContext === 'beginner' ? '/community' : '/community/free'
+  const submitPost = () => {
+    const trimmedTitle = title.trim()
+    const trimmedBody = body.trim()
+
+    if (!trimmedTitle || !trimmedBody) {
+      return
+    }
+
+    const attachedFile = fileRef.current?.files?.[0]
+    const createdPost = createCommunityPost({
+      boardContext,
+      category: String(selectedCategory),
+      title: trimmedTitle,
+      body: trimmedBody,
+      fileName: attachedFile?.name,
+    })
+    const destination = boardContext === 'beginner' ? '/community' : '/community/free'
+
+    navigate(destination, {
+      replace: true,
+      state: {
+        focusPostId: createdPost.id,
+      },
+    })
+  }
 
   return (
     <div className="post_create_page">
@@ -133,22 +172,33 @@ export function PostCreate() {
                 role="listbox"
                 aria-labelledby="post-board-trigger"
               >
-                {boardOptions.map((option) => (
+                {boardOptions.map((option) => {
+                  const disabled = beginnerBoardDisabled && option.value === 'beginner'
+
+                  return (
                   <button
                     key={option.value}
-                    className={`post_create_board_option${boardContext === option.value ? ' is_active' : ''}`}
+                    className={`post_create_board_option${boardContext === option.value ? ' is_active' : ''}${disabled ? ' is_disabled' : ''}`}
                     type="button"
                     role="option"
                     aria-selected={boardContext === option.value}
+                    aria-disabled={disabled}
+                    disabled={disabled}
                     onClick={() => handleBoardSelect(option.value)}
                   >
                     <span>{option.label}</span>
                     <small>{option.description}</small>
+                    {disabled ? (
+                      <small className="post_create_board_option_notice">
+                        숙련자는 일반 게시판에 글을 작성할 수 있어요.
+                      </small>
+                    ) : null}
                     {option.notice ? (
                       <small className="post_create_board_option_notice">{option.notice}</small>
                     ) : null}
                   </button>
-                ))}
+                  )
+                })}
               </div>
             ) : null}
           </div>
@@ -214,7 +264,7 @@ export function PostCreate() {
         <button
           type="button"
           className="post_create_submit"
-          onClick={() => navigate(submitDestination)}
+          onClick={submitPost}
         >
           작성하기
         </button>

@@ -68,10 +68,6 @@ const semifinalMatches: KnockoutMatch[] = [
   { id: 'sf-2', label: '2경기', matchup: 'C팀 vs D팀', time: '오늘 20:30', status: '진행 중' },
 ]
 
-const finalMatches: KnockoutMatch[] = [
-  { id: 'f-1', label: '결승전', matchup: '바주카 vs 블랙워터', time: '오늘 18:00', status: '예정' },
-]
-
 const highlightVideos = [
   { id: 'high-001', title: '8강 하이라이트', imageSrc: matchList01 },
   { id: 'high-002', title: '블랙워터 베스트 플레이', imageSrc: matchList02 },
@@ -108,7 +104,7 @@ const infoCards = [
 export function TournamentHome() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
-  const [activeStage, setActiveStage] = useState<BracketStage>('quarterfinal')
+  const [activeStage, setActiveStage] = useState<BracketStage>('semifinal')
   const [bracketDirection, setBracketDirection] = useState<'next' | 'prev'>('next')
   const [isIntroAnimating, setIsIntroAnimating] = useState(true)
   const isDark = themeMode === 'dark'
@@ -265,16 +261,15 @@ export function TournamentHome() {
 
         {activeStage === 'final' ? (
           <div key="final" className={`tournament_main_bracket_list is_${bracketDirection}`}>
-            {finalMatches.map((match) => (
-              <article key={match.id} className="tournament_main_bracket_card is_knockout is_final">
-                <span className="tournament_main_bracket_label is_highlight">{match.label}</span>
-                <div className="tournament_main_bracket_matchbox">
-                  <strong>{match.matchup}</strong>
-                  <span>{match.time}</span>
-                </div>
-                <span className="tournament_main_bracket_pill">{match.status}</span>
-              </article>
-            ))}
+            <article className="tournament_main_bracket_card is_final is_coming_soon">
+              <span className="tournament_main_bracket_label is_highlight">FINAL</span>
+              <div className="tournament_main_coming_soon">
+                <span>COMING SOON</span>
+                <strong>FINAL MATCHUP</strong>
+                <p>Locked after the semifinals</p>
+              </div>
+              <span className="tournament_main_bracket_pill">TBA</span>
+            </article>
           </div>
         ) : null}
       </section>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowUpIcon from '../../asset/icons/arrow_up.svg'
@@ -22,6 +22,21 @@ import { boardPosts } from '../../data/mockData'
 import { generalPosts } from './BoardList'
 import { recentQuestions } from './BeginnerBoard'
 import { readCommunityBookmarks, toggleCommunityBookmark } from './communityBookmarkStore'
+import {
+  addStoredPostComment,
+  addStoredPostReply,
+  deleteStoredComment,
+  deleteStoredPost,
+  deleteStoredReply,
+  editStoredComment,
+  editStoredPost,
+  editStoredReply,
+  findCommunityPost,
+  getCommunityRelativeTime,
+  toggleStoredCommentLike,
+  toggleStoredPostLike,
+  toggleStoredReplyLike,
+} from './communityPostStore'
 import './Community.css'
 
 const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
@@ -83,6 +98,31 @@ type ThreadCommentData = {
   liked?: boolean
   replies: ReplyData[]
 }
+
+type LinkedPostDetail = {
+  id: string
+  title: string
+  category: string
+  author: string
+  createdAt: string
+  views: string | number
+  commentsCount: number
+  body: string
+  recommended?: boolean
+  isStored?: boolean
+  likeCount?: number
+  liked?: boolean
+  comments?: ThreadCommentData[]
+}
+
+type PostDetailLocationState = {
+  returnTo?: string
+}
+
+type ReportSheetTarget =
+  | { canManage: boolean; kind: 'post' }
+  | { canManage: boolean; kind: 'comment'; commentId: string }
+  | { canManage: boolean; kind: 'reply'; commentId: string; replyId: string }
 
 const initialComments: ThreadCommentData[] = [
   {
@@ -248,7 +288,27 @@ const createLinkedPostBody = (title: string, category: string) => {
   return `${title}\n\n${category} 주제로 올라온 커뮤니티 글입니다. 글의 상황이나 궁금한 점을 조금 더 자세히 적어두면 같은 경험을 가진 유저들이 더 구체적으로 답변하기 좋아요.\n\n관련 장비, 방문한 필드, 게임 날짜처럼 맥락이 되는 정보를 함께 남기면 댓글 흐름도 자연스럽게 이어집니다.`
 }
 
-const getLinkedPostDetail = (postId?: string) => {
+const getLinkedPostDetail = (postId?: string): LinkedPostDetail => {
+  const storedPost = findCommunityPost(postId)
+
+  if (storedPost) {
+    return {
+      id: storedPost.id,
+      title: storedPost.title,
+      category: storedPost.category,
+      author: storedPost.author,
+      createdAt: getCommunityRelativeTime(storedPost.createdAtISO),
+      views: storedPost.views,
+      commentsCount: storedPost.commentsCount,
+      body: storedPost.body,
+      recommended: storedPost.boardContext === 'beginner',
+      isStored: true,
+      likeCount: storedPost.likeCount,
+      liked: storedPost.liked,
+      comments: storedPost.comments,
+    }
+  }
+
   const beginnerQuestion = recentQuestions.find((question) => question.id === postId)
 
   if (beginnerQuestion) {
@@ -358,14 +418,16 @@ function ReplyItem({
   onReply,
   currentUserName,
   profileImage,
+  commentId,
   reply,
 }: {
   now: number
   onLike: () => void
-  onOpenReportSheet: (canManage: boolean) => void
+  onOpenReportSheet: (target: ReportSheetTarget) => void
   onReply: (author: string) => void
   currentUserName: string
   profileImage: string
+  commentId: string
   reply: ReplyData
 }) {
   const mentionMatch = reply.body.match(/^(@\S+)\s*(.*)$/)
@@ -389,7 +451,14 @@ function ReplyItem({
           className="post_detail_comment_more"
           type="button"
           aria-label="답글 더보기"
-          onClick={() => onOpenReportSheet(isReplyOwner)}
+          onClick={() =>
+            onOpenReportSheet({
+              canManage: isReplyOwner,
+              kind: 'reply',
+              commentId,
+              replyId: reply.id,
+            })
+          }
         >
           <img src={verticalDotIcon} alt="" />
         </button>
@@ -439,7 +508,7 @@ function ThreadComment({
   onAddReply: (commentId: string, body: string, mentionTarget?: string) => void
   onCollapse: () => void
   onExpand: () => void
-  onOpenReportSheet: (canManage: boolean) => void
+  onOpenReportSheet: (target: ReportSheetTarget) => void
   currentUserName: string
   profileImage: string
   onLikeComment: () => void
@@ -491,7 +560,13 @@ function ThreadComment({
             className="post_detail_comment_more"
             type="button"
             aria-label="댓글 더보기"
-            onClick={() => onOpenReportSheet(isCommentOwner)}
+            onClick={() =>
+              onOpenReportSheet({
+                canManage: isCommentOwner,
+                kind: 'comment',
+                commentId: comment.id,
+              })
+            }
           >
             <img src={verticalDotIcon} alt="" />
           </button>
@@ -552,6 +627,7 @@ function ThreadComment({
               currentUserName={currentUserName}
               onOpenReportSheet={onOpenReportSheet}
               profileImage={profileImage}
+              commentId={comment.id}
               reply={reply}
               onLike={() => onLikeReply(reply.id)}
               onReply={(author) => onReplyTo(author)}
@@ -572,9 +648,11 @@ function ThreadComment({
 
 export function PostDetail() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { id: postId } = useParams()
   const linkedPost = getLinkedPostDetail(postId)
-  const [comments, setComments] = useState(initialComments)
+  const returnTo = (location.state as PostDetailLocationState | null)?.returnTo
+  const [comments, setComments] = useState<ThreadCommentData[]>(() => linkedPost.comments ?? initialComments)
   const [commentInput, setCommentInput] = useState('')
   const [expandedReplyIds, setExpandedReplyIds] = useState<string[]>([])
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
@@ -585,8 +663,8 @@ export function PostDetail() {
   const [postBookmarked, setPostBookmarked] = useState(() =>
     readCommunityBookmarks().has(linkedPost.id),
   )
-  const [postLiked, setPostLiked] = useState(false)
-  const [reportSheetTarget, setReportSheetTarget] = useState<{ canManage: boolean } | null>(null)
+  const [postLiked, setPostLiked] = useState(Boolean(linkedPost.liked))
+  const [reportSheetTarget, setReportSheetTarget] = useState<ReportSheetTarget | null>(null)
   const [profileImage, setProfileImage] = useState(getInitialProfileImage)
   const [currentUserName, setCurrentUserName] = useState(getCurrentUserName)
 
@@ -597,6 +675,14 @@ export function PostDetail() {
 
   useEffect(() => {
     setPostBookmarked(readCommunityBookmarks().has(linkedPost.id))
+  }, [linkedPost.id])
+
+  useEffect(() => {
+    setComments(linkedPost.comments ?? initialComments)
+    setPostLiked(Boolean(linkedPost.liked))
+    setCommentInput('')
+    setExpandedReplyIds([])
+    setMentionTargets({})
   }, [linkedPost.id])
 
   useEffect(() => {
@@ -700,7 +786,9 @@ export function PostDetail() {
     (total, comment) => total + 1 + comment.replies.length,
     0,
   )
-  const postLikeCount = BASE_POST_LIKE_COUNT + (postLiked ? 1 : 0)
+  const postLikeCount = linkedPost.isStored
+    ? (linkedPost.likeCount ?? 0)
+    : BASE_POST_LIKE_COUNT + (postLiked ? 1 : 0)
   const isPostOwner = currentUserName === linkedPost.author
 
   const topLikedComment = comments.reduce<ThreadCommentData | null>((topComment, comment) => {
@@ -744,6 +832,14 @@ export function PostDetail() {
   }
 
   const togglePostLike = () => {
+    if (linkedPost.isStored) {
+      const updatedPost = toggleStoredPostLike(linkedPost.id)
+      if (updatedPost) {
+        setPostLiked(updatedPost.liked)
+      }
+      return
+    }
+
     setPostLiked((liked) => !liked)
   }
 
@@ -752,7 +848,172 @@ export function PostDetail() {
     setPostBookmarked(nextBookmarks.has(linkedPost.id))
   }
 
+  const goBack = () => {
+    if (returnTo) {
+      navigate(returnTo, { replace: true })
+      return
+    }
+
+    navigate(-1)
+  }
+
+  const handleManageEdit = () => {
+    if (!reportSheetTarget?.canManage) return
+
+    if (reportSheetTarget.kind === 'post') {
+      if (!linkedPost.isStored) {
+        setReportSheetTarget(null)
+        return
+      }
+
+      const nextTitle = window.prompt('게시글 제목을 수정해 주세요.', linkedPost.title)
+      if (nextTitle === null) return
+
+      const nextBody = window.prompt('게시글 내용을 수정해 주세요.', linkedPost.body)
+      if (nextBody === null) return
+      const trimmedTitle = nextTitle.trim()
+      const trimmedBody = nextBody.trim()
+      if (!trimmedTitle || !trimmedBody) return
+
+      const updatedPost = editStoredPost(linkedPost.id, trimmedTitle, trimmedBody)
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+        setNow(Date.now())
+      }
+      setReportSheetTarget(null)
+      return
+    }
+
+    if (reportSheetTarget.kind === 'comment') {
+      const targetComment = comments.find((comment) => comment.id === reportSheetTarget.commentId)
+      if (!targetComment) return
+
+      const nextBody = window.prompt('댓글 내용을 수정해 주세요.', targetComment.body)
+      if (nextBody === null) return
+      const trimmedBody = nextBody.trim()
+      if (!trimmedBody) return
+
+      if (linkedPost.isStored) {
+        const updatedPost = editStoredComment(
+          linkedPost.id,
+          reportSheetTarget.commentId,
+          trimmedBody,
+        )
+        if (updatedPost) {
+          setComments(updatedPost.comments)
+        }
+      } else {
+        setComments((items) =>
+          items.map((comment) =>
+            comment.id === reportSheetTarget.commentId
+              ? { ...comment, body: trimmedBody }
+              : comment,
+          ),
+        )
+      }
+      setReportSheetTarget(null)
+      return
+    }
+
+    const targetComment = comments.find((comment) => comment.id === reportSheetTarget.commentId)
+    const targetReply = targetComment?.replies.find((reply) => reply.id === reportSheetTarget.replyId)
+    if (!targetReply) return
+
+    const nextBody = window.prompt('대댓글 내용을 수정해 주세요.', targetReply.body)
+    if (nextBody === null) return
+    const trimmedBody = nextBody.trim()
+    if (!trimmedBody) return
+
+    if (linkedPost.isStored) {
+      const updatedPost = editStoredReply(
+        linkedPost.id,
+        reportSheetTarget.commentId,
+        reportSheetTarget.replyId,
+        trimmedBody,
+      )
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+    } else {
+      setComments((items) =>
+        items.map((comment) =>
+          comment.id === reportSheetTarget.commentId
+            ? {
+                ...comment,
+                replies: comment.replies.map((reply) =>
+                  reply.id === reportSheetTarget.replyId
+                    ? { ...reply, body: trimmedBody }
+                    : reply,
+                ),
+              }
+            : comment,
+        ),
+      )
+    }
+    setReportSheetTarget(null)
+  }
+
+  const handleManageDelete = () => {
+    if (!reportSheetTarget?.canManage) return
+
+    const confirmed = window.confirm('정말 삭제할까요?')
+    if (!confirmed) return
+
+    if (reportSheetTarget.kind === 'post') {
+      if (linkedPost.isStored) {
+        deleteStoredPost(linkedPost.id)
+      }
+      setReportSheetTarget(null)
+      navigate(returnTo || (linkedPost.recommended ? '/community' : '/community/free'), { replace: true })
+      return
+    }
+
+    if (reportSheetTarget.kind === 'comment') {
+      if (linkedPost.isStored) {
+        const updatedPost = deleteStoredComment(linkedPost.id, reportSheetTarget.commentId)
+        if (updatedPost) {
+          setComments(updatedPost.comments)
+        }
+      } else {
+        setComments((items) => items.filter((comment) => comment.id !== reportSheetTarget.commentId))
+      }
+      setReportSheetTarget(null)
+      return
+    }
+
+    if (linkedPost.isStored) {
+      const updatedPost = deleteStoredReply(
+        linkedPost.id,
+        reportSheetTarget.commentId,
+        reportSheetTarget.replyId,
+      )
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+    } else {
+      setComments((items) =>
+        items.map((comment) =>
+          comment.id === reportSheetTarget.commentId
+            ? {
+                ...comment,
+                replies: comment.replies.filter((reply) => reply.id !== reportSheetTarget.replyId),
+              }
+            : comment,
+        ),
+      )
+    }
+    setReportSheetTarget(null)
+  }
+
   const toggleCommentLike = (commentId: string) => {
+    if (linkedPost.isStored) {
+      const updatedPost = toggleStoredCommentLike(linkedPost.id, commentId)
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+      return
+    }
+
     setComments((items) =>
       items.map((comment) =>
         comment.id === commentId
@@ -767,6 +1028,14 @@ export function PostDetail() {
   }
 
   const toggleReplyLike = (commentId: string, replyId: string) => {
+    if (linkedPost.isStored) {
+      const updatedPost = toggleStoredReplyLike(linkedPost.id, commentId, replyId)
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+      return
+    }
+
     setComments((items) =>
       items.map((comment) =>
         comment.id === commentId
@@ -791,6 +1060,16 @@ export function PostDetail() {
     event.preventDefault()
     const body = commentInput.trim()
     if (!body) return
+    if (linkedPost.isStored) {
+      const { commentId, post } = addStoredPostComment(linkedPost.id, body, currentUserName)
+      if (post) {
+        setComments(post.comments)
+        setHighlightedCommentId(commentId)
+        setCommentInput('')
+      }
+      return
+    }
+
     const { dateTime, time } = formatNow()
     const nextComment: ThreadCommentData = {
       id: `comment-user-${Date.now()}`,
@@ -807,6 +1086,22 @@ export function PostDetail() {
   }
 
   const addReply = (commentId: string, body: string, mentionTarget?: string) => {
+    if (linkedPost.isStored) {
+      const { post, replyId } = addStoredPostReply(
+        linkedPost.id,
+        commentId,
+        body,
+        currentUserName,
+        mentionTarget,
+      )
+      if (post) {
+        setComments(post.comments)
+        expandReplies(commentId)
+        setHighlightedReplyId(replyId)
+      }
+      return
+    }
+
     const { dateTime, time } = formatNow()
     const replyBody = mentionTarget ? `@${mentionTarget} ${body}` : body
     const reply: ReplyData = {
@@ -836,7 +1131,7 @@ export function PostDetail() {
         layout="standard"
         title="글 상세"
         titleClassName="post_detail_header_title"
-        onBack={() => navigate(-1)}
+        onBack={goBack}
         rightSlot={(
           <div className="post_detail_icon_right">
             <button className="post_detail_icon_button" type="button" aria-label="알림">
@@ -846,7 +1141,7 @@ export function PostDetail() {
               className="post_detail_icon_button"
               type="button"
               aria-label="더보기"
-              onClick={() => setReportSheetTarget({ canManage: isPostOwner })}
+              onClick={() => setReportSheetTarget({ canManage: isPostOwner, kind: 'post' })}
             >
               <img src={verticalDotIcon} alt="" />
             </button>
@@ -970,7 +1265,7 @@ export function PostDetail() {
               onAddReply={addReply}
               onCollapse={() => collapseReplies(comment.id)}
               onExpand={() => expandReplies(comment.id)}
-              onOpenReportSheet={(canManage) => setReportSheetTarget({ canManage })}
+              onOpenReportSheet={(target) => setReportSheetTarget(target)}
               currentUserName={currentUserName}
               profileImage={profileImage}
               onLikeComment={() => toggleCommentLike(comment.id)}
@@ -1001,14 +1296,14 @@ export function PostDetail() {
                   <button
                     className="post_detail_report_sheet_button post_detail_report_sheet_button--edit"
                     type="button"
-                    onClick={() => setReportSheetTarget(null)}
+                    onClick={handleManageEdit}
                   >
                     수정하기
                   </button>
                   <button
                     className="post_detail_report_sheet_button post_detail_report_sheet_button--danger"
                     type="button"
-                    onClick={() => setReportSheetTarget(null)}
+                    onClick={handleManageDelete}
                   >
                     삭제하기
                   </button>
