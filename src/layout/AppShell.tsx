@@ -30,7 +30,6 @@ export function AppShell() {
   const isMatchPresetFinishPage = location.pathname === '/match/presets/finish'
   const showBottomNav =
     !isCommunityPostDetail &&
-    !isTournamentMvpComplete &&
     !isChatPage &&
     !isBuddyDetailPage &&
     !isBuddyPage &&

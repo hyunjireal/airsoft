@@ -1844,7 +1844,7 @@
 .mvpc_hero::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 0 0 -1px;
   background: linear-gradient(to bottom, rgba(26, 26, 26, 0) 30%, var(--tournament-light-bg) 100%);
   pointer-events: none;
 }
@@ -1858,6 +1858,10 @@
   gap: 16px;
 }
 
+.mvp_vote_complete_page .mvpc_hero_inner {
+  animation: mvpc_hero_in 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 .mvpc_check_medal {
   width: 103px;
   height: 115px;
@@ -1868,6 +1872,11 @@
   width: 103px;
   height: 115px;
   object-fit: contain;
+}
+
+.mvp_vote_complete_page .mvpc_check_medal img {
+  animation: mvpc_medal_pop 680ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+  transform-origin: center bottom;
 }
 
 .mvpc_hero_tit {
@@ -1897,6 +1906,10 @@
   text-align: center;
 }
 
+.mvp_vote_complete_page .mvpc_point_card {
+  animation: mvpc_card_in 620ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+}
+
 .mvpc_point_label {
   margin: 0;
   color: var(--tournament-light-txt-main);
@@ -1910,10 +1923,14 @@
 .mvpc_point_amount {
   color: var(--tournament-light-border);
   font-family: var(--font-pretendard);
-  font-size: 55px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.02em;
+}
+
+.mvp_vote_complete_page .mvpc_point_amount {
+  animation: mvpc_point_amount_in 520ms cubic-bezier(0.18, 1.4, 0.32, 1) 520ms both;
 }
 
 .mvpc_point_prev {
@@ -1931,6 +1948,17 @@
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.02em;
+}
+
+@media (min-width: 600px) and (max-width: 1024px) {
+  .mvp_vote_complete_page .mvpc_point_section {
+    padding: 24px 32px 0;
+  }
+
+  .mvp_vote_complete_page .mvpc_point_card {
+    max-width: 616px;
+    margin: 0 auto;
+  }
 }
 
 .mvpc_point_link {
@@ -1963,6 +1991,24 @@
   gap: 20px;
   padding: 28px 24px 20px;
   background: var(--tournament-light-bg);
+}
+
+.mvp_vote_complete_page .mvpc_player_section,
+.mvp_vote_complete_page .mvpc_rank_section,
+.mvp_vote_complete_page .mvpc_cta_section {
+  animation: mvpc_section_in 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mvp_vote_complete_page .mvpc_player_section {
+  animation-delay: 520ms;
+}
+
+.mvp_vote_complete_page .mvpc_rank_section {
+  animation-delay: 620ms;
+}
+
+.mvp_vote_complete_page .mvpc_cta_section {
+  animation-delay: 720ms;
 }
 
 .mvpc_player_section h2 {
@@ -2060,8 +2106,12 @@
 .mvpc_cta_section {
   display: grid;
   gap: 10px;
-  padding: 50px 24px 24px;
+  padding: 50px 24px 16px;
   background: var(--tournament-light-bg);
+}
+
+.mobile_frame.has_app_bottom_nav:has(.mvp_vote_complete_page) > main {
+  padding-bottom: calc(106px + env(safe-area-inset-bottom, 0px));
 }
 
 .mvpc_btn_primary {
@@ -2122,8 +2172,19 @@
   flex-shrink: 0;
 }
 
+.tournament_page.is_light .mvpc_hero,
+.tournament_page.is_dark .mvpc_hero {
+  background-position: center top;
+  background-size: cover;
+}
+
+.tournament_page.is_light .mvpc_hero_tit {
+  color: var(--color-white);
+}
+
 .tournament_page.is_light .mvpc_hero {
-  background-position: center 20%;
+  border-bottom: 0;
+  box-shadow: inset 0 -2px 0 var(--tournament-light-bg);
 }
 
 .tournament_page.is_dark .mvpc_hero::after {
@@ -2193,6 +2254,88 @@
 
 .tournament_page.is_dark .mvpc_result_notice {
   color: var(--tournament-dark-btn-alert);
+}
+
+@keyframes mvpc_hero_in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mvpc_medal_pop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.72) rotate(-6deg);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.08) rotate(3deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes mvpc_card_in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mvpc_point_amount_in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.88);
+  }
+
+  64% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mvpc_section_in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mvp_vote_complete_page .mvpc_hero_inner,
+  .mvp_vote_complete_page .mvpc_check_medal img,
+  .mvp_vote_complete_page .mvpc_point_card,
+  .mvp_vote_complete_page .mvpc_point_amount,
+  .mvp_vote_complete_page .mvpc_player_section,
+  .mvp_vote_complete_page .mvpc_rank_section,
+  .mvp_vote_complete_page .mvpc_cta_section {
+    animation: none;
+  }
 }
 
 /* =============================================

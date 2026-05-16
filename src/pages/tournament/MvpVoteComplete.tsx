@@ -3,12 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import MainTag from '../../components/MainTag'
 import { PageHeader } from '../../components/PageHeader'
 import { useThemeMode } from '../../hooks/useThemeMode'
-import tournamentHighlightIcon from '../../asset/icons/tournament_highlight.svg'
 import tournamentInfoIcon from '../../asset/icons/tournament_info.svg'
-import tournamentTourIcon from '../../asset/icons/tournament_tour.svg'
 import tournamentCheckImg from '../../asset/images/tournament_check.png'
 import tournamentMainCompleteDarkImg from '../../asset/images/mvpvote_done_dark.png'
-import tournamentMainCompleteImg from '../../asset/images/mvpvote_done_light.png'
 import profileImg01 from '../../asset/images/mvpvote_profile_img01.png'
 import profileImg02 from '../../asset/images/mvpvote_profile_img02.png'
 import profileImg03 from '../../asset/images/mvpvote_profile_img03.png'
@@ -155,10 +152,10 @@ export function MvpVoteComplete() {
     const id = localStorage.getItem('votedMvpId') ?? ''
     return candidateMap[id] ?? defaultCandidate
   }, [])
-  const heroImage = themeMode === 'dark' ? tournamentMainCompleteDarkImg : tournamentMainCompleteImg
+  const heroImage = tournamentMainCompleteDarkImg
 
   return (
-    <div className={`tournament_page is_${themeMode}`}>
+    <div className={`tournament_page mvp_vote_complete_page is_${themeMode}`}>
       <PageHeader
         title="투표 완료"
         variant="default"
@@ -182,8 +179,8 @@ export function MvpVoteComplete() {
       <section className="mvpc_point_section">
         <div className="mvpc_point_card">
           <p className="mvpc_point_label">포인트 적립 완료</p>
-          <strong className="mvpc_point_amount">+50p</strong>
-          <span className="mvpc_point_prev">1,240P → 1,290P</span>
+          <strong className="mvpc_point_amount">+300p</strong>
+          <span className="mvpc_point_prev">1,240P → 1,540P</span>
           <Link className="mvpc_point_link" to="/my/point-shop">
             <span className="mvpc_point_icon" aria-hidden="true" />
             포인트 쓰러가기
@@ -240,12 +237,7 @@ export function MvpVoteComplete() {
         <Link className="mvpc_btn_primary body_b_18" to="/tournament/mvp-vote">
           다른 경기 투표하기
         </Link>
-        <Link className="mvpc_btn_secondary body_sb_16" to="/tournament/highlights">
-          <img src={tournamentHighlightIcon} alt="" aria-hidden="true" />
-          하이라이트 더 보기
-        </Link>
         <Link className="mvpc_btn_secondary body_sb_16" to="/tournament">
-          <img src={tournamentTourIcon} alt="" aria-hidden="true" />
           토너먼트 돌아가기
         </Link>
         <p className="mvpc_result_notice body_m_14">
