@@ -238,6 +238,14 @@ export function MediaProfile() {
 
   return (
     <div className="creator_detail_page">
+      <PageHeader
+        className="creator_detail_page_header"
+        backIcon={iconArrowLeft}
+        layout="standard"
+        title="크리에이터 프로필"
+        onBack={() => navigate(-1)}
+      />
+
       <section
         className="creator_detail_hero"
         style={{
@@ -246,34 +254,25 @@ export function MediaProfile() {
           backgroundPositionY: `${profile.heroOffsetY ?? 0}px`,
         }}
       >
-        <PageHeader
-          className="creator_detail_topbar"
-          backIcon={iconArrowLeft}
-          backButtonClassName="creator_detail_back_button"
-          onBack={() => navigate(-1)}
-          variant="overlay"
-          rightSlot={(
-            <button
-              className={`creator_detail_like_button ${liked ? 'is_liked' : ''}`}
-              type="button"
-              aria-label={`${profile.name} 좋아요 ${liked ? '취소' : '선택'}`}
-              aria-pressed={liked}
-              onClick={handleLikeToggle}
-            >
-              <span className="creator_detail_like_icon_shell">
-                {liked && likeBurstKey > 0 ? (
-                  <span className="creator_detail_like_burst" key={likeBurstKey} aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
-                ) : null}
-                <CreatorHeartIcon liked={liked} />
+        <button
+          className={`creator_detail_like_button creator_detail_like_button_floating ${liked ? 'is_liked' : ''}`}
+          type="button"
+          aria-label={`${profile.name} 좋아요 ${liked ? '취소' : '선택'}`}
+          aria-pressed={liked}
+          onClick={handleLikeToggle}
+        >
+          <span className="creator_detail_like_icon_shell">
+            {liked && likeBurstKey > 0 ? (
+              <span className="creator_detail_like_burst" key={likeBurstKey} aria-hidden="true">
+                <span />
+                <span />
+                <span />
               </span>
-              <span>{profile.likes}</span>
-            </button>
-          )}
-        />
+            ) : null}
+            <CreatorHeartIcon liked={liked} />
+          </span>
+          <span>{profile.likes}</span>
+        </button>
 
         <div className="creator_detail_hero_content">
           <div className="creator_detail_name_row">
@@ -325,6 +324,7 @@ export function MediaProfile() {
                 key={year}
                 className={activeYear === year ? 'is_active' : ''}
                 type="button"
+                disabled={year !== '2026'}
                 onClick={() => setActiveYear(year)}
               >
                 {year}

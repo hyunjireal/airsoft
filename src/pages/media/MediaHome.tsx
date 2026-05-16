@@ -14,6 +14,11 @@ import mediaFrame3 from '../../asset/images/media_3.png'
 import mediaUser1 from '../../asset/images/media_user1.png'
 import mediaUser2 from '../../asset/images/media_user2.png'
 import mediaUser3 from '../../asset/images/media_user3.png'
+import creatorThumbnail01 from '../../asset/images/creator_thumbnail_img01.png'
+import creatorThumbnail02 from '../../asset/images/creator_thumbnail_img02.png'
+import creatorThumbnail03 from '../../asset/images/creator_thumbnail_img03.png'
+import creatorThumbnail04 from '../../asset/images/creator_thumbnail_img04.png'
+import creatorThumbnail05 from '../../asset/images/creator_thumbnail_img05.png'
 import './MediaHome.css'
 
 const podiumCreators = [
@@ -51,6 +56,7 @@ const videoItems = [
     id: 'media-video-1',
     creator: '레드닷존',
     title: '2024 가성비 전동건 TOP 5 리뷰',
+    thumbnail: creatorThumbnail01,
     views: 56,
     daysAgo: 2,
   },
@@ -58,6 +64,7 @@ const videoItems = [
     id: 'media-video-2',
     creator: '하나캠',
     title: '초보자를 위한 CQB 입문 세팅',
+    thumbnail: creatorThumbnail02,
     views: 18,
     daysAgo: 4,
   },
@@ -65,6 +72,7 @@ const videoItems = [
     id: 'media-video-3',
     creator: '꼬꼬댁',
     title: '필드에서 바로 쓰는 엄폐 이동 팁',
+    thumbnail: creatorThumbnail03,
     views: 64,
     daysAgo: 7,
   },
@@ -72,6 +80,7 @@ const videoItems = [
     id: 'media-video-4',
     creator: '베키사리',
     title: '야외전 필수 장비 체크리스트',
+    thumbnail: creatorThumbnail04,
     views: 29,
     daysAgo: 14,
   },
@@ -79,12 +88,15 @@ const videoItems = [
     id: 'media-video-5',
     creator: '알파튜브',
     title: '팀 매치에서 콜사인 제대로 쓰는 법',
+    thumbnail: creatorThumbnail05,
     views: 41,
     daysAgo: 21,
   },
 ]
 
 type ContentSort = 'latest' | 'popular'
+
+const CREATOR_CONTENT_VIDEO_URL = 'https://youtu.be/bnjqWY4uULA?si=dYwoqQb0AoOB7vp9'
 
 function formatDaysAgo(daysAgo: number) {
   if (daysAgo < 7) return `${daysAgo}일 전`
@@ -226,8 +238,17 @@ export function MediaHome() {
 
         <div className="media_video_list">
           {sortedVideoItems.map((item) => (
-            <article className="media_video_item" key={item.id}>
-              <div className="media_video_thumb" aria-hidden="true" />
+            <a
+              className="media_video_item"
+              key={item.id}
+              href={CREATOR_CONTENT_VIDEO_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${item.title} 영상 열기`}
+            >
+              <div className="media_video_thumb" aria-hidden="true">
+                <img src={item.thumbnail} alt="" loading="lazy" />
+              </div>
               <div className="media_video_info">
                 <div className="media_video_top">
                   <span className="body_m_14">{item.creator}</span>
@@ -236,7 +257,7 @@ export function MediaHome() {
                 <strong className="media_video_title body_sb_16">{item.title}</strong>
                 <p className="media_video_meta body_m_14">조회수 {item.views}K · {formatDaysAgo(item.daysAgo)}</p>
               </div>
-            </article>
+            </a>
           ))}
         </div>
       </section>
