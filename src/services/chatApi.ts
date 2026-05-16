@@ -1,14 +1,24 @@
 export type ChatRole = 'user' | 'assistant'
 
+export interface ChatAttachment {
+  id: string
+  name: string
+  type: string
+  size: number
+  dataUrl: string
+}
+
 export interface ChatMessage {
   id: string
   role: ChatRole
   text: string
+  attachments?: ChatAttachment[]
 }
 
 export interface ChatApiMessage {
   role: ChatRole
   content: string
+  attachments?: ChatAttachment[]
 }
 
 type ChatApiResponse = {
@@ -22,10 +32,11 @@ type ChatApiResponse = {
 
 function toApiMessages(messages: ChatMessage[]): ChatApiMessage[] {
   return messages
-    .filter((message) => message.text.trim().length > 0)
+    .filter((message) => message.text.trim().length > 0 || (message.attachments?.length ?? 0) > 0)
     .map((message) => ({
       role: message.role,
       content: message.text,
+      attachments: message.attachments,
     }))
 }
 
@@ -38,14 +49,7 @@ export async function requestChatAnswer(messages: ChatMessage[]) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      messages: [
-        {
-          role: 'system',
-          content:
-            '당신은 에어소프트 입문자를 돕는 친절한 한국어 챗봇입니다. 안전 수칙, 장비 준비, 매치 참여, 커뮤니티 이용 방법을 짧고 정확하게 안내하세요.',
-        },
-        ...toApiMessages(messages),
-      ],
+      messages: toApiMessages(messages),
     }),
   })
 
