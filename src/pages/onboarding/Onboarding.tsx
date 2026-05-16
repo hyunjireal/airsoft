@@ -333,7 +333,6 @@ export function Onboarding() {
                 key={`copy-${activeSlide.id}`}
                 className={[
                   'onboarding_rebuilt__copy',
-                  activeSlide.id === 'community' ? 'onboarding_rebuilt__copy--community' : '',
                   `is-slide-${slideDirection}`,
                 ]
                   .filter(Boolean)
