@@ -1650,14 +1650,16 @@
 }
 
 .guide_quiz_finish_page {
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 25px;
   padding-bottom: 174px;
 }
 
 .guide_quiz_finish {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  justify-content: center;
   gap: 30px;
   width: 100%;
 }
