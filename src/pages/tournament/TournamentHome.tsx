@@ -262,13 +262,16 @@ export function TournamentHome() {
         {activeStage === 'final' ? (
           <div key="final" className={`tournament_main_bracket_list is_${bracketDirection}`}>
             <article className="tournament_main_bracket_card is_final is_coming_soon">
-              <span className="tournament_main_bracket_label is_highlight">FINAL</span>
-              <div className="tournament_main_coming_soon">
-                <span>COMING SOON</span>
-                <strong>FINAL MATCHUP</strong>
-                <p>Locked after the semifinals</p>
+              <div className="tournament_main_final_label_col">
+                <span className="tournament_main_bracket_label is_highlight">FINAL</span>
               </div>
-              <span className="tournament_main_bracket_pill">TBA</span>
+              <div className="tournament_main_coming_soon_group">
+                <div className="tournament_main_coming_soon">
+                <strong>FINAL MATCHUP</strong>
+                <p>4강 종료 후 공개됩니다</p>
+                </div>
+                <span className="tournament_main_bracket_pill tournament_main_coming_soon_pill">COMING SOON</span>
+              </div>
             </article>
           </div>
         ) : null}
