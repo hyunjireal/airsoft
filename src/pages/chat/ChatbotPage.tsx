@@ -39,11 +39,17 @@ const frequentQuestions = [
   '첫 게임 전 체크리스트',
 ]
 
-const loadingLabels = [
+const analysisLoadingLabels = [
   '사진에서 장비 구성을 확인하고 있어요',
   '보호장비와 안전 요소를 대조하고 있어요',
   '입문자 기준 추천 포인트를 정리하고 있어요',
   '필드 입장 전 체크리스트를 만들고 있어요',
+]
+
+const typingLoadingLabels = [
+  'AI가 입력 중이에요',
+  '질문 내용을 정리하고 있어요',
+  '초보자 기준으로 답변을 준비하고 있어요',
 ]
 
 const mockAnalysisResults: AnalysisResult[] = [
@@ -85,12 +91,20 @@ const mockAnalysisResults: AnalysisResult[] = [
   },
 ]
 
-const quickAnswers = [
-  '초보자라면 고글, 하관 보호 마스크, 장갑을 먼저 준비하는 걸 추천해요. 장비 성능보다 안전 장비가 우선이에요.',
-  '배터리는 사용 후 완전 방전 상태로 오래 두지 않는 편이 좋아요. 게임 전에는 충전량과 커넥터 흔들림을 같이 확인하세요.',
-  '국내 필드에서는 탄속, 칼라파트, 운반 방식 확인이 중요해요. 방문할 필드 규정을 먼저 보는 흐름이 가장 안정적이에요.',
-  '첫 게임 전에는 고글, 마스크, 장갑, 배터리, 탄창, BB탄, 탄속 확인 순서로 체크하면 빠뜨리는 일이 적어요.',
-]
+const quickAnswerMap: Record<string, string> = {
+  '초보 장비 추천해줘':
+    '처음이라면 안전 장비부터 준비하는 걸 추천해요 👍\n\n• 보호 고글\n• 하관 보호 마스크\n• 장갑\n• 긴팔 복장\n\n이 4가지는 거의 필수에 가까워요.\n총기 성능보다 안전 장비가 훨씬 중요합니다.',
+  '보호장비는 뭐가 필요해?':
+    '에어소프트에서는 눈 보호가 가장 중요해요 👀\n\n추천 보호 장비:\n• 고글\n• 하관 마스크\n• 장갑\n• 무릎 보호대\n\n특히 CQB 실내 필드는 얼굴 보호 장비를 필수로 요구하는 경우가 많아요.',
+  '배터리 관리 방법':
+    '배터리는 완전 방전 상태로 오래 두지 않는 게 좋아요 🔋\n\n사용 후 체크하면 좋은 것:\n• 발열 여부 확인\n• 커넥터 상태 점검\n• 충전 후 바로 분리\n\n리포 배터리는 전용 충전기 사용을 추천해요.',
+  '국내 규제에서 확인할 점':
+    '국내에서는 탄속 제한과 칼라파트 유지 여부를 꼭 확인해야 해요 ⚠️\n\n필드마다 규정이 조금씩 다를 수 있어서,\n방문 전 공지사항 확인도 추천해요.\n\n무리한 개조는 필드 입장이 제한될 수 있어요.',
+  '첫 게임 전 체크리스트':
+    '첫 게임 전에는 이것만 체크해도 훨씬 편해져요 ✅\n\n• 고글/마스크 챙기기\n• 여분 BB탄 준비\n• 물과 장갑 챙기기\n• 필드 규칙 미리 확인\n\n처음이라면 렌탈 장비로 먼저 경험해보는 것도 좋아요.',
+}
+
+const fallbackQuickAnswers = Object.values(quickAnswerMap)
 
 const MAX_UPLOAD_IMAGE_SIDE = 1400
 const MAX_UPLOAD_IMAGE_BYTES = 1.4 * 1024 * 1024
@@ -98,10 +112,12 @@ const MAX_UPLOAD_IMAGE_BYTES = 1.4 * 1024 * 1024
 const welcomeMessage: TimedChatMessage = {
   id: 'welcome',
   role: 'assistant',
-  text:
-    '안녕하세요. AI 장비 코치 가이예요.\n장비 사진을 보내주시면 입문자 기준으로 안전, 규제, 관리 포인트를 빠르게 체크해드릴게요.',
+  text: '',
   time: '오전 10:30',
 }
+
+const welcomeMessageText =
+  '안녕하세요. AI 장비 코치 가이예요.\n장비 사진을 보내주시면 입문자 기준으로 안전, 규제, 관리 포인트를 빠르게 체크해드릴게요.'
 
 function wait(ms: number) {
   return new Promise<void>((resolve) => {
@@ -269,6 +285,7 @@ export function ChatbotPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialQuestionSent = useRef(false)
+  const introStartedRef = useRef(false)
   const chatScrollRef = useRef<HTMLElement | null>(null)
   const pageRef = useRef<HTMLDivElement | null>(null)
   const bottomRef = useRef<HTMLDivElement | null>(null)
@@ -287,13 +304,18 @@ export function ChatbotPage() {
       time: getCurrentTime(),
     },
   ])
+  const [isIntroComplete, setIsIntroComplete] = useState(false)
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [loadingIndex, setLoadingIndex] = useState(0)
+  const [loadingMode, setLoadingMode] = useState<'analysis' | 'typing'>('analysis')
   const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [isCameraReady, setIsCameraReady] = useState(false)
   const [cameraError, setCameraError] = useState('')
-  const loadingText = useMemo(() => loadingLabels[loadingIndex % loadingLabels.length], [loadingIndex])
+  const loadingText = useMemo(() => {
+    const labels = loadingMode === 'analysis' ? analysisLoadingLabels : typingLoadingLabels
+    return labels[loadingIndex % labels.length]
+  }, [loadingIndex, loadingMode])
 
   const scrollToLatestMessage = () => {
     if (scrollFrameRef.current) {
@@ -378,6 +400,44 @@ export function ChatbotPage() {
       typeNextCharacter()
     })
 
+  const typeExistingAssistantMessage = (messageId: string, answer: string) =>
+    new Promise<void>((resolve) => {
+      const characters = Array.from(answer)
+      let index = 0
+
+      setTypingMessageId(messageId)
+
+      const typeNextCharacter = () => {
+        index += 1
+        const nextText = characters.slice(0, index).join('')
+
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === messageId
+              ? {
+                  ...message,
+                  text: nextText,
+                }
+              : message,
+          ),
+        )
+
+        if (index >= characters.length) {
+          setTypingMessageId(null)
+          typingTimerRef.current = null
+          resolve()
+          return
+        }
+
+        typingTimerRef.current = window.setTimeout(
+          typeNextCharacter,
+          getTypingDelay(characters[index - 1]),
+        )
+      }
+
+      typeNextCharacter()
+    })
+
   const appendAnalysisCard = (analysis: AnalysisResult) => {
     setMessages((current) => [...current, createMessage('assistant', '', undefined, analysis)])
   }
@@ -395,6 +455,7 @@ export function ChatbotPage() {
     setMessages((current) => [...current, userMessage])
     setIsSending(true)
     setLoadingIndex(0)
+    setLoadingMode('analysis')
 
     const analysis = pickRandom(mockAnalysisResults)
 
@@ -415,11 +476,14 @@ export function ChatbotPage() {
     setMessages((current) => [...current, userMessage])
     setInput('')
     setIsSending(true)
-    setLoadingIndex(1)
+    setLoadingIndex(0)
+    setLoadingMode('typing')
 
-    await wait(1050 + Math.floor(Math.random() * 500))
+    const answer = quickAnswerMap[trimmed] ?? pickRandom(fallbackQuickAnswers)
+
+    await wait(1200 + Math.floor(Math.random() * 800))
     setIsSending(false)
-    await typeAssistantAnswer(pickRandom(quickAnswers))
+    await typeAssistantAnswer(answer)
   }
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -522,13 +586,31 @@ export function ChatbotPage() {
 
   useEffect(() => {
     const question = searchParams.get('question')
-    if (!question || initialQuestionSent.current) {
+    if (!question || initialQuestionSent.current || !isIntroComplete) {
       return
     }
 
     initialQuestionSent.current = true
     void sendText(question)
-  }, [searchParams])
+  }, [searchParams, isIntroComplete])
+
+  useEffect(() => {
+    if (introStartedRef.current) {
+      return
+    }
+
+    introStartedRef.current = true
+
+    const timer = window.setTimeout(() => {
+      void typeExistingAssistantMessage(welcomeMessage.id, welcomeMessageText).then(() => {
+        setIsIntroComplete(true)
+      })
+    }, 760)
+
+    return () => {
+      window.clearTimeout(timer)
+    }
+  }, [])
 
   useEffect(() => {
     if (!isSending) {
@@ -593,12 +675,7 @@ export function ChatbotPage() {
   return (
     <div className="chat_page" ref={pageRef}>
       <div className="chat_con">
-        <PageHeader
-          className="chat_top"
-          groupClassName="chat_tit"
-          title="AI 장비 코치"
-          onBack={goBack}
-        />
+        <PageHeader title="AI 챗봇 가이" onBack={goBack} />
 
         <main className="chat" ref={chatScrollRef}>
           <section className="chat_thread" aria-live="polite">
@@ -611,7 +688,7 @@ export function ChatbotPage() {
               <img src={gaiImage} alt="" aria-hidden="true" />
               <div>
                 <strong>장비 전체 사진을 보내주세요</strong>
-                <span>가이가 안전, 규제, 관리 포인트를 AI처럼 빠르게 분석해드려요.</span>
+                <span>AI 챗봇 가이가 장비 분석부터 관리·튜닝 팁까지 도와드려요</span>
               </div>
               <button type="button" onClick={openCamera} disabled={isSending}>
                 <img src={imageIcon} alt="" aria-hidden="true" />
@@ -638,6 +715,13 @@ export function ChatbotPage() {
                         />
                       ))}
                       {message.text ? renderMessageText(message.text) : null}
+                      {isTyping && !message.text ? (
+                        <span className="chat_inline_typing" aria-label="AI가 입력 중">
+                          <i />
+                          <i />
+                          <i />
+                        </span>
+                      ) : null}
                       {message.analysis ? renderAnalysisCard(message.analysis) : null}
                     </div>
                     <time>{message.time}</time>
