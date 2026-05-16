@@ -2092,11 +2092,17 @@
   color: var(--color-white);
 }
 
+:root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_sticky_top,
+:root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_figma_title {
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_figma_title .page_header__back_icon,
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_back img {
   filter: brightness(0) invert(1);
 }
 
-:root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_figma_top h1,
+:root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_figma_title .page_header__title,
 :root[data-theme='dark'] .guide_quiz_figma_page:not(.guide_quiz_finish_page) .guide_quiz_question_head h2 {
   color: var(--color-white);
 }
@@ -2225,11 +2231,12 @@
   color: var(--color-white);
 }
 
+:root[data-theme='dark'] .guide_quiz_finish_page .page_header__back_icon,
 :root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_back img {
   filter: brightness(0) invert(1);
 }
 
-:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_figma_top h1,
+:root[data-theme='dark'] .guide_quiz_finish_page .page_header__title,
 :root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_intro h2 {
   color: var(--color-white);
 }
