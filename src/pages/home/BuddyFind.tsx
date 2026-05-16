@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { LazyMotion, domAnimation, m } from 'motion/react'
+import { LazyMotion, domAnimation, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
 import buddyHeroMain from '../../asset/images/buddy_hero_main.png'
 import { PageHeader } from '../../components/PageHeader'
+import { useThemeMode } from '../../hooks/useThemeMode'
 import {
   buddyButtonHover,
   buddyButtonTap,
@@ -75,6 +76,7 @@ const EXP_OPTIONS: FilterOption[] = [
 
 export function BuddyFind() {
   const navigate = useNavigate()
+  const themeMode = useThemeMode()
   const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(1)
   const [selectedHelpIds, setSelectedHelpIds] = useState<string[]>(['equipment', 'rules'])
   const [selectedExpId, setSelectedExpId] = useState<string>('first')
@@ -98,7 +100,7 @@ export function BuddyFind() {
     <LazyMotion features={domAnimation}>
       <article className="buddy_find_page">
         <PageHeader
-          variant="dark"
+          variant={themeMode === 'dark' ? 'dark' : 'default'}
           className="buddy_find_header"
           onBack={() => navigate(-1)}
           backLabel="뒤로 가기"

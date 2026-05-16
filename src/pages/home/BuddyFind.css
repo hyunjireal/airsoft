@@ -419,3 +419,100 @@
   opacity: 0.42;
   cursor: default;
 }
+
+:root[data-theme='light'] .buddy_find_page {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+:root[data-theme='light'] .buddy_find_page .buddy_find_header {
+  background: var(--color-white);
+}
+
+:root[data-theme='light'] .buddy_find_page .page_header__title {
+  color: var(--color-black);
+}
+
+:root[data-theme='light'] .buddy_find_page .page_header__circle_button {
+  background: var(--color-white);
+  border-color: var(--color-gray04);
+}
+
+:root[data-theme='light'] .buddy_find_page .page_header__profile_link {
+  border-color: var(--color-gray04);
+}
+
+:root[data-theme='light'] .buddy_find_hero {
+  background: #f4f6ed;
+}
+
+:root[data-theme='light'] .buddy_find_hero::after {
+  background: linear-gradient(
+    40deg,
+    rgba(255, 255, 255, 0.82) 13%,
+    rgba(244, 246, 237, 0.54) 46%,
+    rgba(226, 253, 52, 0.18) 74%
+  );
+}
+
+:root[data-theme='light'] .buddy_find_hero__title,
+:root[data-theme='light'] .buddy_find_section__title,
+:root[data-theme='light'] .buddy_find_schedule_card__date,
+:root[data-theme='light'] .buddy_find_filter_title {
+  color: var(--color-black);
+}
+
+:root[data-theme='light'] .buddy_find_section__desc,
+:root[data-theme='light'] .buddy_find_schedule_card__place,
+:root[data-theme='light'] .buddy_find_schedule_card__count {
+  color: var(--color-gray02);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card,
+:root[data-theme='light'] .buddy_find_filter_card,
+:root[data-theme='light'] .buddy_find_summary_card {
+  border: 1px solid var(--color-gray05);
+  background: var(--color-white);
+  box-shadow: 0 8px 22px rgba(31, 43, 69, 0.08);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card--selected {
+  border-color: rgba(103, 107, 93, 0.32);
+  box-shadow:
+    0 8px 22px rgba(31, 43, 69, 0.08),
+    inset 0 0 0 1px rgba(226, 253, 52, 0.72);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card__divider {
+  border-top-color: var(--color-gray04);
+}
+
+:root[data-theme='light'] .buddy_find_more__button {
+  background: var(--color-gray05);
+  color: var(--color-black);
+}
+
+:root[data-theme='light'] .buddy_find_more__arrow {
+  filter: none;
+  opacity: 0.8;
+}
+
+:root[data-theme='light'] .buddy_find_filter_title span {
+  color: var(--color-gray02);
+}
+
+:root[data-theme='light'] .buddy_find_filter_button,
+:root[data-theme='light'] .buddy_find_summary_chip {
+  border-color: var(--color-gray04);
+  background: #f7f8f2;
+  color: var(--color-black);
+}
+
+:root[data-theme='light'] .buddy_find_filter_button--active {
+  border-color: var(--color-khaki);
+  background: rgba(226, 253, 52, 0.34);
+}
+
+:root[data-theme='light'] .buddy_find_summary_chip__close {
+  color: var(--color-gray02);
+}

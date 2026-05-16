@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { AnimatePresence, motion, useInView } from 'motion/react'
+import { AnimatePresence, motion, useInView } from 'framer-motion'
 import './AnimatedList.css'
 
 type AnimatedItemProps = {
