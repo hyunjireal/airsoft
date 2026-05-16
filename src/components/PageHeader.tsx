@@ -12,6 +12,7 @@ type PageHeaderLayout = 'custom' | 'standard' | 'section'
 type ThemeMode = 'light' | 'dark'
 
 const THEME_STORAGE_KEY = 'airsoft-theme'
+const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') {
@@ -67,6 +68,7 @@ export function PageHeader({
   hideRight = false,
 }: PageHeaderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
+  const [profileImage, setProfileImage] = useState<string>(() => localStorage.getItem(PROFILE_IMAGE_KEY) || userAvatar)
   const hasTitleContent = !hideLeft && Boolean(leftSlot || onBack || title)
 
   useEffect(() => {
@@ -75,16 +77,24 @@ export function PageHeader({
   }, [themeMode])
 
   useEffect(() => {
-    const syncTheme = (event: StorageEvent) => {
-      if (event.key !== THEME_STORAGE_KEY) return
-
-      setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
+    const syncStorage = (event: StorageEvent) => {
+      if (event.key === THEME_STORAGE_KEY) {
+        setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
+      } else if (event.key === PROFILE_IMAGE_KEY) {
+        setProfileImage(event.newValue || userAvatar)
+      }
     }
 
-    window.addEventListener('storage', syncTheme)
+    const syncProfileOnFocus = () => {
+      setProfileImage(localStorage.getItem(PROFILE_IMAGE_KEY) || userAvatar)
+    }
+
+    window.addEventListener('storage', syncStorage)
+    window.addEventListener('focus', syncProfileOnFocus)
 
     return () => {
-      window.removeEventListener('storage', syncTheme)
+      window.removeEventListener('storage', syncStorage)
+      window.removeEventListener('focus', syncProfileOnFocus)
     }
   }, [])
 
@@ -153,7 +163,7 @@ export function PageHeader({
               />
             </button>
             <Link className="page_header__circle_button page_header__profile_link" to="/my" aria-label="마이페이지로 이동">
-              <img className="page_header__profile_image" src={userAvatar} alt="" aria-hidden="true" />
+              <img className="page_header__profile_image" src={profileImage} alt="" aria-hidden="true" />
             </Link>
           </div>
         ) : null}

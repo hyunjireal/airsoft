@@ -127,6 +127,15 @@ const buddyProcessSteps = [
 ]
 
 const HOME_PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
+
+function saveProfileImage(dataUrl: string) {
+  try {
+    localStorage.setItem(HOME_PROFILE_IMAGE_KEY, dataUrl)
+  } catch {
+    localStorage.removeItem(HOME_PROFILE_IMAGE_KEY)
+  }
+  window.dispatchEvent(new StorageEvent('storage', { key: HOME_PROFILE_IMAGE_KEY, newValue: dataUrl }))
+}
 const BUDDY_SHEET_CLOSE_DURATION = 280
 
 function normalizeDateValue(value?: string) {
@@ -327,6 +336,8 @@ export function Home() {
   const [profilePreview, setProfilePreview] = useState(() => localStorage.getItem(HOME_PROFILE_IMAGE_KEY) || userAvatar)
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const [cameraError, setCameraError] = useState('')
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user')
+  const [isFlashing, setIsFlashing] = useState(false)
   const [scheduleRevision, setScheduleRevision] = useState(0)
   const savedProfileBadge = localStorage.getItem('homeProfileBadge')
   const savedProfileTitle = localStorage.getItem('homeProfileTitle')
@@ -445,11 +456,7 @@ export function Home() {
       if (typeof reader.result !== 'string') return
 
       setProfilePreview(reader.result)
-      try {
-        localStorage.setItem(HOME_PROFILE_IMAGE_KEY, reader.result)
-      } catch {
-        localStorage.removeItem(HOME_PROFILE_IMAGE_KEY)
-      }
+      saveProfileImage(reader.result)
       setIsProfileSheetOpen(false)
       setCameraError('')
     }
@@ -463,7 +470,7 @@ export function Home() {
     setIsCameraOpen(false)
   }
 
-  const openProfileCamera = async () => {
+  const openProfileCamera = async (mode: 'user' | 'environment' = 'user') => {
     setCameraError('')
 
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -471,18 +478,26 @@ export function Home() {
       return
     }
 
+    cameraStream?.getTracks().forEach((track) => track.stop())
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user' },
+        video: { facingMode: mode },
         audio: false,
       })
       setCameraStream(stream)
+      setFacingMode(mode)
       setIsProfileSheetOpen(false)
       setIsCameraOpen(true)
     } catch {
       setCameraError('카메라 권한을 확인해주세요.')
       cameraInputRef.current?.click()
     }
+  }
+
+  const switchCamera = async () => {
+    const nextMode = facingMode === 'user' ? 'environment' : 'user'
+    await openProfileCamera(nextMode)
   }
 
   const captureProfilePhoto = () => {
@@ -492,20 +507,26 @@ export function Home() {
       return
     }
 
+    setIsFlashing(true)
+    window.setTimeout(() => setIsFlashing(false), 200)
+
     const canvas = document.createElement('canvas')
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
+    const size = Math.min(video.videoWidth, video.videoHeight)
+    canvas.width = size
+    canvas.height = size
     const context = canvas.getContext('2d')
     if (!context) return
 
-    context.drawImage(video, 0, 0, canvas.width, canvas.height)
+    const offsetX = (video.videoWidth - size) / 2
+    const offsetY = (video.videoHeight - size) / 2
+    if (facingMode === 'user') {
+      context.translate(size, 0)
+      context.scale(-1, 1)
+    }
+    context.drawImage(video, offsetX, offsetY, size, size, 0, 0, size, size)
     const nextPreview = canvas.toDataURL('image/jpeg', 0.9)
     setProfilePreview(nextPreview)
-    try {
-      localStorage.setItem(HOME_PROFILE_IMAGE_KEY, nextPreview)
-    } catch {
-      localStorage.removeItem(HOME_PROFILE_IMAGE_KEY)
-    }
+    saveProfileImage(nextPreview)
     closeProfileCamera()
   }
 
@@ -917,7 +938,7 @@ export function Home() {
               <button
                 className="home_profile_sheet_action"
                 type="button"
-                onClick={openProfileCamera}
+                onClick={() => openProfileCamera()}
               >
                 카메라로 촬영
               </button>
@@ -940,28 +961,40 @@ export function Home() {
         </div>
       ) : null}
       {isCameraOpen ? (
-        <div className="home_camera_layer" role="presentation">
-          <div className="home_camera_backdrop" aria-hidden="true" />
-          <section className="home_camera_sheet" role="dialog" aria-modal="true" aria-label="프로필 사진 촬영">
-            <div className="home_camera_preview">
-              <video
-                ref={cameraVideoRef}
-                className="home_camera_video"
-                autoPlay
-                muted
-                playsInline
-              />
-            </div>
-            {cameraError ? <p className="home_camera_error">{cameraError}</p> : null}
-            <div className="home_camera_actions">
-              <button className="home_camera_button home_camera_button--capture" type="button" onClick={captureProfilePhoto}>
-                촬영
+        <div className={`home_camera_layer${isFlashing ? ' is_flashing' : ''}`} role="dialog" aria-modal="true" aria-label="프로필 사진 촬영">
+          <video
+            ref={cameraVideoRef}
+            className={`home_camera_video${facingMode === 'user' ? ' is_mirrored' : ''}`}
+            autoPlay
+            muted
+            playsInline
+          />
+          <div className="home_camera_overlay" aria-hidden="true">
+            <div className="home_camera_guide_circle" />
+          </div>
+          <div className="home_camera_flash" aria-hidden="true" />
+          <div className="home_camera_top_bar">
+            <button className="home_camera_icon_btn" type="button" aria-label="촬영 닫기" onClick={closeProfileCamera}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+            {cameraError ? <p className="home_camera_error">{cameraError}</p> : <span className="home_camera_label">프로필 사진 촬영</span>}
+          </div>
+          <div className="home_camera_bottom_bar">
+            <div className="home_camera_bottom_side" />
+            <button className="home_camera_shutter" type="button" aria-label="촬영" onClick={captureProfilePhoto}>
+              <span className="home_camera_shutter_inner" />
+            </button>
+            <div className="home_camera_bottom_side">
+              <button className="home_camera_icon_btn" type="button" aria-label="카메라 전환" onClick={switchCamera}>
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                  <path d="M5 10C5 7.24 7.24 5 10 5h8.5l-2-2M23 18c0 2.76-2.24 5-5 5H9.5l2 2" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M10.5 14a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Z" stroke="#fff" strokeWidth="1.8" />
+                </svg>
               </button>
-              <button className="home_camera_button" type="button" onClick={closeProfileCamera}>
-                취소
-              </button>
             </div>
-          </section>
+          </div>
         </div>
       ) : null}
       {isBuddySheetOpen ? (
