@@ -368,6 +368,45 @@ export function GuideQuiz() {
               <p>{finishMessage.hintDescription}</p>
             </div>
           </section>
+
+          <section className="guide_quiz_finish_hint guide_quiz_finish_hint_reward" aria-label="포인트 적립 안내">
+            <div className="guide_quiz_finish_reward_info">
+              <svg
+                className="guide_quiz_finish_reward_icon"
+                width="36"
+                height="36"
+                viewBox="0 0 36 36"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M15.75 33C7.87994 33 1.5 26.2843 1.5 18C1.5 9.71573 7.87994 3 15.75 3C23.6201 3 30 9.71573 30 18C30 26.2843 23.6201 33 15.75 33Z"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M19.5 13.2C18.5455 12.4255 17.3542 12.0019 16.125 12C13.0185 12 10.5 14.685 10.5 18C10.5 21.315 13.0185 24 16.125 24C17.391 24 18.5595 23.553 19.5 22.8"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M15 3C21.4995 3 34.5 4.5 34.5 18C34.5 31.5 21.4995 33 15 33"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+              </svg>
+              <div className="guide_quiz_finish_reward_text">
+                <strong>포인트 적립 완료</strong>
+                <p>초보자 퀴즈 참여 보상</p>
+              </div>
+            </div>
+            <strong className="guide_quiz_finish_reward_point">+ 500P</strong>
+          </section>
         </main>
 
         <section className="guide_quiz_finish_actions">

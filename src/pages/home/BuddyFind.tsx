@@ -706,12 +706,6 @@ function BuddyRequestModal({
 
   const handleConfirm = () => {
     onClose()
-    setStep('form')
-    setMessage('')
-  }
-
-  const handleGoHome = () => {
-    onClose()
     navigate('/home')
   }
 
@@ -786,7 +780,7 @@ function BuddyRequestModal({
             <button className="buddy_request_btn buddy_request_btn--confirm" type="button" onClick={handleConfirm}>
               확인
             </button>
-            <button className="buddy_request_btn--home" type="button" onClick={handleGoHome}>
+            <button className="buddy_request_btn--home" type="button" hidden aria-hidden="true" tabIndex={-1} onClick={handleConfirm}>
               홈으로 돌아가기
             </button>
           </div>

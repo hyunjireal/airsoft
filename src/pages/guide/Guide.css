@@ -1981,6 +1981,66 @@
   font-weight: var(--font-weight-medium);
 }
 
+.guide_quiz_finish_hint_reward {
+  justify-content: space-between;
+  padding: 15px 15px 15px 20px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: #edefe8;
+  color: #4c5534;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_icon {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  color: #4c5534;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_text strong {
+  color: #4c5534;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.32px;
+  white-space: nowrap;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_text p {
+  color: var(--color-gray02);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.28px;
+  white-space: nowrap;
+}
+
+.guide_quiz_finish_hint_reward .guide_quiz_finish_reward_point {
+  flex: 0 0 auto;
+  color: #4c5534;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.52px;
+  white-space: nowrap;
+}
+
 .guide_quiz_finish_actions {
   position: fixed;
   right: 50%;
@@ -2247,6 +2307,14 @@
   filter: brightness(0) saturate(100%) invert(88%) sepia(99%) saturate(973%) hue-rotate(16deg) brightness(110%) contrast(104%);
 }
 
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward .guide_quiz_finish_reward_info > img {
+  filter: none;
+}
+
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward .guide_quiz_finish_reward_icon {
+  color: #e2fd34;
+}
+
 :root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_success_circle_mark {
   --guide-quiz-success-color: #e2fd34;
 }
@@ -2287,6 +2355,20 @@
 
 :root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint p {
   color: var(--color-white);
+}
+
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward {
+  border: 1px solid #e2fd34;
+  background: #000;
+}
+
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward .guide_quiz_finish_reward_text strong,
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward .guide_quiz_finish_reward_point {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_hint_reward .guide_quiz_finish_reward_text p {
+  color: #fff;
 }
 
 :root[data-theme='dark'] .guide_quiz_finish_page .guide_quiz_finish_actions {
