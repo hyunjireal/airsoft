@@ -17,7 +17,8 @@ export function AppShell() {
   const isTournamentExperience = isTournamentMain || isTournamentMvpVote || isTournamentMvpComplete
   const hasTournamentBottomNav = isTournamentMain || isTournamentMvpVote
   const isChatPage = location.pathname === '/chat'
-  const isBuddyPage = location.pathname === '/buddy' || location.pathname.startsWith('/buddy/')
+  const isBuddyPage = location.pathname === '/buddy' || location.pathname === '/buddy/loading'
+  const isBuddyRecommendPage = location.pathname === '/buddy/recommend'
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
@@ -43,6 +44,7 @@ export function AppShell() {
     !isMatchPage &&
     !isMediaPage &&
     !isBuddyPage &&
+    !isBuddyRecommendPage &&
     !isMediaProfile &&
     !isBeginnerBoardHome &&
     !isGeneralBoardHome &&

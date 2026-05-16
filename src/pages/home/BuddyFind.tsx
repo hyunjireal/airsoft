@@ -1,10 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { LazyMotion, domAnimation, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
 import buddyHeroDark from '../../asset/images/buddy_bg_d.png'
 import buddyHeroLight from '../../asset/images/buddy_bg_l.png'
+import buddyLoadingFigmaBg from '../../asset/images/buddy_loading_figma_bg.png'
+import buddyLoadingFigmaBgLight from '../../asset/images/buddy_loading_figma_bg_light.png'
+import buddyProfileOne from '../../asset/images/buddy_profile_img01.png'
+import buddyProfileTwo from '../../asset/images/buddy_profile_img02.png'
+import buddyProfileThree from '../../asset/images/buddy_profile_img03.png'
+import buddyProfileFour from '../../asset/images/buddy_profile_img04.png'
+import buddyProfileFive from '../../asset/images/buddy_profile_img05.png'
 import { PageHeader } from '../../components/PageHeader'
 import { useThemeMode } from '../../hooks/useThemeMode'
 import {
@@ -30,6 +37,16 @@ type ScheduleItem = {
 type FilterOption = {
   id: string
   label: string
+}
+
+type BuddyRecommendation = {
+  id: string
+  name: string
+  region: string
+  experience: string
+  manner: string
+  rating: string
+  image: string
 }
 
 const MOCK_SCHEDULES: ScheduleItem[] = [
@@ -73,6 +90,54 @@ const EXP_OPTIONS: FilterOption[] = [
   { id: 'first', label: '처음 참여' },
   { id: 'one-two', label: '1~2회 참여' },
   { id: 'three-plus', label: '3회 이상' },
+]
+
+const BUDDY_RECOMMENDATIONS: BuddyRecommendation[] = [
+  {
+    id: 'buddy-buddy',
+    name: '버디버디',
+    region: '경기도',
+    experience: '안내 9회',
+    manner: '우수',
+    rating: '4.8',
+    image: buddyProfileOne,
+  },
+  {
+    id: 'tacti-bear',
+    name: '택티곰',
+    region: '서울',
+    experience: '안내 2회',
+    manner: '우수',
+    rating: '4.9',
+    image: buddyProfileTwo,
+  },
+  {
+    id: 'lime-shot',
+    name: '라임샷',
+    region: '경기도',
+    experience: '안내 9회',
+    manner: '우수',
+    rating: '4.7',
+    image: buddyProfileThree,
+  },
+  {
+    id: 'magnum',
+    name: '매그넘',
+    region: '경기도',
+    experience: '안내 6회',
+    manner: '우수',
+    rating: '4.2',
+    image: buddyProfileFour,
+  },
+  {
+    id: 'kill-shopping',
+    name: '킬샷핑',
+    region: '경기도',
+    experience: '안내 7회',
+    manner: '우수',
+    rating: '4.0',
+    image: buddyProfileFive,
+  },
 ]
 
 export function BuddyFind() {
@@ -401,7 +466,7 @@ export function BuddyFind() {
             className="buddy_find_start_button buddy_find_motion_button"
             type="button"
             disabled={!isReadyToStart}
-            onClick={() => navigate('/my/schedule')}
+            onClick={() => navigate('/buddy/loading')}
             whileHover={isReadyToStart ? buddyButtonHover : undefined}
             whileTap={isReadyToStart ? buddyButtonTap : undefined}
           >
@@ -410,5 +475,120 @@ export function BuddyFind() {
         </m.div>
       </article>
     </LazyMotion>
+  )
+}
+
+export function BuddyLoading() {
+  const navigate = useNavigate()
+  const themeMode = useThemeMode()
+  const isLightMode = themeMode === 'light'
+
+  useEffect(() => {
+    const timerId = window.setTimeout(() => {
+      navigate('/buddy/recommend')
+    }, 2600)
+
+    return () => window.clearTimeout(timerId)
+  }, [navigate])
+
+  return (
+    <article
+      className={`buddy_loading_page${isLightMode ? ' buddy_loading_page--light' : ''}`}
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <img
+        className="buddy_loading_bg"
+        src={isLightMode ? buddyLoadingFigmaBgLight : buddyLoadingFigmaBg}
+        alt=""
+        aria-hidden="true"
+      />
+
+      <PageHeader
+        variant={isLightMode ? 'transparent' : 'overlay'}
+        className="buddy_loading_header"
+        onBack={() => navigate('/buddy')}
+        backLabel="버디 찾기로 돌아가기"
+        hideRight
+      />
+
+      <div className="buddy_loading_statusbar" aria-hidden="true">
+        <span className="buddy_loading_statusbar__time">15:00</span>
+        <span className="buddy_loading_statusbar__icons">
+          <span className="buddy_loading_signal">
+            <span />
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="buddy_loading_wifi" />
+          <span className="buddy_loading_battery" />
+        </span>
+      </div>
+
+      <section className="buddy_loading_text">
+        <h1>버디 찾는 중</h1>
+        <p>
+          당신에게 맞는 버디를 찾고있어요{isLightMode ? '.' : ''}
+          <br />
+          잠시만 기다려주세요{isLightMode ? '!' : ''}
+        </p>
+      </section>
+
+    </article>
+  )
+}
+
+export function BuddyRecommend() {
+  const navigate = useNavigate()
+
+  return (
+    <article className="buddy_recommend_page">
+      <PageHeader
+        variant="dark"
+        className="buddy_recommend_header"
+        onBack={() => navigate('/buddy')}
+        backLabel="버디 찾기로 돌아가기"
+        title="추천 버디"
+      />
+
+      <section className="buddy_recommend_intro">
+        <p>가장 적합한 순서대로 안내해 드릴게요</p>
+      </section>
+
+      <section className="buddy_recommend_list_section" aria-label="추천 버디 목록">
+        <div className="buddy_recommend_list">
+          {BUDDY_RECOMMENDATIONS.map((buddy) => (
+            <button className="buddy_recommend_card" type="button" key={buddy.id}>
+              <span className="buddy_recommend_card__main">
+                <img className="buddy_recommend_card__avatar" src={buddy.image} alt="" />
+                <span className="buddy_recommend_card__info">
+                  <strong className="buddy_recommend_card__name">{buddy.name}</strong>
+                  <span className="buddy_recommend_card__meta">
+                    <span>
+                      <b>지역</b>
+                      <span>{buddy.region}</span>
+                    </span>
+                    <span>
+                      <b>경험</b>
+                      <span>{buddy.experience}</span>
+                    </span>
+                    <span>
+                      <b>매너</b>
+                      <span>{buddy.manner}</span>
+                    </span>
+                  </span>
+                  <span className="buddy_recommend_card__rating">
+                    <span aria-hidden="true">★</span>
+                    {buddy.rating}
+                  </span>
+                </span>
+              </span>
+              <span className="buddy_recommend_card__arrow" aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      </section>
+    </article>
   )
 }
