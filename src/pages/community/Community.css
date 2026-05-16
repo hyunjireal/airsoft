@@ -576,7 +576,7 @@
   top: 0;
   z-index: 20;
   overflow: hidden;
-  padding: 160px clamp(24px, 4vw, 32px) 24px;
+  padding: 130px clamp(24px, 4vw, 32px) 24px;
   border-radius: 0 0 35px 35px;
   background: #e5ead7;
   color: var(--color-black);
@@ -820,7 +820,7 @@
 
 .beginner_hero_art {
   position: absolute;
-  top: 91px;
+  top: 71px;
   right: -52px;
   width: 270px;
   height: 196px;
