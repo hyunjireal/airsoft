@@ -4,8 +4,10 @@ import KeywordTag from '../../components/KeywordTag'
 import More from '../../components/More'
 import { PageHeader } from '../../components/PageHeader'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
+import profilePointArrowIcon from '../../asset/icons/arrow_r.svg'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import matchPencilIcon from '../../asset/icons/preset_pencil.svg'
+import myPointIcon from '../../asset/icons/my_point.svg'
 import quickBookmarkIcon from '../../asset/icons/my_quick_bookmark.svg'
 import quickHandIcon from '../../asset/icons/my_quick_hand.svg'
 import quickTeamIcon from '../../asset/icons/my_quick_team.svg'
@@ -20,13 +22,13 @@ type QuickMenuIconKind = 'team' | 'buddy' | 'posts' | 'saved'
 
 type QuickMenuItem = {
   label: string
-  to: string
+  to?: string
   icon: QuickMenuIconKind
 }
 
 type MenuItem = {
   label: string
-  to: string
+  to?: string
 }
 
 const matchTabs: Array<{ key: MatchTab; label: string }> = [
@@ -36,10 +38,10 @@ const matchTabs: Array<{ key: MatchTab; label: string }> = [
 ]
 
 const quickMenuItems: QuickMenuItem[] = [
-  { label: '내 소속 팀', to: '/team/team-001', icon: 'team' },
-  { label: '버디 매칭', to: '/home', icon: 'buddy' },
-  { label: '내가 쓴 글', to: '/my/posts', icon: 'posts' },
-  { label: '저장한 글', to: '/community/free', icon: 'saved' },
+  { label: '내 소속 팀', icon: 'team' },
+  { label: '버디 매칭', to: '/buddy', icon: 'buddy' },
+  { label: '내가 쓴 글', icon: 'posts' },
+  { label: '저장한 글', icon: 'saved' },
 ]
 
 const quickIconMap: Record<QuickMenuIconKind, { src: string; className: string }> = {
@@ -50,21 +52,21 @@ const quickIconMap: Record<QuickMenuIconKind, { src: string; className: string }
 }
 
 const teamManagementItems: MenuItem[] = [
-  { label: '내 소속 팀', to: '/team/team-001' },
-  { label: '내가 생성한 팀', to: '/team/create' },
-  { label: '버디 매칭', to: '/home' },
+  { label: '내 소속 팀' },
+  { label: '내가 생성한 팀' },
+  { label: '버디 매칭', to: '/buddy' },
 ]
 
 const communityItems: MenuItem[] = [
-  { label: '내가 쓴 글', to: '/my/posts' },
-  { label: '내가 남긴 질문', to: '/community/beginner/recent' },
-  { label: '저장한 글', to: '/community/free' },
+  { label: '내가 쓴 글' },
+  { label: '내가 남긴 질문' },
+  { label: '저장한 글' },
 ]
 
 const settingsItems: MenuItem[] = [
-  { label: '알림 설정', to: '/my/notifications' },
-  { label: '개인정보 및 보안', to: '/my/profile' },
-  { label: '고객센터', to: '/chat' },
+  { label: '알림 설정' },
+  { label: '개인정보 및 보안' },
+  { label: '고객센터' },
 ]
 
 const profileStats = [
@@ -104,11 +106,7 @@ function BellIcon() {
 }
 
 function PointIcon() {
-  return (
-    <span aria-hidden="true" className="my_point_icon">
-      P
-    </span>
-  )
+  return <img aria-hidden="true" className="my_point_icon" src={myPointIcon} alt="" />
 }
 
 function QuickMenuIcon({ kind }: { kind: QuickMenuIconKind }) {
@@ -117,13 +115,27 @@ function QuickMenuIcon({ kind }: { kind: QuickMenuIconKind }) {
 }
 
 function QuickMenuLink({ item }: { item: QuickMenuItem }) {
-  return (
-    <Link className="my_quick_link" to={item.to}>
+  const content = (
+    <>
       <span className="my_quick_link_left">
         <QuickMenuIcon kind={item.icon} />
         <span className="my_quick_link_label">{item.label}</span>
       </span>
       <img alt="" aria-hidden="true" className="my_quick_link_arrow" src={arrowRightIcon} />
+    </>
+  )
+
+  if (!item.to) {
+    return (
+      <div className="my_quick_link my_quick_link_static" aria-disabled="true">
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <Link className="my_quick_link" to={item.to}>
+      {content}
     </Link>
   )
 }
@@ -135,14 +147,30 @@ function ListSection({ title, items }: { title: string; items: MenuItem[] }) {
         <h2 className="my_section_title">{title}</h2>
       </div>
       <div className="my_list_items">
-        {items.map((item) => (
-          <Link className="my_list_item" key={item.label} to={item.to}>
-            <span className="my_list_item_label">{item.label}</span>
-            <span className="my_list_item_arrow_wrap" aria-hidden="true">
-              <img alt="" className="my_list_item_arrow" src={arrowRightIcon} />
-            </span>
-          </Link>
-        ))}
+        {items.map((item) => {
+          const content = (
+            <>
+              <span className="my_list_item_label">{item.label}</span>
+              <span className="my_list_item_arrow_wrap" aria-hidden="true">
+                <img alt="" className="my_list_item_arrow" src={arrowRightIcon} />
+              </span>
+            </>
+          )
+
+          if (!item.to) {
+            return (
+              <div className="my_list_item my_list_item_static" key={item.label} aria-disabled="true">
+                {content}
+              </div>
+            )
+          }
+
+          return (
+            <Link className="my_list_item" key={item.label} to={item.to}>
+              {content}
+            </Link>
+          )
+        })}
       </div>
     </section>
   )
@@ -414,7 +442,7 @@ export function MyPage() {
           <>
             <PointIcon />
             <span className="my_profile_points_value">2,450P</span>
-            <img alt="" aria-hidden="true" className="my_profile_points_arrow" src={arrowRightIcon} />
+            <img alt="" aria-hidden="true" className="my_profile_points_arrow" src={profilePointArrowIcon} />
           </>
         }
       />

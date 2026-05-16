@@ -1,7 +1,7 @@
 .my_page {
   --my-section-max-width: 720px;
   --my-section-inline-padding: 24px;
-  padding: clamp(52px, 8vw, 86px) 0 20px;
+  padding: 0 0 20px;
   margin-bottom: -48px;
   background: var(--color-white);
   color: var(--color-black);
@@ -51,13 +51,13 @@
 
 
 .my_bell_button {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
 }
 
 .my_bell_icon {
-  width: 17px;
-  height: 19px;
+  width: 36px;
+  height: 36px;
 }
 
 .my_page_title {
@@ -203,17 +203,11 @@
 }
 
 .my_point_icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
   width: 18px;
   height: 18px;
-  border-radius: 999px;
-  background: var(--color-green);
-  color: var(--color-white);
-  font-size: 11px;
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .my_profile_points_value {
@@ -226,8 +220,8 @@
 }
 
 .my_profile_points_arrow {
-  width: 4px;
-  height: 8px;
+  width: 6px;
+  height: 12px;
   object-fit: contain;
   opacity: 0.35;
 }
@@ -293,8 +287,166 @@
   line-height: var(--line-height-130);
 }
 
-:root[data-theme='dark'] .my_section_title {
-  color: var(--color-white);
+:root[data-theme='dark'] .my_page {
+  --my-dark-bg: #1a1a1a;
+  --my-dark-surface: #000000;
+  --my-dark-border: #4b4b4b;
+  --my-dark-border-soft: rgba(103, 107, 93, 0.14);
+  --my-dark-text: #ffffff;
+  --my-dark-text-soft: #e9e9e9;
+  --my-dark-text-muted: #d9d9d9;
+  --my-dark-text-sub: #adadad;
+  --my-dark-disabled: #636363;
+  --my-dark-khaki: #676b5d;
+  --my-dark-green: #bbe21c;
+  --my-dark-lime: #e2fd34;
+  background: var(--my-dark-bg);
+  color: var(--my-dark-text);
+}
+
+:root[data-theme='dark'] .mobile_frame:has(.my_page),
+:root[data-theme='dark'] .mobile_frame:has(.my_page) > main {
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .my_header_button,
+:root[data-theme='dark'] .my_page_title,
+:root[data-theme='dark'] .my_section_title,
+:root[data-theme='dark'] .my_profile_name,
+:root[data-theme='dark'] .my_profile_suffix,
+:root[data-theme='dark'] .my_profile_stat_value,
+:root[data-theme='dark'] .my_match_title,
+:root[data-theme='dark'] .my_quick_link_label {
+  color: var(--my-dark-text);
+}
+
+:root[data-theme='dark'] .my_header_button img,
+:root[data-theme='dark'] .my_bell_icon {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .my_profile_card {
+  border-color: var(--my-dark-border-soft);
+  background: var(--my-dark-surface);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='dark'] .my_profile_avatar,
+:root[data-theme='dark'] .my_profile_edit {
+  border-color: var(--my-dark-border);
+}
+
+:root[data-theme='dark'] .my_profile_edit {
+  background: var(--my-dark-surface);
+}
+
+:root[data-theme='dark'] .my_profile_edit_icon,
+:root[data-theme='dark'] .my_profile_points_arrow,
+:root[data-theme='dark'] .my_quick_link_arrow,
+:root[data-theme='dark'] .my_list_item_arrow,
+:root[data-theme='dark'] .my_matches_more .arrow_r {
+  filter: brightness(0) invert(1);
+  opacity: 0.7;
+}
+
+:root[data-theme='dark'] .my_profile_status,
+:root[data-theme='dark'] .my_profile_stat_label {
+  color: var(--my-dark-text-muted);
+}
+
+:root[data-theme='dark'] .my_profile_stat_divider {
+  background: var(--my-dark-border);
+}
+
+:root[data-theme='dark'] .my_profile_points {
+  border: 1px solid var(--my-dark-green);
+  background: var(--my-dark-khaki);
+}
+
+:root[data-theme='dark'] .my_profile_points_value {
+  color: var(--my-dark-green);
+}
+
+:root[data-theme='dark'] .my_match_tab {
+  color: var(--my-dark-text-sub);
+}
+
+:root[data-theme='dark'] .my_match_tab.is_active {
+  border-bottom-color: var(--my-dark-text);
+  color: var(--my-dark-text);
+}
+
+:root[data-theme='dark'] .my_match_card,
+:root[data-theme='dark'] .my_quick_link {
+  border-color: var(--my-dark-border);
+  background: var(--my-dark-surface);
+}
+
+:root[data-theme='dark'] .my_match_thumb {
+  background: var(--my-dark-surface);
+}
+
+:root[data-theme='dark'] .my_match_tag {
+  background: var(--my-dark-lime);
+  color: #364300;
+}
+
+:root[data-theme='dark'] .my_match_tag_d14 {
+  color: #3d65d0;
+}
+
+:root[data-theme='dark'] .my_match_meta {
+  color: var(--my-dark-text-sub);
+}
+
+:root[data-theme='dark'] .my_quick_icon {
+  filter: brightness(0) saturate(100%) invert(86%) sepia(92%) saturate(655%) hue-rotate(12deg) brightness(103%) contrast(98%);
+}
+
+:root[data-theme='dark'] .my_list_item {
+  color: var(--my-dark-text-soft);
+}
+
+:root[data-theme='dark'] .my_list_divider::after {
+  background: var(--my-dark-border);
+}
+
+:root[data-theme='dark'] .my_logout_button {
+  color: var(--my-dark-disabled);
+}
+
+:root[data-theme='dark'] .my_logout_modal {
+  border-color: var(--my-dark-border);
+  background: var(--my-dark-surface);
+}
+
+:root[data-theme='dark'] .my_logout_modal h2,
+:root[data-theme='dark'] .my_logout_modal_button_secondary {
+  color: var(--my-dark-text);
+}
+
+:root[data-theme='dark'] .my_logout_modal p {
+  color: var(--my-dark-text-sub);
+}
+
+:root[data-theme='dark'] .my_logout_modal_button_secondary {
+  border-color: var(--my-dark-border);
+  background: var(--my-dark-bg);
+}
+
+:root[data-theme='dark'] .my_logout_modal_button_primary {
+  background: var(--my-dark-green);
+  color: #364300;
+}
+
+:root[data-theme='dark'] .my_header_button:focus-visible,
+:root[data-theme='dark'] .my_profile_edit:focus-visible,
+:root[data-theme='dark'] .my_match_tab:focus-visible,
+:root[data-theme='dark'] .my_quick_link:focus-visible,
+:root[data-theme='dark'] .my_list_item:focus-visible,
+:root[data-theme='dark'] .my_logout_button:focus-visible,
+:root[data-theme='dark'] .my_logout_modal_button:focus-visible {
+  outline-color: var(--my-dark-green);
 }
 
 .my_matches_more {
@@ -446,6 +598,10 @@
   background: var(--color-white);
 }
 
+.my_quick_link_static {
+  cursor: default;
+}
+
 .my_quick_link_left {
   display: flex;
   align-items: center;
@@ -531,6 +687,10 @@
   font-size: var(--font-size-18);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-130);
+}
+
+.my_list_item_static {
+  cursor: default;
 }
 
 .my_list_item_label {
@@ -652,8 +812,8 @@
 .my_header_button:hover,
 .my_profile_edit:hover,
 .my_match_tab:hover,
-.my_quick_link:hover,
-.my_list_item:hover,
+.my_quick_link:not(.my_quick_link_static):hover,
+.my_list_item:not(.my_list_item_static):hover,
 .my_logout_button:hover,
 .my_logout_modal_button:hover {
   transform: translateY(-1px);
@@ -703,21 +863,21 @@
 }
 
 :root[data-theme='dark'] .my_schedule_page {
-  --my-schedule-bg: var(--tournament-dark-bg);
-  --my-schedule-border: var(--color-gray03);
-  --my-schedule-text: var(--tournament-dark-txt-main);
-  --my-schedule-text-sub: var(--tournament-dark-txt-sub);
+  --my-schedule-bg: #1a1a1a;
+  --my-schedule-border: #ffffff;
+  --my-schedule-text: #ffffff;
+  --my-schedule-text-sub: #adadad;
   --my-schedule-card-bg: #000000;
-  --my-schedule-card-stroke: var(--color-black);
-  --my-schedule-card-title: var(--tournament-dark-card-tit);
-  --my-schedule-card-text: var(--tournament-dark-txt-main);
+  --my-schedule-card-stroke: #4b4b4b;
+  --my-schedule-card-title: #ffffff;
+  --my-schedule-card-text: #adadad;
   --my-schedule-icon-filter: brightness(0) invert(1);
-  --my-schedule-action-icon-filter: brightness(0) saturate(100%) invert(39%) sepia(0%) saturate(0%) hue-rotate(193deg) brightness(94%) contrast(88%);
+  --my-schedule-action-icon-filter: brightness(0) invert(1);
 }
 
 :root[data-theme='dark'] .mobile_frame:has(.my_schedule_page),
 :root[data-theme='dark'] .mobile_frame:has(.my_schedule_page) > main {
-  background: var(--tournament-dark-bg);
+  background: #1a1a1a;
 }
 
 .my_schedule_top {

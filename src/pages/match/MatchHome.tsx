@@ -704,6 +704,8 @@ export function MatchHome() {
           <More
             className="my_matches_more"
             style={homeMatchMoreStyle}
+            state={{ from: '/match' }}
+            to="/my/schedule"
           />
         </div>
 
