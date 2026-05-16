@@ -363,6 +363,7 @@ export function BeginnerBoard() {
   const [heroCollapsed, setHeroCollapsed] = useState(false);
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
   const questionsSectionRef = useRef<HTMLElement | null>(null);
+  const collapseTriggerRef = useRef<HTMLSpanElement | null>(null);
   const [expandedTabs, setExpandedTabs] = useState<Set<CategoryTab>>(
     () => new Set(),
   );
@@ -524,8 +525,8 @@ export function BeginnerBoard() {
   }, [focusPostId, location.pathname, navigate, visibleQuestions]);
 
   useEffect(() => {
-    const questionsSection = questionsSectionRef.current;
-    if (!questionsSection) return undefined;
+    const collapseTrigger = collapseTriggerRef.current;
+    if (!collapseTrigger) return undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -533,12 +534,12 @@ export function BeginnerBoard() {
       },
       {
         root: null,
-        rootMargin: "-96px 0px -68% 0px",
+        rootMargin: "-112px 0px -52% 0px",
         threshold: 0.01,
       },
     );
 
-    observer.observe(questionsSection);
+    observer.observe(collapseTrigger);
 
     return () => observer.disconnect();
   }, []);
@@ -702,6 +703,7 @@ export function BeginnerBoard() {
         </section>
 
         <section className="beginner_questions_section" ref={questionsSectionRef}>
+          <span className="beginner_questions_collapse_trigger" ref={collapseTriggerRef} aria-hidden="true" />
           <div className="beginner_question_header">
             <div className="beginner_question_heading">
               <h2>최근 올라온 질문</h2>

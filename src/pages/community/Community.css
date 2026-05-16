@@ -984,7 +984,17 @@
 }
 
 .beginner_questions_section {
+  position: relative;
   padding: 0;
+}
+
+.beginner_questions_collapse_trigger {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
 }
 
 .beginner_start_title {
@@ -4448,10 +4458,6 @@
 }
 
 /* Tab pill container */
-:root[data-theme='dark'] .community_header {
-  background: #000;
-}
-
 :root[data-theme='dark'] .community_header_circle_button {
   border-color: #636363;
   background: #1a1a1a;
@@ -4459,6 +4465,11 @@
 
 :root[data-theme='dark'] .community_header_profile_link {
   border-color: #4b4b4b;
+}
+
+:root[data-theme='dark'] .beginner_board_page.is_hero_collapsed .community_header {
+  background: #000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
 }
 
 :root[data-theme='dark'] .community_tabs {
