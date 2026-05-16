@@ -76,6 +76,8 @@ const teamCards = [
   { id: 17, name: '델타 포지션', region: '인천 송도권', tags: ['주말팀'], logo: mainTeamImg01 },
   { id: 18, name: '밸런스 스쿼드', region: '경기 광명권', tags: ['평일팀'], logo: mainTeamImg02 },
 ]
+const visibleTeamCards = teamCards.slice(0, 5)
+
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
@@ -319,11 +321,18 @@ function useDragScroll() {
 
 export function Home() {
   const navigate = useNavigate()
-  const teamScrollRef = useRef<HTMLDivElement>(null)
+  const teamTrackRef = useRef<HTMLDivElement>(null)
+  const matchSectionRef = useRef<HTMLDivElement>(null)
+  const buddySectionRef = useRef<HTMLDivElement>(null)
+  const guideSectionRef = useRef<HTMLDivElement>(null)
+  const teamSectionRef = useRef<HTMLElement>(null)
+  const bannerSectionRef = useRef<HTMLElement>(null)
+  const tournamentSectionRef = useRef<HTMLElement>(null)
   const isTeamAutoPausedRef = useRef(false)
   const teamAutoResumeTimerRef = useRef<number | null>(null)
+  const teamOffsetRef = useRef(0)
+  const teamLoopWidthRef = useRef(0)
   const matchDragScroll = useDragScroll()
-  const teamDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const albumInputRef = useRef<HTMLInputElement>(null)
@@ -340,6 +349,14 @@ export function Home() {
   const [isFlashing, setIsFlashing] = useState(false)
   const [pendingAlbumImage, setPendingAlbumImage] = useState<string | null>(null)
   const [scheduleRevision, setScheduleRevision] = useState(0)
+  const [visibleHomeSections, setVisibleHomeSections] = useState({
+    match: false,
+    buddy: false,
+    guide: false,
+    team: false,
+    banner: false,
+  })
+  const [isTournamentVisible, setIsTournamentVisible] = useState(false)
   const savedProfileBadge = localStorage.getItem('homeProfileBadge')
   const savedProfileTitle = localStorage.getItem('homeProfileTitle')
   const savedLevel = localStorage.getItem('level')
@@ -388,30 +405,35 @@ export function Home() {
   }, [])
 
   useEffect(() => {
-    const scrollElement = teamScrollRef.current
-    if (!scrollElement) return undefined
+    const trackElement = teamTrackRef.current
+    if (!trackElement) return undefined
 
     let frameId = 0
     let previousTime = performance.now()
-    let virtualScrollLeft = scrollElement.scrollLeft
-    const speed = 14
+    const speed = 18
+
+    const updateLoopWidth = () => {
+      teamLoopWidthRef.current = trackElement.scrollWidth / 2
+
+      if (teamLoopWidthRef.current > 0) {
+        teamOffsetRef.current %= teamLoopWidthRef.current
+        trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(updateLoopWidth)
+    resizeObserver.observe(trackElement)
+    updateLoopWidth()
 
     const animate = (time: number) => {
       const deltaSeconds = (time - previousTime) / 1000
       previousTime = time
 
-      const loopWidth = scrollElement.scrollWidth / 2
+      const loopWidth = teamLoopWidthRef.current
 
       if (!isTeamAutoPausedRef.current && loopWidth > 0) {
-        virtualScrollLeft += speed * deltaSeconds
-
-        if (virtualScrollLeft >= loopWidth) {
-          virtualScrollLeft -= loopWidth
-        }
-
-        scrollElement.scrollLeft = virtualScrollLeft
-      } else {
-        virtualScrollLeft = scrollElement.scrollLeft
+        teamOffsetRef.current = (teamOffsetRef.current + speed * deltaSeconds) % loopWidth
+        trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
       }
 
       frameId = window.requestAnimationFrame(animate)
@@ -421,10 +443,79 @@ export function Home() {
 
     return () => {
       window.cancelAnimationFrame(frameId)
+      resizeObserver.disconnect()
 
       if (teamAutoResumeTimerRef.current) {
         window.clearTimeout(teamAutoResumeTimerRef.current)
       }
+    }
+  }, [])
+
+  useEffect(() => {
+    const sectionElement = tournamentSectionRef.current
+    if (!sectionElement || isTournamentVisible) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return
+        setIsTournamentVisible(true)
+        observer.disconnect()
+      },
+      {
+        threshold: 0.32,
+        rootMargin: '0px 0px -8% 0px',
+      },
+    )
+
+    observer.observe(sectionElement)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [isTournamentVisible])
+
+  useEffect(() => {
+    const revealTargets = [
+      ['match', matchSectionRef.current],
+      ['buddy', buddySectionRef.current],
+      ['guide', guideSectionRef.current],
+      ['team', teamSectionRef.current],
+      ['banner', bannerSectionRef.current],
+    ] as const
+
+    const targetMap = new Map<HTMLElement, keyof typeof visibleHomeSections>()
+    revealTargets.forEach(([key, element]) => {
+      if (!element) return
+      targetMap.set(element, key)
+    })
+
+    if (targetMap.size === 0) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+
+          const key = targetMap.get(entry.target as HTMLElement)
+          if (!key) return
+
+          setVisibleHomeSections((current) => {
+            if (current[key]) return current
+            return { ...current, [key]: true }
+          })
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '0px 0px -10% 0px',
+      },
+    )
+
+    targetMap.forEach((_, element) => observer.observe(element))
+
+    return () => {
+      observer.disconnect()
     }
   }, [])
 
@@ -700,7 +791,10 @@ export function Home() {
               </Link>
             </div>
 
-            <div className="home_userinfo_match">
+            <div
+              className={`home_userinfo_match home_reveal_section ${visibleHomeSections.match ? 'is_visible' : ''}`}
+              ref={matchSectionRef}
+            >
               <div className="home_userinfo_match_header">
                 <h2 className="home_userinfo_match_title">내 경기 일정</h2>
                 <Link className="home_more_link" to="/my/schedule" state={{ from: '/home' }} aria-label="내 경기 일정 더보기">
@@ -727,7 +821,10 @@ export function Home() {
       </section>
 
       <section className="banner">
-        <div className="buddy">
+        <div
+          className={`buddy home_reveal_section ${visibleHomeSections.buddy ? 'is_visible' : ''}`}
+          ref={buddySectionRef}
+        >
           <div className="buddy_top">
             <div className="buddy_visual" aria-hidden="true">
               <img src={mainBuddy01} alt="" className="buddy_main_img" />
@@ -787,7 +884,10 @@ export function Home() {
           </div>
         </div>
 
-        <div className="banner_bottom">
+        <div
+          className={`banner_bottom home_reveal_section ${visibleHomeSections.guide ? 'is_visible' : ''}`}
+          ref={guideSectionRef}
+        >
           <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
             <div className="bottom_text_group">
               <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
@@ -814,7 +914,10 @@ export function Home() {
 
       <div className="bottom">
         {/* ⑤ 팀 추천 섹션 */}
-        <section className="home_team">
+        <section
+          className={`home_team home_reveal_section ${visibleHomeSections.team ? 'is_visible' : ''}`}
+          ref={teamSectionRef}
+        >
           <div className="home_team_content_box">
             <div className="home_team_header">
               <h2 className="home_team_title">
@@ -824,41 +927,41 @@ export function Home() {
             <div className="home_team_con">
               <div
                 className="home_team_scroll"
-                ref={teamScrollRef}
-                {...teamDragScroll}
-                onPointerDown={(event) => {
+                onPointerDown={() => {
                   pauseTeamAutoScroll()
-                  teamDragScroll.onPointerDown(event)
                 }}
-                onPointerUp={(event) => {
-                  teamDragScroll.onPointerUp(event)
+                onPointerUp={() => {
                   resumeTeamAutoScrollSoon()
                 }}
-                onPointerCancel={(event) => {
-                  teamDragScroll.onPointerCancel(event)
+                onPointerCancel={() => {
                   resumeTeamAutoScrollSoon()
                 }}
-                onPointerLeave={(event) => {
-                  teamDragScroll.onPointerLeave(event)
+                onPointerLeave={() => {
                   resumeTeamAutoScrollSoon()
                 }}
               >
-                {[...teamCards, ...teamCards].map((team, index) => (
-                  <article key={`${team.id}-${index}`} className="home_team_card" aria-hidden={index >= teamCards.length}>
-                    <div className="home_team_card_logo">
-                      <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
-                    </div>
-                    <p className="home_team_card_name">{team.name}</p>
-                    <p className="home_team_card_region">{team.region}</p>
-                  </article>
-                ))}
+                <div className="home_team_track" ref={teamTrackRef}>
+                  {[...visibleTeamCards, ...visibleTeamCards].map((team, index) => (
+                    <article key={`${team.id}-${index}`} className="home_team_card" aria-hidden={index >= visibleTeamCards.length}>
+                      <div className="home_team_card_logo">
+                        <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
+                      </div>
+                      <p className="home_team_card_name">{team.name}</p>
+                      <p className="home_team_card_region">{team.region}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* ⑥ 오바워치 배너 */}
-        <section className="home_banner" {...bannerDragScroll}>
+        <section
+          className={`home_banner home_reveal_section ${visibleHomeSections.banner ? 'is_visible' : ''}`}
+          ref={bannerSectionRef}
+          {...bannerDragScroll}
+        >
           <Link className="home_banner_inner" to="/guide/quiz">
             <div className="home_banner_txt">
               <p className="home_banner_label">건잇 x 오버워치</p>
@@ -876,7 +979,10 @@ export function Home() {
         </section>
 
         {/* ⑦ 토너먼트 섹션 */}
-        <section className="home_tournament">
+        <section
+          className={`home_tournament ${isTournamentVisible ? 'is_visible' : ''}`}
+          ref={tournamentSectionRef}
+        >
           <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
           <div className="home_tournament_team_info">
             {tournamentCards.map((tc) => (
