@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
@@ -7,19 +7,89 @@ import chatbotCalendarIcon from '../../asset/icons/chatbot_cal.svg'
 import imageIcon from '../../asset/icons/match_img.svg'
 import sendIcon from '../../asset/icons/com_send.svg'
 import gaiImage from '../../asset/images/gai.png'
-import { requestChatAnswer, type ChatAttachment, type ChatMessage } from '../../services/chatApi'
+import type { ChatAttachment, ChatMessage } from '../../services/chatApi'
 import './Chat.css'
+
+type AnalysisTone = 'good' | 'warn' | 'info'
+
+type AnalysisItem = {
+  label: string
+  value: string
+  detail: string
+  tone: AnalysisTone
+}
+
+type AnalysisResult = {
+  title: string
+  confidence: string
+  summary: string
+  items: AnalysisItem[]
+}
 
 type TimedChatMessage = ChatMessage & {
   time: string
+  analysis?: AnalysisResult
 }
 
 const frequentQuestions = [
   '초보 장비 추천해줘',
-  '보호장비 뭐가 필요해?',
-  '배터리 관리 팁',
-  '국내 규제에서 조심할 점',
+  '보호장비는 뭐가 필요해?',
+  '배터리 관리 방법',
+  '국내 규제에서 확인할 점',
   '첫 게임 전 체크리스트',
+]
+
+const loadingLabels = [
+  '사진에서 장비 구성을 확인하고 있어요',
+  '보호장비와 안전 요소를 대조하고 있어요',
+  '입문자 기준 추천 포인트를 정리하고 있어요',
+  '필드 입장 전 체크리스트를 만들고 있어요',
+]
+
+const mockAnalysisResults: AnalysisResult[] = [
+  {
+    title: '입문자 장비 안전 분석',
+    confidence: 'AI 체크 완료',
+    summary: '전체 구성은 입문자가 사용하기에 무난해요. 다만 얼굴 보호와 탄속 확인은 필드 방문 전에 한 번 더 챙기는 편이 좋아요.',
+    items: [
+      { label: '보호장비', value: '적절해요', detail: '기본 장비 구성은 안정적으로 보여요.', tone: 'good' },
+      { label: '안전', value: '고글 착용 권장', detail: '눈 보호는 가장 먼저 확인해야 해요.', tone: 'warn' },
+      { label: '추천', value: '메쉬 마스크 추천', detail: '근거리 CQB에서는 하관 보호가 있으면 좋아요.', tone: 'info' },
+      { label: '규제', value: '탄속 확인 필요', detail: '방문 필드 기준에 맞는지 크로노 측정이 필요해요.', tone: 'warn' },
+      { label: '관리', value: '배터리 상태 점검', detail: '게임 전 충전량과 커넥터 상태를 확인하세요.', tone: 'info' },
+    ],
+  },
+  {
+    title: '필드 입장 전 빠른 점검',
+    confidence: '데모 분석 완료',
+    summary: '사진 기준으로는 바로 게임 준비가 가능해 보이지만, 마스크와 여분 배터리를 준비하면 훨씬 안정적인 세팅이에요.',
+    items: [
+      { label: '보호장비', value: '기본 구성 양호', detail: '장갑과 고글을 함께 챙기면 좋아요.', tone: 'good' },
+      { label: '안전', value: '렌즈 손상 확인', detail: '고글 렌즈에 균열이나 흠집이 없는지 봐주세요.', tone: 'warn' },
+      { label: '추천', value: '예비 탄창 준비', detail: '초보자는 1개보다 2개 이상이 편해요.', tone: 'info' },
+      { label: '규제', value: '필드 규정 확인', detail: '실내/실외 필드마다 허용 탄속이 달라요.', tone: 'warn' },
+      { label: '관리', value: '홉업 초기화', detail: '첫 게임 전에는 기본값에서 조금씩 조절하세요.', tone: 'info' },
+    ],
+  },
+  {
+    title: '초보자 맞춤 장비 코칭',
+    confidence: '추천 생성 완료',
+    summary: '현재 장비는 시작용으로 충분해 보여요. 안전 장비 우선순위를 높이고, 소모품은 여유 있게 준비하는 구성이 좋습니다.',
+    items: [
+      { label: '보호장비', value: '상체 보호 보완', detail: '얇은 긴팔이나 패딩감 있는 의류가 도움이 돼요.', tone: 'info' },
+      { label: '안전', value: '고글 필수', detail: '일반 안경은 보호장비로 충분하지 않아요.', tone: 'warn' },
+      { label: '추천', value: '메쉬 마스크 추천', detail: '입문자에게 체감 만족도가 높은 장비예요.', tone: 'good' },
+      { label: '규제', value: '칼라파트 유지', detail: '외관 규정은 이동 중에도 유지하는 편이 안전해요.', tone: 'warn' },
+      { label: '관리', value: '탄창 청소', detail: '먼지와 BB탄 잔여물을 가볍게 제거하세요.', tone: 'info' },
+    ],
+  },
+]
+
+const quickAnswers = [
+  '초보자라면 고글, 하관 보호 마스크, 장갑을 먼저 준비하는 걸 추천해요. 장비 성능보다 안전 장비가 우선이에요.',
+  '배터리는 사용 후 완전 방전 상태로 오래 두지 않는 편이 좋아요. 게임 전에는 충전량과 커넥터 흔들림을 같이 확인하세요.',
+  '국내 필드에서는 탄속, 칼라파트, 운반 방식 확인이 중요해요. 방문할 필드 규정을 먼저 보는 흐름이 가장 안정적이에요.',
+  '첫 게임 전에는 고글, 마스크, 장갑, 배터리, 탄창, BB탄, 탄속 확인 순서로 체크하면 빠뜨리는 일이 적어요.',
 ]
 
 const MAX_UPLOAD_IMAGE_SIDE = 1400
@@ -29,13 +99,23 @@ const welcomeMessage: TimedChatMessage = {
   id: 'welcome',
   role: 'assistant',
   text:
-    '안녕하세요! 저는 AI 장비 코치 가이예요.\n장비 사진을 보내주시면 입문자 기준으로 안전, 규제, 관리 포인트를 함께 체크해드릴게요.',
+    '안녕하세요. AI 장비 코치 가이예요.\n장비 사진을 보내주시면 입문자 기준으로 안전, 규제, 관리 포인트를 빠르게 체크해드릴게요.',
   time: '오전 10:30',
+}
+
+function wait(ms: number) {
+  return new Promise<void>((resolve) => {
+    window.setTimeout(resolve, ms)
+  })
+}
+
+function pickRandom<T>(items: T[]) {
+  return items[Math.floor(Math.random() * items.length)]
 }
 
 function getTypingDelay(character: string) {
   if (/\s/.test(character)) return 16
-  if (/[.!?。]\s?$/.test(character)) return 90
+  if (/[.!?。！？]/.test(character)) return 90
   if (character === '\n') return 110
 
   return 16
@@ -54,12 +134,14 @@ function createMessage(
   role: ChatMessage['role'],
   text: string,
   attachments?: ChatAttachment[],
+  analysis?: AnalysisResult,
 ): TimedChatMessage {
   return {
     id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     role,
     text,
     attachments,
+    analysis,
     time: getCurrentTime(),
   }
 }
@@ -80,7 +162,7 @@ function readFileAsDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(new Error('사진을 불러오지 못했어요. 다시 시도해주세요.'))
+    reader.onerror = () => reject(new Error('사진을 불러오지 못했어요. 다른 사진으로 다시 시도해주세요.'))
     reader.readAsDataURL(file)
   })
 }
@@ -135,36 +217,14 @@ async function readCompressedImageAsDataUrl(file: File) {
   return drawCompressedImage(image, image.naturalWidth || image.width, image.naturalHeight || image.height)
 }
 
-function isAnalysisLine(line: string) {
-  return /^(✅|⚠️?|❗|💡)/u.test(line.trim())
-}
-
-function renderMessageText(text: string, isTyping: boolean) {
-  const lines = text.split('\n')
-  const hasAnalysis = lines.some(isAnalysisLine)
-
+function renderMessageText(text: string) {
   return (
-    <div className={hasAnalysis ? 'chat_result_summary' : 'chat_text'}>
-      {hasAnalysis ? <strong className="chat_result_title">분석 결과</strong> : null}
-      {lines.map((line, index) => {
+    <div className="chat_text">
+      {text.split('\n').map((line, index) => {
         const trimmedLine = line.trim()
 
         if (!trimmedLine) {
           return <span className="chat_text_spacer" key={`spacer-${index}`} aria-hidden="true" />
-        }
-
-        if (isAnalysisLine(trimmedLine)) {
-          const icon = trimmedLine.match(/^(✅|⚠️?|❗|💡)/u)?.[0] ?? ''
-          const label = trimmedLine.replace(/^(✅|⚠️?|❗|💡)\s*/u, '').trim()
-
-          return (
-            <span className="chat_result_line" key={`${trimmedLine}-${index}`}>
-              <span className="chat_result_icon" aria-hidden="true">
-                {icon}
-              </span>
-              <span>{label}</span>
-            </span>
-          )
         }
 
         return (
@@ -173,13 +233,35 @@ function renderMessageText(text: string, isTyping: boolean) {
           </span>
         )
       })}
-      {hasAnalysis && !isTyping ? (
-        <button className="chat_result_cta" type="button">
-          상세 결과 보기
-          <img src={arrowRightIcon} alt="" aria-hidden="true" />
-        </button>
-      ) : null}
     </div>
+  )
+}
+
+function renderAnalysisCard(analysis: AnalysisResult) {
+  return (
+    <section className="chat_result_card" aria-label="AI 분석 결과 카드">
+      <div className="chat_result_card_head">
+        <div>
+          <span className="chat_result_badge">AI 분석 결과</span>
+          <strong>{analysis.title}</strong>
+        </div>
+        <span className="chat_result_confidence">{analysis.confidence}</span>
+      </div>
+      <p>{analysis.summary}</p>
+      <div className="chat_result_grid">
+        {analysis.items.map((item) => (
+          <article className={`chat_result_item is_${item.tone}`} key={item.label}>
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
+            <small>{item.detail}</small>
+          </article>
+        ))}
+      </div>
+      <button className="chat_result_cta" type="button">
+        상세 결과 보기
+        <img src={arrowRightIcon} alt="" aria-hidden="true" />
+      </button>
+    </section>
   )
 }
 
@@ -204,9 +286,11 @@ export function ChatbotPage() {
   ])
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
+  const [loadingIndex, setLoadingIndex] = useState(0)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [isCameraReady, setIsCameraReady] = useState(false)
   const [cameraError, setCameraError] = useState('')
+  const loadingText = useMemo(() => loadingLabels[loadingIndex % loadingLabels.length], [loadingIndex])
 
   const stopCamera = () => {
     streamRef.current?.getTracks().forEach((track) => track.stop())
@@ -254,6 +338,10 @@ export function ChatbotPage() {
       typeNextCharacter()
     })
 
+  const appendAnalysisCard = (analysis: AnalysisResult) => {
+    setMessages((current) => [...current, createMessage('assistant', '', undefined, analysis)])
+  }
+
   const sendEquipmentPhoto = async (attachment: ChatAttachment) => {
     if (isSending) {
       return
@@ -261,25 +349,20 @@ export function ChatbotPage() {
 
     const userMessage = createMessage(
       'user',
-      '장비 사진을 촬영했어요. 초보 기준으로 추천 장비와 안전 체크를 해주세요.',
+      '장비 사진을 보냈어요. 초보자 기준으로 추천 장비와 안전 체크를 해주세요.',
       [attachment],
     )
-    const nextMessages = [...messages, userMessage]
-    setMessages(nextMessages)
+    setMessages((current) => [...current, userMessage])
     setIsSending(true)
+    setLoadingIndex(0)
 
-    try {
-      const answer = await requestChatAnswer(nextMessages)
-      await typeAssistantAnswer(answer)
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : '가이가 사진 분석을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'
-      await typeAssistantAnswer(message)
-    } finally {
-      setIsSending(false)
-    }
+    const analysis = pickRandom(mockAnalysisResults)
+
+    await wait(2050)
+    setIsSending(false)
+    await typeAssistantAnswer('사진 확인했어요. 장비 구성과 안전 포인트를 기준으로 빠르게 정리해드릴게요.')
+    await wait(260)
+    appendAnalysisCard(analysis)
   }
 
   const sendText = async (text = input) => {
@@ -289,23 +372,14 @@ export function ChatbotPage() {
     }
 
     const userMessage = createMessage('user', trimmed)
-    const nextMessages = [...messages, userMessage]
-    setMessages(nextMessages)
+    setMessages((current) => [...current, userMessage])
     setInput('')
     setIsSending(true)
+    setLoadingIndex(1)
 
-    try {
-      const answer = await requestChatAnswer(nextMessages)
-      await typeAssistantAnswer(answer)
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : '가이가 응답을 불러오지 못했어요. 잠시 후 다시 시도해주세요.'
-      await typeAssistantAnswer(message)
-    } finally {
-      setIsSending(false)
-    }
+    await wait(1050 + Math.floor(Math.random() * 500))
+    setIsSending(false)
+    await typeAssistantAnswer(pickRandom(quickAnswers))
   }
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -341,7 +415,7 @@ export function ChatbotPage() {
 
       setIsCameraReady(true)
     } catch {
-      setCameraError('카메라를 열 수 없어요. 브라우저 권한을 확인하거나 사진 파일을 선택해주세요.')
+      setCameraError('카메라 권한을 사용할 수 없어 사진 선택으로 전환했어요.')
       fileInputRef.current?.click()
     }
   }
@@ -392,10 +466,8 @@ export function ChatbotPage() {
       const dataUrl = await readCompressedImageAsDataUrl(file)
       closeCamera()
       await sendEquipmentPhoto(dataUrlToAttachment(dataUrl, file.name))
-    } catch (error) {
-      await typeAssistantAnswer(
-        error instanceof Error ? error.message : '사진을 처리하지 못했어요. 다시 시도해주세요.',
-      )
+    } catch {
+      await typeAssistantAnswer('사진을 처리하지 못했어요. 다른 사진을 선택해주시면 바로 다시 분석해볼게요.')
     }
   }
 
@@ -419,6 +491,20 @@ export function ChatbotPage() {
   }, [searchParams])
 
   useEffect(() => {
+    if (!isSending) {
+      return
+    }
+
+    const timer = window.setInterval(() => {
+      setLoadingIndex((current) => current + 1)
+    }, 620)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [isSending])
+
+  useEffect(() => {
     return () => {
       if (typingTimerRef.current) {
         window.clearTimeout(typingTimerRef.current)
@@ -434,7 +520,7 @@ export function ChatbotPage() {
     }
 
     chat.scrollTop = chat.scrollHeight
-  }, [messages, isSending])
+  }, [messages, isSending, loadingText])
 
   useEffect(() => {
     const page = pageRef.current
@@ -471,7 +557,7 @@ export function ChatbotPage() {
         <PageHeader
           className="chat_top"
           groupClassName="chat_tit"
-          title="AI 챗봇 가이"
+          title="AI 장비 코치"
           onBack={goBack}
         />
 
@@ -485,8 +571,8 @@ export function ChatbotPage() {
             <div className="chat_scan_prompt">
               <img src={gaiImage} alt="" aria-hidden="true" />
               <div>
-                <strong>장비 전체 사진을 한 장 보내주세요!</strong>
-                <span>가이가 안전, 규제, 관리 포인트를 더 정확하게 분석해드릴 수 있어요.</span>
+                <strong>장비 전체 사진을 보내주세요</strong>
+                <span>가이가 안전, 규제, 관리 포인트를 AI처럼 빠르게 분석해드려요.</span>
               </div>
               <button type="button" onClick={openCamera} disabled={isSending}>
                 <img src={imageIcon} alt="" aria-hidden="true" />
@@ -503,7 +589,7 @@ export function ChatbotPage() {
                     <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
                   ) : null}
                   <div className="chat_message_stack">
-                    <div className={`chat_bubble${isTyping ? ' is_typing' : ''}`}>
+                    <div className={`chat_bubble${isTyping ? ' is_typing' : ''}${message.analysis ? ' has_result_card' : ''}`}>
                       {message.attachments?.map((attachment) => (
                         <img
                           className="chat_uploaded_image"
@@ -512,7 +598,8 @@ export function ChatbotPage() {
                           alt={attachment.name}
                         />
                       ))}
-                      {renderMessageText(message.text, isTyping)}
+                      {message.text ? renderMessageText(message.text) : null}
+                      {message.analysis ? renderAnalysisCard(message.analysis) : null}
                     </div>
                     <time>{message.time}</time>
                   </div>
@@ -525,7 +612,8 @@ export function ChatbotPage() {
                 <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
                 <div className="chat_message_stack">
                   <div className="chat_analysis_state">
-                    <span>가이가 분석 중이에요</span>
+                    <span className="chat_analysis_orbit" aria-hidden="true" />
+                    <span>{loadingText}</span>
                     <span className="chat_typing_dots" aria-hidden="true">
                       <i />
                       <i />
@@ -569,7 +657,7 @@ export function ChatbotPage() {
               </button>
               <input
                 value={input}
-                placeholder="장비 사진을 찍거나 질문을 입력해 주세요."
+                placeholder="장비 사진을 찍거나 질문을 입력해주세요"
                 onChange={(event) => setInput(event.target.value)}
                 disabled={isSending}
               />
@@ -600,16 +688,16 @@ export function ChatbotPage() {
             <div className="gai_camera_scrim" />
             <div className="gai_camera_topbar">
               <button type="button" aria-label="카메라 닫기" onClick={closeCamera}>
-                ←
+                ×
               </button>
               <strong>장비 스캔</strong>
               <button type="button" aria-label="카메라 닫기" onClick={closeCamera}>
-                ×
+                완료
               </button>
             </div>
             <div className="gai_camera_hint">
               <strong>장비가 프레임 안에 들어오게 맞춰주세요</strong>
-              <span>불법 개조, 안전 문제 가능성까지 함께 체크할게요.</span>
+              <span>안전 장비와 관리 포인트를 함께 체크할게요.</span>
             </div>
             <div className="gai_scan_frame" aria-hidden="true">
               <span />
@@ -619,7 +707,7 @@ export function ChatbotPage() {
             </div>
             {cameraError ? <p className="gai_camera_error">{cameraError}</p> : null}
             {!isCameraReady && !cameraError ? (
-              <p className="gai_camera_error">카메라를 준비하는 중이에요.</p>
+              <p className="gai_camera_error">카메라를 준비하고 있어요.</p>
             ) : null}
             <div className="gai_camera_actions">
               <button type="button" onClick={capturePhoto} disabled={!isCameraReady}>
