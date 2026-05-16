@@ -142,6 +142,7 @@ export function MediaHome() {
   const [rankingOpen, setRankingOpen] = useState(false)
   const [activeRankIndex, setActiveRankIndex] = useState(0)
   const [contentSort, setContentSort] = useState<ContentSort>('latest')
+  const [introComplete, setIntroComplete] = useState(false)
   const activeRanking = rankingItems[activeRankIndex % rankingItems.length]
   const sortedVideoItems = [...videoItems].sort((a, b) => {
     if (contentSort === 'popular') {
@@ -155,8 +156,14 @@ export function MediaHome() {
     const timer = window.setInterval(() => {
       setActiveRankIndex((current) => (current + 1) % rankingItems.length)
     }, 1800)
+    const introTimer = window.setTimeout(() => {
+      setIntroComplete(true)
+    }, 2350)
 
-    return () => window.clearInterval(timer)
+    return () => {
+      window.clearInterval(timer)
+      window.clearTimeout(introTimer)
+    }
   }, [])
 
   return (
@@ -236,11 +243,16 @@ export function MediaHome() {
           </div>
         </div>
 
-        <div className="media_video_list">
-          {sortedVideoItems.map((item) => (
+        <div className="media_video_list" key={contentSort}>
+          {sortedVideoItems.map((item, itemIndex) => (
             <a
               className="media_video_item"
               key={item.id}
+              style={{
+                animationDelay: introComplete
+                  ? `${itemIndex * 0.055}s`
+                  : `${1.88 + itemIndex * 0.08}s`,
+              }}
               href={CREATOR_CONTENT_VIDEO_URL}
               target="_blank"
               rel="noreferrer"
