@@ -4,6 +4,10 @@ import redTeamImg from '../../asset/images/main_hero01.png'
 import vsImg from '../../asset/images/main_hero_vs.png'
 import './TournamentHero.css'
 
+interface TournamentHeroProps {
+  skipIntro?: boolean
+}
+
 type DotStyle = CSSProperties & {
   '--th-dx': string
   '--th-delay': string
@@ -22,9 +26,9 @@ const RED_DOTS: Array<{ style: DotStyle }> = [
   { style: { '--th-dx': '9px',  '--th-delay': '0.5s', '--th-dur': '4.6s', right: '26%', top: '48%' } },
 ]
 
-export function TournamentHero() {
+export function TournamentHero({ skipIntro = false }: TournamentHeroProps) {
   return (
-    <section className="th_hero" aria-label="다음 토너먼트 매치업">
+    <section className={`th_hero${skipIntro ? ' is_intro_skipped' : ''}`} aria-label="다음 토너먼트 매치업">
       {/* Noise texture overlay */}
       <div className="th_noise" aria-hidden="true" />
 
@@ -64,22 +68,28 @@ export function TournamentHero() {
             {/* gradient follows the "/" diagonal: blue at bottom-left, red at top-right */}
             <linearGradient id="thClashMain" gradientUnits="userSpaceOnUse"
               x1="65" y1="423" x2="325" y2="0">
-              <stop offset="0%"   stopColor="#3388ff" stopOpacity="0.85" />
-              <stop offset="40%"  stopColor="#ffffff" stopOpacity="0.95" />
-              <stop offset="60%"  stopColor="#ffffff" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#ff4444" stopOpacity="0.85" />
+              <stop offset="0%"   stopColor="#0b1c3d" stopOpacity="0" />
+              <stop offset="22%"  stopColor="#1e4f9f" stopOpacity="0.28" />
+              <stop offset="46%"  stopColor="#726a9e" stopOpacity="0.68" />
+              <stop offset="54%"  stopColor="#8a617c" stopOpacity="0.62" />
+              <stop offset="78%"  stopColor="#7c2631" stopOpacity="0.26" />
+              <stop offset="100%" stopColor="#2a0710" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="thClashGlow" gradientUnits="userSpaceOnUse"
               x1="65" y1="423" x2="325" y2="0">
-              <stop offset="0%"   stopColor="#2266ff" stopOpacity="0.55" />
-              <stop offset="50%"  stopColor="#aaccff" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#ff3333" stopOpacity="0.55" />
+              <stop offset="0%"   stopColor="#0b1c3d" stopOpacity="0" />
+              <stop offset="28%"  stopColor="#173e83" stopOpacity="0.22" />
+              <stop offset="50%"  stopColor="#5d5a88" stopOpacity="0.42" />
+              <stop offset="72%"  stopColor="#651d2a" stopOpacity="0.2" />
+              <stop offset="100%" stopColor="#2a0710" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="thClashAmbient" gradientUnits="userSpaceOnUse"
               x1="65" y1="423" x2="325" y2="0">
-              <stop offset="0%"   stopColor="#1144cc" stopOpacity="0.4" />
-              <stop offset="50%"  stopColor="#6677aa" stopOpacity="0.18" />
-              <stop offset="100%" stopColor="#cc1111" stopOpacity="0.4" />
+              <stop offset="0%"   stopColor="#0b1c3d" stopOpacity="0" />
+              <stop offset="33%"  stopColor="#12356f" stopOpacity="0.12" />
+              <stop offset="50%"  stopColor="#4d4266" stopOpacity="0.2" />
+              <stop offset="67%"  stopColor="#561623" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#2a0710" stopOpacity="0" />
             </linearGradient>
             <filter id="thBlurAmbient" x="-100%" y="-100%" width="300%" height="300%">
               <feGaussianBlur stdDeviation="20" />

@@ -160,6 +160,7 @@ function saveProfileImage(dataUrl: string) {
 }
 const BUDDY_SHEET_CLOSE_DURATION = 280
 const HOME_OPENING_DURATION = 2050
+const HOME_HERO_INTRO_SEEN_KEY = 'airsoft:home-hero-intro-seen'
 
 function normalizeDateValue(value?: string) {
   const matchedDate = value?.trim().replaceAll('.', '-').match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
@@ -370,9 +371,13 @@ export function Home() {
   const [isFlashing, setIsFlashing] = useState(false)
   const [pendingAlbumImage, setPendingAlbumImage] = useState<string | null>(null)
   const [scheduleRevision, setScheduleRevision] = useState(0)
+  const [hasSeenHomeHeroIntro] = useState(() => {
+    if (typeof window === 'undefined') return true
+    return sessionStorage.getItem(HOME_HERO_INTRO_SEEN_KEY) === 'true'
+  })
   const [isHomeOpeningDone, setIsHomeOpeningDone] = useState(() => {
     if (typeof window === 'undefined') return true
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    return hasSeenHomeHeroIntro || window.matchMedia('(prefers-reduced-motion: reduce)').matches
   })
   const [visibleHomeSections, setVisibleHomeSections] = useState({
     match: false,
@@ -402,6 +407,7 @@ export function Home() {
     if (isHomeOpeningDone) return undefined
 
     const timer = window.setTimeout(() => {
+      sessionStorage.setItem(HOME_HERO_INTRO_SEEN_KEY, 'true')
       setIsHomeOpeningDone(true)
     }, HOME_OPENING_DURATION)
 
@@ -515,6 +521,8 @@ export function Home() {
   }, [isTournamentVisible])
 
   useEffect(() => {
+    if (!isHomeOpeningDone) return undefined
+
     const revealTargets = [
       ['match', matchSectionRef.current],
       ['buddy', buddySectionRef.current],
@@ -557,7 +565,7 @@ export function Home() {
     return () => {
       observer.disconnect()
     }
-  }, [])
+  }, [isHomeOpeningDone])
 
   const pauseTeamAutoScroll = () => {
     isTeamAutoPausedRef.current = true
@@ -690,7 +698,7 @@ export function Home() {
       <PageHeader className="home_page_header" layout="standard" hideLeft />
       <section className="home_main">
         {/* ① 히어로 섹션 */}
-        <TournamentHero />
+        <TournamentHero skipIntro={hasSeenHomeHeroIntro} />
 
         {/* ② 사용자 정보 + 경기 일정 */}
         <div className="home_userinfo_bg">
