@@ -1,10 +1,14 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import bookmarkIcon from "../../asset/icons/com_bookmark.svg";
 import bookmarkOnIcon from "../../asset/icons/com_bookmark_on.svg";
 import chatSmallIcon from "../../asset/icons/com_chat02.svg";
 import eyesIcon from "../../asset/icons/com_eyes.svg";
 import aiIcon from "../../asset/icons/com_ai.svg";
+import guyFaceSmileIcon from "../../asset/icons/guy-face-caret-circle-caret.svg";
+import guyFaceTalkIcon from "../../asset/icons/guy-face-owo.svg";
+import guyFaceThinkIcon from "../../asset/icons/guy-face-plus-underscore-plus.svg";
+import guyFaceArcSmileIcon from "../../asset/icons/guy-face-arc-smile.svg";
 import safetyIcon from "../../asset/icons/com_safety.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
 import writeIcon from "../../asset/icons/com_write.svg";
@@ -13,6 +17,7 @@ import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_que
 import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
+import { PageHeader } from "../../components/PageHeader";
 import "./Community.css";
 
 const categoryTabs = [
@@ -43,6 +48,14 @@ const quickQuestions = [
   "초보가 먼저 알아야 할 것",
   "맞으면 어떻게 해?",
   "필드 규칙 알려줘",
+];
+
+const gaiPromptStates = [
+  { placeholder: "가이에게 물어보세요", face: guyFaceTalkIcon },
+  { placeholder: "장비 추천이 궁금한가요?", face: guyFaceThinkIcon },
+  { placeholder: "필드 매너를 물어보세요", face: guyFaceSmileIcon },
+  { placeholder: "초보자 규칙부터 확인해볼까요?", face: guyFaceArcSmileIcon },
+  { placeholder: "오늘 바로 갈 수 있는 게임은?", face: guyFaceTalkIcon },
 ];
 
 const INITIAL_VISIBLE_QUESTION_COUNT = 5;
@@ -314,6 +327,10 @@ const recentQuestions: RecentQuestion[] = [
   },
 ];
 
+const recentQuestionOrder = new Map(
+  recentQuestions.map((question, index) => [question.id, index]),
+);
+
 const questionCategoryToneClass: Record<QuestionCategory, string> = {
   "법규/규정": "is-rules",
   장비: "is-equipment",
@@ -328,6 +345,11 @@ function chatQuestionUrl(question: string) {
 
 export function BeginnerBoard() {
   const navigate = useNavigate();
+  const switchTimerRef = useRef<number | null>(null);
+  const introTimerRef = useRef<number | null>(null);
+  const [activeCommunityTab, setActiveCommunityTab] = useState<"beginner" | "free">("beginner");
+  const [switchingBoard, setSwitchingBoard] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
   const [expandedTabs, setExpandedTabs] = useState<Set<CategoryTab>>(
     () => new Set(),
@@ -337,6 +359,7 @@ export function BeginnerBoard() {
   );
   const [aiQuestion, setAiQuestion] = useState("");
   const [aiFocused, setAiFocused] = useState(false);
+  const [gaiPromptIndex, setGaiPromptIndex] = useState(0);
 
   const filteredQuestions = useMemo(() => {
     if (activeCategory === "전체") {
@@ -348,12 +371,28 @@ export function BeginnerBoard() {
     );
   }, [activeCategory]);
 
+  const orderedQuestions = useMemo(() => {
+    return [...filteredQuestions].sort((a, b) => {
+      const aBookmarked = bookmarkedIds.has(a.id);
+      const bBookmarked = bookmarkedIds.has(b.id);
+
+      if (aBookmarked !== bBookmarked) {
+        return aBookmarked ? -1 : 1;
+      }
+
+      return (
+        (recentQuestionOrder.get(a.id) ?? 0) -
+        (recentQuestionOrder.get(b.id) ?? 0)
+      );
+    });
+  }, [bookmarkedIds, filteredQuestions]);
+
   const activeTabExpanded = expandedTabs.has(activeCategory);
   const visibleQuestions = activeTabExpanded
-    ? filteredQuestions
-    : filteredQuestions.slice(0, INITIAL_VISIBLE_QUESTION_COUNT);
+    ? orderedQuestions
+    : orderedQuestions.slice(0, INITIAL_VISIBLE_QUESTION_COUNT);
   const hasMoreQuestions =
-    filteredQuestions.length > INITIAL_VISIBLE_QUESTION_COUNT &&
+    orderedQuestions.length > INITIAL_VISIBLE_QUESTION_COUNT &&
     !activeTabExpanded;
 
   const askGai = (question: string) => {
@@ -383,16 +422,65 @@ export function BeginnerBoard() {
     });
   };
 
+  const switchToFreeBoard = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (switchingBoard) return;
+
+    setActiveCommunityTab("free");
+    setSwitchingBoard(true);
+    switchTimerRef.current = window.setTimeout(() => {
+      navigate("/community/free");
+    }, 200);
+  };
+
+  useEffect(() => {
+    introTimerRef.current = window.setTimeout(() => {
+      setIntroComplete(true);
+    }, 1450);
+
+    return () => {
+      if (switchTimerRef.current !== null) {
+        window.clearTimeout(switchTimerRef.current);
+      }
+      if (introTimerRef.current !== null) {
+        window.clearTimeout(introTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (aiFocused || aiQuestion) return;
+
+    const placeholderTimer = window.setInterval(() => {
+      setGaiPromptIndex((current) => (current + 1) % gaiPromptStates.length);
+    }, 2800);
+
+    return () => {
+      window.clearInterval(placeholderTimer);
+    };
+  }, [aiFocused, aiQuestion]);
+
   return (
-    <div className="beginner_board_page">
-      <section className="beginner_hero" aria-label="초보 질문방 소개">
-        <nav className="community_tabs" aria-label="커뮤니티 게시판 탭">
-          <NavLink to="/community" end>
+    <div className={`beginner_board_page${switchingBoard ? " is_switching_content" : ""}`}>
+      <PageHeader className="community_topbar" hideLeft hideRight>
+        <nav
+          className={`community_tabs community_tabs--${activeCommunityTab}`}
+          aria-label="커뮤니티 게시판 탭"
+        >
+          <NavLink className={() => (activeCommunityTab === "beginner" ? "active" : "")} to="/community" end>
             초보 질문방
           </NavLink>
-          <NavLink to="/community/free">일반 게시판</NavLink>
+          <NavLink
+            className={() => (activeCommunityTab === "free" ? "active" : "")}
+            to="/community/free"
+            onClick={switchToFreeBoard}
+          >
+            일반 게시판
+          </NavLink>
         </nav>
+      </PageHeader>
 
+      <section className="beginner_hero" aria-label="초보 질문방 소개">
         <div className="beginner_hero_content">
           <span className="beginner_hero_badge">
             <img src={safetyIcon} alt="" />
@@ -402,7 +490,7 @@ export function BeginnerBoard() {
           <h1>초보 질문방</h1>
 
           <form
-            className={`beginner_ai_search ${aiFocused || aiQuestion ? "is_active" : ""}`}
+            className={`beginner_ai_search ${aiFocused || aiQuestion ? "is_active" : ""} ${aiQuestion.trim() ? "is_ready" : ""}`}
             aria-label="가이에게 질문하기"
             onSubmit={(event) => {
               event.preventDefault();
@@ -411,13 +499,18 @@ export function BeginnerBoard() {
           >
             <span className="beginner_ai_search_left">
               <img src={aiIcon} alt="" />
+              {!aiFocused && !aiQuestion ? (
+                <span className="beginner_ai_placeholder" key={gaiPromptStates[gaiPromptIndex].placeholder}>
+                  {gaiPromptStates[gaiPromptIndex].placeholder}
+                </span>
+              ) : null}
               <input
                 type="search"
                 value={aiQuestion}
                 onFocus={() => setAiFocused(true)}
                 onBlur={() => setAiFocused(false)}
                 onChange={(event) => setAiQuestion(event.target.value)}
-                placeholder="가이에게 물어보세요"
+                placeholder=""
               />
             </span>
             <button
@@ -448,7 +541,14 @@ export function BeginnerBoard() {
           </div>
         </div>
 
-        <div className="beginner_hero_art" aria-hidden="true" />
+        <div className="beginner_hero_art" aria-hidden="true">
+          <img
+            className="beginner_gai_expression"
+            key={gaiPromptStates[gaiPromptIndex].face}
+            src={gaiPromptStates[gaiPromptIndex].face}
+            alt=""
+          />
+        </div>
       </section>
 
       <div className="beginner_body">
@@ -566,13 +666,18 @@ export function BeginnerBoard() {
             </div>
 
             <div className="beginner_question_card_list">
-              {visibleQuestions.map((question) => {
+              {visibleQuestions.map((question, questionIndex) => {
                 const bookmarked = bookmarkedIds.has(question.id);
 
                 return (
 	                  <article
 	                    className="beginner_question_card"
 	                    key={question.id}
+                      style={{
+                        animationDelay: introComplete
+                          ? `${questionIndex * 0.045}s`
+                          : `${1.16 + questionIndex * 0.09}s`,
+                      }}
 	                    onClick={() => navigate(`/community/post/${question.id}`)}
 	                  >
                     <div className="beginner_question_card_header">

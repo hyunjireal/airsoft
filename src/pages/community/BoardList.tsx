@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import './Community.css'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
@@ -15,6 +15,7 @@ import hotFieldSix from '../../asset/images/match_list03.jpg'
 import CategoryTag from '../../components/CategoryTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
+import { PageHeader } from '../../components/PageHeader'
 import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
@@ -335,6 +336,9 @@ function getPostCategory(post: BoardPost) {
 export function BoardList() {
   const { boardType = 'free' } = useParams()
   const navigate = useNavigate()
+  const switchTimerRef = useRef<number | null>(null)
+  const [activeCommunityTab, setActiveCommunityTab] = useState<'beginner' | 'free'>('free')
+  const [switchingBoard, setSwitchingBoard] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
@@ -358,10 +362,14 @@ export function BoardList() {
         views: 320,
         commentsCount: post.commentsCount,
       }))
+  const sortedDisplayPosts =
+    selectedSort === 'popular'
+      ? [...displayPosts].sort((a, b) => b.commentsCount - a.commentsCount || b.views - a.views)
+      : displayPosts
   const categoryKey = isFreeBoard ? selectedCategory : typedBoard
   const isExpanded = expandedCategories.has(categoryKey)
-  const visiblePosts = isExpanded ? displayPosts : displayPosts.slice(0, INITIAL_VISIBLE_GENERAL_POST_COUNT)
-  const hasMorePosts = displayPosts.length > INITIAL_VISIBLE_GENERAL_POST_COUNT && !isExpanded
+  const visiblePosts = isExpanded ? sortedDisplayPosts : sortedDisplayPosts.slice(0, INITIAL_VISIBLE_GENERAL_POST_COUNT)
+  const hasMorePosts = sortedDisplayPosts.length > INITIAL_VISIBLE_GENERAL_POST_COUNT && !isExpanded
 
   const write = () => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -383,17 +391,48 @@ export function BoardList() {
     })
   }
 
+  const switchToBeginnerBoard = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault()
+    if (switchingBoard) return
+
+    setActiveCommunityTab('beginner')
+    setSwitchingBoard(true)
+    switchTimerRef.current = window.setTimeout(() => {
+      navigate('/community')
+    }, 200)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (switchTimerRef.current !== null) {
+        window.clearTimeout(switchTimerRef.current)
+      }
+    }
+  }, [])
+
   if (isFreeBoard) {
     return (
-      <div className="general_board_page">
-        <section className="general_board_hero">
-          <nav className="community_tabs" aria-label="커뮤니티 게시판 탭">
-            <NavLink to="/community" end>
+      <div className={`general_board_page${switchingBoard ? ' is_switching_content' : ''}`}>
+        <PageHeader className="community_topbar" hideLeft hideRight>
+          <nav
+            className={`community_tabs community_tabs--${activeCommunityTab}`}
+            aria-label="커뮤니티 게시판 탭"
+          >
+            <NavLink
+              className={() => (activeCommunityTab === 'beginner' ? 'active' : '')}
+              to="/community"
+              end
+              onClick={switchToBeginnerBoard}
+            >
               초보 질문방
             </NavLink>
-            <NavLink to="/community/free">일반 게시판</NavLink>
+            <NavLink className={() => (activeCommunityTab === 'free' ? 'active' : '')} to="/community/free">
+              일반 게시판
+            </NavLink>
           </nav>
+        </PageHeader>
 
+        <section className="general_board_hero">
           <div className="general_board_hero_copy">
             <h1>일반 게시판</h1>
             <p>
@@ -465,7 +504,11 @@ export function BoardList() {
           </div>
         </section>
 
-        <section className="general_post_list" aria-label="일반 게시글 목록">
+        <section
+          className="general_post_list"
+          key={`${selectedCategory}-${selectedSort}-${isExpanded ? 'expanded' : 'collapsed'}`}
+          aria-label="일반 게시글 목록"
+        >
           {visiblePosts.map((post) => (
             <button className="general_post_card" key={post.id} type="button" onClick={() => openPost(post.id)}>
               <span className="general_post_card_top">
