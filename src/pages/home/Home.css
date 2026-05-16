@@ -1446,7 +1446,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 45px;
+  justify-content: space-between;
+  gap: 8px;
   flex: 130 1 0;
   width: auto;
   min-width: 0;
@@ -1454,59 +1455,72 @@
   padding: 15px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #E4DCD5;
+  background: #d0dbf4;
   overflow: hidden;
+  appearance: none;
+  cursor: pointer;
+  text-align: left;
 }
 
-.right_title_group,
-.right_tag_group {
+.right:active {
+  transform: translateY(1px);
+}
+
+.right_faq_text {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0;
+  gap: 4px;
 }
 
-.right_title_group p,
-.right_tag_group p {
+.right_faq_title {
   margin: 0;
-}
-
-.right_brand,
-.right_title {
   font-family: var(--font-pretendard);
   font-size: var(--font-size-16);
   font-weight: var(--font-weight-bold);
-  line-height: 110%;
+  line-height: 1.2;
   letter-spacing: var(--letter-spacing-tight);
+  color: #212e4b;
 }
 
-.right_brand {
-  color: #5C5C46;
+.right_faq_desc {
+  margin: 0;
+  font-family: var(--font-pretendard);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-tight);
+  color: #4a6bc6;
 }
 
-.right_title {
-  color: #000;
-}
-
-.right_tag_group {
+.right_faq_tag {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: #86abff;
+  color: #212e4b;
   font-family: var(--font-pretendard);
   font-size: 10px;
-  font-weight: 400;
-  line-height: normal;
+  font-weight: 500;
+  line-height: 1.3;
   letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-gray02);
+  white-space: nowrap;
 }
 
-.right_img {
+.right_faq_img {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 64px;
-  height: 60px;
+  right: -4px;
+  bottom: 5px;
+  width: 58px;
+  height: 56px;
   object-fit: contain;
   pointer-events: none;
+  opacity: 0.2;
 }
 
 /* ============================================================
@@ -2045,7 +2059,16 @@
 
 :root[data-theme='dark'] .right {
   border-color: rgba(255, 255, 255, 0.1);
-  background: #e4dcd5;
+  background: #1e2d4a;
+}
+
+:root[data-theme='dark'] .right_faq_title {
+  color: #d0dbf4;
+}
+
+:root[data-theme='dark'] .right_faq_ai,
+:root[data-theme='dark'] .right_faq_desc {
+  color: #86abff;
 }
 
 :root[data-theme='dark'] .home_team_card {

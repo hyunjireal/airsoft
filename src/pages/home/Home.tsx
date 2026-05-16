@@ -31,8 +31,8 @@ import mainBuddy01 from '../../asset/images/main_buddy01.png'
 import mainBuddy02 from '../../asset/images/main_buddy02.png'
 import mainBuddy03 from '../../asset/images/main_buddy03.png'
 import mainBuddy04 from '../../asset/images/main_buddy04.png'
-import mainQnaImg from '../../asset/images/main_qna01.png'
 import mainQuizImg from '../../asset/images/main_quizImg01.png'
+import beginnerGuideQuestionImage from '../../asset/images/com_beginner_card_question.png'
 import badge03 from '../../asset/images/badge03.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import mainTeam01 from '../../asset/images/main_team01.png'
@@ -771,17 +771,14 @@ export function Home() {
             </KeywordTag>
             <img src={mainQuizImg} alt="" className="bottom_quiz_img" aria-hidden="true" />
           </Link>
-          <div className="right">
-            <div className="right_title_group">
-              <p className="right_brand">GUNIT</p>
-              <p className="right_title">인기 질문&amp;팁</p>
+          <button className="right" type="button" onClick={() => navigate('/chat')} aria-label="자주 묻는 질문 보기">
+            <div className="right_faq_text">
+              <p className="right_faq_title">자주 묻는<br />질문</p>
+              <p className="right_faq_desc">많이 물어보는<br />질문들을 모아뒀어요.</p>
             </div>
-            <div className="right_tag_group">
-              <p>#뉴비필독</p>
-              <p>#AI가_답변완료</p>
-            </div>
-            <img src={mainQnaImg} alt="" className="right_img" aria-hidden="true" />
-          </div>
+            <span className="right_faq_tag">자세히 보기</span>
+            <img src={beginnerGuideQuestionImage} alt="" className="right_faq_img" aria-hidden="true" />
+          </button>
         </div>
       </section>
 

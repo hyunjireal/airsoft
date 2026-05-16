@@ -267,8 +267,8 @@
 }
 
 .tournament_main_cta.is_disabled {
-  border: 1px solid #555;
-  color: #555;
+  border: 1px solid #ccc;
+  color: #ccc;
   cursor: default;
   pointer-events: none;
 }
@@ -283,6 +283,10 @@
 }
 
 .tournament_main_cta.is_primary img {
+  filter: brightness(0) invert(1);
+}
+
+.tournament_main_page.is_dark .tournament_main_cta.is_primary img {
   filter: brightness(0) saturate(100%);
 }
 
