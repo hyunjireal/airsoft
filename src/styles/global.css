@@ -331,7 +331,7 @@ body {
 
 body {
   margin: 0;
-  min-width: var(--app-min-width);
+  min-width: 0;
   background: var(--color-white);
 }
 
@@ -433,9 +433,9 @@ a {
 
 .mobile_frame {
   position: relative;
-  width: clamp(var(--app-min-width), 100%, var(--app-max-width));
+  width: min(100%, var(--app-max-width));
   max-width: var(--app-max-width);
-  min-width: var(--app-min-width);
+  min-width: 0;
   min-height: 100vh;
   margin: 0 auto;
   overflow-x: hidden;
