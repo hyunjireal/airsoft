@@ -20,6 +20,12 @@ import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 import type { BoardPost } from '../../types'
+import {
+  hasCommunityBookmarkStore,
+  readCommunityBookmarks,
+  toggleCommunityBookmark,
+  writeCommunityBookmarks,
+} from './communityBookmarkStore'
 
 const freeBoardCategories = ['전체', '자유수다', '팀원모집', '경기후기', '장비', '정보', '이벤트']
 const freeBoardTypes: BoardPost['boardType'][] = ['free', 'tip', 'review']
@@ -45,7 +51,7 @@ const hotPosts = [
   { id: 'hot-006', title: '에어소프트 총기 관리 기초', image: hotFieldSix, comments: 33 },
 ]
 
-const generalPosts: GeneralPostItem[] = [
+export const generalPosts: GeneralPostItem[] = [
   {
     id: 'general-001',
     category: '정보',
@@ -337,12 +343,26 @@ export function BoardList() {
   const { boardType = 'free' } = useParams()
   const navigate = useNavigate()
   const switchTimerRef = useRef<number | null>(null)
+  const introTimerRef = useRef<number | null>(null)
   const [activeCommunityTab, setActiveCommunityTab] = useState<'beginner' | 'free'>('free')
   const [switchingBoard, setSwitchingBoard] = useState(false)
+  const [introComplete, setIntroComplete] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
+    const savedBookmarks = readCommunityBookmarks()
+
+    if (hasCommunityBookmarkStore()) {
+      return savedBookmarks
+    }
+
+    const initialBookmarks = new Set(generalPosts.filter((post) => post.saved).map((post) => post.id))
+    writeCommunityBookmarks(initialBookmarks)
+
+    return initialBookmarks
+  })
   const typedBoard = boardType as BoardPost['boardType']
   const isFreeBoard = typedBoard === 'free'
   const posts = boardPosts.filter((post) => {
@@ -383,6 +403,10 @@ export function BoardList() {
     navigate(`/community/post/${postId}`)
   }
 
+  const toggleBookmark = (postId: string) => {
+    setBookmarkedIds(toggleCommunityBookmark(postId))
+  }
+
   const showMorePosts = () => {
     setExpandedCategories((current) => {
       const next = new Set(current)
@@ -403,9 +427,16 @@ export function BoardList() {
   }
 
   useEffect(() => {
+    introTimerRef.current = window.setTimeout(() => {
+      setIntroComplete(true)
+    }, 1280)
+
     return () => {
       if (switchTimerRef.current !== null) {
         window.clearTimeout(switchTimerRef.current)
+      }
+      if (introTimerRef.current !== null) {
+        window.clearTimeout(introTimerRef.current)
       }
     }
   }, [])
@@ -451,8 +482,18 @@ export function BoardList() {
             </button>
           </div>
           <div className="general_hot_scroller">
-            {hotPosts.map((post) => (
-              <button className="general_hot_card" key={post.title} type="button" onClick={() => openPost(post.id)}>
+            {hotPosts.map((post, postIndex) => (
+              <button
+                className="general_hot_card"
+                key={post.title}
+                type="button"
+                style={{
+                  animationDelay: introComplete
+                    ? `${postIndex * 0.045}s`
+                    : `${0.82 + postIndex * 0.08}s`,
+                }}
+                onClick={() => openPost(post.id)}
+              >
                 <span className="general_hot_image">
                   <img src={post.image} alt="" />
                   <MainTag className="general_hot_badge">HOT</MainTag>
@@ -509,11 +550,39 @@ export function BoardList() {
           key={`${selectedCategory}-${selectedSort}-${isExpanded ? 'expanded' : 'collapsed'}`}
           aria-label="일반 게시글 목록"
         >
-          {visiblePosts.map((post) => (
-            <button className="general_post_card" key={post.id} type="button" onClick={() => openPost(post.id)}>
+          {visiblePosts.map((post, postIndex) => (
+            <button
+              className="general_post_card"
+              key={post.id}
+              type="button"
+              style={{
+                animationDelay: introComplete
+                  ? `${postIndex * 0.045}s`
+                  : `${1.12 + postIndex * 0.09}s`,
+              }}
+              onClick={() => openPost(post.id)}
+            >
               <span className="general_post_card_top">
                 <span className="general_post_category">{post.category}</span>
-                <img className="general_bookmark_icon" src={post.saved ? bookmarkOnIcon : bookmarkIcon} alt="" />
+                <img
+                  className="general_bookmark_icon"
+                  src={bookmarkedIds.has(post.id) ? bookmarkOnIcon : bookmarkIcon}
+                  alt=""
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${post.title} 북마크`}
+                  aria-pressed={bookmarkedIds.has(post.id)}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    toggleBookmark(post.id)
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter' && event.key !== ' ') return
+                    event.preventDefault()
+                    event.stopPropagation()
+                    toggleBookmark(post.id)
+                  }}
+                />
               </span>
               <span className="general_post_title">{post.title}</span>
               <span className="general_post_meta">

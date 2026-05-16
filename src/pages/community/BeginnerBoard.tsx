@@ -19,6 +19,12 @@ import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
 import { PageHeader } from "../../components/PageHeader";
+import {
+  hasCommunityBookmarkStore,
+  readCommunityBookmarks,
+  toggleCommunityBookmark,
+  writeCommunityBookmarks,
+} from "./communityBookmarkStore";
 import "./Community.css";
 
 const categoryTabs = [
@@ -61,7 +67,7 @@ const gaiPromptStates = [
 
 const INITIAL_VISIBLE_QUESTION_COUNT = 5;
 
-const recentQuestions: RecentQuestion[] = [
+export const recentQuestions: RecentQuestion[] = [
   {
     id: "q-001",
     title: "서바이벌 게임에서 꼭 지켜야 할 기본 규칙이 궁금해요!",
@@ -356,7 +362,18 @@ export function BeginnerBoard() {
     () => new Set(),
   );
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(
-    () => new Set([recentQuestions[0]?.id].filter(Boolean)),
+    () => {
+      const savedBookmarks = readCommunityBookmarks();
+
+      if (hasCommunityBookmarkStore()) {
+        return savedBookmarks;
+      }
+
+      const initialBookmarks = new Set([recentQuestions[0]?.id].filter(Boolean));
+      writeCommunityBookmarks(initialBookmarks);
+
+      return initialBookmarks;
+    },
   );
   const [aiQuestion, setAiQuestion] = useState("");
   const [aiFocused, setAiFocused] = useState(false);
@@ -404,15 +421,7 @@ export function BeginnerBoard() {
   };
 
   const toggleBookmark = (questionId: string) => {
-    setBookmarkedIds((current) => {
-      const next = new Set(current);
-      if (next.has(questionId)) {
-        next.delete(questionId);
-      } else {
-        next.add(questionId);
-      }
-      return next;
-    });
+    setBookmarkedIds(toggleCommunityBookmark(questionId));
   };
 
   const showMoreQuestions = () => {
