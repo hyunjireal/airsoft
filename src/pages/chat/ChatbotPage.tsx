@@ -1,8 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
+import aiIcon from '../../asset/icons/com_ai.svg'
 import chatbotCalendarIcon from '../../asset/icons/chatbot_cal.svg'
 import imageIcon from '../../asset/icons/match_img.svg'
 import sendIcon from '../../asset/icons/com_send.svg'
@@ -285,7 +287,6 @@ export function ChatbotPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialQuestionSent = useRef(false)
-  const introStartedRef = useRef(false)
   const chatScrollRef = useRef<HTMLElement | null>(null)
   const pageRef = useRef<HTMLDivElement | null>(null)
   const bottomRef = useRef<HTMLDivElement | null>(null)
@@ -595,19 +596,18 @@ export function ChatbotPage() {
   }, [searchParams, isIntroComplete])
 
   useEffect(() => {
-    if (introStartedRef.current) {
-      return
-    }
-
-    introStartedRef.current = true
+    let isCancelled = false
 
     const timer = window.setTimeout(() => {
       void typeExistingAssistantMessage(welcomeMessage.id, welcomeMessageText).then(() => {
-        setIsIntroComplete(true)
+        if (!isCancelled) {
+          setIsIntroComplete(true)
+        }
       })
     }, 760)
 
     return () => {
+      isCancelled = true
       window.clearTimeout(timer)
     }
   }, [])
@@ -769,7 +769,7 @@ export function ChatbotPage() {
           </div>
 
           <form className="post_detail_comment_input" onSubmit={submit}>
-            <div className="post_detail_comment_searchbar chat_input_bar">
+            <div className={`chat_input_bar${input.trim() ? ' is_ready' : ''}`}>
               <button
                 className="chat_capture_inline"
                 type="button"
@@ -777,11 +777,11 @@ export function ChatbotPage() {
                 disabled={isSending}
                 aria-label="장비 사진 보내기"
               >
-                <img src={imageIcon} alt="" aria-hidden="true" />
+                <img src={aiIcon} alt="" aria-hidden="true" />
               </button>
               <input
                 value={input}
-                placeholder="장비 사진을 찍거나 질문을 입력해주세요"
+                placeholder="장비 추천이 궁금한가요?"
                 onChange={(event) => setInput(event.target.value)}
                 disabled={isSending}
               />
@@ -815,9 +815,6 @@ export function ChatbotPage() {
                 ×
               </button>
               <strong>장비 스캔</strong>
-              <button type="button" aria-label="카메라 닫기" onClick={closeCamera}>
-                완료
-              </button>
             </div>
             <div className="gai_camera_hint">
               <strong>장비가 프레임 안에 들어오게 맞춰주세요</strong>
@@ -834,9 +831,14 @@ export function ChatbotPage() {
               <p className="gai_camera_error">카메라를 준비하고 있어요.</p>
             ) : null}
             <div className="gai_camera_actions">
-              <button type="button" onClick={capturePhoto} disabled={!isCameraReady}>
+              <LoginButton
+                className="gai_camera_capture_button"
+                variant="accent"
+                onClick={capturePhoto}
+                disabled={!isCameraReady}
+              >
                 사진 촬영하기
-              </button>
+              </LoginButton>
             </div>
           </div>
         ) : null}
