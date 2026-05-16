@@ -134,6 +134,7 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  overflow-anchor: none;
   overscroll-behavior: contain;
   scroll-padding-bottom: calc(var(--chat-bottom-height) + env(safe-area-inset-bottom, 0px) + 28px);
   scrollbar-width: none;
@@ -154,6 +155,13 @@
   margin: 0 auto;
   padding: clamp(10px, 1.6vh, 18px) var(--chat-pad)
     calc(var(--chat-bottom-height) + env(safe-area-inset-bottom, 0px) + clamp(24px, 4vh, 42px));
+}
+
+.chat_thread_end {
+  flex: 0 0 calc(var(--chat-bottom-height) + env(safe-area-inset-bottom, 0px) + 32px);
+  width: 100%;
+  height: calc(var(--chat-bottom-height) + env(safe-area-inset-bottom, 0px) + 32px);
+  pointer-events: none;
 }
 
 .chat_day_marker {

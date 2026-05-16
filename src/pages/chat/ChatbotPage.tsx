@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
@@ -272,6 +272,9 @@ export function ChatbotPage() {
   const chatScrollRef = useRef<HTMLElement | null>(null)
   const pageRef = useRef<HTMLDivElement | null>(null)
   const bottomRef = useRef<HTMLDivElement | null>(null)
+  const threadEndRef = useRef<HTMLDivElement | null>(null)
+  const scrollFrameRef = useRef<number | null>(null)
+  const scrollTimerRef = useRef<number | null>(null)
   const typingTimerRef = useRef<number | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -291,6 +294,43 @@ export function ChatbotPage() {
   const [isCameraReady, setIsCameraReady] = useState(false)
   const [cameraError, setCameraError] = useState('')
   const loadingText = useMemo(() => loadingLabels[loadingIndex % loadingLabels.length], [loadingIndex])
+
+  const scrollToLatestMessage = () => {
+    if (scrollFrameRef.current) {
+      window.cancelAnimationFrame(scrollFrameRef.current)
+    }
+    if (scrollTimerRef.current) {
+      window.clearTimeout(scrollTimerRef.current)
+    }
+
+    const pinToBottom = () => {
+      const chat = chatScrollRef.current
+
+      if (!chat) {
+        return
+      }
+
+      chat.scrollTo({
+        top: chat.scrollHeight,
+        behavior: 'auto',
+      })
+    }
+
+    scrollFrameRef.current = window.requestAnimationFrame(() => {
+      pinToBottom()
+
+      scrollFrameRef.current = window.requestAnimationFrame(() => {
+        pinToBottom()
+        scrollFrameRef.current = null
+      })
+    })
+
+    scrollTimerRef.current = window.setTimeout(() => {
+      pinToBottom()
+      threadEndRef.current?.scrollIntoView({ block: 'end', behavior: 'auto' })
+      scrollTimerRef.current = null
+    }, 180)
+  }
 
   const stopCamera = () => {
     streamRef.current?.getTracks().forEach((track) => track.stop())
@@ -509,18 +549,19 @@ export function ChatbotPage() {
       if (typingTimerRef.current) {
         window.clearTimeout(typingTimerRef.current)
       }
+      if (scrollFrameRef.current) {
+        window.cancelAnimationFrame(scrollFrameRef.current)
+      }
+      if (scrollTimerRef.current) {
+        window.clearTimeout(scrollTimerRef.current)
+      }
       stopCamera()
     }
   }, [])
 
-  useEffect(() => {
-    const chat = chatScrollRef.current
-    if (!chat) {
-      return
-    }
-
-    chat.scrollTop = chat.scrollHeight
-  }, [messages, isSending, loadingText])
+  useLayoutEffect(() => {
+    scrollToLatestMessage()
+  }, [messages, isSending, loadingText, typingMessageId])
 
   useEffect(() => {
     const page = pageRef.current
@@ -534,9 +575,7 @@ export function ChatbotPage() {
       const height = Math.ceil(bottom.getBoundingClientRect().height + 44)
       page.style.setProperty('--chat-bottom-height', `${height}px`)
 
-      if (chatScrollRef.current) {
-        chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight
-      }
+      scrollToLatestMessage()
     }
 
     updateBottomSpace()
@@ -623,6 +662,7 @@ export function ChatbotPage() {
                 </div>
               </article>
             ) : null}
+            <div className="chat_thread_end" ref={threadEndRef} aria-hidden="true" />
           </section>
         </main>
 
