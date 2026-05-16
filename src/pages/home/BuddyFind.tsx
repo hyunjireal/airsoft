@@ -634,11 +634,113 @@ export function BuddyRecommend() {
   )
 }
 
+type RequestModalStep = 'form' | 'success'
+
+function BuddyRequestModal({
+  buddy,
+  onClose,
+}: {
+  buddy: BuddyRecommendation
+  onClose: () => void
+}) {
+  const [step, setStep] = useState<RequestModalStep>('form')
+  const [message, setMessage] = useState('')
+  const MAX_LENGTH = 80
+
+  const handleSubmit = () => {
+    setStep('success')
+  }
+
+  const handleConfirm = () => {
+    onClose()
+    setStep('form')
+    setMessage('')
+  }
+
+  return (
+    <div className="buddy_request_overlay" onClick={step === 'form' ? onClose : undefined}>
+      <div className="buddy_request_sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="buddy_request_handle" aria-hidden="true" />
+
+        {step === 'form' ? (
+          <div className="buddy_request_form">
+            <h2 className="buddy_request_title">
+              버디에게
+              <br />
+              <em>플레이 요청</em> 보내기
+            </h2>
+            <p className="buddy_request_desc">
+              함께 플레이하고 싶은 이유나
+              <br />
+              간단한 인사를 남겨보세요
+            </p>
+            <div className="buddy_request_textarea_wrap">
+              <textarea
+                className="buddy_request_textarea"
+                value={message}
+                onChange={(e) => setMessage(e.target.value.slice(0, MAX_LENGTH))}
+                placeholder="안녕하세요! 이번 주말 CQB&#10;함께 플레이해보고 싶어요 🙌"
+                rows={4}
+              />
+              <span className="buddy_request_counter">
+                {message.length}/{MAX_LENGTH}
+              </span>
+            </div>
+            <p className="buddy_request_info">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <circle cx="8" cy="8" r="7" stroke="#adadad" strokeWidth="1.5" />
+                <rect x="7.25" y="7" width="1.5" height="5" rx="0.75" fill="#adadad" />
+                <rect x="7.25" y="4.5" width="1.5" height="1.5" rx="0.75" fill="#adadad" />
+              </svg>
+              상대방이 수락하면 채팅이 열려요
+            </p>
+            <div className="buddy_request_actions">
+              <button className="buddy_request_btn buddy_request_btn--cancel" type="button" onClick={onClose}>
+                취소
+              </button>
+              <button className="buddy_request_btn buddy_request_btn--submit" type="button" onClick={handleSubmit}>
+                버디 요청하기
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="buddy_request_success">
+            <div className="buddy_request_radar" aria-hidden="true">
+              <span className="buddy_request_radar__ring buddy_request_radar__ring--1" />
+              <span className="buddy_request_radar__ring buddy_request_radar__ring--2" />
+              <span className="buddy_request_radar__ring buddy_request_radar__ring--3" />
+              <span className="buddy_request_radar__dot" />
+              <svg className="buddy_request_radar__check" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="30" stroke="#e2fd34" strokeWidth="3" />
+                <path d="M20 32L28 40L44 24" stroke="#e2fd34" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <h2 className="buddy_request_success__title">
+              버디 요청을
+              <br />
+              <em>보냈어요!</em>
+            </h2>
+            <p className="buddy_request_success__desc">
+              {buddy.name}님이 요청을 확인하고 있어요
+              <br />
+              수락 시 채팅이 자동으로 열립니다
+            </p>
+            <button className="buddy_request_btn buddy_request_btn--confirm" type="button" onClick={handleConfirm}>
+              확인
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function BuddyDetail() {
   const navigate = useNavigate()
   const { buddyId } = useParams()
   const themeMode = useThemeMode()
   const isLightMode = themeMode === 'light'
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const buddy =
     BUDDY_RECOMMENDATIONS.find((recommendation) => recommendation.id === buddyId) ??
     BUDDY_RECOMMENDATIONS[0]
@@ -737,10 +839,14 @@ export function BuddyDetail() {
           </div>
         </section>
 
-        <button className="buddy_detail_request" type="button">
+        <button className="buddy_detail_request" type="button" onClick={() => setIsModalOpen(true)}>
           버디 요청하기
         </button>
       </main>
+
+      {isModalOpen && (
+        <BuddyRequestModal buddy={buddy} onClose={() => setIsModalOpen(false)} />
+      )}
     </article>
   )
 }
