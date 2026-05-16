@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
@@ -7,7 +8,30 @@ import { useThemeMode } from '../../hooks/useThemeMode'
 import tournamentLockIcon from '../../asset/icons/tournament_lock.svg'
 import tournamentMainDarkImg from '../../asset/images/tournament_main01.png'
 import tournamentMainLightImg from '../../asset/images/tournament_main_light.png'
+import thumbBazooka from '../../asset/images/mvpvote_thumbnail_bajuka.png'
+import thumbBlackwater from '../../asset/images/mvpvote_thumbnail_blackwater.png'
+import thumbSmoke from '../../asset/images/mvpvote_thumbnail_smoke.png'
+import thumbDeltaforce from '../../asset/images/mvpvote_thumbnail_deltapos.png'
+import profileImg01 from '../../asset/images/mvpvote_profile_img01.png'
+import profileImg02 from '../../asset/images/mvpvote_profile_img02.png'
+import profileImg03 from '../../asset/images/mvpvote_profile_img03.png'
+import profileImg04 from '../../asset/images/mvpvote_profile_img04.png'
+import profileImg05 from '../../asset/images/mvpvote_profile_img05.png'
+import profileImg06 from '../../asset/images/mvpvote_profile_img06.png'
+import profileImg07 from '../../asset/images/mvpvote_profile_img07.png'
+import profileImg08 from '../../asset/images/mvpvote_profile_img08.png'
+import profileImg09 from '../../asset/images/mvpvote_profile_img09.png'
+import profileImg10 from '../../asset/images/mvpvote_profile_img10.png'
+import profileImg11 from '../../asset/images/mvpvote_profile_img11.png'
+import profileImg12 from '../../asset/images/mvpvote_profile_img12.png'
 import './Tournament.css'
+
+const teamThumbnails: Record<string, string> = {
+  bazooka: thumbBazooka,
+  blackwater: thumbBlackwater,
+  smokeline: thumbSmoke,
+  deltaforce: thumbDeltaforce,
+}
 
 const matches = [
   {
@@ -18,18 +42,18 @@ const matches = [
         id: 'bazooka',
         name: '바주카',
         candidates: [
-          { id: 'bazooka-01', team: '바주카', name: '김루키', note: '결정적 돌파 성공', votes: 128 },
-          { id: 'bazooka-07', team: '바주카', name: '이플레이', note: '연속 방어 성공', votes: 96 },
-          { id: 'bazooka-23', team: '바주카', name: '빅에이스', note: '마지막 교전 승리', votes: 74 },
+          { id: 'bazooka-01', team: '바주카', name: '김루키', note: '결정적 돌파 성공', votes: 128, profileImg: profileImg01 },
+          { id: 'bazooka-07', team: '바주카', name: '이플레이', note: '연속 방어 성공', votes: 96, profileImg: profileImg02 },
+          { id: 'bazooka-23', team: '바주카', name: '빅에이스', note: '마지막 교전 승리', votes: 74, profileImg: profileImg03 },
         ],
       },
       {
         id: 'blackwater',
         name: '블랙워터',
         candidates: [
-          { id: 'blackwater-04', team: '블랙워터', name: '한스모크', note: '연막 진입 루트 확보', votes: 112 },
-          { id: 'blackwater-11', team: '블랙워터', name: '오버워치', note: '후방 엄호 성공', votes: 89 },
-          { id: 'blackwater-19', team: '블랙워터', name: '나이트샷', note: '막판 거점 방어', votes: 68 },
+          { id: 'blackwater-04', team: '블랙워터', name: '한스모크', note: '연막 진입 루트 확보', votes: 112, profileImg: profileImg04 },
+          { id: 'blackwater-11', team: '블랙워터', name: '오버워치', note: '후방 엄호 성공', votes: 89, profileImg: profileImg05 },
+          { id: 'blackwater-19', team: '블랙워터', name: '나이트샷', note: '막판 거점 방어', votes: 68, profileImg: profileImg06 },
         ],
       },
     ],
@@ -42,18 +66,18 @@ const matches = [
         id: 'smokeline',
         name: '스모크',
         candidates: [
-          { id: 'smokeline-02', team: '스모크', name: '강브리치', note: '첫 교전 선제 제압', votes: 104 },
-          { id: 'smokeline-08', team: '스모크', name: '민커버', note: '엄폐 전환 성공', votes: 91 },
-          { id: 'smokeline-15', team: '스모크', name: '서패스', note: '측면 돌파 기여', votes: 63 },
+          { id: 'smokeline-02', team: '스모크', name: '강브리치', note: '첫 교전 선제 제압', votes: 104, profileImg: profileImg07 },
+          { id: 'smokeline-08', team: '스모크', name: '민커버', note: '엄폐 전환 성공', votes: 91, profileImg: profileImg08 },
+          { id: 'smokeline-15', team: '스모크', name: '서패스', note: '측면 돌파 기여', votes: 63, profileImg: profileImg09 },
         ],
       },
       {
         id: 'deltaforce',
         name: '델타포스',
         candidates: [
-          { id: 'deltaforce-03', team: '델타포스', name: '윤스나이프', note: '장거리 견제 성공', votes: 118 },
-          { id: 'deltaforce-10', team: '델타포스', name: '최리콘', note: '정찰 정보 공유', votes: 85 },
-          { id: 'deltaforce-21', team: '델타포스', name: '도미네이터', note: '최종 라운드 세이브', votes: 72 },
+          { id: 'deltaforce-03', team: '델타포스', name: '윤스나이프', note: '장거리 견제 성공', votes: 118, profileImg: profileImg10 },
+          { id: 'deltaforce-10', team: '델타포스', name: '최리콘', note: '정찰 정보 공유', votes: 85, profileImg: profileImg11 },
+          { id: 'deltaforce-21', team: '델타포스', name: '도미네이터', note: '최종 라운드 세이브', votes: 72, profileImg: profileImg12 },
         ],
       },
     ],
@@ -66,6 +90,8 @@ export function MvpVote() {
   const [selectedMatch, setSelectedMatch] = useState<string | null>('quarter-3')
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
   const heroImage = themeMode === 'dark' ? tournamentMainDarkImg : tournamentMainLightImg
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)
@@ -83,11 +109,16 @@ export function MvpVote() {
   const isTeamSelectOpen = selectedMatch !== null
   const isCandidateSelectOpen = selectedTeam !== null
 
-  const submitVote = () => {
+  const openConfirm = () => {
     if (!selectedCandidate) return
+    setConfirmOpen(true)
+  }
 
+  const confirmVote = () => {
+    if (!selectedCandidate) return
     localStorage.setItem('votedMvpId', selectedCandidate)
-    navigate('/tournament/mvp-complete')
+    setConfirmOpen(false)
+    setTransitioning(true)
   }
 
   const selectMatch = (matchId: string) => {
@@ -103,21 +134,18 @@ export function MvpVote() {
 
   return (
     <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}`}>
+      <PageHeader
+        title="MVP 투표"
+        variant="default"
+        onBack={() => navigate(-1)}
+      />
       <section
         className="tournament_intro_card"
         style={{ backgroundImage: `url(${heroImage})` }}
       >
         <div className="tournament_intro_tit">
-          <PageHeader
-            className="tournament_intro_top"
-            title="MVP 투표"
-            titleAs="span"
-            titleClassName="body_b_28"
-            variant={themeMode === 'dark' ? 'overlay' : 'transparent'}
-            onBack={() => navigate(-1)}
-          />
           <div className="tournament_intro_bottom">
-            <p className="body_sb_16">
+            <p className="body_sb_20">
               각 경기에서 <em>가장 인상 깊었던</em><br />
               선수를 선택해주세요
             </p>
@@ -198,7 +226,20 @@ export function MvpVote() {
       {isCandidateSelectOpen ? (
         <section className="tournament_team_media_section">
           <h2 className="body_sb_20">{selectedTeamData?.name} 주요 장면</h2>
-          <div className="tournament_team_media_placeholder" aria-label="선택한 팀 주요 장면 영상 영역" />
+          <a
+            className="tournament_team_media_placeholder"
+            href="https://youtu.be/bnjqWY4uULA?si=mYqU6tLXVf8LDQal"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="선택한 팀 주요 장면 영상 보기"
+          >
+            {selectedTeam && teamThumbnails[selectedTeam] ? (
+              <>
+                <img src={teamThumbnails[selectedTeam]} alt={`${selectedTeamData?.name} 주요 장면`} />
+                <span className="tournament_media_play_btn" aria-hidden="true" />
+              </>
+            ) : null}
+          </a>
         </section>
       ) : null}
 
@@ -217,7 +258,7 @@ export function MvpVote() {
                 onClick={() => setSelectedCandidate(candidate.id)}
               >
                 <div className="tournament_candidate_player">
-                  <span aria-hidden="true" />
+                  <img className="tournament_candidate_profile" src={candidate.profileImg} alt="" aria-hidden="true" />
                   <div>
                     <p className="body_m_14">{candidate.team}</p>
                     <strong className="body_b_16">{candidate.name}</strong>
@@ -255,7 +296,7 @@ export function MvpVote() {
       <section className="tournament_cta_section">
         <LoginButton
           className="tournament_fixed_vote"
-          onClick={submitVote}
+          onClick={openConfirm}
           disabled={!selectedCandidate}
           style={{
             background: 'var(--tournament-light-btn-bg)',
@@ -271,6 +312,58 @@ export function MvpVote() {
           <span className="body_m_14">투표 후 변경할 수 없습니다.</span>
         </p>
       </section>
+
+      <AnimatePresence>
+        {confirmOpen ? (
+          <motion.div
+            className="mvp_confirm_backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setConfirmOpen(false)}
+          >
+            <motion.div
+              className="mvp_confirm_sheet"
+              role="dialog"
+              aria-modal="true"
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="mvp_confirm_handle" aria-hidden="true" />
+              <div className="mvp_confirm_body">
+                <p className="mvp_confirm_title body_b_20">
+                  정말 <em>{selected?.name}</em>에게<br />투표하시겠습니까?
+                </p>
+                <p className="mvp_confirm_sub body_m_14">투표 후에는 변경할 수 없습니다.</p>
+              </div>
+              <div className="mvp_confirm_actions">
+                <button className="mvp_confirm_cancel body_sb_16" type="button" onClick={() => setConfirmOpen(false)}>
+                  취소
+                </button>
+                <button className="mvp_confirm_submit body_sb_16" type="button" onClick={confirmVote}>
+                  투표하기
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {transitioning ? (
+          <motion.div
+            className="mvp_transition_overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            onAnimationComplete={() => navigate('/tournament/mvp-complete')}
+          />
+        ) : null}
+      </AnimatePresence>
     </div>
   )
 }

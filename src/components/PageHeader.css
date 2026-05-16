@@ -156,3 +156,11 @@
 :root[data-theme='dark'] .page_header__circle_button {
   border-color: var(--color-gray03);
 }
+
+:root[data-theme='dark'] .page_header .page_header__back_icon {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .page_header .page_header__title {
+  color: var(--color-white);
+}
