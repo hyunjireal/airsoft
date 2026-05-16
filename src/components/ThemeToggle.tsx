@@ -9,7 +9,7 @@ type ThemeMode = 'light' | 'dark'
 const THEME_STORAGE_KEY = 'airsoft-theme'
 
 function getInitialTheme(): ThemeMode {
-  return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'
+  return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark'
 }
 
 export function ThemeToggle() {
@@ -24,7 +24,7 @@ export function ThemeToggle() {
     const syncTheme = (event: StorageEvent) => {
       if (event.key !== THEME_STORAGE_KEY) return
 
-      setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
+      setThemeMode(event.newValue === 'light' ? 'light' : 'dark')
     }
 
     window.addEventListener('storage', syncTheme)

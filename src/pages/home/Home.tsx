@@ -129,6 +129,26 @@ const buddyProcessSteps = [
 ]
 
 const HOME_PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
+const homeProfileGreetings = [
+  '오늘도 안전한 슈팅 하세요!',
+  '필드에서는 안전이 가장 멋진 플레이예요!',
+  '좋은 팀워크로 즐거운 게임 되세요!',
+  '오늘 컨디션에 맞춰 천천히 준비해볼까요?',
+  '장비 체크하고 기분 좋게 출발해요!',
+  '무리하지 말고 안전하게 즐겨요!',
+  '오늘도 매너 있는 플레이를 기대할게요!',
+  '든든한 준비가 좋은 게임을 만들어요!',
+  '필드에서 멋진 순간을 만들어봐요!',
+  '침착하게, 안전하게, 재미있게 즐겨요!',
+]
+
+function getProfileGreetingSeed(...values: Array<string | null | undefined>) {
+  const seedText = values.filter(Boolean).join('|') || 'airsoft'
+
+  return Array.from(seedText).reduce((seed, character) => {
+    return (seed * 31 + character.charCodeAt(0)) % homeProfileGreetings.length
+  }, 0)
+}
 
 function saveProfileImage(dataUrl: string) {
   try {
@@ -366,6 +386,9 @@ export function Home() {
     savedProfileBadge === 'badge03' || savedLevel === '숙련자' || savedSkillAlias === '베테랑'
   const homeProfileBadge = isVeteranProfile ? badge03 : symbolBeginner
   const homeProfileTitle = savedProfileTitle || (isVeteranProfile ? '베테랑 숙련자' : '안전제일 뉴비')
+  const homeProfileGreeting = homeProfileGreetings[
+    getProfileGreetingSeed(savedNickname, homeProfileTitle, savedLevel, savedSkillAlias)
+  ]
   const homeScheduleCards = useMemo(() => {
     return createHomeScheduleCards()
   }, [scheduleRevision])
@@ -699,7 +722,7 @@ export function Home() {
                     <span className="home_userinfo_name_user">{savedNickname || '삼삼오오'}</span>
                     <span className="home_userinfo_name_suffix">님</span>
                     <br />
-                    <span className="home_userinfo_greeting body_m_16">오늘도 안전한 슈팅 하세요!</span>
+                    <span className="home_userinfo_greeting body_m_16">{homeProfileGreeting}</span>
                   </p>
                 </div>
               </div>

@@ -6,7 +6,7 @@ const THEME_STORAGE_KEY = 'airsoft-theme'
 
 function readThemeMode(): ThemeMode {
   if (typeof window === 'undefined') {
-    return 'light'
+    return 'dark'
   }
 
   const rootTheme = document.documentElement.dataset.theme
@@ -14,7 +14,7 @@ function readThemeMode(): ThemeMode {
     return rootTheme
   }
 
-  return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'
+  return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark'
 }
 
 export function useThemeMode() {

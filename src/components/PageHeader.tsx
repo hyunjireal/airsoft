@@ -16,10 +16,10 @@ const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 
 function getInitialTheme(): ThemeMode {
   if (typeof window === 'undefined') {
-    return 'light'
+    return 'dark'
   }
 
-  return localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light'
+  return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark'
 }
 
 type PageHeaderProps = {
@@ -79,7 +79,7 @@ export function PageHeader({
   useEffect(() => {
     const syncStorage = (event: StorageEvent) => {
       if (event.key === THEME_STORAGE_KEY) {
-        setThemeMode(event.newValue === 'dark' ? 'dark' : 'light')
+        setThemeMode(event.newValue === 'light' ? 'light' : 'dark')
       } else if (event.key === PROFILE_IMAGE_KEY) {
         setProfileImage(event.newValue || userAvatar)
       }

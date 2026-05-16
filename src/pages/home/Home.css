@@ -760,6 +760,7 @@
 }
 
 .home_userinfo_category_more {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2472,9 +2473,9 @@
 }
 
 :root[data-theme='dark'] .home_userinfo_category_more {
-  border-color: var(--color-gray03);
+  border-color: var(--color-lime);
   background: var(--color-gray00);
-  color: var(--color-gray04);
+  color: var(--color-lime);
 }
 
 :root[data-theme='dark'] .home_userinfo_category_more.is_expanded {
@@ -2482,8 +2483,24 @@
   background: var(--color-gray00);
 }
 
+:root[data-theme='dark'] .home_userinfo_category_more::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--color-lime);
+  border-bottom: 2px solid var(--color-lime);
+  border-radius: 1px;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 220ms ease;
+}
+
+:root[data-theme='dark'] .home_userinfo_category_more.is_expanded::before {
+  transform: translateY(2px) rotate(225deg);
+}
+
 :root[data-theme='dark'] .home_userinfo_category_more_icon {
-  filter: brightness(0) invert(1);
+  position: absolute;
+  opacity: 0;
 }
 
 :root[data-theme='dark'] .home_match_card {
