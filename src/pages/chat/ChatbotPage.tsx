@@ -14,21 +14,21 @@ type TimedChatMessage = ChatMessage & {
 const frequentQuestions = [
   '초보가 먼저 알아야 할 것',
   '처음 경기 준비물',
-  '히트 선언 방법',
-  '장비 대여 가능 여부',
+  '안전 수칙 알려줘',
+  '장비 대여 가능한가요?',
   '매치 신청하는 법',
 ]
 
 const welcomeMessage: TimedChatMessage = {
   id: 'welcome',
   role: 'assistant',
-  text: '안녕하세요! AI 챗봇 가이에요.\n궁금한 정보를 알려드릴게요!',
+  text: '안녕하세요! AI 챗봇 가이에요.\n궁금한 에어소프트 정보를 물어보세요.',
   time: '오전 10:30',
 }
 
 function getTypingDelay(character: string) {
   if (/\s/.test(character)) return 18
-  if (/[.!?。！？,，:;]\s?$/.test(character)) return 110
+  if (/[.!?。！？;]\s?$/.test(character)) return 110
   if (character === '\n') return 160
 
   return 28
@@ -114,9 +114,18 @@ export function ChatbotPage() {
     setInput('')
     setIsSending(true)
 
-    const answer = await requestChatAnswer(nextMessages)
-    await typeAssistantAnswer(answer)
-    setIsSending(false)
+    try {
+      const answer = await requestChatAnswer(nextMessages)
+      await typeAssistantAnswer(answer)
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : '챗봇 응답을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'
+      await typeAssistantAnswer(message)
+    } finally {
+      setIsSending(false)
+    }
   }
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -167,13 +176,13 @@ export function ChatbotPage() {
           className="chat_top"
           groupClassName="chat_tit"
           backButtonClassName="chat_back_button"
-          title={(
+          title={
             <>
               <span className="body_m_28">AI 챗봇 </span>
               <strong className="body_b_28">가이</strong>
             </>
-          )}
-          subtitle="가이에게 무엇이든 물어보세요!"
+          }
+          subtitle="가이에게 무엇이든 물어보세요."
           subtitleClassName="chat_subtitle body_m_16"
           onBack={goBack}
         />
@@ -217,12 +226,16 @@ export function ChatbotPage() {
             <div className="post_detail_comment_searchbar">
               <input
                 value={input}
-                placeholder="메세지를 입력하세요"
+                placeholder="메시지를 입력하세요."
                 onChange={(event) => setInput(event.target.value)}
                 disabled={isSending}
               />
               <button type="submit" aria-label="보내기" disabled={isSending}>
-                {isSending ? <span className="chat_send_loading" aria-hidden="true" /> : <img src={sendIcon} alt="" />}
+                {isSending ? (
+                  <span className="chat_send_loading" aria-hidden="true" />
+                ) : (
+                  <img src={sendIcon} alt="" />
+                )}
               </button>
             </div>
           </form>
