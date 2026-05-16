@@ -14,6 +14,7 @@ import buddyProfileFour from '../../asset/images/buddy_profile_img04.png'
 import buddyProfileFive from '../../asset/images/buddy_profile_img05.png'
 import { PageHeader } from '../../components/PageHeader'
 import { useThemeMode } from '../../hooks/useThemeMode'
+import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
 import {
   buddyButtonHover,
   buddyButtonTap,
@@ -27,11 +28,13 @@ import {
 import './BuddyFind.css'
 
 type ScheduleItem = {
-  id: number
+  id: string
+  matchId: string
   date: string
   place: string
   memberCount: string
   summaryLabel?: string
+  to: string
 }
 
 type FilterOption = {
@@ -57,7 +60,7 @@ type BuddyReview = {
   date: string
 }
 
-const MOCK_SCHEDULES: ScheduleItem[] = [
+const MOCK_SCHEDULES: ScheduleItem[] = [] /*
   {
     id: 1,
     date: '5/23 (토) 13:00',
@@ -84,6 +87,8 @@ const MOCK_SCHEDULES: ScheduleItem[] = [
     memberCount: '4 / 8명',
   },
 ]
+
+*/
 
 const HELP_OPTIONS: FilterOption[] = [
   { id: 'equipment', label: '장비' },
@@ -174,19 +179,68 @@ const BUDDY_DETAIL_REVIEWS: BuddyReview[] = [
 
 const BUDDY_DETAIL_TAGS = ['공격형', '팀플레이', 'CQB 전문', '입문자 친화', '커뮤니케이션 우수', '전략적 플레이']
 
+function createScheduleItem(match: MyMatchItem): ScheduleItem {
+  const scheduleLabel = match.detail.split(' I ')[0] || match.time
+
+  return {
+    id: match.id,
+    matchId: match.matchId,
+    date: scheduleLabel,
+    place: match.fieldName || match.title,
+    memberCount: `${match.currentParticipants} / ${match.maxParticipants}명`,
+    summaryLabel: `${scheduleLabel} ${match.fieldName || match.title}`,
+    to: match.to,
+  }
+}
+
+function getUpcomingBuddySchedules() {
+  const schedules = getMyMatches()
+    .filter((match) => match.status !== 'past')
+    .map(createScheduleItem)
+
+  return schedules.length > 0 ? schedules : MOCK_SCHEDULES
+}
+
 export function BuddyFind() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
-  const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(1)
+  const [schedules, setSchedules] = useState<ScheduleItem[]>(() => getUpcomingBuddySchedules())
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(() => schedules[0]?.id ?? null)
   const [selectedHelpIds, setSelectedHelpIds] = useState<string[]>(['equipment', 'rules'])
   const [selectedExpId, setSelectedExpId] = useState<string>('first')
 
   const selectedSchedule =
-    MOCK_SCHEDULES.find((schedule) => schedule.id === selectedScheduleId) ?? null
+    schedules.find((schedule) => schedule.id === selectedScheduleId) ?? null
   const selectedHelpOptions = HELP_OPTIONS.filter((option) => selectedHelpIds.includes(option.id))
   const selectedExpOption = EXP_OPTIONS.find((option) => option.id === selectedExpId) ?? null
   const isReadyToStart =
     selectedSchedule !== null && selectedHelpOptions.length > 0 && selectedExpOption !== null
+
+  useEffect(() => {
+    const refreshSchedules = () => {
+      const nextSchedules = getUpcomingBuddySchedules()
+
+      setSchedules(nextSchedules)
+      setSelectedScheduleId((currentId) => {
+        if (currentId && nextSchedules.some((schedule) => schedule.id === currentId)) {
+          return currentId
+        }
+
+        return nextSchedules[0]?.id ?? null
+      })
+    }
+
+    refreshSchedules()
+    window.addEventListener('focus', refreshSchedules)
+    window.addEventListener('storage', refreshSchedules)
+    window.addEventListener('pageshow', refreshSchedules)
+
+    return () => {
+      window.removeEventListener('focus', refreshSchedules)
+      window.removeEventListener('storage', refreshSchedules)
+      window.removeEventListener('pageshow', refreshSchedules)
+    }
+  }, [])
 
   const toggleHelpOption = (targetId: string) => {
     setSelectedHelpIds((currentIds) =>
@@ -248,7 +302,7 @@ export function BuddyFind() {
             aria-label="다가오는 매치 목록"
             variants={buddyStaggerContainerVariants}
           >
-            {MOCK_SCHEDULES.map((schedule) => {
+            {schedules.map((schedule) => {
               const isSelected = schedule.id === selectedScheduleId
 
               return (
@@ -453,7 +507,6 @@ export function BuddyFind() {
                   key={option.id}
                   className="buddy_find_summary_chip buddy_find_motion_button"
                   type="button"
-                  variants={buddyChipVariants}
                   onClick={() =>
                     setSelectedHelpIds((currentIds) =>
                       currentIds.filter((id) => id !== option.id),
@@ -474,7 +527,6 @@ export function BuddyFind() {
                   key={selectedExpOption.id}
                   className="buddy_find_summary_chip buddy_find_motion_button"
                   type="button"
-                  variants={buddyChipVariants}
                   onClick={() => setSelectedExpId('')}
                   whileHover={buddyButtonHover}
                   whileTap={buddyButtonTap}
