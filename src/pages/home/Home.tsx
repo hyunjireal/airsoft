@@ -338,6 +338,7 @@ export function Home() {
   const [cameraError, setCameraError] = useState('')
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user')
   const [isFlashing, setIsFlashing] = useState(false)
+  const [pendingAlbumImage, setPendingAlbumImage] = useState<string | null>(null)
   const [scheduleRevision, setScheduleRevision] = useState(0)
   const savedProfileBadge = localStorage.getItem('homeProfileBadge')
   const savedProfileTitle = localStorage.getItem('homeProfileTitle')
@@ -454,14 +455,22 @@ export function Home() {
     const reader = new FileReader()
     reader.onload = () => {
       if (typeof reader.result !== 'string') return
-
-      setProfilePreview(reader.result)
-      saveProfileImage(reader.result)
+      setPendingAlbumImage(reader.result)
       setIsProfileSheetOpen(false)
-      setCameraError('')
     }
     reader.readAsDataURL(file)
     event.target.value = ''
+  }
+
+  const confirmAlbumImage = () => {
+    if (!pendingAlbumImage) return
+    setProfilePreview(pendingAlbumImage)
+    saveProfileImage(pendingAlbumImage)
+    setPendingAlbumImage(null)
+  }
+
+  const cancelAlbumImage = () => {
+    setPendingAlbumImage(null)
   }
 
   const closeProfileCamera = () => {
@@ -992,6 +1001,30 @@ export function Home() {
                   <path d="M5 10C5 7.24 7.24 5 10 5h8.5l-2-2M23 18c0 2.76-2.24 5-5 5H9.5l2 2" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M10.5 14a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0Z" stroke="#fff" strokeWidth="1.8" />
                 </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {pendingAlbumImage ? (
+        <div className="home_album_confirm_layer" role="presentation">
+          <button
+            className="home_album_confirm_backdrop"
+            type="button"
+            aria-label="사진 선택 취소"
+            onClick={cancelAlbumImage}
+          />
+          <div className="home_album_confirm_dialog" role="dialog" aria-modal="true" aria-labelledby="album_confirm_title">
+            <div className="home_album_confirm_preview_wrap">
+              <img src={pendingAlbumImage} alt="선택한 프로필 사진" className="home_album_confirm_preview" />
+            </div>
+            <p id="album_confirm_title" className="home_album_confirm_title">이 사진으로 설정할까요?</p>
+            <div className="home_album_confirm_actions">
+              <button className="home_album_confirm_btn home_album_confirm_btn--cancel" type="button" onClick={cancelAlbumImage}>
+                취소
+              </button>
+              <button className="home_album_confirm_btn home_album_confirm_btn--ok" type="button" onClick={confirmAlbumImage}>
+                확인
               </button>
             </div>
           </div>

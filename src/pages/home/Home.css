@@ -313,6 +313,102 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* ── 앨범 선택 확인 팝업 ── */
+.home_album_confirm_layer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.home_album_confirm_backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  cursor: pointer;
+}
+
+.home_album_confirm_dialog {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 320px);
+  border-radius: 20px;
+  background: var(--color-white);
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22);
+}
+
+:root[data-theme='dark'] .home_album_confirm_dialog {
+  background: #1e1e1e;
+}
+
+.home_album_confirm_preview_wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #000;
+}
+
+.home_album_confirm_preview {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home_album_confirm_title {
+  padding: 16px 20px 4px;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-black);
+  text-align: center;
+}
+
+:root[data-theme='dark'] .home_album_confirm_title {
+  color: var(--color-white);
+}
+
+.home_album_confirm_actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px 16px 20px;
+}
+
+.home_album_confirm_btn {
+  min-height: 48px;
+  border-radius: 12px;
+  border: none;
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-16);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-tight);
+  cursor: pointer;
+}
+
+.home_album_confirm_btn--cancel {
+  background: var(--color-gray100, #f2f2f2);
+  color: var(--color-gray500, #666);
+}
+
+:root[data-theme='dark'] .home_album_confirm_btn--cancel {
+  background: #2a2a2a;
+  color: #aaa;
+}
+
+.home_album_confirm_btn--ok {
+  background: var(--color-khaki, #6b7c4e);
+  color: #fff;
+}
+
 /* ── 카메라 풀스크린 UI ── */
 .home_camera_layer {
   position: fixed;
