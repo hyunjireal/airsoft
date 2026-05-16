@@ -974,10 +974,10 @@
   margin: 0;
   font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 700;
   line-height: normal;
   letter-spacing: -0.02em;
-  color: #d0d0d0;
+  color: #fff;
 }
 
 .home_match_dday_tag {
@@ -2171,7 +2171,7 @@
 }
 
 :root[data-theme='dark'] .home_match_card_notice {
-  color: #e9e9e9;
+  color: #fff;
 }
 
 :root[data-theme='dark'] .home_match_dday_tag {
