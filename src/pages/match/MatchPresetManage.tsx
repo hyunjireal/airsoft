@@ -7,42 +7,14 @@ import { PageHeader } from '../../components/PageHeader'
 import presetPencilIcon from '../../asset/icons/preset_pencil.svg'
 import presetTrashIcon from '../../asset/icons/preset_trash.svg'
 import presetPlusIcon from '../../asset/icons/preset_plus.svg'
+import {
+  deleteMatchPreset,
+  findMatchPreset,
+  readAppliedMatchPresetId,
+  readMatchPresets,
+  type MatchPresetItem,
+} from './matchPresetStorage'
 import './match.css'
-
-type PresetItem = {
-  id: string
-  title: string
-  description: string
-}
-
-const appliedPreset: PresetItem = {
-  id: 'applied-weekend',
-  title: '주말 즐겜용',
-  description: '커스텀 프리셋',
-}
-
-const presetItems: PresetItem[] = [
-  {
-    id: 'beginner',
-    title: '초보 입문자',
-    description: '입문하는 플레이어를 위한\n부담 없는 초보형 프리셋',
-  },
-  {
-    id: 'weekend',
-    title: '주말 캐주얼',
-    description: '주말 위주로 가볍게 즐기는\n부담 없는 캐주얼 프리셋',
-  },
-  {
-    id: 'team',
-    title: '팀플 선호',
-    description: '팀원과 협동하며 움직이는\n팀 중심 플레이 프리셋',
-  },
-  {
-    id: 'cqb',
-    title: 'CQB 선호',
-    description: '근거리 교전을 즐기는\n실내 CQB 중심 프리셋',
-  },
-]
 
 function PresetActionButtons({ onDelete, onEdit }: { onDelete: () => void; onEdit?: () => void }) {
   return (
@@ -64,7 +36,7 @@ function PresetCard({
   onEdit,
   useListExit = false,
 }: {
-  preset: PresetItem
+  preset: MatchPresetItem
   active?: boolean
   onDelete: () => void
   onEdit?: () => void
@@ -109,7 +81,8 @@ function PresetCard({
 export function MatchPresetManage() {
   const navigate = useNavigate()
   const [isAppliedVisible, setIsAppliedVisible] = useState(true)
-  const [managedPresets, setManagedPresets] = useState(presetItems)
+  const [managedPresets, setManagedPresets] = useState(readMatchPresets)
+  const appliedPreset = findMatchPreset(readAppliedMatchPresetId()) ?? managedPresets[0]
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -136,7 +109,7 @@ export function MatchPresetManage() {
           <h2 id="match-preset-applied-title" className="match_preset_manage_section_title">
             적용된 프리셋
           </h2>
-          {isAppliedVisible ? (
+          {isAppliedVisible && appliedPreset ? (
             <AnimatedContent distance={28} duration={0.85} ease="power3.out" threshold={0.05} className="match_preset_manage_motion_card">
               <PresetCard preset={appliedPreset} active onDelete={() => setIsAppliedVisible(false)} />
             </AnimatedContent>
@@ -151,7 +124,12 @@ export function MatchPresetManage() {
               </h2>
               <span className="match_preset_manage_count">({managedPresets.length}/10)</span>
             </div>
-            <button className="match_preset_manage_head_add" type="button" aria-label="프리셋 추가">
+            <button
+              className="match_preset_manage_head_add"
+              type="button"
+              aria-label="프리셋 추가"
+              onClick={() => navigate('/match/presets/create')}
+            >
               <img src={presetPlusIcon} alt="" className="match_preset_option_icon" aria-hidden="true" />
             </button>
           </div>
@@ -169,7 +147,10 @@ export function MatchPresetManage() {
                 preset={preset}
                 useListExit
                 onEdit={() => navigate(`/match/presets/${preset.id}/edit`)}
-                onDelete={() => setManagedPresets((currentPresets) => currentPresets.filter((item) => item.id !== preset.id))}
+                onDelete={() => {
+                  deleteMatchPreset(preset.id)
+                  setManagedPresets(readMatchPresets())
+                }}
               />
             )}
           />

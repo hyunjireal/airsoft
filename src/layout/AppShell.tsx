@@ -27,6 +27,7 @@ export function AppShell() {
   const isMatchApplyPage = /^\/match\/[^/]+\/apply$/.test(location.pathname)
   const isMatchApplyCompletePage = /^\/match\/[^/]+\/complete$/.test(location.pathname)
   const isMatchPresetEditPage = /^\/match\/presets\/[^/]+\/edit$/.test(location.pathname)
+  const isMatchPresetCreatePage = location.pathname === '/match/presets/create'
   const isMatchPresetFinishPage = location.pathname === '/match/presets/finish'
   const showBottomNav =
     !isCommunityPostDetail &&
@@ -39,6 +40,7 @@ export function AppShell() {
     !isMatchApplyPage &&
     !isMatchApplyCompletePage &&
     !isMatchPresetEditPage &&
+    !isMatchPresetCreatePage &&
     !isMatchPresetFinishPage
   const keepTopInset = false
   const showBackButton =

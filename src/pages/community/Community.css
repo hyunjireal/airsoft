@@ -124,7 +124,7 @@
 
 .general_board_page {
   position: relative;
-  width: min(100%, 768px);
+  width: min(100%, var(--app-max-width));
   min-height: 100vh;
   margin: 0 auto;
   padding-bottom: 0;
@@ -588,7 +588,7 @@
 
 .beginner_board_page {
   position: relative;
-  width: min(100%, 768px);
+  width: min(100%, var(--app-max-width));
   min-height: 100vh;
   margin: 0 auto;
   padding: 0 0 208px;

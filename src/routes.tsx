@@ -122,6 +122,7 @@ export const router = createBrowserRouter([
           { path: '/match/edit/:id', element: <MatchEdit /> },
           { path: '/match/manage', element: <MatchManageHome /> },
           { path: '/match/presets', element: <MatchPresetManage /> },
+          { path: '/match/presets/create', element: <MatchPresetEdit mode="create" /> },
           { path: '/match/presets/:presetId/edit', element: <MatchPresetEdit /> },
           { path: '/match/presets/finish', element: <MatchPresetFinish /> },
           { path: '/match/filter', element: <MatchFilter /> },

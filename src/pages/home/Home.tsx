@@ -867,9 +867,9 @@ export function Home() {
                   <span className="buddy_lime_text">함께할 버디</span>를 연결해드려요
                 </p>
                 <p className="buddy_info_desc">
-                  예약 시 버디 필요를 체크하면
+                  어색해도 겁내지 마세요!
                   <br />
-                  함께할 버디를 연결해드려요
+                  경험자가 준비와 진행을 도와줘요
                 </p>
               </div>
             </div>

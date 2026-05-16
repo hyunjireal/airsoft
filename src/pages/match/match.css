@@ -930,7 +930,7 @@
   display: flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
 }
 
 .match_preset_manage_action {
@@ -5335,7 +5335,7 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: min(100%, 768px);
+  width: min(100%, var(--app-max-width));
   background: var(--color-white);
   border-radius: 15px 15px 0 0;
   padding: 24px;

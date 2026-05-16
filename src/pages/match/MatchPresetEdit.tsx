@@ -2,25 +2,12 @@ import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
+import { createMatchPresetId, findMatchPreset, upsertMatchPreset } from './matchPresetStorage'
 import './match.css'
 
 type ChipOption = {
   label: string
   subLabel?: string
-}
-
-const presetNames: Record<string, string> = {
-  beginner: '초보 입문자',
-  weekend: '주말 캐주얼',
-  team: '팀플 선호',
-  cqb: 'CQB 선호',
-}
-
-const presetDescriptions: Record<string, string> = {
-  beginner: '처음이라 편하게 즐기고 싶어요',
-  weekend: '주말에 가볍게 뛰는 매치를 선호해요',
-  team: '팀원들과 호흡 맞추는 플레이가 좋아요',
-  cqb: '가까운 거리에서 빠르게 움직이는 게 좋아요',
 }
 
 const levelOptions: ChipOption[] = [{ label: '초보' }, { label: '중급' }, { label: '숙련자' }]
@@ -75,30 +62,51 @@ function ChipGroup({
   )
 }
 
-export function MatchPresetEdit() {
+type MatchPresetEditProps = {
+  mode?: 'edit' | 'create'
+}
+
+export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
   const navigate = useNavigate()
   const { presetId = 'weekend' } = useParams()
-  const initialName = useMemo(() => presetNames[presetId] ?? '주말 즐겜용', [presetId])
-  const initialDescription = useMemo(() => presetDescriptions[presetId] ?? '내 플레이 취향에 맞춰 저장해둘래요', [presetId])
-  const [name, setName] = useState(initialName)
-  const [description, setDescription] = useState(initialDescription)
-  const [level, setLevel] = useState(['초보'])
-  const [distance, setDistance] = useState(['근거리'])
-  const [distanceValue, setDistanceValue] = useState(10)
-  const [time, setTime] = useState(['전체'])
-  const [weekdays, setWeekdays] = useState(['일', '토'])
-  const [playStyle, setPlayStyle] = useState(['개인 플레이', '용병'])
-  const [gameTone, setGameTone] = useState(['캐주얼', '실력 향상'])
-  const [teamwork, setTeamwork] = useState(['솔플/자유'])
-  const [priority, setPriority] = useState(['안전', '매너', '즐거움'])
-  const [purpose, setPurpose] = useState(['실력 향상', '스트레스 해소', '취미'])
+  const isCreateMode = mode === 'create'
+  const editingPreset = useMemo(() => (isCreateMode ? undefined : findMatchPreset(presetId)), [isCreateMode, presetId])
+  const [presetFormId] = useState(() => editingPreset?.id ?? createMatchPresetId())
+  const [name, setName] = useState(editingPreset?.title ?? '')
+  const [description, setDescription] = useState(editingPreset?.description ?? '')
+  const [level, setLevel] = useState(editingPreset?.level ?? ['초보'])
+  const [distance, setDistance] = useState(editingPreset?.distance ?? ['근거리'])
+  const [distanceValue, setDistanceValue] = useState(editingPreset?.distanceValue ?? 10)
+  const [time, setTime] = useState(editingPreset?.time ?? ['전체'])
+  const [weekdays, setWeekdays] = useState(editingPreset?.weekdays ?? ['일', '토'])
+  const [playStyle, setPlayStyle] = useState(editingPreset?.playStyle ?? ['개인 플레이', '용병'])
+  const [gameTone, setGameTone] = useState(editingPreset?.gameTone ?? ['캐주얼', '실력 향상'])
+  const [teamwork, setTeamwork] = useState(editingPreset?.teamwork ?? ['솔플/자유'])
+  const [priority, setPriority] = useState(editingPreset?.priority ?? ['안전', '매너', '즐거움'])
+  const [purpose, setPurpose] = useState(editingPreset?.purpose ?? ['실력 향상', '스트레스 해소', '취미'])
 
   const goBack = () => {
     navigate('/match/presets')
   }
 
   const savePreset = () => {
-    navigate('/match/presets/finish')
+    upsertMatchPreset({
+      id: presetFormId,
+      title: name.trim() || '새 프리셋',
+      description: description.trim() || '직접 설정하는 맞춤 프리셋',
+      level,
+      distance,
+      distanceValue,
+      time,
+      weekdays,
+      playStyle,
+      gameTone,
+      teamwork,
+      priority,
+      purpose,
+      isCustom: isCreateMode || editingPreset?.isCustom,
+    })
+    navigate('/match/presets')
   }
 
   const updateDistanceByIndex = (index: number) => {
@@ -123,7 +131,7 @@ export function MatchPresetEdit() {
         className="match_page_header match_preset_edit_header"
         backButtonClassName="match_page_back_button"
         layout="standard"
-        title="프리셋 수정"
+        title={isCreateMode ? '프리셋 만들기' : '프리셋 수정'}
         titleClassName="match_page_title"
         onBack={goBack}
       />
@@ -241,7 +249,7 @@ export function MatchPresetEdit() {
 
         <div className="match_preset_edit_bottom">
           <LoginButton className="match_preset_edit_save" onClick={savePreset}>
-            저장하기
+            {isCreateMode ? '만들기' : '저장하기'}
           </LoginButton>
         </div>
       </main>

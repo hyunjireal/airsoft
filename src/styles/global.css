@@ -138,7 +138,8 @@
   --line-height-130: 130%;
   --letter-spacing-0: 0;
   --letter-spacing-tight: -0.02em;
-  --app-max-width: 768px;
+  --app-min-width: 390px;
+  --app-max-width: 1024px;
   --app-edge-offset: max(16px, calc((100vw - var(--app-max-width)) / 2 + 16px));
   --app-header-height: 140px;
   --app-bottom-safe-area: calc(var(--app-header-height) + env(safe-area-inset-bottom, 0px) + 24px);
@@ -330,7 +331,7 @@ body {
 
 body {
   margin: 0;
-  min-width: 320px;
+  min-width: var(--app-min-width);
   background: var(--color-white);
 }
 
@@ -432,8 +433,9 @@ a {
 
 .mobile_frame {
   position: relative;
-  width: min(100%, var(--app-max-width));
+  width: clamp(var(--app-min-width), 100%, var(--app-max-width));
   max-width: var(--app-max-width);
+  min-width: var(--app-min-width);
   min-height: 100vh;
   margin: 0 auto;
   overflow-x: hidden;

@@ -25,6 +25,12 @@ import matchList05 from '../../asset/images/match_list05.jpg'
 import { LoginButton } from '../../components/LoginButton'
 import { getMyMatchGroups } from '../my/myMatchData'
 import { cacheMatchSnapshot } from './matchApplicationStorage'
+import {
+  readAppliedMatchPresetId,
+  readMatchPresets,
+  writeAppliedMatchPresetId,
+  type MatchPresetItem,
+} from './matchPresetStorage'
 import './match.css'
 
 type MatchType = 'personal' | 'team' | 'mercenary'
@@ -46,7 +52,7 @@ type MatchSchedule = {
 }
 
 type MatchTypeFilter = 'all' | MatchType
-type MatchPresetId = 'beginner' | 'weekend' | 'team' | 'cqb' | 'custom'
+type MatchPresetId = string
 type WeekSlideDirection = 'prev' | 'next' | null
 
 type AiRecommendedMatch = {
@@ -70,43 +76,36 @@ const typeFilters: Array<{ label: string; value: MatchTypeFilter }> = [
   { label: '용병', value: 'mercenary' },
 ]
 
-const matchPresetOptions: Array<{
-  id: MatchPresetId
-  title: string
-  description: string
+type MatchPresetOption = MatchPresetItem & {
   icon: string
-}> = [
-  {
-    id: 'beginner',
-    title: '초보 입문자',
-    description: '입문하는 플레이어를 위한\n부담 없는 초보형 프리셋',
-    icon: presetCheckIcon,
-  },
-  {
-    id: 'weekend',
-    title: '주말 캐주얼',
-    description: '주말 위주로 가볍게 즐기는\n부담 없는 캐주얼 프리셋',
-    icon: presetCheckIcon,
-  },
-  {
-    id: 'team',
-    title: '팀플 선호',
-    description: '팀원과 협동하며 움직이는\n팀 중심 플레이 프리셋',
-    icon: presetCheckIcon,
-  },
-  {
-    id: 'cqb',
-    title: 'CQB 선호',
-    description: '근거리 교전을 즐기는\n실내 CQB 중심 프리셋',
-    icon: presetCheckIcon,
-  },
-  {
-    id: 'custom',
-    title: '커스텀 프리셋',
-    description: '직접 설정하는 맞춤 프리셋',
-    icon: presetPlusIcon,
-  },
-]
+  isCreateAction?: boolean
+}
+
+function createMatchPresetOptions(): MatchPresetOption[] {
+  return [
+    ...readMatchPresets().map((preset) => ({
+      ...preset,
+      icon: preset.isCustom ? presetPlusIcon : presetCheckIcon,
+    })),
+    {
+      id: 'custom',
+      title: '커스텀 프리셋',
+      description: '직접 설정하는 맞춤 프리셋',
+      level: [],
+      distance: [],
+      distanceValue: 10,
+      time: [],
+      weekdays: [],
+      playStyle: [],
+      gameTone: [],
+      teamwork: [],
+      priority: [],
+      purpose: [],
+      icon: presetPlusIcon,
+      isCreateAction: true,
+    },
+  ]
+}
 
 const homeMatchMoreStyle = {
   gap: 4,
@@ -550,13 +549,19 @@ export function MatchHome() {
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
   const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
   const [showPresetSheet, setShowPresetSheet] = useState(false)
-  const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>('weekend')
-  const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>('weekend')
+  const [matchPresetOptions, setMatchPresetOptions] = useState(createMatchPresetOptions)
+  const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>(readAppliedMatchPresetId)
+  const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>(readAppliedMatchPresetId)
   const [weekSlideDirection, setWeekSlideDirection] = useState<WeekSlideDirection>(null)
   const [aiMatchIndex, setAiMatchIndex] = useState(0)
   const [isAiMatchRefreshing, setIsAiMatchRefreshing] = useState(false)
   const myMatchGroups = getMyMatchGroups()
-  const appliedPreset = matchPresetOptions.find((preset) => preset.id === appliedPresetId) ?? matchPresetOptions[0]
+  const presetSelectionOptions = matchPresetOptions.filter((preset) => !preset.isCreateAction)
+  const appliedPreset = presetSelectionOptions.find((preset) => preset.id === appliedPresetId) ?? presetSelectionOptions[0]
+  const appliedPresetTitle = appliedPreset?.title ?? '프리셋 없음'
+  const appliedPresetSummary = appliedPreset
+    ? `${appliedPreset.distance[0] ?? '거리 미정'} · ${appliedPreset.weekdays.join(', ') || '요일 미정'} · ${appliedPreset.level[0] ?? '숙련도 미정'}`
+    : '프리셋을 만들어 추천 조건을 설정하세요'
   const aiRecommendedMatch = aiRecommendedMatches[aiMatchIndex]
   const hiddenAiMemberCount = Math.max(aiRecommendedMatch.currentMembers - 3, 0)
   const selectedDay = String(selectedDate.getDate())
@@ -624,6 +629,27 @@ export function MatchHome() {
   }, [])
 
   useEffect(() => {
+    const syncPresets = () => {
+      const nextOptions = createMatchPresetOptions()
+      const nextAppliedPresetId = readAppliedMatchPresetId()
+
+      setMatchPresetOptions(nextOptions)
+      setAppliedPresetId(nextAppliedPresetId)
+      setSelectedPresetId((currentId) => {
+        return nextOptions.some((preset) => preset.id === currentId) ? currentId : nextAppliedPresetId
+      })
+    }
+
+    window.addEventListener('focus', syncPresets)
+    window.addEventListener('storage', syncPresets)
+
+    return () => {
+      window.removeEventListener('focus', syncPresets)
+      window.removeEventListener('storage', syncPresets)
+    }
+  }, [])
+
+  useEffect(() => {
     if ((location.state as { scrollTo?: string } | null)?.scrollTo === 'ai-recommend') {
       window.setTimeout(() => {
         aiSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -654,6 +680,7 @@ export function MatchHome() {
   }
 
   const applyPreset = () => {
+    writeAppliedMatchPresetId(selectedPresetId)
     setAppliedPresetId(selectedPresetId)
     setShowPresetSheet(false)
   }
@@ -750,8 +777,8 @@ export function MatchHome() {
           <div className="match_ai_preset_card">
             <strong>적용된 프리셋</strong>
             <p>
-              <span>{appliedPreset.title}</span>
-              가까운 거리 · 주말 경기 · 비슷한 실력
+              <span>{appliedPresetTitle}</span>
+              {appliedPresetSummary}
             </p>
           </div>
 
@@ -1066,7 +1093,15 @@ export function MatchHome() {
                 showGradients={false}
                 enableArrowNavigation={false}
                 initialSelectedIndex={matchPresetOptions.findIndex((preset) => preset.id === selectedPresetId)}
-                onItemSelect={(preset) => setSelectedPresetId(preset.id)}
+                onItemSelect={(preset) => {
+                  if (preset.isCreateAction) {
+                    setShowPresetSheet(false)
+                    navigate('/match/presets/create')
+                    return
+                  }
+
+                  setSelectedPresetId(preset.id)
+                }}
                 renderItem={(preset) => {
                   const isSelected = selectedPresetId === preset.id
                   return (
@@ -1079,7 +1114,7 @@ export function MatchHome() {
                         <span>{preset.description}</span>
                       </span>
                       <span className="match_preset_option_icon_wrap" aria-hidden="true">
-                        {isSelected || preset.id === 'custom' ? (
+                        {isSelected || preset.isCreateAction ? (
                           <img src={preset.icon} alt="" className="match_preset_option_icon" />
                         ) : (
                           <span className="match_preset_option_empty_icon" />
