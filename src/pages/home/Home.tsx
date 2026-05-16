@@ -643,13 +643,16 @@ export function Home() {
                 </div>
               </div>
 
-              <article
+              <Link
+                to="/match"
+                state={{ scrollTo: 'ai-recommend' }}
                 className="home_ai_recommend_card"
                 style={
                   {
                     '--home-ai-bg': `url(${mainAiBg})`,
                   } as CSSProperties
                 }
+                aria-label="AI 추천 매치 보러가기"
               >
                 <img src={mainAiImg} alt="" className="home_ai_recommend_image" aria-hidden="true" />
                 <div className="home_ai_recommend_textbox">
@@ -664,7 +667,7 @@ export function Home() {
                   <span className="home_ai_recommend_match_label">매칭률</span>
                   <strong>87%</strong>
                 </div>
-              </article>
+              </Link>
             </div>
 
             <div className="home_userinfo_match">

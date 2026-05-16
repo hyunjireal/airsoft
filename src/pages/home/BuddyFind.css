@@ -12,7 +12,7 @@
 
 .mobile_frame:has(.buddy_loading_page),
 .mobile_frame:has(.buddy_loading_page) > main {
-  --app-max-width: 393px;
+  --app-max-width: 1024px;
 }
 
 .buddy_find_page .buddy_find_header {
@@ -614,10 +614,12 @@
   color: #1a1a1a;
 }
 
+/* 헤더 — absolute로 이미지 위에 떠있음 */
 .buddy_loading_header {
   position: absolute !important;
   top: 0;
   left: 0;
+  width: 100%;
   z-index: 3;
   background: transparent !important;
 }
@@ -631,6 +633,7 @@
   filter: none;
 }
 
+/* 상태바 */
 .buddy_loading_statusbar {
   position: relative;
   z-index: 1;
@@ -638,7 +641,7 @@
   align-items: center;
   justify-content: space-between;
   height: 40px;
-  padding: 19px 31px 0;
+  padding: clamp(14px, 2.4vw, 22px) clamp(20px, 4vw, 40px) 0;
   color: #ffffff;
 }
 
@@ -647,7 +650,7 @@
 }
 
 .buddy_loading_statusbar__time {
-  font-size: 17px;
+  font-size: clamp(14px, 1.8vw, 18px);
   font-weight: var(--font-weight-semibold);
   line-height: 1;
   letter-spacing: 0.038px;
@@ -677,21 +680,10 @@
   background: #000000;
 }
 
-.buddy_loading_signal span:nth-child(1) {
-  height: 4px;
-}
-
-.buddy_loading_signal span:nth-child(2) {
-  height: 6px;
-}
-
-.buddy_loading_signal span:nth-child(3) {
-  height: 9px;
-}
-
-.buddy_loading_signal span:nth-child(4) {
-  height: 11px;
-}
+.buddy_loading_signal span:nth-child(1) { height: 4px; }
+.buddy_loading_signal span:nth-child(2) { height: 6px; }
+.buddy_loading_signal span:nth-child(3) { height: 9px; }
+.buddy_loading_signal span:nth-child(4) { height: 11px; }
 
 .buddy_loading_wifi {
   position: relative;
@@ -772,43 +764,39 @@
   background: #000000;
 }
 
+/* 텍스트 영역 — 항상 상단 고정 */
 .buddy_loading_text {
   position: relative;
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 11px;
-  padding: 84px 24px 0;
+  gap: clamp(8px, 1.4vw, 14px);
+  /* 상단: 헤더 높이(약 56px) + statusbar(40px) + 여백 */
+  padding: clamp(70px, 12vw, 120px) clamp(20px, 4vw, 48px) 0;
   text-align: center;
-}
-
-.buddy_loading_page--light .buddy_loading_text {
-  padding-top: 85px;
 }
 
 .buddy_loading_text h1 {
   margin: 0;
   color: #e9e9e9;
-  font-size: 28px;
+  font-size: clamp(24px, 3.6vw, 38px);
   font-weight: var(--font-weight-bold);
   line-height: 1.3;
-  letter-spacing: -0.56px;
+  letter-spacing: -0.02em;
 }
 
 .buddy_loading_page--light .buddy_loading_text h1 {
   color: #1a1a1a;
-  font-size: 26px;
-  letter-spacing: -0.52px;
 }
 
 .buddy_loading_text p {
-  width: 204px;
+  max-width: clamp(200px, 36vw, 320px);
   margin: 0;
   color: #ffffff;
-  font-size: 16px;
+  font-size: clamp(14px, 1.8vw, 18px);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.3;
-  letter-spacing: -0.32px;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
 }
 
 .buddy_loading_page--light .buddy_loading_text p {
@@ -1619,6 +1607,26 @@
   background: #e2fd34;
   color: #1a1a1a;
   margin-top: 8px;
+}
+
+.buddy_request_btn--home {
+  margin-top: 12px;
+  padding: 6px 12px;
+  border: 0;
+  background: transparent;
+  color: #636363;
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+:root[data-theme='light'] .buddy_request_btn--home {
+  color: #a0a89a;
 }
 
 /* success step */

@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import type { CSSProperties } from 'react'
@@ -539,7 +539,9 @@ function readFocusedMatchDate() {
 
 export function MatchHome() {
   const navigate = useNavigate()
+  const location = useLocation()
   const scheduleSectionRef = useRef<HTMLElement | null>(null)
+  const aiSectionRef = useRef<HTMLElement | null>(null)
   const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
   const [calendarMonth, setCalendarMonth] = useState<Date>(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
@@ -620,6 +622,14 @@ export function MatchHome() {
       }, 180)
     }
   }, [])
+
+  useEffect(() => {
+    if ((location.state as { scrollTo?: string } | null)?.scrollTo === 'ai-recommend') {
+      window.setTimeout(() => {
+        aiSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 200)
+    }
+  }, [location.state])
 
   const handleTypeSelect = (kind: 'personal' | 'team' | 'guest', guestFlow?: 'wanted' | 'join') => {
     if (kind !== 'guest') {
@@ -727,7 +737,7 @@ export function MatchHome() {
         </div>
       </section>
 
-      <section className="match_section match_ai_recommend_section" aria-labelledby="match-ai-title">
+      <section className="match_section match_ai_recommend_section" aria-labelledby="match-ai-title" ref={aiSectionRef}>
         <div className="match_ai_heading">
           <h2 id="match-ai-title" className="match_section_title">AI 추천 매치</h2>
           <button className="match_ai_preset_button" type="button" onClick={openPresetSheet}>

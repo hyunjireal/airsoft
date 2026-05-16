@@ -643,6 +643,7 @@ function BuddyRequestModal({
   buddy: BuddyRecommendation
   onClose: () => void
 }) {
+  const navigate = useNavigate()
   const [step, setStep] = useState<RequestModalStep>('form')
   const [message, setMessage] = useState('')
   const MAX_LENGTH = 80
@@ -655,6 +656,11 @@ function BuddyRequestModal({
     onClose()
     setStep('form')
     setMessage('')
+  }
+
+  const handleGoHome = () => {
+    onClose()
+    navigate('/home')
   }
 
   return (
@@ -727,6 +733,9 @@ function BuddyRequestModal({
             </p>
             <button className="buddy_request_btn buddy_request_btn--confirm" type="button" onClick={handleConfirm}>
               확인
+            </button>
+            <button className="buddy_request_btn--home" type="button" onClick={handleGoHome}>
+              홈으로 돌아가기
             </button>
           </div>
         )}
