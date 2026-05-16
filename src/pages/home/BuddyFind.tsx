@@ -3,7 +3,8 @@ import { LazyMotion, domAnimation, m } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
-import buddyHeroMain from '../../asset/images/buddy_hero_main.png'
+import buddyHeroDark from '../../asset/images/buddy_bg_d.png'
+import buddyHeroLight from '../../asset/images/buddy_bg_l.png'
 import { PageHeader } from '../../components/PageHeader'
 import { useThemeMode } from '../../hooks/useThemeMode'
 import {
@@ -108,7 +109,12 @@ export function BuddyFind() {
         />
 
         <section className="buddy_find_hero" aria-label="버디 매칭 소개">
-          <img className="buddy_find_hero__art" src={buddyHeroMain} alt="" aria-hidden="true" />
+          <img
+            className="buddy_find_hero__art"
+            src={themeMode === 'dark' ? buddyHeroDark : buddyHeroLight}
+            alt=""
+            aria-hidden="true"
+          />
           <div className="buddy_find_hero__info">
             <p className="buddy_find_hero__title">
               같은 게임 참가자와
@@ -231,7 +237,7 @@ export function BuddyFind() {
             </h2>
           </div>
           <p className="buddy_find_section__desc buddy_find_section__desc--stacked">
-            도움이 필요한 항목과 경험 수준을 입력하면
+            도움이 필요한 항목과 경험 수준을 선택하면
             <br />
             더 잘 맞는 버디를 추천해드려요
           </p>

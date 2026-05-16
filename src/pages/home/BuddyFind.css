@@ -249,7 +249,7 @@
 
 .buddy_find_more__button {
   width: 100%;
-  min-height: 69px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -409,7 +409,7 @@
   background: var(--color-lime);
   color: var(--color-black);
   font-size: 18px;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   line-height: 1.3;
   letter-spacing: var(--letter-spacing-tight);
   cursor: pointer;
@@ -420,99 +420,159 @@
   cursor: default;
 }
 
+:root[data-theme='light'] {
+  --buddy-light-white: #ffffff;
+  --buddy-light-cream: #f8f8f4;
+  --buddy-light-hero: #d7ddd6;
+  --buddy-light-text: #171914;
+  --buddy-light-muted: #6f7466;
+  --buddy-light-line: #d8d9d1;
+  --buddy-light-olive: #676B5D;
+  --buddy-light-lime: #676B5D;
+}
+
 :root[data-theme='light'] .buddy_find_page {
-  background: var(--color-white);
-  color: var(--color-black);
+  background: var(--buddy-light-white);
+  color: var(--buddy-light-text);
 }
 
 :root[data-theme='light'] .buddy_find_page .buddy_find_header {
-  background: var(--color-white);
+  background: var(--buddy-light-white);
 }
 
 :root[data-theme='light'] .buddy_find_page .page_header__title {
-  color: var(--color-black);
+  color: var(--buddy-light-text);
 }
 
 :root[data-theme='light'] .buddy_find_page .page_header__circle_button {
-  background: var(--color-white);
-  border-color: var(--color-gray04);
+  background: var(--buddy-light-white);
+  border-color: var(--buddy-light-line);
 }
 
 :root[data-theme='light'] .buddy_find_page .page_header__profile_link {
-  border-color: var(--color-gray04);
+  border-color: var(--buddy-light-line);
 }
 
 :root[data-theme='light'] .buddy_find_hero {
-  background: #f4f6ed;
+  background: var(--buddy-light-white);
 }
 
 :root[data-theme='light'] .buddy_find_hero::after {
-  background: linear-gradient(
-    40deg,
-    rgba(255, 255, 255, 0.82) 13%,
-    rgba(244, 246, 237, 0.54) 46%,
-    rgba(226, 253, 52, 0.18) 74%
-  );
+  background: none;
 }
 
 :root[data-theme='light'] .buddy_find_hero__title,
 :root[data-theme='light'] .buddy_find_section__title,
 :root[data-theme='light'] .buddy_find_schedule_card__date,
 :root[data-theme='light'] .buddy_find_filter_title {
-  color: var(--color-black);
+  color: var(--buddy-light-text);
+}
+
+:root[data-theme='light'] .buddy_find_section__badge {
+  background: var(--buddy-light-lime);
+  color: var(--buddy-light-white);
 }
 
 :root[data-theme='light'] .buddy_find_section__desc,
 :root[data-theme='light'] .buddy_find_schedule_card__place,
 :root[data-theme='light'] .buddy_find_schedule_card__count {
-  color: var(--color-gray02);
+  color: var(--buddy-light-muted);
+}
+
+:root[data-theme='light'] .buddy_find_section__desc span {
+  color: var(--buddy-light-lime);
 }
 
 :root[data-theme='light'] .buddy_find_schedule_card,
 :root[data-theme='light'] .buddy_find_filter_card,
 :root[data-theme='light'] .buddy_find_summary_card {
-  border: 1px solid var(--color-gray05);
-  background: var(--color-white);
-  box-shadow: 0 8px 22px rgba(31, 43, 69, 0.08);
+  background: var(--buddy-light-white);
+}
+
+:root[data-theme='light'] .buddy_find_filter_card,
+:root[data-theme='light'] .buddy_find_summary_card {
+  border: 1px solid #D9D9D9;
 }
 
 :root[data-theme='light'] .buddy_find_schedule_card--selected {
-  border-color: rgba(103, 107, 93, 0.32);
-  box-shadow:
-    0 8px 22px rgba(31, 43, 69, 0.08),
-    inset 0 0 0 1px rgba(226, 253, 52, 0.72);
+  border-color: var(--buddy-light-olive);
 }
 
 :root[data-theme='light'] .buddy_find_schedule_card__divider {
-  border-top-color: var(--color-gray04);
+  border-top-color: var(--buddy-light-line);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card__icon_wrap,
+:root[data-theme='light'] .buddy_find_more__icon_wrap {
+  background: rgba(103, 107, 93, 0.2);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card__icon_wrap img,
+:root[data-theme='light'] .buddy_find_more__icon_wrap img,
+:root[data-theme='light'] .buddy_find_summary_chip__left img {
+  filter: brightness(0) saturate(100%) invert(41%) sepia(7%) saturate(634%) hue-rotate(40deg) brightness(95%) contrast(86%);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card__action {
+  background: var(--buddy-light-olive);
+  color: var(--buddy-light-white);
+}
+
+:root[data-theme='light'] .buddy_find_schedule_card__action:active {
+  background: var(--buddy-light-muted);
 }
 
 :root[data-theme='light'] .buddy_find_more__button {
-  background: var(--color-gray05);
-  color: var(--color-black);
+  background: var(--buddy-light-olive);
+  color: var(--buddy-light-white);
 }
 
 :root[data-theme='light'] .buddy_find_more__arrow {
-  filter: none;
-  opacity: 0.8;
+  filter: brightness(0) invert(1);
 }
 
 :root[data-theme='light'] .buddy_find_filter_title span {
-  color: var(--color-gray02);
+  color: var(--buddy-light-muted);
 }
 
 :root[data-theme='light'] .buddy_find_filter_button,
 :root[data-theme='light'] .buddy_find_summary_chip {
-  border-color: var(--color-gray04);
-  background: #f7f8f2;
-  color: var(--color-black);
+  border-color: var(--buddy-light-line);
+  background: var(--buddy-light-white);
+  color: var(--buddy-light-text);
 }
 
 :root[data-theme='light'] .buddy_find_filter_button--active {
-  border-color: var(--color-khaki);
-  background: rgba(226, 253, 52, 0.34);
+  border-color: var(--buddy-light-olive);
+  background: var(--buddy-light-cream);
 }
 
 :root[data-theme='light'] .buddy_find_summary_chip__close {
-  color: var(--color-gray02);
+  color: var(--buddy-light-muted);
+}
+
+:root[data-theme='light'] .buddy_find_start_button {
+  background: var(--buddy-light-olive);
+  color: var(--buddy-light-white);
+}
+
+@media (min-width: 768px) {
+  .buddy_find_summary_card {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .buddy_find_summary_chip--schedule {
+    margin-bottom: 0;
+  }
+
+  .buddy_find_summary_row {
+    display: contents;
+  }
+
+  .buddy_find_summary_chip {
+    white-space: nowrap;
+  }
 }
