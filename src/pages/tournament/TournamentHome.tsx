@@ -172,10 +172,10 @@ export function TournamentHome() {
             </div>
 
             <div className="tournament_main_banner_actions">
-              <Link className="tournament_main_cta is_secondary" to="/tournament/highlights">
+              <span className="tournament_main_cta is_disabled">
                 <img src={tournamentHighlightIcon} alt="" aria-hidden="true" />
                 <span>하이라이트 보기</span>
-              </Link>
+              </span>
               <Link className="tournament_main_cta is_primary" to="/tournament/mvp-vote">
                 <img src={tournamentTourIcon} alt="" aria-hidden="true" />
                 <span>MVP 투표</span>
@@ -264,17 +264,19 @@ export function TournamentHome() {
 
         <div className="tournament_main_video_row">
           {highlightVideos.map((video) => (
-            <Link
+            <a
               key={video.id}
               className="tournament_main_video_card"
-              to={`/tournament/highlights/${video.id}`}
+              href="https://youtu.be/bnjqWY4uULA?si=YNIvFmm_o-TZ5RLw"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <div className="tournament_main_video_thumb">
                 <img src={video.imageSrc} alt="" aria-hidden="true" />
                 <span className="tournament_main_video_play" aria-hidden="true" />
               </div>
               <strong>{video.title}</strong>
-            </Link>
+            </a>
           ))}
         </div>
       </section>

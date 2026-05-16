@@ -36,7 +36,7 @@
   --tournament-info-card-border: rgba(255, 255, 255, 0.08);
   --tournament-hero-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0) 14%, rgba(255, 255, 255, 0.58) 72%, #ffffff 100%);
   min-height: 100vh;
-  padding-bottom: 200px;
+  padding-bottom: 133px;
   background: var(--tournament-page-bg);
   color: var(--tournament-copy);
 }
@@ -61,7 +61,7 @@
   --tournament-stage-card-soft-border: rgba(255, 255, 255, 0.08);
   --tournament-stage-card-shadow: none;
   --tournament-stage-card-text: #ffffff;
-  --tournament-stage-card-subtext: #d9d9d9;
+  --tournament-stage-card-subtext: #7a7a7a;
   --tournament-stage-card-label: #adadad;
   --tournament-stage-pill-border: #636363;
   --tournament-stage-pill-text: #636363;
@@ -103,8 +103,8 @@
   position: absolute !important;
   inset: 0 0 auto;
   z-index: 2;
-  min-height: 0 !important;
-  height: auto !important;
+  min-height: 130px !important;
+  height: 130px !important;
   padding: calc(40px + env(safe-area-inset-top, 0px)) var(--tournament-shell-padding) 0 !important;
   background: transparent !important;
 }
@@ -116,7 +116,7 @@
 .tournament_main_hero_inner {
   position: relative;
   z-index: 1;
-  padding: clamp(100px, calc(62px + 9.5vw), 160px) var(--tournament-shell-padding) 0;
+  padding: clamp(150px, calc(100px + 9.5vw), 220px) var(--tournament-shell-padding) 0;
 }
 
 .tournament_main_banner {
@@ -266,6 +266,17 @@
   color: var(--tournament-cta-secondary-text);
 }
 
+.tournament_main_cta.is_disabled {
+  border: 1px solid #555;
+  color: #555;
+  cursor: default;
+  pointer-events: none;
+}
+
+.tournament_main_cta.is_disabled img {
+  opacity: 0.4;
+}
+
 .tournament_main_cta.is_primary {
   background: var(--tournament-cta-primary-bg);
   color: var(--tournament-cta-primary-text);
@@ -283,6 +294,10 @@
 
 .tournament_main_section:last-child {
   padding-bottom: 24px;
+}
+
+.tournament_main_bracket_section {
+  padding-top: clamp(24px, calc(13px + 2.7vw), 40px);
 }
 
 .tournament_main_section_header h2 {
@@ -525,7 +540,7 @@
 
 .tournament_main_page.is_dark .tournament_main_info_icon,
 .tournament_main_page.is_dark .tournament_main_notice img {
-  filter: brightness(0) saturate(100%) invert(88%) sepia(75%) saturate(762%) hue-rotate(20deg) brightness(104%) contrast(98%);
+  filter: brightness(0) saturate(100%) invert(88%) sepia(100%) saturate(235%) hue-rotate(8deg);
 }
 
 .tournament_main_info_copy {
@@ -567,4 +582,12 @@
   width: 16px;
   height: 16px;
   object-fit: contain;
+}
+
+@media (min-width: 768px) {
+  .tournament_main_banner,
+  .tournament_main_stage_tabs,
+  .tournament_main_bracket_list {
+    width: 100%;
+  }
 }
