@@ -126,6 +126,39 @@ body.auth_body {
   max-width: calc(310px + 250 * (var(--auth-fluid-range) / 631));
 }
 
+.auth_dummy_account_button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-pretendard);
+  font-size: calc(13px + 2 * (var(--auth-fluid-range) / 631));
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.auth_dummy_account_button img {
+  width: calc(12px + 2 * (var(--auth-fluid-range) / 631));
+  height: calc(12px + 2 * (var(--auth-fluid-range) / 631));
+  filter: brightness(0) saturate(100%) invert(100%);
+  opacity: 0.82;
+}
+
+.auth_dummy_account_button:focus-visible {
+  outline: 2px solid rgba(226, 253, 52, 0.45);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .auth_form_block {
   display: flex;
   flex-direction: column;

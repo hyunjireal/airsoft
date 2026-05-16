@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import phoneNumberImage from '../../asset/images/login_number_img.png'
+import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import iconEyeOff from '../../asset/icons/login_eye_off.svg'
 import iconLocation from '../../asset/icons/login_location.svg'
 import { AuthShell } from './AuthShell'
@@ -61,6 +62,14 @@ const regionOptions = [
 ]
 
 const regionPlaceholder = '활동 지역을 선택해주세요'
+
+const dummySignupProfile = {
+  nickname: '더미요원3355',
+  email: 'dummy3355@airsoft.test',
+  password: 'Dummy3355!',
+  region: '서울',
+  phoneNumber: '010-3355-0000',
+}
 
 function ChevronDownIcon({ className = 'auth_phone_chevron' }: { className?: string }) {
   return (
@@ -154,6 +163,17 @@ export function Signup() {
     setRegionSheetOpen(false)
   }
 
+  const handleUseDummyAccount = () => {
+    setNickname(dummySignupProfile.nickname)
+    setEmail(dummySignupProfile.email)
+    setPassword(dummySignupProfile.password)
+    setPasswordConfirm(dummySignupProfile.password)
+    setRegion(dummySignupProfile.region)
+    setPhoneNumber(dummySignupProfile.phoneNumber)
+    setSubmitted(false)
+    setRegionSheetOpen(false)
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setSubmitted(true)
@@ -214,6 +234,10 @@ export function Signup() {
             <div className="auth_page_header auth_page_header_left">
               <h1 className="auth_page_title">회원가입</h1>
               <p className="auth_page_description">{selectedMode.formSubtitle}</p>
+              <button className="auth_dummy_account_button" type="button" onClick={handleUseDummyAccount}>
+                <span>더미 계정 사용</span>
+                <img src={arrowRightIcon} alt="" aria-hidden="true" />
+              </button>
             </div>
 
             <div className="auth_form_block auth_form_block_signup">
