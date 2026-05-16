@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import More from '../../components/More'
@@ -367,6 +367,7 @@ export function MyPage() {
     confirmed: myMatchGroups.confirmed,
     past: myMatchGroups.past,
   }[matchTab]
+  const activeMatchTabIndex = matchTabs.findIndex((tab) => tab.key === matchTab)
 
   useEffect(() => {
     const refreshSchedules = () => {
@@ -458,7 +459,12 @@ export function MyPage() {
           />
         </div>
 
-        <div className="my_match_tabs" role="tablist" aria-label="내 매치 상태 탭">
+        <div
+          className="my_match_tabs"
+          role="tablist"
+          aria-label="내 매치 상태 탭"
+          style={{ '--my-match-tab-index': activeMatchTabIndex } as CSSProperties}
+        >
           {matchTabs.map((tab) => (
             <button
               key={tab.key}
@@ -473,7 +479,7 @@ export function MyPage() {
           ))}
         </div>
 
-        <div className="my_match_cards">
+        <div className="my_match_cards" key={matchTab}>
           {visibleMatches.map((match) => (
             <MatchCardLink key={match.id} match={match} />
           ))}
