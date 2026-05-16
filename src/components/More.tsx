@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, type LinkProps } from 'react-router-dom'
 import arrowR from '../asset/icons/arrow_r.svg'
 
 type MoreProps = {
@@ -8,6 +8,7 @@ type MoreProps = {
   className?: string
   disabled?: boolean
   onClick?: () => void
+  state?: LinkProps['state']
   style?: CSSProperties
   to?: string
   type?: 'button' | 'reset' | 'submit'
@@ -43,6 +44,7 @@ function More({
   className,
   disabled,
   onClick,
+  state,
   style,
   to,
   type,
@@ -57,7 +59,7 @@ function More({
 
   if (to) {
     return (
-      <Link aria-label={ariaLabel} className={className} style={mergedStyle} to={to}>
+      <Link aria-label={ariaLabel} className={className} state={state} style={mergedStyle} to={to}>
         {content}
       </Link>
     )

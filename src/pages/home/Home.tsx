@@ -670,7 +670,7 @@ export function Home() {
             <div className="home_userinfo_match">
               <div className="home_userinfo_match_header">
                 <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-                <Link className="home_more_link" to="/my/schedule" aria-label="내 경기 일정 더보기">
+                <Link className="home_more_link" to="/my/schedule" state={{ from: '/home' }} aria-label="내 경기 일정 더보기">
                   <More />
                 </Link>
               </div>

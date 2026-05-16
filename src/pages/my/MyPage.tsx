@@ -10,7 +10,6 @@ import quickBookmarkIcon from '../../asset/icons/my_quick_bookmark.svg'
 import quickHandIcon from '../../asset/icons/my_quick_hand.svg'
 import quickTeamIcon from '../../asset/icons/my_quick_team.svg'
 import quickWriteIcon from '../../asset/icons/my_quick_write.svg'
-import myMatchThumbImage from '../../asset/images/my_match_img01.png'
 import profileImage from '../../asset/images/main_user01.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import { getMyMatchGroups, type MyMatchItem } from './myMatchData'
@@ -174,7 +173,7 @@ function MatchCardLink({ match }: { match: MyMatchItem }) {
   return (
     <Link className="my_match_card" to={match.to}>
       <div className="my_match_thumb" aria-hidden="true">
-        <img className="my_match_thumb_image" src={myMatchThumbImage} alt="" />
+        <img className="my_match_thumb_image" src={match.imageSrc} alt="" />
       </div>
       <div className="my_match_info">
         <div className="my_match_title_row">
@@ -329,16 +328,33 @@ export function MyPage() {
   const [loggedIn, setLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true')
   const [matchTab, setMatchTab] = useState<MatchTab>('waiting')
   const [logoutModalOpen, setLogoutModalOpen] = useState(false)
+  const [scheduleRevision, setScheduleRevision] = useState(0)
 
   const savedNickname = localStorage.getItem('nickname')
   const profileName = resolveProfileName(savedNickname)
   const profileStatusLabel = localStorage.getItem('skillAlias')?.trim() || '안전제일 뉴비'
-  const myMatchGroups = useMemo(() => getMyMatchGroups(), [])
+  const myMatchGroups = useMemo(() => getMyMatchGroups(), [scheduleRevision])
   const visibleMatches = {
     waiting: myMatchGroups.applied,
     confirmed: myMatchGroups.confirmed,
     past: myMatchGroups.past,
   }[matchTab]
+
+  useEffect(() => {
+    const refreshSchedules = () => {
+      setScheduleRevision((revision) => revision + 1)
+    }
+
+    window.addEventListener('focus', refreshSchedules)
+    window.addEventListener('storage', refreshSchedules)
+    window.addEventListener('pageshow', refreshSchedules)
+
+    return () => {
+      window.removeEventListener('focus', refreshSchedules)
+      window.removeEventListener('storage', refreshSchedules)
+      window.removeEventListener('pageshow', refreshSchedules)
+    }
+  }, [])
 
   useEffect(() => {
     if (!logoutModalOpen) {
@@ -409,6 +425,8 @@ export function MyPage() {
           <More
             className="my_matches_more"
             style={moreActionStyle}
+            state={{ from: '/my' }}
+            to="/my/schedule"
           />
         </div>
 

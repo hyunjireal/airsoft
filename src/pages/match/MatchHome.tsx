@@ -708,14 +708,14 @@ export function MatchHome() {
         </div>
 
         <div className="match_status_list">
-          <Link className="match_status_summary_card is_waiting" to="/my/schedule?tab=applied">
+          <Link className="match_status_summary_card is_waiting" to="/my/schedule?tab=applied" state={{ from: '/match' }}>
             <span>
               <strong>승인대기 일정</strong>
               <small>참가 신청한 매치를 확인하세요</small>
             </span>
             <b>{myMatchGroups.applied.length}건</b>
           </Link>
-          <Link className="match_status_summary_card is_confirmed" to="/my/schedule?tab=confirmed">
+          <Link className="match_status_summary_card is_confirmed" to="/my/schedule?tab=confirmed" state={{ from: '/match' }}>
             <span>
               <strong>확정 일정</strong>
               <small>확정된 매치 일정을 확인하세요</small>
