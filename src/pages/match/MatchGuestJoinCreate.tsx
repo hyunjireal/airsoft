@@ -9,6 +9,9 @@ import guestLocaIcon from '../../asset/icons/guest_loca.svg'
 import guestScheduleIcon from '../../asset/icons/guest_schedule.svg'
 import './match.css'
 
+const CREATED_MATCHES_KEY = 'airsoft:created-matches'
+const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
+
 const difficultyOptions = ['초보', '숙련자', '상관없음']
 const fieldOptions: Record<string, string[]> = {
   서울: ['강남 CQB', '어반 CQB'],
@@ -60,7 +63,32 @@ export function MatchGuestJoinCreate() {
     setParticipantCount((count) => Math.min(2, count + 1))
   }
 
-  const completeGuestJoinRegistration = () => {
+  const createGuestJoinMatch = () => {
+    const savedMatches = (() => {
+      try {
+        const matches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
+        return Array.isArray(matches) ? matches : []
+      } catch {
+        return []
+      }
+    })()
+    const createdMatch = {
+      id: `created-guest-join-${Date.now()}`,
+      type: 'mercenary',
+      title: title.trim() || '제가 갈게요',
+      time: matchTime,
+      region,
+      fieldName,
+      difficulty: '용병',
+      currentParticipants: participantCount,
+      maxParticipants: participantCount,
+      action: '상세 보기',
+      body,
+      date: matchDate,
+    }
+
+    localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify([createdMatch, ...savedMatches]))
+    localStorage.setItem(CREATED_MATCH_FOCUS_DATE_KEY, matchDate)
     markMatchRegistrationToastPending()
     navigate('/match')
   }
@@ -218,7 +246,7 @@ export function MatchGuestJoinCreate() {
       <div className="mgc_submit_wrap">
         <LoginButton
           style={{ background: 'var(--color-khaki)', backgroundColor: 'var(--color-khaki)', color: 'var(--color-white)', WebkitTextFillColor: 'var(--color-white)' }}
-          onClick={completeGuestJoinRegistration}
+          onClick={createGuestJoinMatch}
         >
           등록하기
         </LoginButton>

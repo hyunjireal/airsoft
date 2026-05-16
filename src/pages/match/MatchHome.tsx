@@ -976,8 +976,12 @@ export function MatchHome() {
                           >
                             {getMatchTypeLabel(match)}
                           </MainTag>
-                          {isPastMatch ? <span className="match_past_schedule_badge">지난 일정</span> : null}
-                          {isMine ? <span className="match_my_schedule_badge">내가 올린 일정</span> : null}
+                          {isPastMatch || isMine ? (
+                            <div className="match_schedule_badge_stack" aria-hidden="true">
+                              {isMine ? <span className="match_my_schedule_badge">내가 올린 일정</span> : null}
+                              {isPastMatch ? <span className="match_past_schedule_badge">지난 일정</span> : null}
+                            </div>
+                          ) : null}
                           <div className="match_item_media">
                             <img className="match_selected_thumb" src={match.imageSrc ?? matchList01} alt="" aria-hidden="true" />
                             <div className="match_selected_info">

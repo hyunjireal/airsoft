@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import tournamentHighlightIcon from '../../asset/icons/tournament_highlight.svg'
@@ -49,6 +49,12 @@ const bracketTabs: Array<{ id: BracketStage; label: string }> = [
   { id: 'semifinal', label: '4강' },
   { id: 'final', label: '결승' },
 ]
+
+const bracketStageIndex: Record<BracketStage, number> = {
+  quarterfinal: 0,
+  semifinal: 1,
+  final: 2,
+}
 
 const quarterfinalMatches: QuarterfinalMatch[] = [
   { id: 'qf-1', label: '1경기', winner: '바주카', winnerScore: 2, loser: 'E팀', loserScore: 0, status: '완료' },
@@ -103,8 +109,16 @@ export function TournamentHome() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
   const [activeStage, setActiveStage] = useState<BracketStage>('quarterfinal')
+  const [bracketDirection, setBracketDirection] = useState<'next' | 'prev'>('next')
+  const [isIntroAnimating, setIsIntroAnimating] = useState(true)
   const isDark = themeMode === 'dark'
   const heroImage = isDark ? tournamentMainDarkImage : tournamentMainLightImage
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setIsIntroAnimating(false), 1250)
+
+    return () => window.clearTimeout(timer)
+  }, [])
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -115,13 +129,20 @@ export function TournamentHome() {
     navigate('/home')
   }
 
+  const changeStage = (nextStage: BracketStage) => {
+    if (nextStage === activeStage) return
+
+    setBracketDirection(bracketStageIndex[nextStage] > bracketStageIndex[activeStage] ? 'next' : 'prev')
+    setActiveStage(nextStage)
+  }
+
   const moveToSemifinal = () => {
-    setActiveStage('semifinal')
+    changeStage('semifinal')
     document.getElementById('tournament-bracket')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   return (
-    <div className={`tournament_main_page is_${themeMode}`}>
+    <div className={`tournament_main_page is_${themeMode}${isIntroAnimating ? ' is_intro' : ''}`}>
       <section
         className="tournament_main_hero"
         style={{ '--tournament-hero-image': `url(${heroImage})` } as CSSProperties}
@@ -191,6 +212,7 @@ export function TournamentHome() {
         </div>
 
         <div className="tournament_main_stage_tabs" role="tablist" aria-label="토너먼트 대진 단계">
+          <span className="tournament_main_stage_indicator" aria-hidden="true" />
           {bracketTabs.map((tab) => (
             <button
               key={tab.id}
@@ -198,7 +220,7 @@ export function TournamentHome() {
               type="button"
               role="tab"
               aria-selected={activeStage === tab.id}
-              onClick={() => setActiveStage(tab.id)}
+              onClick={() => changeStage(tab.id)}
             >
               {tab.label}
             </button>
@@ -206,7 +228,7 @@ export function TournamentHome() {
         </div>
 
         {activeStage === 'quarterfinal' ? (
-          <div className="tournament_main_bracket_list">
+          <div key="quarterfinal" className={`tournament_main_bracket_list is_${bracketDirection}`}>
             {quarterfinalMatches.map((match) => (
               <article key={match.id} className="tournament_main_bracket_card is_quarterfinal">
                 <span className="tournament_main_bracket_label">{match.label}</span>
@@ -227,7 +249,7 @@ export function TournamentHome() {
         ) : null}
 
         {activeStage === 'semifinal' ? (
-          <div className="tournament_main_bracket_list">
+          <div key="semifinal" className={`tournament_main_bracket_list is_${bracketDirection}`}>
             {semifinalMatches.map((match) => (
               <article key={match.id} className="tournament_main_bracket_card is_knockout">
                 <span className="tournament_main_bracket_label">{match.label}</span>
@@ -242,7 +264,7 @@ export function TournamentHome() {
         ) : null}
 
         {activeStage === 'final' ? (
-          <div className="tournament_main_bracket_list">
+          <div key="final" className={`tournament_main_bracket_list is_${bracketDirection}`}>
             {finalMatches.map((match) => (
               <article key={match.id} className="tournament_main_bracket_card is_knockout is_final">
                 <span className="tournament_main_bracket_label is_highlight">{match.label}</span>
