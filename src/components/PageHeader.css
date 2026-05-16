@@ -6,9 +6,9 @@
   align-items: flex-end !important;
   justify-content: center;
   width: 100%;
-  height: 130px !important;
-  min-height: 130px !important;
-  padding: 40px 24px 16px !important;
+  height: 100px !important;
+  min-height: 100px !important;
+  padding: 0 24px 16px !important;
   background: var(--color-white);
   font-family: var(--font-pretendard);
   text-align: left;

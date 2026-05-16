@@ -22,7 +22,7 @@
   width: min(100%, var(--app-max-width));
   height: auto;
   min-height: 0;
-  padding: 10px 22px 16px;
+  padding: 20px 22px 16px;
   background: transparent;
   box-sizing: border-box;
   transform: translateX(-50%);

@@ -362,7 +362,7 @@ export function BeginnerBoard() {
   const [introComplete, setIntroComplete] = useState(false);
   const [heroCollapsed, setHeroCollapsed] = useState(false);
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
-  const questionListRef = useRef<HTMLDivElement | null>(null);
+  const questionsSectionRef = useRef<HTMLElement | null>(null);
   const [expandedTabs, setExpandedTabs] = useState<Set<CategoryTab>>(
     () => new Set(),
   );
@@ -524,8 +524,8 @@ export function BeginnerBoard() {
   }, [focusPostId, location.pathname, navigate, visibleQuestions]);
 
   useEffect(() => {
-    const questionList = questionListRef.current;
-    if (!questionList) return undefined;
+    const questionsSection = questionsSectionRef.current;
+    if (!questionsSection) return undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -533,12 +533,12 @@ export function BeginnerBoard() {
       },
       {
         root: null,
-        rootMargin: "-128px 0px -84% 0px",
+        rootMargin: "-96px 0px -68% 0px",
         threshold: 0.01,
       },
     );
 
-    observer.observe(questionList);
+    observer.observe(questionsSection);
 
     return () => observer.disconnect();
   }, []);
@@ -701,7 +701,7 @@ export function BeginnerBoard() {
           </div>
         </section>
 
-        <section className="beginner_questions_section">
+        <section className="beginner_questions_section" ref={questionsSectionRef}>
           <div className="beginner_question_header">
             <div className="beginner_question_heading">
               <h2>최근 올라온 질문</h2>
@@ -734,7 +734,7 @@ export function BeginnerBoard() {
               ))}
             </div>
 
-            <div className="beginner_question_card_list" ref={questionListRef}>
+            <div className="beginner_question_card_list">
               {visibleQuestions.map((question, questionIndex) => {
                 const bookmarked = bookmarkedIds.has(question.id);
 
