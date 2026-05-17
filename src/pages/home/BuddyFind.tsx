@@ -6,7 +6,6 @@ import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
 import buddyHeroDark from '../../asset/images/buddy_bg_d.png'
 import buddyHeroLight from '../../asset/images/buddy_bg_l.png'
 import buddyLoadingFigmaBg from '../../asset/images/buddy_loading_figma_bg.png'
-import buddyLoadingFigmaBgLight from '../../asset/images/buddy_loading_figma_bg_light.png'
 import buddyProfileOne from '../../asset/images/buddy_profile_img01.png'
 import buddyProfileTwo from '../../asset/images/buddy_profile_img02.png'
 import buddyProfileThree from '../../asset/images/buddy_profile_img03.png'
@@ -566,60 +565,39 @@ export function BuddyFind() {
 
 export function BuddyLoading() {
   const navigate = useNavigate()
-  const themeMode = useThemeMode()
-  const isLightMode = themeMode === 'light'
 
-  useEffect(() => {
-    const timerId = window.setTimeout(() => {
-      navigate('/buddy/recommend')
-    }, 2600)
+  const goRecommend = () => {
+    navigate('/buddy/recommend')
+  }
 
-    return () => window.clearTimeout(timerId)
-  }, [navigate])
+  const handleLoadingKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    goRecommend()
+  }
 
   return (
     <article
-      className={`buddy_loading_page${isLightMode ? ' buddy_loading_page--light' : ''}`}
+      className="buddy_loading_page"
       aria-live="polite"
       aria-busy="true"
+      role="button"
+      tabIndex={0}
+      onClick={goRecommend}
+      onKeyDown={handleLoadingKeyDown}
     >
-      <img
-        className="buddy_loading_bg"
-        src={isLightMode ? buddyLoadingFigmaBgLight : buddyLoadingFigmaBg}
-        alt=""
-        aria-hidden="true"
-      />
-
-      <PageHeader
-        variant={isLightMode ? 'transparent' : 'overlay'}
-        className="buddy_loading_header"
-        onBack={() => navigate('/buddy')}
-        backLabel="버디 찾기로 돌아가기"
-        hideRight
-      />
-
-      <div className="buddy_loading_statusbar" aria-hidden="true">
-        <span className="buddy_loading_statusbar__time">15:00</span>
-        <span className="buddy_loading_statusbar__icons">
-          <span className="buddy_loading_signal">
-            <span />
-            <span />
-            <span />
-            <span />
-          </span>
-          <span className="buddy_loading_wifi" />
-          <span className="buddy_loading_battery" />
-        </span>
-      </div>
-
       <section className="buddy_loading_text">
         <h1>버디 찾는 중</h1>
         <p>
-          당신에게 맞는 버디를 찾고있어요{isLightMode ? '.' : ''}
+          당신에게 맞는 버디를 찾고있어요
           <br />
-          잠시만 기다려주세요{isLightMode ? '!' : ''}
+          잠시만 기다려주세요
         </p>
       </section>
+
+      <div className="buddy_loading_visual_frame" aria-hidden="true">
+        <img className="buddy_loading_visual" src={buddyLoadingFigmaBg} alt="" />
+      </div>
 
     </article>
   )

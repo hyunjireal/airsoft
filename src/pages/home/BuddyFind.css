@@ -631,217 +631,66 @@
 
 .buddy_loading_page {
   position: relative;
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
   overflow: hidden;
-  background: #111310;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 121px 0;
+  box-sizing: border-box;
+  background: #000000;
   color: var(--color-white);
   font-family: var(--font-pretendard);
+  cursor: pointer;
 }
 
-.buddy_loading_bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center bottom;
-  pointer-events: none;
-  user-select: none;
-}
-
-.buddy_loading_page--light {
-  background: #ffffff;
-  color: #1a1a1a;
-}
-
-/* 헤더 — absolute로 이미지 위에 떠있음 */
-.buddy_loading_header {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 3;
-  background: transparent !important;
-}
-
-.buddy_loading_header .page_header__back {
-  position: relative;
-  z-index: 1;
-}
-
-.buddy_loading_page--light .buddy_loading_header .page_header__back_icon {
-  filter: none;
-}
-
-/* 상태바 */
-.buddy_loading_statusbar {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 40px;
-  padding: clamp(14px, 2.4vw, 22px) clamp(20px, 4vw, 40px) 0;
-  color: #ffffff;
-}
-
-.buddy_loading_page--light .buddy_loading_statusbar {
-  color: #000000;
-}
-
-.buddy_loading_statusbar__time {
-  font-size: clamp(14px, 1.8vw, 18px);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1;
-  letter-spacing: 0.038px;
-}
-
-.buddy_loading_statusbar__icons {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.buddy_loading_signal {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2px;
-  width: 20px;
-  height: 13px;
-}
-
-.buddy_loading_signal span {
-  width: 3px;
-  border-radius: 999px;
-  background: #ffffff;
-}
-
-.buddy_loading_page--light .buddy_loading_signal span {
-  background: #000000;
-}
-
-.buddy_loading_signal span:nth-child(1) { height: 4px; }
-.buddy_loading_signal span:nth-child(2) { height: 6px; }
-.buddy_loading_signal span:nth-child(3) { height: 9px; }
-.buddy_loading_signal span:nth-child(4) { height: 11px; }
-
-.buddy_loading_wifi {
-  position: relative;
-  width: 16px;
-  height: 12px;
-}
-
-.buddy_loading_wifi::before,
-.buddy_loading_wifi::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  border: 2px solid #ffffff;
-  border-bottom: 0;
-  border-left-color: transparent;
-  border-right-color: transparent;
-  border-radius: 999px 999px 0 0;
-  transform: translateX(-50%);
-}
-
-.buddy_loading_page--light .buddy_loading_wifi::before,
-.buddy_loading_page--light .buddy_loading_wifi::after {
-  border-top-color: #000000;
-}
-
-.buddy_loading_wifi::before {
-  top: 1px;
-  width: 15px;
-  height: 8px;
-}
-
-.buddy_loading_wifi::after {
-  top: 6px;
-  width: 7px;
-  height: 4px;
-}
-
-.buddy_loading_battery {
-  position: relative;
-  width: 24px;
-  height: 11px;
-  border: 1.5px solid #ffffff;
-  border-radius: 3px;
-}
-
-.buddy_loading_page--light .buddy_loading_battery {
-  border-color: #000000;
-}
-
-.buddy_loading_battery::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 5px;
-  border-radius: 1.5px;
-  background: #ffffff;
-}
-
-.buddy_loading_page--light .buddy_loading_battery::before {
-  background: #000000;
-}
-
-.buddy_loading_battery::after {
-  content: "";
-  position: absolute;
-  top: 3px;
-  right: -4px;
-  width: 2px;
-  height: 5px;
-  border-radius: 0 2px 2px 0;
-  background: #ffffff;
-  opacity: 0.8;
-}
-
-.buddy_loading_page--light .buddy_loading_battery::after {
-  background: #000000;
-}
-
-/* 텍스트 영역 — 항상 상단 고정 */
 .buddy_loading_text {
   position: relative;
-  z-index: 1;
   display: grid;
   justify-items: center;
-  gap: clamp(8px, 1.4vw, 14px);
-  /* 상단: 헤더 높이(약 56px) + statusbar(40px) + 여백 */
-  padding: clamp(70px, 12vw, 120px) clamp(20px, 4vw, 36px) 0;
+  gap: 0;
+  flex: 0 0 auto;
+  white-space: nowrap;
   text-align: center;
 }
 
 .buddy_loading_text h1 {
   margin: 0;
   color: #e9e9e9;
-  font-size: clamp(24px, 3.6vw, 38px);
+  font-size: 32px;
   font-weight: var(--font-weight-bold);
   line-height: 1.3;
-  letter-spacing: -0.02em;
-}
-
-.buddy_loading_page--light .buddy_loading_text h1 {
-  color: #1a1a1a;
+  letter-spacing: -0.64px;
 }
 
 .buddy_loading_text p {
-  max-width: clamp(200px, 36vw, 320px);
   margin: 0;
   color: #ffffff;
-  font-size: clamp(14px, 1.8vw, 18px);
+  font-size: 18px;
   font-weight: var(--font-weight-semibold);
-  line-height: 1.5;
-  letter-spacing: -0.02em;
+  line-height: 1.3;
+  letter-spacing: -0.36px;
 }
 
-.buddy_loading_page--light .buddy_loading_text p {
-  color: #1a1a1a;
+.buddy_loading_visual_frame {
+  position: relative;
+  flex: 0 0 auto;
+  width: 541px;
+  height: 569px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.buddy_loading_visual {
+  position: absolute;
+  top: -18.81%;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  height: 118.81%;
+  object-fit: cover;
+  user-select: none;
 }
 
 .buddy_recommend_page {
