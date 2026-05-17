@@ -380,7 +380,7 @@ function renderMessageText(text: string) {
   );
 }
 
-function renderAnalysisCard(analysis: AnalysisResult) {
+function renderAnalysisCard(analysis: AnalysisResult, onDetail?: () => void) {
   return (
     <section className="chat_result_card" aria-label="AI 분석 결과 카드">
       <div className="chat_result_card_head">
@@ -404,7 +404,7 @@ function renderAnalysisCard(analysis: AnalysisResult) {
           </article>
         ))}
       </div>
-      <LoginButton className="chat_result_cta" variant="accent">
+      <LoginButton className="chat_result_cta" variant="accent" onClick={onDetail}>
         상세 결과 보기
       </LoginButton>
     </section>
@@ -624,6 +624,10 @@ export function ChatbotPage() {
   const sendEquipmentPhoto = async (attachment: ChatAttachment) => {
     if (isSending) {
       return;
+    }
+
+    if (attachment.dataUrl) {
+      sessionStorage.setItem('gai_analysis_image', attachment.dataUrl)
     }
 
     const userMessage = createMessage(
@@ -1004,7 +1008,7 @@ export function ChatbotPage() {
                           </span>
                         ) : null}
                         {message.analysis
-                          ? renderAnalysisCard(message.analysis)
+                          ? renderAnalysisCard(message.analysis, () => navigate('/chat/analysis'))
                           : null}
                       </div>
                       <time>{message.time}</time>

@@ -5,6 +5,7 @@ import { ScrollToTop } from './layout/ScrollToTop'
 import { Login } from './pages/auth/Login'
 import { Signup } from './pages/auth/Signup'
 import { ChatbotPage } from './pages/chat/ChatbotPage'
+import { ChatAnalysisPage } from './pages/chat/ChatAnalysisPage'
 import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
@@ -167,6 +168,7 @@ export const router = createBrowserRouter([
           { path: '/tournament/mvp-complete', element: <MvpVoteComplete /> },
           { path: '/tournament/ranking', element: <Ranking /> },
           { path: '/chat', element: <ChatbotPage /> },
+          { path: '/chat/analysis', element: <ChatAnalysisPage /> },
           { path: '/my', element: <MyPage /> },
           { path: '/my/point-shop', element: <PointShop /> },
           { path: '/my/point-shop/history', element: <PointHistory /> },
