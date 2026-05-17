@@ -1932,6 +1932,7 @@
 }
 
 .home_team_card_logo {
+  flex: 0 0 64px;
   width: 64px;
   height: 64px;
   border-radius: 50%;
@@ -1942,9 +1943,10 @@
 }
 
 .home_team_card_logo_img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
 }
 
 .home_team_card_name {
@@ -2473,12 +2475,74 @@
     margin-left: -36px;
     padding-right: 36px;
     padding-left: 36px;
+    overflow: visible;
+    touch-action: auto;
+  }
+
+  .home_team_track {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .home_team_card {
+    width: 100%;
+    min-height: 142px;
+  }
+
+  .home_team_card.is_duplicate {
+    display: none;
   }
 
   .buddy_bottom,
   .buddy_con {
     padding-right: 36px;
     padding-left: 36px;
+  }
+
+  .buddy_top {
+    align-items: center;
+    min-height: 176px;
+  }
+
+  .buddy_visual {
+    left: calc(50% - 310px);
+    width: 132px;
+  }
+
+  .buddy_text {
+    box-sizing: border-box;
+    gap: 14px;
+    width: min(100%, 620px);
+    margin: 0 auto;
+    padding: 0 0 0 164px;
+  }
+
+  .buddy_title.body_sb_14 {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .buddy_info_title,
+  .buddy_info_desc {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .buddy_info_title {
+    font-size: 18px;
+  }
+
+  .buddy_info_desc {
+    font-size: 16px;
+  }
+
+  .buddy_desktop_hidden_break {
+    display: none;
   }
 }
 

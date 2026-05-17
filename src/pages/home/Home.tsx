@@ -76,7 +76,7 @@ const teamCards = [
   { id: 17, name: '델타 포지션', region: '인천 송도권', tags: ['주말팀'], logo: mainTeamImg01 },
   { id: 18, name: '밸런스 스쿼드', region: '경기 광명권', tags: ['평일팀'], logo: mainTeamImg02 },
 ]
-const visibleTeamCards = teamCards.slice(0, 5)
+const visibleTeamCards = teamCards.slice(0, 6)
 
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
@@ -457,8 +457,16 @@ export function Home() {
     let frameId = 0
     let previousTime = performance.now()
     const speed = 18
+    const desktopGridQuery = window.matchMedia('(min-width: 1024px)')
 
     const updateLoopWidth = () => {
+      if (desktopGridQuery.matches) {
+        teamLoopWidthRef.current = 0
+        teamOffsetRef.current = 0
+        trackElement.style.transform = 'none'
+        return
+      }
+
       teamLoopWidthRef.current = trackElement.scrollWidth / 2
 
       if (teamLoopWidthRef.current > 0) {
@@ -477,7 +485,7 @@ export function Home() {
 
       const loopWidth = teamLoopWidthRef.current
 
-      if (!isTeamAutoPausedRef.current && loopWidth > 0) {
+      if (!desktopGridQuery.matches && !isTeamAutoPausedRef.current && loopWidth > 0) {
         teamOffsetRef.current = (teamOffsetRef.current + speed * deltaSeconds) % loopWidth
         trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
       }
@@ -486,9 +494,11 @@ export function Home() {
     }
 
     frameId = window.requestAnimationFrame(animate)
+    desktopGridQuery.addEventListener('change', updateLoopWidth)
 
     return () => {
       window.cancelAnimationFrame(frameId)
+      desktopGridQuery.removeEventListener('change', updateLoopWidth)
       resizeObserver.disconnect()
 
       if (teamAutoResumeTimerRef.current) {
@@ -876,12 +886,12 @@ export function Home() {
               <div className="buddy_info">
                 <p className="buddy_info_title">
                   첫 게임이 걱정된다면
-                  <br />
+                  <br className="buddy_desktop_hidden_break" />
                   <span className="buddy_lime_text">함께할 버디</span>를 연결해드려요
                 </p>
                 <p className="buddy_info_desc">
                   어색해도 겁내지 마세요!
-                  <br />
+                  <br className="buddy_desktop_hidden_break" />
                   경험자가 준비와 진행을 도와줘요
                 </p>
               </div>
@@ -978,7 +988,11 @@ export function Home() {
               >
                 <div className="home_team_track" ref={teamTrackRef}>
                   {[...visibleTeamCards, ...visibleTeamCards].map((team, index) => (
-                    <article key={`${team.id}-${index}`} className="home_team_card" aria-hidden={index >= visibleTeamCards.length}>
+                    <article
+                      key={`${team.id}-${index}`}
+                      className={`home_team_card${index >= visibleTeamCards.length ? ' is_duplicate' : ''}`}
+                      aria-hidden={index >= visibleTeamCards.length}
+                    >
                       <div className="home_team_card_logo">
                         <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
                       </div>
