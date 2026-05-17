@@ -931,11 +931,6 @@ export function ChatbotPage() {
   };
 
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-      return;
-    }
-
     navigate("/home");
   };
 

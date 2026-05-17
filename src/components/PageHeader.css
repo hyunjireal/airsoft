@@ -94,12 +94,17 @@
   color: var(--color-gray00);
   overflow: hidden;
   cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .page_header__theme_icon {
   width: 20px;
   height: 20px;
   object-fit: contain;
+  animation: theme_toggle_icon_switch 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .page_header__profile_image {

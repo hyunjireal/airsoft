@@ -164,6 +164,7 @@ export function PageHeader({
               onClick={toggleThemeMode}
             >
               <img
+                key={themeMode}
                 className="page_header__theme_icon"
                 src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
                 alt=""

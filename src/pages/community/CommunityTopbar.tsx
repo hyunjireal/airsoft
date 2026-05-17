@@ -77,6 +77,7 @@ export function CommunityTopbar({
             onClick={toggleThemeMode}
           >
             <img
+              key={themeMode}
               className="community_header_theme_icon"
               src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
               alt=""

@@ -380,6 +380,7 @@ a {
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transition: background 360ms ease, border-color 360ms ease;
 }
 
 .global_theme_toggle_button,
@@ -397,11 +398,52 @@ a {
   cursor: pointer;
 }
 
-.global_theme_toggle_icon {
+.global_theme_icon_wrap {
+  position: relative;
   display: block;
-  width: 32px;
-  height: 32px;
-  object-fit: cover;
+  width: 22px;
+  height: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.theme_icon_sun,
+.theme_icon_moon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* currentColor를 통해 부드러운 색 전환 */
+  color: #282828;
+  will-change: transform, opacity;
+  transition:
+    transform 380ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 340ms ease,
+    color 380ms ease;
+}
+
+/* 라이트 모드: 해 위(표시), 달 아래(숨김) */
+.global_theme_toggle.is_light .theme_icon_sun {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.global_theme_toggle.is_light .theme_icon_moon {
+  transform: translateY(140%);
+  opacity: 0;
+}
+
+/* 다크 모드: 달 위(표시), 해 아래(숨김) */
+.global_theme_toggle.is_dark .theme_icon_moon {
+  transform: translateY(0);
+  opacity: 1;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.global_theme_toggle.is_dark .theme_icon_sun {
+  transform: translateY(140%);
+  opacity: 0;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .global_theme_profile_image{
@@ -427,8 +469,28 @@ a {
   background: rgba(26, 26, 26, 0.78);
 }
 
-:root[data-theme='dark'] .global_theme_toggle_icon {
-  filter: brightness(0) invert(1);
+@keyframes theme_toggle_icon_switch {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.82) rotate(18deg);
+  }
+
+  62% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.08) rotate(-5deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page_header__theme_icon,
+  .community_header_theme_icon {
+    animation: none;
+  }
 }
 
 .mobile_frame {

@@ -103,7 +103,7 @@ export function ChatAnalysisPage() {
 
   return (
     <div className="gai_report_page">
-      <PageHeader title="분석 리포트" onBack={() => navigate(-1)} />
+      <PageHeader title="분석 리포트" onBack={() => navigate('/chat', { replace: true })} />
 
       <div className="gai_report_scroll">
         {/* Hero */}
