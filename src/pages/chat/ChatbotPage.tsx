@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import type { CSSProperties, ChangeEvent, FormEvent, MouseEvent } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { LoginButton } from "../../components/LoginButton";
 import { PageHeader } from "../../components/PageHeader";
 import chatbotCameraIcon from "../../asset/icons/chatbot_camera.svg";
@@ -213,6 +213,8 @@ const fallbackAnswers = [
 
 const MAX_UPLOAD_IMAGE_SIDE = 1400;
 const MAX_UPLOAD_IMAGE_BYTES = 1.4 * 1024 * 1024;
+const CHAT_SESSION_STORAGE_KEY = "gai_chat_messages";
+const resumeQuestionPrompt = "추가로 무엇이 궁금하신가요?";
 
 const welcomeMessage: TimedChatMessage = {
   id: "welcome",
@@ -265,6 +267,37 @@ function createMessage(
     analysis,
     time: getCurrentTime(),
   };
+}
+
+function createWelcomeMessage(): TimedChatMessage {
+  return {
+    ...welcomeMessage,
+    time: getCurrentTime(),
+  };
+}
+
+function readStoredMessages() {
+  try {
+    const storedValue = sessionStorage.getItem(CHAT_SESSION_STORAGE_KEY);
+    if (!storedValue) {
+      return null;
+    }
+
+    const parsedValue = JSON.parse(storedValue);
+    if (!Array.isArray(parsedValue) || parsedValue.length === 0) {
+      return null;
+    }
+
+    return parsedValue.filter(
+      (message): message is TimedChatMessage =>
+        typeof message?.id === "string" &&
+        (message.role === "assistant" || message.role === "user") &&
+        typeof message.text === "string" &&
+        typeof message.time === "string",
+    );
+  } catch {
+    return null;
+  }
 }
 
 function dataUrlToAttachment(
@@ -443,6 +476,7 @@ function renderAnalysisThinkingState(currentStep: number, loadingText: string) {
 
 export function ChatbotPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const initialQuestionSent = useRef(false);
   const chatScrollRef = useRef<HTMLElement | null>(null);
@@ -465,14 +499,23 @@ export function ChatbotPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const albumInputRef = useRef<HTMLInputElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const initialMessages = useMemo(() => {
+    const storedMessages = readStoredMessages();
+
+    return {
+      messages: storedMessages?.length ? storedMessages : [createWelcomeMessage()],
+      restored: Boolean(storedMessages?.length),
+    };
+  }, []);
+  const restoredMessagesRef = useRef(initialMessages.restored);
+  const resumePromptSentRef = useRef(false);
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<TimedChatMessage[]>(() => [
-    {
-      ...welcomeMessage,
-      time: getCurrentTime(),
-    },
-  ]);
-  const [isIntroComplete, setIsIntroComplete] = useState(false);
+  const [messages, setMessages] = useState<TimedChatMessage[]>(
+    initialMessages.messages,
+  );
+  const [isIntroComplete, setIsIntroComplete] = useState(
+    initialMessages.restored,
+  );
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(0);
@@ -864,6 +907,48 @@ export function ChatbotPage() {
   }, [searchParams, isIntroComplete]);
 
   useEffect(() => {
+    const locationState = location.state as { resumePrompt?: boolean } | null;
+    if (
+      !locationState?.resumePrompt ||
+      !restoredMessagesRef.current ||
+      resumePromptSentRef.current
+    ) {
+      return;
+    }
+
+    resumePromptSentRef.current = true;
+    navigate(location.pathname, { replace: true, state: null });
+
+    const showResumePrompt = async () => {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage?.role === "assistant" && lastMessage.text === resumeQuestionPrompt) {
+        return;
+      }
+
+      setIsSending(true);
+      setLoadingIndex(0);
+      setLoadingMode("typing");
+      await wait(900);
+      setIsSending(false);
+      await typeAssistantAnswer(resumeQuestionPrompt);
+    };
+
+    void showResumePrompt();
+  }, [location.pathname, location.state, navigate]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(CHAT_SESSION_STORAGE_KEY, JSON.stringify(messages));
+    } catch {
+      // If the uploaded image payload is too large for sessionStorage, keep the live chat intact.
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (restoredMessagesRef.current) {
+      return;
+    }
+
     let isCancelled = false;
 
     const timer = window.setTimeout(() => {

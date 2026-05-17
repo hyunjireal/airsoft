@@ -428,6 +428,126 @@
   height: 20px;
 }
 
+:root[data-theme='light'] .gai_report_page {
+  --lime: #676b5d;
+  --lime-soft: rgba(103, 107, 93, 0.12);
+  --lime-glow: rgba(103, 107, 93, 0.22);
+  --warn: #b87917;
+  --warn-soft: rgba(184, 121, 23, 0.11);
+  --ok: #1f9c5b;
+  --ok-soft: rgba(31, 156, 91, 0.1);
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface2: #eeeeee;
+  --stroke: rgba(26, 26, 26, 0.09);
+  --text: #1a1a1a;
+  --muted: rgba(26, 26, 26, 0.72);
+  background: var(--bg);
+  color: var(--text);
+}
+
+:root[data-theme='light'] .gai_report_page .page_header {
+  background: #f5f5f5;
+}
+
+:root[data-theme='light'] .gai_report_image_wrap {
+  background: var(--surface2);
+  border-color: rgba(26, 26, 26, 0.08);
+  box-shadow: 0 14px 32px rgba(31, 37, 18, 0.08);
+}
+
+:root[data-theme='light'] .gai_report_hero_img {
+  opacity: 0.94;
+}
+
+:root[data-theme='light'] .gai_report_done_badge {
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(31, 156, 91, 0.2);
+  color: var(--ok);
+  box-shadow: 0 8px 22px rgba(31, 37, 18, 0.08);
+}
+
+:root[data-theme='light'] .gai_report_section_dot.is_muted {
+  background: rgba(26, 26, 26, 0.22);
+}
+
+:root[data-theme='light'] .gai_report_detect_item,
+:root[data-theme='light'] .gai_report_reg_card {
+  background: var(--surface);
+  border-color: var(--stroke);
+  box-shadow: 0 10px 26px rgba(31, 37, 18, 0.06);
+}
+
+:root[data-theme='light'] .gai_report_detect_item:has(.is_ok) {
+  border-color: rgba(31, 156, 91, 0.16);
+}
+
+:root[data-theme='light'] .gai_report_detect_item:has(.is_warn) {
+  border-color: rgba(184, 121, 23, 0.18);
+}
+
+:root[data-theme='light'] .gai_report_detect_body strong,
+:root[data-theme='light'] .gai_report_rec_head strong,
+:root[data-theme='light'] .gai_report_reg_row strong {
+  color: #1a1a1a;
+}
+
+:root[data-theme='light'] .gai_report_detect_body span,
+:root[data-theme='light'] .gai_report_reg_row span {
+  color: var(--muted);
+}
+
+:root[data-theme='light'] .gai_report_risk_item {
+  background: rgba(184, 121, 23, 0.08);
+  border-color: rgba(184, 121, 23, 0.18);
+}
+
+:root[data-theme='light'] .gai_report_risk_item span {
+  color: rgba(26, 26, 26, 0.76);
+}
+
+:root[data-theme='light'] .gai_report_rec_item {
+  background: linear-gradient(135deg, rgba(103, 107, 93, 0.1) 0%, rgba(255, 255, 255, 0.92) 100%);
+  border-color: rgba(103, 107, 93, 0.2);
+  box-shadow: 0 10px 26px rgba(31, 37, 18, 0.07);
+}
+
+:root[data-theme='light'] .gai_report_rec_tag {
+  border-color: rgba(103, 107, 93, 0.3);
+  background: rgba(103, 107, 93, 0.1);
+  color: var(--lime);
+}
+
+:root[data-theme='light'] .gai_report_rec_item p {
+  color: rgba(26, 26, 26, 0.78);
+}
+
+:root[data-theme='light'] .gai_report_reg_row + .gai_report_reg_row {
+  border-top-color: var(--stroke);
+}
+
+:root[data-theme='light'] .gai_report_cta {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 0),
+    rgba(245, 245, 245, 0.92) 42%,
+    #f5f5f5 100%
+  );
+}
+
+:root[data-theme='light'] .gai_report_cta_btn.is_secondary {
+  background: #ffffff;
+  border-color: rgba(26, 26, 26, 0.1);
+  color: #1a1a1a;
+  box-shadow: 0 8px 20px rgba(31, 37, 18, 0.07);
+}
+
+:root[data-theme='light'] .gai_report_cta_btn.is_primary {
+  background: #676b5d;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(103, 107, 93, 0.24);
+}
+
 /* ── Scroll reveal ───────────────────────────── */
 .gai_reveal {
   opacity: 0;

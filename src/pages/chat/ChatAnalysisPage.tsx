@@ -209,7 +209,7 @@ export function ChatAnalysisPage() {
         <button
           className="gai_report_cta_btn is_primary"
           type="button"
-          onClick={() => navigate('/chat')}
+          onClick={() => navigate('/chat', { state: { resumePrompt: true } })}
         >
           AI에게 추가 질문
         </button>
