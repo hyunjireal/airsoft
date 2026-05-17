@@ -19,6 +19,15 @@ import creatorThumbnail02 from '../../asset/images/creator_thumbnail_img02.png'
 import creatorThumbnail03 from '../../asset/images/creator_thumbnail_img03.png'
 import creatorThumbnail04 from '../../asset/images/creator_thumbnail_img04.png'
 import creatorThumbnail05 from '../../asset/images/creator_thumbnail_img05.png'
+import mediaBanner01 from '../../asset/images/media_banner01.png'
+import creatorGrade04 from '../../asset/images/creator_grade04.png'
+import creatorGrade05 from '../../asset/images/creator_grade05.png'
+import creatorGrade06 from '../../asset/images/creator_grade06.png'
+import creatorGrade07 from '../../asset/images/creator_grade07.png'
+import creatorGrade08 from '../../asset/images/creator_grade08.png'
+import creatorGrade09 from '../../asset/images/creator_grade09.png'
+import creatorGrade10 from '../../asset/images/creator_grade10.png'
+import creatorGrade11 from '../../asset/images/creator_grade11.png'
 import './MediaHome.css'
 
 const podiumCreators = [
@@ -96,6 +105,87 @@ const videoItems = [
 
 type ContentSort = 'latest' | 'popular'
 
+type FeedItem = {
+  id: string
+  avatar: string
+  actorName: string
+  body: string
+  highlightName?: string
+  bodyAfter?: string
+  subtitle?: string
+  time: string
+  isLive?: boolean
+  hasNewDot: boolean
+}
+
+const feedAvatarImages = [
+  creatorGrade04,
+  creatorGrade05,
+  creatorGrade06,
+  creatorGrade07,
+  creatorGrade08,
+  creatorGrade09,
+  creatorGrade10,
+  creatorGrade11,
+]
+
+function createFeedItemsWithUniqueAvatars(items: Omit<FeedItem, 'avatar'>[]): FeedItem[] {
+  const avatarByNickname = new Map<string, string>()
+  let nextAvatarIndex = Math.floor(Math.random() * feedAvatarImages.length)
+
+  return items.map((item) => {
+    const nicknameKey = item.actorName.trim()
+    const existingAvatar = avatarByNickname.get(nicknameKey)
+
+    if (existingAvatar) {
+      return { ...item, avatar: existingAvatar }
+    }
+
+    const avatar = feedAvatarImages[nextAvatarIndex % feedAvatarImages.length]
+    nextAvatarIndex += 1
+    avatarByNickname.set(nicknameKey, avatar)
+
+    return { ...item, avatar }
+  })
+}
+
+const feedItems: FeedItem[] = createFeedItemsWithUniqueAvatars([
+  {
+    id: 'feed-01',
+    actorName: '영은',
+    body: '님이 ',
+    highlightName: '레드닷존',
+    bodyAfter: '님의 영상에 좋아요를 눌렀어요',
+    time: '5분 전',
+    hasNewDot: true,
+  },
+  {
+    id: 'feed-02',
+    actorName: '24영이',
+    body: '님이 ',
+    highlightName: '꼬꼬댁',
+    bodyAfter: ' 팬클럽에 가입했어요',
+    time: '10분 전',
+    hasNewDot: true,
+  },
+  {
+    id: 'feed-03',
+    actorName: '베키사리',
+    body: '님이 새로운 영상을 업로드했어요',
+    subtitle: '야외전 장비 리뷰 7가지',
+    time: '20분 전',
+    hasNewDot: true,
+  },
+  {
+    id: 'feed-04',
+    actorName: '하나캠',
+    body: '님이 라이브를 시작했어요',
+    isLive: true,
+    time: '1시간 전',
+    hasNewDot: true,
+  },
+])
+
 const CREATOR_CONTENT_VIDEO_URL = 'https://youtu.be/bnjqWY4uULA?si=dYwoqQb0AoOB7vp9'
 
 function formatDaysAgo(daysAgo: number) {
@@ -116,6 +206,12 @@ const rankingItems = [
   { rank: 9, name: '깡나브리', score: 650 },
   { rank: 10, name: '육조준', score: 557 },
 ]
+
+const rankingProfileByRank: Record<number, string> = {
+  1: 'creator-001',
+  2: 'creator-002',
+  3: 'creator-003',
+}
 
 function PodiumProfile({ creator }: { creator: (typeof podiumCreators)[number] }) {
   return (
@@ -143,6 +239,7 @@ export function MediaHome() {
   const [activeRankIndex, setActiveRankIndex] = useState(0)
   const [contentSort, setContentSort] = useState<ContentSort>('latest')
   const [introComplete, setIntroComplete] = useState(false)
+  const [feedRefreshIndex, setFeedRefreshIndex] = useState(0)
   const activeRanking = rankingItems[activeRankIndex % rankingItems.length]
   const sortedVideoItems = [...videoItems].sort((a, b) => {
     if (contentSort === 'popular') {
@@ -151,17 +248,24 @@ export function MediaHome() {
 
     return a.daysAgo - b.daysAgo
   })
+  const refreshedFeedItems = feedItems.map((_, index) => (
+    feedItems[(index + feedRefreshIndex) % feedItems.length]
+  ))
 
   useEffect(() => {
     const timer = window.setInterval(() => {
       setActiveRankIndex((current) => (current + 1) % rankingItems.length)
     }, 1800)
+    const feedTimer = window.setInterval(() => {
+      setFeedRefreshIndex((current) => (current + 1) % feedItems.length)
+    }, 5200)
     const introTimer = window.setTimeout(() => {
       setIntroComplete(true)
     }, 760)
 
     return () => {
       window.clearInterval(timer)
+      window.clearInterval(feedTimer)
       window.clearTimeout(introTimer)
     }
   }, [])
@@ -216,18 +320,108 @@ export function MediaHome() {
 
           {rankingOpen ? (
             <ol className="media_ranking_list" aria-label="실시간 크리에이터 랭킹 1위부터 10위">
-              {rankingItems.map((item) => (
-                <li className={`media_ranking_item ${item.rank === activeRanking.rank ? 'is_active' : ''}`} key={item.rank}>
-                  <span className="media_ranking_item_left">
-                    <span className={`media_ranking_item_rank body_b_14 ${item.rank <= 3 ? 'is_top' : ''}`}>{item.rank}</span>
-                    <strong className="body_b_14">{item.name}</strong>
-                  </span>
-                  <span className="media_ranking_item_score body_sb_14">{item.score}</span>
-                </li>
-              ))}
+              {rankingItems.map((item) => {
+                const profileId = rankingProfileByRank[item.rank]
+                const itemContent = (
+                  <>
+                    <span className="media_ranking_item_left">
+                      <span className={`media_ranking_item_rank body_b_14 ${item.rank <= 3 ? 'is_top' : ''}`}>{item.rank}</span>
+                      <strong className="body_b_14">{item.name}</strong>
+                    </span>
+                    <span className="media_ranking_item_score body_sb_14">{item.score}</span>
+                  </>
+                )
+
+                return (
+                  <li className={`media_ranking_item ${item.rank === activeRanking.rank ? 'is_active' : ''}`} key={item.rank}>
+                    {profileId ? (
+                      <Link
+                        className="media_ranking_item_link"
+                        to={`/media/${profileId}`}
+                        aria-label={`${item.name} ?꾨줈??蹂닿린`}
+                      >
+                        {itemContent}
+                      </Link>
+                    ) : (
+                      <div className="media_ranking_item_static">
+                        {itemContent}
+                      </div>
+                    )}
+                  </li>
+                )
+              })}
             </ol>
           ) : null}
         </div>
+      </section>
+
+      <div className="media_promo_banner" role="img" aria-label="프로모션 배너">
+        <svg className="media_banner_circuit mbcirc_tl" aria-hidden="true" width="90" height="46" viewBox="0 0 90 46" fill="none">
+          <line x1="2" y1="10" x2="45" y2="10" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.5" />
+          <line x1="45" y1="10" x2="45" y2="4" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.5" />
+          <line x1="45" y1="4" x2="88" y2="4" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.5" />
+          <circle cx="45" cy="10" r="1.5" fill="#9BFF1A" fillOpacity="0.7" />
+          <circle cx="88" cy="4" r="2" fill="#9BFF1A" fillOpacity="0.9" />
+          <line x1="2" y1="24" x2="22" y2="24" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.22" />
+          <line x1="2" y1="36" x2="13" y2="36" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.13" />
+        </svg>
+        <svg className="media_banner_circuit mbcirc_bc" aria-hidden="true" width="130" height="28" viewBox="0 0 130 28" fill="none">
+          <line x1="0" y1="16" x2="55" y2="16" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.38" />
+          <line x1="55" y1="16" x2="55" y2="24" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.38" />
+          <line x1="55" y1="24" x2="130" y2="24" stroke="#9BFF1A" strokeWidth="0.8" strokeOpacity="0.38" />
+          <circle cx="55" cy="16" r="1.5" fill="#9BFF1A" fillOpacity="0.6" />
+          <circle cx="55" cy="24" r="1.5" fill="#9BFF1A" fillOpacity="0.6" />
+        </svg>
+        <span className="media_banner_dot mbdot1" aria-hidden="true" />
+        <span className="media_banner_dot mbdot2" aria-hidden="true" />
+        <span className="media_banner_dot mbdot3" aria-hidden="true" />
+        <span className="media_banner_dot mbdot4" aria-hidden="true" />
+        <p className="media_banner_copy">
+          최애 크리에이터를 팔로우하고
+          <br />
+          새로운 소식을 가장 먼저 받아보세요!
+        </p>
+        <div className="media_banner_img_wrap" aria-hidden="true">
+          <img className="media_banner_img" src={mediaBanner01} alt="" />
+        </div>
+      </div>
+
+      <section className="media_feed_section" aria-labelledby="media-feed-title">
+        <div className="media_feed_head">
+          <h2 id="media-feed-title" className="body_b_20">팬 활동 피드</h2>
+          <button className="media_feed_more_btn" type="button">더보기</button>
+        </div>
+        <ul className="media_feed_list" aria-label="팬 활동 목록">
+          {refreshedFeedItems.map((item, idx) => (
+            <li
+              className="media_feed_item"
+              key={`${item.id}-${feedRefreshIndex}`}
+              style={{ animationDelay: `${idx * 45}ms` }}
+            >
+              <div className="media_feed_avatar" aria-hidden="true">
+                <img src={item.avatar} alt="" />
+              </div>
+              <div className="media_feed_content">
+                <p className="media_feed_text">
+                  <span className="media_feed_actor">{item.actorName}</span>
+                  {item.body}
+                  {item.highlightName && (
+                    <span className="media_feed_highlight">{item.highlightName}</span>
+                  )}
+                  {item.bodyAfter}
+                  {item.isLive && (
+                    <span className="media_feed_live" aria-label="라이브 중">LIVE</span>
+                  )}
+                </p>
+                {item.subtitle && (
+                  <p className="media_feed_subtitle">{item.subtitle}</p>
+                )}
+                <p className="media_feed_time">{item.time}</p>
+              </div>
+              {item.hasNewDot && <span className="media_feed_dot" aria-label="새 활동" />}
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="media_contents_section" aria-labelledby="media-contents-title">
