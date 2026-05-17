@@ -173,10 +173,15 @@ export function MvpVote() {
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)
   const currentCandidates = selectedTeamData?.candidates ?? matches[0].teams[0].candidates
   const selected = currentCandidates.find((candidate) => candidate.id === selectedCandidate)
-  const topVotes = Math.max(...currentCandidates.map((candidate) => candidate.votes))
-  const liveRanking = [...currentCandidates]
+  const previewCandidates = currentCandidates.map((candidate) => ({
+    ...candidate,
+    votes: candidate.votes + (selectedCandidate === candidate.id ? 1 : 0),
+  }))
+  const topVotes = Math.max(...previewCandidates.map((candidate) => candidate.votes))
+  const liveRanking = [...previewCandidates]
     .sort((a, b) => b.votes - a.votes)
     .map((candidate, index) => ({
+      id: candidate.id,
       rank: index + 1,
       name: candidate.name,
       displayName: formatRankName(candidate.name),
@@ -392,7 +397,7 @@ export function MvpVote() {
         <h2>실시간 랭킹</h2>
         <div className="tournament_player_rank_list" key={selectedCandidate ?? selectedTeam ?? 'locked'}>
           {liveRanking.map((player) => (
-            <div className="tournament_player_rank_item" key={player.rank}>
+            <div className="tournament_player_rank_item" key={player.id}>
               <div className="tournament_player_rank_name">
                 <MainTag
                   className={`tournament_rank_tag${player.rank === 1 ? ' is_first' : ''}`}

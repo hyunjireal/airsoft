@@ -147,6 +147,26 @@ const candidateMap: Record<string, CandidateInfo> = {
 
 const defaultCandidate = candidateMap['bazooka-01']
 
+const applyVoteToRanking = (candidate: CandidateInfo): CandidateInfo => {
+  const updatedRanking = candidate.ranking
+    .map((player) => ({
+      ...player,
+      votes: player.votes + (player.name === candidate.name ? 1 : 0),
+    }))
+    .sort((a, b) => b.votes - a.votes)
+
+  const topVotes = Math.max(...updatedRanking.map((player) => player.votes))
+
+  return {
+    ...candidate,
+    ranking: updatedRanking.map((player, index) => ({
+      ...player,
+      rank: index + 1,
+      percent: Math.round((player.votes / topVotes) * 100),
+    })),
+  }
+}
+
 export function MvpVoteComplete() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
@@ -155,7 +175,7 @@ export function MvpVoteComplete() {
   const [headerSolid, setHeaderSolid] = useState(false)
   const voted = useMemo<CandidateInfo>(() => {
     const id = localStorage.getItem('votedMvpId') ?? ''
-    return candidateMap[id] ?? defaultCandidate
+    return applyVoteToRanking(candidateMap[id] ?? defaultCandidate)
   }, [])
   const heroImage = tournamentMainCompleteDarkImg
 
