@@ -1195,11 +1195,10 @@
 
 .chat_media_picker_sample {
   display: flex;
-  gap: 12px;
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 70px;
+  min-height: 50px;
   padding: 8px 12px;
   border: 1px solid rgba(223, 255, 34, 0.28);
   border-radius: 10px;
@@ -1223,14 +1222,6 @@
   opacity: 0.52;
   cursor: not-allowed;
   transform: none;
-}
-
-.chat_media_picker_sample img {
-  display: block;
-  width: 64px;
-  height: 52px;
-  border-radius: 8px;
-  object-fit: cover;
 }
 
 .chat_media_picker_sample span {

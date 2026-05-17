@@ -1332,7 +1332,6 @@ export function ChatbotPage() {
                 onClick={() => void pickSamplePhoto()}
                 disabled={isSending}
               >
-                <img src={sampleEquipmentImage} alt="" aria-hidden="true" />
                 <span>
                   <strong>예시 이미지 사용하기</strong>
                 </span>
