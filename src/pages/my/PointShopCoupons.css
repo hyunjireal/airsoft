@@ -1,5 +1,6 @@
 .point_shop_coupons_page {
-  padding: clamp(52px, 8vw, 60px) 0 20px;
+  min-height: 100vh;
+  padding: 0 0 20px;
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-pretendard);
@@ -13,12 +14,6 @@
 .point_shop_coupons_shell {
   width: min(calc(100% - 46px), 720px);
   margin: 0 auto;
-}
-
-.point_shop_coupons_header {
-}
-
-.point_shop_coupons_header_left {
 }
 
 .point_shop_coupons_back_button,
@@ -324,6 +319,114 @@
 .point_shop_coupon_modal_close:focus-visible {
   outline: 2px solid var(--color-black);
   outline-offset: 2px;
+}
+
+:root[data-theme='dark'] .mobile_frame:has(.point_shop_coupons_page),
+:root[data-theme='dark'] .mobile_frame:has(.point_shop_coupons_page) > main {
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .point_shop_coupons_page,
+:root[data-theme='dark'] .point_shop_coupons_header {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_coupons_title,
+:root[data-theme='dark'] .point_shop_coupon_title {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_coupons_back_icon {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .point_shop_coupons_tab {
+  color: #adadad;
+}
+
+:root[data-theme='dark'] .point_shop_coupons_tab_active {
+  border-bottom-color: var(--color-white);
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_coupon_card,
+:root[data-theme='dark'] .point_shop_coupon_card_used {
+  border-color: #4b4b4b;
+  background: #000000;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_validity {
+  color: #d9d9d9;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_action {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .point_shop_coupon_action_used {
+  background: #4b4b4b;
+  color: #adadad;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_backdrop {
+  background: rgba(0, 0, 0, 0.58);
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal,
+:root[data-theme='dark'] .point_shop_coupon_barcode_card {
+  border: 1px solid #4b4b4b;
+  background: #000000;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_title,
+:root[data-theme='dark'] .point_shop_coupon_barcode_value {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_validity,
+:root[data-theme='dark'] .point_shop_coupon_barcode_hint {
+  color: #d9d9d9;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_label {
+  color: #adadad;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_handle {
+  background: #4b4b4b;
+}
+
+:root[data-theme='dark'] .point_shop_coupon_barcode_visual {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #ffffff 0 2px,
+      transparent 2px 4px,
+      #ffffff 4px 5px,
+      transparent 5px 8px,
+      #ffffff 8px 11px,
+      transparent 11px 13px,
+      #ffffff 13px 14px,
+      transparent 14px 17px,
+      #ffffff 17px 21px,
+      transparent 21px 23px,
+      #ffffff 23px 24px,
+      transparent 24px 28px
+    );
+}
+
+:root[data-theme='dark'] .point_shop_coupon_modal_close {
+  background: var(--color-white);
+  color: var(--color-black);
+}
+
+:root[data-theme='dark'] .point_shop_coupons_back_button:focus-visible,
+:root[data-theme='dark'] .point_shop_coupons_tab:focus-visible,
+:root[data-theme='dark'] .point_shop_coupon_action:focus-visible,
+:root[data-theme='dark'] .point_shop_coupon_modal_close:focus-visible {
+  outline-color: var(--color-white);
 }
 
 @media (min-width: 640px) {

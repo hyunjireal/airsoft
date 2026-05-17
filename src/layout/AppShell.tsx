@@ -24,6 +24,7 @@ export function AppShell() {
   const isMySchedulePage = location.pathname === '/my/schedule'
   const isMyPage = location.pathname === '/my'
   const isPointShopPage = location.pathname === '/my/point-shop'
+  const isPointShopCouponsPage = location.pathname === '/my/point-shop/coupons'
   const isPointHistoryPage = location.pathname === '/my/point-shop/history'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
@@ -49,6 +50,7 @@ export function AppShell() {
     !isMatchPresetFinishPage &&
     !isMyPage &&
     !isPointShopPage &&
+    !isPointShopCouponsPage &&
     !isPointHistoryPage
   const keepTopInset = false
   const showBackButton =
@@ -66,6 +68,7 @@ export function AppShell() {
     !isGuideHubPage &&
     !isMySchedulePage &&
     !isPointShopPage &&
+    !isPointShopCouponsPage &&
     !isPointHistoryPage &&
     !isGuideQuizPage &&
     location.pathname !== '/home' &&
