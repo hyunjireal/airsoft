@@ -58,26 +58,14 @@ type HomeMatchCard = {
 }
 
 const teamCards = [
-  { id: 1, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
-  { id: 2, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '평일팀'], logo: mainTeamImg02 },
-  { id: 3, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
-  { id: 4, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
-  { id: 5, name: '택티컬 블랙', region: '서울 CQB', tags: ['숙련자팀', '주말팀'], logo: mainTeamImg01 },
-  { id: 6, name: '알파라인', region: '경기 북부권', tags: ['숙련자팀', '평일팀'], logo: mainTeamImg02 },
-  { id: 7, name: '초심자 연합', region: '경기 용인권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
-  { id: 8, name: '프렌들리 팀', region: '서울 수도권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
-  { id: 9, name: '그린존 루키즈', region: '경기 고양권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
-  { id: 10, name: '세이프티 크루', region: '서울 노원권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg02 },
-  { id: 11, name: '브라보 입문반', region: '인천 서구권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
-  { id: 12, name: '느긋한 전우회', region: '경기 수원권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
-  { id: 13, name: '주말 사격회', region: '서울 마포권', tags: ['주말팀'], logo: mainTeamImg01 },
-  { id: 14, name: '필드메이트', region: '경기 성남권', tags: ['평일팀'], logo: mainTeamImg02 },
-  { id: 15, name: '스모크 라인', region: '경기 안양권', tags: ['숙련자팀'], logo: mainTeamImg03 },
-  { id: 16, name: 'CQB 베테랑즈', region: '서울 영등포권', tags: ['숙련자팀'], logo: mainTeamImg04 },
-  { id: 17, name: '델타 포지션', region: '인천 송도권', tags: ['주말팀'], logo: mainTeamImg01 },
-  { id: 18, name: '밸런스 스쿼드', region: '경기 광명권', tags: ['평일팀'], logo: mainTeamImg02 },
+  { id: 1, name: '스모크 포인트', region: '경기 파주권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
+  { id: 2, name: '그린존 루키즈', region: '서울 노원권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg02 },
+  { id: 3, name: '델타 브리프', region: '인천 송도권', tags: ['초보자팀', '주말팀'], logo: mainTeamImg03 },
+  { id: 4, name: '브라보 네스트', region: '경기 용인권', tags: ['초보자팀', '평일팀'], logo: mainTeamImg04 },
+  { id: 5, name: '택티컬 블룸', region: '서울 마포권', tags: ['숙련자팀', '주말팀'], logo: mainTeamImg01 },
+  { id: 6, name: '알파 웨이브', region: '경기 고양권', tags: ['숙련자팀', '평일팀'], logo: mainTeamImg02 },
 ]
-const visibleTeamCards = teamCards.slice(0, 6)
+const visibleTeamCards = teamCards
 
 const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
@@ -311,6 +299,7 @@ export function Home() {
   const bannerSectionRef = useRef<HTMLElement>(null)
   const tournamentSectionRef = useRef<HTMLElement>(null)
   const isTeamAutoPausedRef = useRef(false)
+  const isTeamGridModeRef = useRef(false)
   const teamAutoResumeTimerRef = useRef<number | null>(null)
   const teamOffsetRef = useRef(0)
   const teamLoopWidthRef = useRef(0)
@@ -402,12 +391,25 @@ export function Home() {
     let frameId = 0
     let previousTime = performance.now()
     const speed = 18
+    const gridModeQuery = window.matchMedia('(min-width: 1024px)')
 
     const renderTeamTrack = () => {
+      if (isTeamGridModeRef.current) {
+        trackElement.style.transform = 'none'
+        return
+      }
+
       trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
     }
 
     const updateLoopWidth = () => {
+      if (isTeamGridModeRef.current) {
+        teamLoopWidthRef.current = 0
+        teamOffsetRef.current = 0
+        renderTeamTrack()
+        return
+      }
+
       teamLoopWidthRef.current = trackElement.scrollWidth / 2
 
       if (teamLoopWidthRef.current > 0) {
@@ -416,9 +418,15 @@ export function Home() {
       }
     }
 
+    const syncTeamLayoutMode = () => {
+      isTeamGridModeRef.current = gridModeQuery.matches
+      updateLoopWidth()
+    }
+
     const resizeObserver = new ResizeObserver(updateLoopWidth)
     resizeObserver.observe(trackElement)
-    updateLoopWidth()
+    gridModeQuery.addEventListener('change', syncTeamLayoutMode)
+    syncTeamLayoutMode()
 
     const animate = (time: number) => {
       const deltaSeconds = (time - previousTime) / 1000
@@ -426,7 +434,7 @@ export function Home() {
 
       const loopWidth = teamLoopWidthRef.current
 
-      if (!isTeamAutoPausedRef.current && !isTeamDraggingRef.current && loopWidth > 0) {
+      if (!isTeamGridModeRef.current && !isTeamAutoPausedRef.current && !isTeamDraggingRef.current && loopWidth > 0) {
         teamOffsetRef.current = (teamOffsetRef.current + speed * deltaSeconds) % loopWidth
         renderTeamTrack()
       }
@@ -439,6 +447,7 @@ export function Home() {
     return () => {
       window.cancelAnimationFrame(frameId)
       resizeObserver.disconnect()
+      gridModeQuery.removeEventListener('change', syncTeamLayoutMode)
 
       if (teamAutoResumeTimerRef.current) {
         window.clearTimeout(teamAutoResumeTimerRef.current)
@@ -549,6 +558,7 @@ export function Home() {
   }
 
   const handleTeamPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (isTeamGridModeRef.current) return
     if (event.button !== 0 && event.pointerType === 'mouse') return
 
     pauseTeamAutoScroll()
@@ -559,6 +569,7 @@ export function Home() {
   }
 
   const handleTeamPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (isTeamGridModeRef.current) return
     if (!isTeamDraggingRef.current) return
 
     const deltaX = event.clientX - teamDragStartXRef.current
@@ -568,6 +579,7 @@ export function Home() {
   }
 
   const handleTeamPointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (isTeamGridModeRef.current) return
     if (isTeamDraggingRef.current) {
       event.currentTarget.releasePointerCapture?.(event.pointerId)
     }

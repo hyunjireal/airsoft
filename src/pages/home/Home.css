@@ -92,11 +92,22 @@
 }
 
 .home_hero_tournament_link {
+  position: sticky;
+  top: 0;
+  z-index: 0;
   display: block;
   width: 100%;
+  height: 423px;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+.home_hero_tournament_link .th_hero {
+  position: relative;
+  top: auto;
+  height: 100%;
 }
 
 .home_hero_inner {
@@ -2472,6 +2483,10 @@
 }
 
 @media (min-width: 768px) {
+  .home_hero_tournament_link {
+    height: 500px;
+  }
+
   .home_match_scroll {
     --home-match-gap: clamp(8px, 1.2vw, 12px);
     gap: var(--home-match-gap);
@@ -2514,6 +2529,10 @@
 }
 
 @media (min-width: 1024px) {
+  .home_hero_tournament_link {
+    height: 520px;
+  }
+
   .home_hero_inner,
   .home_team_content_box,
   .home_banner,
@@ -2525,31 +2544,32 @@
   }
 
   .home_team_scroll {
-    width: calc(100% + 72px);
-    margin-right: -36px;
-    margin-left: -36px;
-    padding-right: 36px;
-    padding-left: 36px;
-    overflow: hidden;
-    cursor: grab;
-    touch-action: pan-y;
-  }
-
-  .home_team_scroll:active {
-    cursor: grabbing;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    padding: 0 0 4px;
+    overflow: visible;
+    cursor: default;
+    touch-action: auto;
   }
 
   .home_team_track {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 14px;
-    width: max-content;
-    will-change: transform;
+    width: 100%;
+    transform: none !important;
+    will-change: auto;
   }
 
   .home_team_card {
-    flex: 0 0 clamp(94px, calc((100vw - 72px - 70px) / 6), calc((var(--app-max-width) - 72px - 70px) / 6));
-    width: clamp(94px, calc((100vw - 72px - 70px) / 6), calc((var(--app-max-width) - 72px - 70px) / 6));
+    flex: 1 1 auto;
+    width: 100%;
     min-height: 142px;
+  }
+
+  .home_team_card.is_duplicate {
+    display: none;
   }
 
   .buddy_bottom,

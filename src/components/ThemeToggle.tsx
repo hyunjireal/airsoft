@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import darkModeIcon from '../asset/icons/main_dark.svg'
-import lightModeIcon from '../asset/icons/main_light.svg'
+import darkModeIcon from '../asset/icons/dark.svg'
+import lightModeIcon from '../asset/icons/light.svg'
 import userAvatar from '../asset/images/main_user01.png'
 
 type ThemeMode = 'light' | 'dark'

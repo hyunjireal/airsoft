@@ -380,6 +380,7 @@ function CommentMeta({
   onLike,
   onReply,
   now,
+  burstKey,
 }: {
   count: number
   dateTime: string
@@ -388,6 +389,7 @@ function CommentMeta({
   now: number
   onLike?: () => void
   onReply?: () => void
+  burstKey?: number
 }) {
   return (
     <div className="post_detail_comment_meta_line">
@@ -398,7 +400,19 @@ function CommentMeta({
           type="button"
           onClick={onLike}
         >
-          <img src={heartIcon} alt="" />
+          <span className="post_detail_comment_like_icon_shell">
+            {liked && burstKey ? (
+              <span className="post_detail_like_burst post_detail_comment_like_burst" key={burstKey} aria-hidden="true">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+              </span>
+            ) : null}
+            <img src={heartIcon} alt="" />
+          </span>
           <span>{count}</span>
         </button>
       </div>
@@ -419,6 +433,7 @@ function ReplyItem({
   currentUserName,
   profileImage,
   commentId,
+  likeBurstKey,
   reply,
 }: {
   now: number
@@ -428,6 +443,7 @@ function ReplyItem({
   currentUserName: string
   profileImage: string
   commentId: string
+  likeBurstKey?: number
   reply: ReplyData
 }) {
   const mentionMatch = reply.body.match(/^(@\S+)\s*(.*)$/)
@@ -478,6 +494,7 @@ function ReplyItem({
         dateTime={reply.dateTime}
         label="답글쓰기"
         liked={reply.liked}
+        burstKey={likeBurstKey}
         now={now}
         onLike={onLike}
         onReply={() => onReply(reply.author)}
@@ -499,6 +516,8 @@ function ThreadComment({
   profileImage,
   onLikeComment,
   onLikeReply,
+  commentLikeBurstKey,
+  replyLikeBurstKeys,
   onReplyTo,
 }: {
   comment: ThreadCommentData
@@ -513,6 +532,8 @@ function ThreadComment({
   profileImage: string
   onLikeComment: () => void
   onLikeReply: (replyId: string) => void
+  commentLikeBurstKey?: number
+  replyLikeBurstKeys: Record<string, number>
   onReplyTo: (author: string) => void
 }) {
   const [replyInput, setReplyInput] = useState('')
@@ -579,6 +600,7 @@ function ThreadComment({
             dateTime={comment.dateTime}
             label="답글쓰기"
             liked={comment.liked}
+            burstKey={commentLikeBurstKey}
             now={now}
             onLike={onLikeComment}
             onReply={() => onReplyTo('')}
@@ -628,6 +650,7 @@ function ThreadComment({
               onOpenReportSheet={onOpenReportSheet}
               profileImage={profileImage}
               commentId={comment.id}
+              likeBurstKey={replyLikeBurstKeys[reply.id]}
               reply={reply}
               onLike={() => onLikeReply(reply.id)}
               onReply={(author) => onReplyTo(author)}
@@ -664,6 +687,9 @@ export function PostDetail() {
     readCommunityBookmarks().has(linkedPost.id),
   )
   const [postLiked, setPostLiked] = useState(Boolean(linkedPost.liked))
+  const [postLikeBurstKey, setPostLikeBurstKey] = useState(0)
+  const [commentLikeBurstKeys, setCommentLikeBurstKeys] = useState<Record<string, number>>({})
+  const [replyLikeBurstKeys, setReplyLikeBurstKeys] = useState<Record<string, number>>({})
   const [reportSheetTarget, setReportSheetTarget] = useState<ReportSheetTarget | null>(null)
   const [profileImage, setProfileImage] = useState(getInitialProfileImage)
   const [currentUserName, setCurrentUserName] = useState(getCurrentUserName)
@@ -683,6 +709,8 @@ export function PostDetail() {
     setCommentInput('')
     setExpandedReplyIds([])
     setMentionTargets({})
+    setCommentLikeBurstKeys({})
+    setReplyLikeBurstKeys({})
   }, [linkedPost.id])
 
   useEffect(() => {
@@ -836,11 +864,20 @@ export function PostDetail() {
       const updatedPost = toggleStoredPostLike(linkedPost.id)
       if (updatedPost) {
         setPostLiked(updatedPost.liked)
+        if (updatedPost.liked) {
+          setPostLikeBurstKey((current) => current + 1)
+        }
       }
       return
     }
 
-    setPostLiked((liked) => !liked)
+    setPostLiked((liked) => {
+      const nextLiked = !liked
+      if (nextLiked) {
+        setPostLikeBurstKey((current) => current + 1)
+      }
+      return nextLiked
+    })
   }
 
   const togglePostBookmark = () => {
@@ -1010,6 +1047,14 @@ export function PostDetail() {
       const updatedPost = toggleStoredCommentLike(linkedPost.id, commentId)
       if (updatedPost) {
         setComments(updatedPost.comments)
+        const updatedComment = updatedPost.comments.find((comment) => comment.id === commentId)
+
+        if (updatedComment?.liked) {
+          setCommentLikeBurstKeys((keys) => ({
+            ...keys,
+            [commentId]: (keys[commentId] ?? 0) + 1,
+          }))
+        }
       }
       return
     }
@@ -1017,11 +1062,22 @@ export function PostDetail() {
     setComments((items) =>
       items.map((comment) =>
         comment.id === commentId
-          ? {
-              ...comment,
-              liked: !comment.liked,
-              likeCount: comment.likeCount + (comment.liked ? -1 : 1),
-            }
+          ? (() => {
+              const nextLiked = !comment.liked
+
+              if (nextLiked) {
+                setCommentLikeBurstKeys((keys) => ({
+                  ...keys,
+                  [commentId]: (keys[commentId] ?? 0) + 1,
+                }))
+              }
+
+              return {
+                ...comment,
+                liked: nextLiked,
+                likeCount: comment.likeCount + (comment.liked ? -1 : 1),
+              }
+            })()
           : comment,
       ),
     )
@@ -1032,6 +1088,16 @@ export function PostDetail() {
       const updatedPost = toggleStoredReplyLike(linkedPost.id, commentId, replyId)
       if (updatedPost) {
         setComments(updatedPost.comments)
+        const updatedReply = updatedPost.comments
+          .find((comment) => comment.id === commentId)
+          ?.replies.find((reply) => reply.id === replyId)
+
+        if (updatedReply?.liked) {
+          setReplyLikeBurstKeys((keys) => ({
+            ...keys,
+            [replyId]: (keys[replyId] ?? 0) + 1,
+          }))
+        }
       }
       return
     }
@@ -1043,11 +1109,22 @@ export function PostDetail() {
               ...comment,
               replies: comment.replies.map((reply) =>
                 reply.id === replyId
-                  ? {
-                      ...reply,
-                      liked: !reply.liked,
-                      likeCount: reply.likeCount + (reply.liked ? -1 : 1),
-                    }
+                  ? (() => {
+                      const nextLiked = !reply.liked
+
+                      if (nextLiked) {
+                        setReplyLikeBurstKeys((keys) => ({
+                          ...keys,
+                          [replyId]: (keys[replyId] ?? 0) + 1,
+                        }))
+                      }
+
+                      return {
+                        ...reply,
+                        liked: nextLiked,
+                        likeCount: reply.likeCount + (reply.liked ? -1 : 1),
+                      }
+                    })()
                   : reply,
               ),
             }
@@ -1211,7 +1288,19 @@ export function PostDetail() {
             type="button"
             onClick={togglePostLike}
           >
-            <img src={heartIcon} alt="" />
+            <span className="post_detail_like_icon_shell">
+              {postLiked && postLikeBurstKey > 0 ? (
+                <span className="post_detail_like_burst" key={postLikeBurstKey} aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </span>
+              ) : null}
+              <img src={heartIcon} alt="" />
+            </span>
             <span>공감</span>
             <strong>{postLikeCount}</strong>
           </button>
@@ -1270,6 +1359,8 @@ export function PostDetail() {
               profileImage={profileImage}
               onLikeComment={() => toggleCommentLike(comment.id)}
               onLikeReply={(replyId) => toggleReplyLike(comment.id, replyId)}
+              commentLikeBurstKey={commentLikeBurstKeys[comment.id]}
+              replyLikeBurstKeys={replyLikeBurstKeys}
               onReplyTo={(author) => setReplyTarget(comment.id, author)}
             />
           ))}

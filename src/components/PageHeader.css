@@ -168,3 +168,10 @@
 :root[data-theme='dark'] .page_header .page_header__title {
   color: var(--color-white);
 }
+
+@media (min-width: 1024px) {
+  .page_header:not(.page_header--section) {
+    padding-right: 36px !important;
+    padding-left: 36px !important;
+  }
+}

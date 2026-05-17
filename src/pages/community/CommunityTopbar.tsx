@@ -78,7 +78,7 @@ export function CommunityTopbar({
           >
             <img
               className="community_header_theme_icon"
-              src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
+              src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
               alt=""
               aria-hidden="true"
             />

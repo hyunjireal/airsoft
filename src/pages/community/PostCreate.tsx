@@ -66,6 +66,8 @@ export function PostCreate() {
   const [selectedCategory, setSelectedCategory] = useState<PostCategory>(postCategories[0])
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const [titleError, setTitleError] = useState('')
+  const [bodyError, setBodyError] = useState('')
   const [fileName, setFileName] = useState('선택한 파일 없음')
   const [attachedImages, setAttachedImages] = useState<AttachedImagePreview[]>([])
   const fileRef = useRef<HTMLInputElement>(null)
@@ -173,8 +175,13 @@ export function PostCreate() {
   const submitPost = () => {
     const trimmedTitle = title.trim()
     const trimmedBody = body.trim()
+    const nextTitleError = trimmedTitle ? '' : '제목을 입력하시오'
+    const nextBodyError = trimmedBody ? '' : '본문을 입력하시오'
 
-    if (!trimmedTitle || !trimmedBody) {
+    setTitleError(nextTitleError)
+    setBodyError(nextBodyError)
+
+    if (nextTitleError || nextBodyError) {
       return
     }
 
@@ -282,11 +289,23 @@ export function PostCreate() {
           </label>
           <input
             id="post_title"
-            className="post_create_control post_create_input"
+            className={`post_create_control post_create_input${titleError ? ' is_error' : ''}`}
             placeholder="제목을 입력해주세요"
             value={title}
-            onChange={(event) => setTitle(event.target.value)}
+            aria-invalid={Boolean(titleError)}
+            aria-describedby={titleError ? 'post_title_error' : undefined}
+            onChange={(event) => {
+              setTitle(event.target.value)
+              if (titleError) {
+                setTitleError('')
+              }
+            }}
           />
+          {titleError ? (
+            <p className="post_create_error" id="post_title_error">
+              {titleError}
+            </p>
+          ) : null}
         </div>
 
         <div className="post_create_field">
@@ -295,11 +314,23 @@ export function PostCreate() {
           </label>
           <textarea
             id="post_body"
-            className="post_create_textarea"
+            className={`post_create_textarea${bodyError ? ' is_error' : ''}`}
             placeholder="본문을 입력해주세요"
             value={body}
-            onChange={(event) => setBody(event.target.value)}
+            aria-invalid={Boolean(bodyError)}
+            aria-describedby={bodyError ? 'post_body_error' : undefined}
+            onChange={(event) => {
+              setBody(event.target.value)
+              if (bodyError) {
+                setBodyError('')
+              }
+            }}
           />
+          {bodyError ? (
+            <p className="post_create_error" id="post_body_error">
+              {bodyError}
+            </p>
+          ) : null}
         </div>
 
         <div className="post_create_field">
