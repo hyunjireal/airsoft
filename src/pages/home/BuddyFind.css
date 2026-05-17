@@ -660,6 +660,21 @@
   font-family: var(--font-pretendard);
 }
 
+:root[data-theme='light'] .mobile_frame:has(.buddy_loading_page),
+:root[data-theme='light'] .mobile_frame:has(.buddy_loading_page) > main {
+  background: #ffffff;
+}
+
+:root[data-theme='light'] .buddy_loading_page {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+:root[data-theme='light'] .buddy_loading_text h1,
+:root[data-theme='light'] .buddy_loading_text p {
+  color: #1a1a1a;
+}
+
 .buddy_loading_visual_frame::before {
   content: "";
   position: absolute;

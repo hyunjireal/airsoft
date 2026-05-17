@@ -258,7 +258,7 @@ export function BuddyFind() {
         <PageHeader
           variant={themeMode === 'dark' ? 'dark' : 'default'}
           className="buddy_find_header"
-          onBack={() => navigate(-1)}
+          onBack={() => navigate('/home')}
           backLabel="뒤로 가기"
           title="버디 찾기"
         />
