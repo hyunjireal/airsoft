@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
+import type { CSSProperties, ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
@@ -32,6 +32,13 @@ type TimedChatMessage = ChatMessage & {
   time: string
   analysis?: AnalysisResult
 }
+
+const analysisThinkingSteps = [
+  '사진 속 장비 구성을 분리하고 있어요',
+  '보호장비와 안전 기준을 대조하고 있어요',
+  '입문자 기준 위험 포인트를 골라내고 있어요',
+  '추천 순서를 정리하고 있어요',
+]
 
 const frequentQuestions = [
   '초보 장비 추천해줘',
@@ -267,8 +274,12 @@ function renderAnalysisCard(analysis: AnalysisResult) {
       </div>
       <p>{analysis.summary}</p>
       <div className="chat_result_grid">
-        {analysis.items.map((item) => (
-          <article className={`chat_result_item is_${item.tone}`} key={item.label}>
+        {analysis.items.map((item, index) => (
+          <article
+            className={`chat_result_item is_${item.tone}`}
+            key={item.label}
+            style={{ '--result-index': index } as CSSProperties}
+          >
             <span>{item.label}</span>
             <strong>{item.value}</strong>
             <small>{item.detail}</small>
@@ -280,6 +291,36 @@ function renderAnalysisCard(analysis: AnalysisResult) {
         <img src={arrowRightIcon} alt="" aria-hidden="true" />
       </button>
     </section>
+  )
+}
+
+function renderAnalysisThinkingState(currentStep: number, loadingText: string) {
+  return (
+    <div className="chat_analysis_state chat_analysis_state_steps">
+      <div className="chat_analysis_state_header">
+        <span className="chat_analysis_orbit" aria-hidden="true" />
+        <div>
+          <strong>AI가 분석 중이에요</strong>
+          <span>{loadingText}</span>
+        </div>
+      </div>
+      <div className="chat_analysis_progress" aria-label="AI 분석 진행 단계">
+        {analysisThinkingSteps.map((step, index) => {
+          const isDone = index < currentStep
+          const isActive = index === currentStep
+
+          return (
+            <div
+              className={`chat_analysis_progress_item${isDone ? ' is_done' : ''}${isActive ? ' is_active' : ''}`}
+              key={step}
+            >
+              <span aria-hidden="true">{isDone ? '✓' : index + 1}</span>
+              <p>{step}</p>
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -310,6 +351,7 @@ export function ChatbotPage() {
   const [isSending, setIsSending] = useState(false)
   const [loadingIndex, setLoadingIndex] = useState(0)
   const [loadingMode, setLoadingMode] = useState<'analysis' | 'typing'>('analysis')
+  const [analysisThinkingStep, setAnalysisThinkingStep] = useState(0)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
   const [isCameraReady, setIsCameraReady] = useState(false)
   const [cameraError, setCameraError] = useState('')
@@ -457,13 +499,20 @@ export function ChatbotPage() {
     setIsSending(true)
     setLoadingIndex(0)
     setLoadingMode('analysis')
+    setAnalysisThinkingStep(0)
 
     const analysis = pickRandom(mockAnalysisResults)
 
-    await wait(2050)
+    for (let stepIndex = 0; stepIndex < analysisThinkingSteps.length; stepIndex += 1) {
+      setAnalysisThinkingStep(stepIndex)
+      await wait(900 + stepIndex * 170)
+    }
+
+    setAnalysisThinkingStep(analysisThinkingSteps.length)
+    await wait(520)
     setIsSending(false)
     await typeAssistantAnswer('사진 확인했어요. 장비 구성과 안전 포인트를 기준으로 빠르게 정리해드릴게요.')
-    await wait(260)
+    await wait(620)
     appendAnalysisCard(analysis)
   }
 
@@ -479,6 +528,7 @@ export function ChatbotPage() {
     setIsSending(true)
     setLoadingIndex(0)
     setLoadingMode('typing')
+    setAnalysisThinkingStep(0)
 
     const answer = quickAnswerMap[trimmed] ?? pickRandom(fallbackQuickAnswers)
 
@@ -643,7 +693,7 @@ export function ChatbotPage() {
 
   useLayoutEffect(() => {
     scrollToLatestMessage()
-  }, [messages, isSending, loadingText, typingMessageId])
+  }, [messages, isSending, loadingText, typingMessageId, analysisThinkingStep])
 
   useEffect(() => {
     const page = pageRef.current
@@ -734,15 +784,19 @@ export function ChatbotPage() {
               <article className="chat_message_frame assistant is_entering">
                 <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
                 <div className="chat_message_stack">
-                  <div className="chat_analysis_state">
-                    <span className="chat_analysis_orbit" aria-hidden="true" />
-                    <span>{loadingText}</span>
-                    <span className="chat_typing_dots" aria-hidden="true">
-                      <i />
-                      <i />
-                      <i />
-                    </span>
-                  </div>
+                  {loadingMode === 'analysis' ? (
+                    renderAnalysisThinkingState(analysisThinkingStep, loadingText)
+                  ) : (
+                    <div className="chat_analysis_state">
+                      <span className="chat_analysis_orbit" aria-hidden="true" />
+                      <span>{loadingText}</span>
+                      <span className="chat_typing_dots" aria-hidden="true">
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                    </div>
+                  )}
                 </div>
               </article>
             ) : null}
