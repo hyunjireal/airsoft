@@ -12,13 +12,15 @@ import quickBookmarkIcon from '../../asset/icons/my_quick_bookmark.svg'
 import quickHandIcon from '../../asset/icons/my_quick_hand.svg'
 import quickTeamIcon from '../../asset/icons/my_quick_team.svg'
 import quickWriteIcon from '../../asset/icons/my_quick_write.svg'
-import profileImage from '../../asset/images/main_user01.png'
+import defaultProfileImage from '../../asset/images/main_user01.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import { getMyMatchGroups, type MyMatchItem } from './myMatchData'
 import './my.css'
 
 type MatchTab = 'waiting' | 'confirmed' | 'past'
 type QuickMenuIconKind = 'team' | 'buddy' | 'posts' | 'saved'
+
+const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 
 type QuickMenuItem = {
   label: string
@@ -295,11 +297,13 @@ function LogoutModal({
 function ProfileInfo({
   name,
   statusLabel,
+  profileImageSrc,
   rightSlot,
   pointLinkTo,
 }: {
   name: string
   statusLabel: string
+  profileImageSrc: string
   rightSlot: ReactNode
   pointLinkTo?: string
 }) {
@@ -317,7 +321,7 @@ function ProfileInfo({
         <div className="my_profile_top">
           <div className="my_profile_identity">
             <div className="my_profile_avatar_wrap">
-              <img className="my_profile_avatar" src={profileImage} alt={`${name} 프로필`} />
+              <img className="my_profile_avatar" src={profileImageSrc} alt={`${name} 프로필`} />
               <button className="my_profile_edit" type="button" aria-label="프로필 이미지 변경">
                 <img className="my_profile_edit_icon" src={matchPencilIcon} alt="" aria-hidden="true" />
               </button>
@@ -357,6 +361,7 @@ export function MyPage() {
   const [matchTab, setMatchTab] = useState<MatchTab>('waiting')
   const [logoutModalOpen, setLogoutModalOpen] = useState(false)
   const [scheduleRevision, setScheduleRevision] = useState(0)
+  const [profileImageSrc, setProfileImageSrc] = useState(() => localStorage.getItem(PROFILE_IMAGE_KEY) || defaultProfileImage)
 
   const savedNickname = localStorage.getItem('nickname')
   const profileName = resolveProfileName(savedNickname)
@@ -382,6 +387,28 @@ export function MyPage() {
       window.removeEventListener('focus', refreshSchedules)
       window.removeEventListener('storage', refreshSchedules)
       window.removeEventListener('pageshow', refreshSchedules)
+    }
+  }, [])
+
+  useEffect(() => {
+    const refreshProfileImage = () => {
+      setProfileImageSrc(localStorage.getItem(PROFILE_IMAGE_KEY) || defaultProfileImage)
+    }
+
+    const syncProfileImage = (event: StorageEvent) => {
+      if (event.key === PROFILE_IMAGE_KEY) {
+        setProfileImageSrc(event.newValue || defaultProfileImage)
+      }
+    }
+
+    window.addEventListener('storage', syncProfileImage)
+    window.addEventListener('focus', refreshProfileImage)
+    window.addEventListener('pageshow', refreshProfileImage)
+
+    return () => {
+      window.removeEventListener('storage', syncProfileImage)
+      window.removeEventListener('focus', refreshProfileImage)
+      window.removeEventListener('pageshow', refreshProfileImage)
     }
   }, [])
 
@@ -438,6 +465,7 @@ export function MyPage() {
       <ProfileInfo
         name={profileName}
         statusLabel={profileStatusLabel}
+        profileImageSrc={profileImageSrc}
         pointLinkTo="/my/point-shop"
         rightSlot={
           <>

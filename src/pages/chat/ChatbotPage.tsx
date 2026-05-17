@@ -1,9 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties, ChangeEvent, FormEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
-import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import aiIcon from '../../asset/icons/com_ai.svg'
 import chatbotCalendarIcon from '../../asset/icons/chatbot_cal.svg'
 import imageIcon from '../../asset/icons/match_img.svg'
@@ -286,10 +285,9 @@ function renderAnalysisCard(analysis: AnalysisResult) {
           </article>
         ))}
       </div>
-      <button className="chat_result_cta" type="button">
+      <LoginButton className="chat_result_cta" variant="accent">
         상세 결과 보기
-        <img src={arrowRightIcon} alt="" aria-hidden="true" />
-      </button>
+      </LoginButton>
     </section>
   )
 }
@@ -734,11 +732,12 @@ export function ChatbotPage() {
               오늘
             </div>
 
-            {messages.map((message) => {
+            {messages.map((message, index) => {
               const isTyping = message.id === typingMessageId
 
               return (
-                <article className={`chat_message_frame ${message.role} is_entering`} key={message.id}>
+                <Fragment key={message.id}>
+                  <article className={`chat_message_frame ${message.role} is_entering`}>
                   {message.role === 'assistant' ? (
                     <img className="chat_gai" src={gaiImage} alt="" aria-hidden="true" />
                   ) : null}
@@ -764,21 +763,23 @@ export function ChatbotPage() {
                     </div>
                     <time>{message.time}</time>
                   </div>
-                </article>
+                  </article>
+                  {index === 0 ? (
+                    <div className="chat_scan_prompt">
+                      <img src={gaiImage} alt="" aria-hidden="true" />
+                      <div>
+                        <strong>장비 전체 사진을 보내주세요</strong>
+                        <span>정면이 잘 보이게 촬영하면 더 정확하게 분석할 수 있어요</span>
+                      </div>
+                      <button type="button" onClick={openCamera} disabled={isSending}>
+                        <img src={imageIcon} alt="" aria-hidden="true" />
+                        사진 촬영하기
+                      </button>
+                    </div>
+                  ) : null}
+                </Fragment>
               )
             })}
-
-            <div className="chat_scan_prompt">
-              <img src={gaiImage} alt="" aria-hidden="true" />
-              <div>
-                <strong>장비 전체 사진을 보내주세요</strong>
-                <span>정면이 잘 보이게 촬영하면 더 정확하게 분석할 수 있어요</span>
-              </div>
-              <button type="button" onClick={openCamera} disabled={isSending}>
-                <img src={imageIcon} alt="" aria-hidden="true" />
-                사진 촬영하기
-              </button>
-            </div>
 
             {isSending && !typingMessageId ? (
               <article className="chat_message_frame assistant is_entering">
@@ -808,17 +809,35 @@ export function ChatbotPage() {
           <div className="chat_faq">
             <p className="body_m_14">자주 묻는 질문</p>
             <div className="chat_faq_tags">
-              {frequentQuestions.map((question) => (
-                <button
-                  className="chat_faq_tag"
-                  key={question}
-                  type="button"
-                  onClick={() => void sendText(question)}
-                  disabled={isSending}
-                >
-                  {question}
-                </button>
-              ))}
+              <div className="chat_faq_track">
+                <div className="chat_faq_group">
+                  {frequentQuestions.map((question) => (
+                    <button
+                      className="chat_faq_tag"
+                      key={question}
+                      type="button"
+                      onClick={() => void sendText(question)}
+                      disabled={isSending}
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+                <div className="chat_faq_group" aria-hidden="true">
+                  {frequentQuestions.map((question) => (
+                    <button
+                      className="chat_faq_tag"
+                      key={`loop-${question}`}
+                      type="button"
+                      onClick={() => void sendText(question)}
+                      disabled={isSending}
+                      tabIndex={-1}
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
