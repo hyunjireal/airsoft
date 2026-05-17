@@ -117,6 +117,7 @@ export function MatchPresetManage() {
   const [managedPresets, setManagedPresets] = useState(readMatchPresets)
   const [appliedPresetId, setAppliedPresetId] = useState(readAppliedMatchPresetId)
   const [switchingPresetId, setSwitchingPresetId] = useState<string | null>(null)
+  const [deleteTargetPreset, setDeleteTargetPreset] = useState<MatchPresetItem | null>(null)
   const switchingTimerRef = useRef<number | null>(null)
   const appliedPreset = findMatchPreset(appliedPresetId) ?? managedPresets[0]
 
@@ -150,6 +151,31 @@ export function MatchPresetManage() {
     navigate('/match')
   }
 
+  const requestDeletePreset = (preset: MatchPresetItem) => {
+    setDeleteTargetPreset(preset)
+  }
+
+  const cancelDeletePreset = () => {
+    setDeleteTargetPreset(null)
+  }
+
+  const confirmDeletePreset = () => {
+    if (!deleteTargetPreset) return
+
+    deleteMatchPreset(deleteTargetPreset.id)
+    const nextPresets = readMatchPresets()
+    setManagedPresets(nextPresets)
+
+    if (deleteTargetPreset.id === appliedPresetId) {
+      const nextAppliedPresetId = nextPresets[0]?.id ?? 'weekend'
+      writeAppliedMatchPresetId(nextAppliedPresetId)
+      setAppliedPresetId(nextAppliedPresetId)
+      setIsAppliedVisible(true)
+    }
+
+    setDeleteTargetPreset(null)
+  }
+
   return (
     <div className="match_preset_manage_page">
       <PageHeader
@@ -173,7 +199,7 @@ export function MatchPresetManage() {
                 preset={appliedPreset}
                 active
                 switching={switchingPresetId === appliedPreset.id}
-                onDelete={() => setIsAppliedVisible(false)}
+                onDelete={() => requestDeletePreset(appliedPreset)}
               />
             </AnimatedContent>
           ) : null}
@@ -212,21 +238,38 @@ export function MatchPresetManage() {
                 useListExit
                 onApply={() => applyPreset(preset.id)}
                 onEdit={() => navigate(`/match/presets/${preset.id}/edit`)}
-                onDelete={() => {
-                  deleteMatchPreset(preset.id)
-                  const nextPresets = readMatchPresets()
-                  setManagedPresets(nextPresets)
-                  if (preset.id === appliedPresetId) {
-                    const nextAppliedPresetId = nextPresets[0]?.id ?? 'weekend'
-                    writeAppliedMatchPresetId(nextAppliedPresetId)
-                    setAppliedPresetId(nextAppliedPresetId)
-                  }
-                }}
+                onDelete={() => requestDeletePreset(preset)}
               />
             )}
           />
         </section>
       </main>
+
+      {deleteTargetPreset ? (
+        <div className="match_preset_delete_modal_backdrop" role="presentation" onClick={cancelDeletePreset}>
+          <section
+            className="match_preset_delete_modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="match-preset-delete-title"
+            aria-describedby="match-preset-delete-desc"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2 id="match-preset-delete-title">프리셋을 삭제할까요?</h2>
+            <p id="match-preset-delete-desc">
+              {deleteTargetPreset.title} 프리셋은 삭제 후 되돌릴 수 없어요.
+            </p>
+            <div className="match_preset_delete_modal_actions">
+              <button className="match_preset_delete_modal_cancel" type="button" onClick={cancelDeletePreset}>
+                취소
+              </button>
+              <button className="match_preset_delete_modal_confirm" type="button" onClick={confirmDeletePreset}>
+                삭제
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
     </div>
   )
 }

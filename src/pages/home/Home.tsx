@@ -1,5 +1,5 @@
 ﻿import { useRef, type CSSProperties, type PointerEvent } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
@@ -41,8 +41,11 @@ import mainTeamImg01 from '../../asset/images/main_teamImg01.png'
 import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
 import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
 import mainTeamImg04 from '../../asset/images/main_teamImg04.png'
+import matchImg01 from '../../asset/images/main_img03.jpg'
+import matchImg02 from '../../asset/images/main_img04.jpg'
+import matchImg03 from '../../asset/images/main_img05.jpg'
+import matchImg04 from '../../asset/images/main_img06.jpg'
 import { primaryAiRecommendedMatch } from '../../data/aiRecommendedMatches'
-import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
 import './Home.css'
 
 type HomeMatchCard = {
@@ -52,10 +55,7 @@ type HomeMatchCard = {
   place: string
   datetime: string
   img: string
-  sortTime?: number
 }
-
-const ONE_DAY_MS = 24 * 60 * 60 * 1000
 
 const teamCards = [
   { id: 1, name: '무적해병', region: '경기도 파주시', tags: ['초보자팀', '주말팀'], logo: mainTeamImg01 },
@@ -83,6 +83,48 @@ const tournamentCards = [
   { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
 ]
+
+const matchCards: HomeMatchCard[] = [
+  {
+    id: 1,
+    dday: '경기 25일 전',
+    notice: '초보자 브리핑과 장비 점검이 함께 진행돼요',
+    place: '경기도 하남시 밀리터리 필드',
+    datetime: '2026.08.08 오후 06:30',
+    img: matchImg01,
+  },
+  {
+    id: 2,
+    dday: '경기 18일 전',
+    notice: '친환경 바이오 BB탄 필수 사용 구역',
+    place: '경기도 파주시 CQB 아레나',
+    datetime: '2026.08.15 오전 10:00',
+    img: matchImg02,
+  },
+  {
+    id: 3,
+    dday: '경기 12일 전',
+    notice: '팀 밸런스 매칭 후 라운드가 배정돼요',
+    place: '서울 강서 실내 필드',
+    datetime: '2026.08.21 오후 02:00',
+    img: matchImg03,
+  },
+  {
+    id: 4,
+    dday: '경기 5일 전',
+    notice: '야간전 참여 전 라이트 규정을 확인해주세요',
+    place: '인천 서구 야외 필드',
+    datetime: '2026.08.28 오후 07:30',
+    img: matchImg04,
+  },
+]
+
+const sortedMatchCards = [...matchCards].sort((a, b) => {
+  const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
+  const bDay = Number(b.dday.match(/\d+/)?.[0] ?? 0)
+
+  return aDay - bDay
+})
 
 const buddyItems = [
   {
@@ -162,89 +204,6 @@ function saveProfileImage(dataUrl: string) {
 const BUDDY_SHEET_CLOSE_DURATION = 280
 const HOME_OPENING_DURATION = 2050
 const HOME_HERO_INTRO_SEEN_KEY = 'airsoft:home-hero-intro-seen'
-
-function normalizeDateValue(value?: string) {
-  const matchedDate = value?.trim().replaceAll('.', '-').match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
-  if (!matchedDate) return null
-
-  const [, year, month, day] = matchedDate
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-}
-
-function normalizeTimeValue(value?: string) {
-  const matchedTime = value?.match(/(\d{1,2}):(\d{2})/)
-  if (!matchedTime) return '00:00'
-
-  const [, hour, minute] = matchedTime
-  return `${hour.padStart(2, '0')}:${minute}`
-}
-
-function getScheduleDate(match: MyMatchItem) {
-  const dateValue = normalizeDateValue(match.dateValue ?? match.time)
-  if (!dateValue) return null
-
-  const timeValue = normalizeTimeValue(match.time)
-  const date = new Date(`${dateValue}T${timeValue}:00`)
-
-  return Number.isNaN(date.getTime()) ? null : date
-}
-
-function getDaysUntil(date: Date) {
-  const today = new Date()
-  const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()
-  const targetStart = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
-
-  return Math.ceil((targetStart - todayStart) / ONE_DAY_MS)
-}
-
-function formatDday(daysUntil: number) {
-  if (daysUntil === 0) return '오늘 경기'
-  return `경기 ${daysUntil}일 전`
-}
-
-function formatKoreanTime(timeValue?: string) {
-  const [hourString, minuteString] = normalizeTimeValue(timeValue).split(':')
-  const hour = Number(hourString)
-  const period = hour < 12 ? '오전' : '오후'
-  const displayHour = hour % 12 || 12
-
-  return `${period} ${String(displayHour).padStart(2, '0')}:${minuteString}`
-}
-
-function formatScheduleDateTime(date: Date, timeValue?: string) {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-
-  return `${year}.${month}.${day} ${formatKoreanTime(timeValue)}`
-}
-
-function createHomeScheduleCards() {
-  return getMyMatches()
-    .filter((match) => match.status !== 'past')
-    .map((match): HomeMatchCard | null => {
-      const date = getScheduleDate(match)
-      if (!date) return null
-
-      const daysUntil = getDaysUntil(date)
-      if (daysUntil < 0) return null
-
-      const place = [match.region, match.fieldName].filter(Boolean).join(' · ') || '장소 미정'
-
-      return {
-        id: match.id,
-        dday: formatDday(daysUntil),
-        notice: match.title,
-        place,
-        datetime: formatScheduleDateTime(date, match.time),
-        img: match.imageSrc,
-        sortTime: date.getTime(),
-      }
-    })
-    .filter((card): card is HomeMatchCard => Boolean(card))
-    .sort((a, b) => (a.sortTime ?? 0) - (b.sortTime ?? 0))
-    .slice(0, 5)
-}
 
 const homeAchievementTagStyle: CSSProperties = {
   border: 0,
@@ -374,7 +333,6 @@ export function Home() {
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user')
   const [isFlashing, setIsFlashing] = useState(false)
   const [pendingAlbumImage, setPendingAlbumImage] = useState<string | null>(null)
-  const [scheduleRevision, setScheduleRevision] = useState(0)
   const [hasSeenHomeHeroIntro] = useState(() => {
     if (typeof window === 'undefined') return true
     return sessionStorage.getItem(HOME_HERO_INTRO_SEEN_KEY) === 'true'
@@ -403,9 +361,7 @@ export function Home() {
   const homeProfileGreeting = homeProfileGreetings[
     getProfileGreetingSeed(savedNickname, homeProfileTitle, savedLevel, savedSkillAlias)
   ]
-  const homeScheduleCards = useMemo(() => {
-    return createHomeScheduleCards()
-  }, [scheduleRevision])
+  const homeScheduleCards = sortedMatchCards
   const homeAiRecommendedMatchTitleLines = primaryAiRecommendedMatch.title.split('\n')
 
   useEffect(() => {
@@ -438,22 +394,6 @@ export function Home() {
       cameraStream?.getTracks().forEach((track) => track.stop())
     }
   }, [cameraStream])
-
-  useEffect(() => {
-    const refreshSchedules = () => {
-      setScheduleRevision((revision) => revision + 1)
-    }
-
-    window.addEventListener('focus', refreshSchedules)
-    window.addEventListener('storage', refreshSchedules)
-    window.addEventListener('pageshow', refreshSchedules)
-
-    return () => {
-      window.removeEventListener('focus', refreshSchedules)
-      window.removeEventListener('storage', refreshSchedules)
-      window.removeEventListener('pageshow', refreshSchedules)
-    }
-  }, [])
 
   useEffect(() => {
     const trackElement = teamTrackRef.current
