@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import matchPencilIcon from '../../asset/icons/preset_pencil.svg'
@@ -23,7 +23,6 @@ const tabs: ScheduleTab[] = [
 
 export function MySchedule() {
   const navigate = useNavigate()
-  const location = useLocation()
   const [searchParams] = useSearchParams()
   const initialTab = searchParams.get('tab') === 'confirmed' ? 'confirmed' : 'applied'
   const [selectedTab, setSelectedTab] = useState<ScheduleStatus>(initialTab)
@@ -37,21 +36,7 @@ export function MySchedule() {
   )
 
   const goBack = () => {
-    const from = location.state && typeof location.state === 'object' && 'from' in location.state
-      ? location.state.from
-      : undefined
-
-    if (typeof from === 'string') {
-      navigate(from)
-      return
-    }
-
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
-    navigate('/my')
+    navigate('/match')
   }
 
   const deleteMyMatch = (matchId: string, title: string) => {

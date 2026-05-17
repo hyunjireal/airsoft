@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import More from '../../components/More'
 import { PageHeader } from '../../components/PageHeader'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
+import couponIcon from '../../asset/icons/coupon.svg'
 import pointshopBannerImage from '../../asset/images/pointshop_bannger_img.png'
 import pointshopBestImg01 from '../../asset/images/pointshop_best_img01.png'
 import pointshopBestImg02 from '../../asset/images/pointshop_best_img02.png'
@@ -291,9 +292,10 @@ export function PointShop() {
           title="포인트 샵"
           titleClassName="point_shop_title"
           onBack={goBack}
-          rightSlot={(
-            <button className="point_shop_coupon_button" type="button" onClick={goToCoupons}>
-              내 쿠폰함
+          hideProfile
+          rightTrailSlot={(
+            <button className="point_shop_coupon_button" type="button" aria-label="내 쿠폰함" onClick={goToCoupons}>
+              <img className="point_shop_coupon_icon" src={couponIcon} alt="" aria-hidden="true" />
             </button>
           )}
         />

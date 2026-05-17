@@ -35,6 +35,28 @@ const detailApplicants = [
   { name: '김루키', role: '용병 / 중급', status: 'waiting' },
 ]
 
+const APPLICANT_PREVIEW_COUNT = 5
+
+function getVisibleParticipantCount(currentParticipants?: number, maxParticipants?: number) {
+  const current = Number.isFinite(currentParticipants) ? Number(currentParticipants) : 0
+  const max = Number.isFinite(maxParticipants) ? Number(maxParticipants) : current
+
+  return Math.max(0, Math.min(current, max))
+}
+
+function createDetailApplicants(count: number) {
+  return Array.from({ length: count }, (_, index) => {
+    const presetApplicant = detailApplicants[index]
+    if (presetApplicant) return presetApplicant
+
+    return {
+      name: `신청자 ${index + 1}`,
+      role: index % 2 === 0 ? '팀플레이 / 중급' : '개인 플레이 / 초급',
+      status: 'waiting',
+    }
+  })
+}
+
 function readStringList(key: string) {
   try {
     const value = JSON.parse(localStorage.getItem(key) ?? '[]')
@@ -75,6 +97,7 @@ export function MatchDetail() {
   const location = useLocation()
   const [modalOpen, setModalOpen] = useState(false)
   const [isApplicantsRefreshing, setIsApplicantsRefreshing] = useState(false)
+  const [applicantsExpanded, setApplicantsExpanded] = useState(false)
   const hideCancelApplication = Boolean(
     (location.state as { hideCancelApplication?: boolean } | null)?.hideCancelApplication,
   )
@@ -131,14 +154,17 @@ export function MatchDetail() {
           backButtonClassName="match_detail_back"
           title="매치 상세"
           onBack={() => navigate('/my/schedule')}
-          hideRight
         />
         <div className="match_detail_empty">경기를 찾을 수 없어요.</div>
       </div>
     )
   }
 
-  const remainingSeats = Math.max(match.maxParticipants - match.currentParticipants, 0)
+  const applicantCount = getVisibleParticipantCount(match.currentParticipants, match.maxParticipants)
+  const applicants = createDetailApplicants(applicantCount)
+  const visibleApplicants = applicantsExpanded ? applicants : applicants.slice(0, APPLICANT_PREVIEW_COUNT)
+  const hasMoreApplicants = applicants.length > APPLICANT_PREVIEW_COUNT
+  const remainingSeats = Math.max(match.maxParticipants - applicantCount, 0)
   const isFull = remainingSeats === 0
 
   const apply = () => {
@@ -172,7 +198,6 @@ export function MatchDetail() {
         backButtonClassName="match_detail_back"
         title="매치 상세"
         onBack={() => navigate('/my/schedule')}
-        hideRight
       />
 
       <section className="match_detail_summary" aria-labelledby="match-detail-title">
@@ -202,7 +227,7 @@ export function MatchDetail() {
           </div>
           <div className="match_detail_info_row">
             <dt>인원</dt>
-            <dd>{match.maxParticipants}명 모집 중 (현재 {match.currentParticipants}/{match.maxParticipants})</dd>
+            <dd>{match.maxParticipants}명 모집 중 (현재 {applicantCount}/{match.maxParticipants})</dd>
           </div>
         </dl>
       </section>
@@ -210,7 +235,7 @@ export function MatchDetail() {
       <main className="match_detail_content">
         <section className="match_detail_section" aria-labelledby="match-detail-applicants">
           <div className="match_detail_section_title_row">
-            <h2 id="match-detail-applicants">신청자 현황 ({match.currentParticipants}/{match.maxParticipants})</h2>
+            <h2 id="match-detail-applicants">신청자 현황 ({applicantCount}/{match.maxParticipants})</h2>
             <button
               className={`match_detail_refresh_button${isApplicantsRefreshing ? ' is_refreshing' : ''}`}
               type="button"
@@ -222,8 +247,8 @@ export function MatchDetail() {
             </button>
           </div>
           <div className={`match_detail_applicant_list${isApplicantsRefreshing ? ' is_refreshing' : ''}`}>
-            {detailApplicants.map((applicant) => (
-              <article className="match_detail_applicant" key={applicant.name}>
+            {visibleApplicants.map((applicant, index) => (
+              <article className="match_detail_applicant" key={`${applicant.name}-${index}`}>
                 <div className="match_detail_applicant_name">
                   <span className="match_detail_applicant_avatar" aria-hidden="true" />
                   <strong>{applicant.name}</strong>
@@ -235,6 +260,16 @@ export function MatchDetail() {
               </article>
             ))}
           </div>
+          {hasMoreApplicants ? (
+            <button
+              className="match_detail_applicant_more"
+              type="button"
+              onClick={() => setApplicantsExpanded((current) => !current)}
+              aria-expanded={applicantsExpanded}
+            >
+              {applicantsExpanded ? '접기' : `더보기 ${applicants.length - APPLICANT_PREVIEW_COUNT}명`}
+            </button>
+          ) : null}
         </section>
 
         <section className="match_detail_section" aria-labelledby="match-detail-memo">

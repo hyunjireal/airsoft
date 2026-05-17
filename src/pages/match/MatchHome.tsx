@@ -666,11 +666,6 @@ export function MatchHome() {
     }
   }
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
     navigate('/home')
   }
 

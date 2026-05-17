@@ -6,7 +6,6 @@ import { Login } from './pages/auth/Login'
 import { Signup } from './pages/auth/Signup'
 import { ChatbotPage } from './pages/chat/ChatbotPage'
 import { ChatAnalysisPage } from './pages/chat/ChatAnalysisPage'
-import { Notifications } from './pages/common/Notifications'
 import { NotFound } from './pages/common/NotFound'
 import { Search } from './pages/common/Search'
 import { BeginnerBoard } from './pages/community/BeginnerBoard'
@@ -176,7 +175,6 @@ export const router = createBrowserRouter([
           { path: '/my/matches', element: <Navigate to="/my/schedule" replace /> },
           { path: '/my/schedule', element: <MySchedule /> },
           { path: '/search', element: <Search /> },
-          { path: '/notifications', element: <Notifications /> },
           { path: '*', element: <NotFound /> },
         ],
       },

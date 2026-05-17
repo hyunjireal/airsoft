@@ -45,6 +45,10 @@
   justify-content: flex-end;
 }
 
+.page_header--hide-profile .page_header__profile_link {
+  display: none;
+}
+
 .page_header--section {
   padding-right: 0 !important;
   padding-left: 0 !important;

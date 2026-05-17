@@ -21,6 +21,9 @@ export function AppShell() {
   const isBuddyRecommendPage = location.pathname === '/buddy/recommend'
   const isBuddyDetailPage = /^\/buddy\/recommend\/[^/]+$/.test(location.pathname)
   const isMySchedulePage = location.pathname === '/my/schedule'
+  const isMyPage = location.pathname === '/my'
+  const isPointShopPage = location.pathname === '/my/point-shop'
+  const isPointHistoryPage = location.pathname === '/my/point-shop/history'
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
   const isMatchEditPage = /^\/match\/edit\/[^/]+$/.test(location.pathname)
@@ -41,7 +44,10 @@ export function AppShell() {
     !isMatchApplyCompletePage &&
     !isMatchPresetEditPage &&
     !isMatchPresetCreatePage &&
-    !isMatchPresetFinishPage
+    !isMatchPresetFinishPage &&
+    !isMyPage &&
+    !isPointShopPage &&
+    !isPointHistoryPage
   const keepTopInset = false
   const showBackButton =
     !isMatchPage &&
@@ -57,6 +63,8 @@ export function AppShell() {
     !isChatPage &&
     !isGuideHubPage &&
     !isMySchedulePage &&
+    !isPointShopPage &&
+    !isPointHistoryPage &&
     !isGuideQuizPage &&
     location.pathname !== '/home' &&
     location.pathname !== '/my'

@@ -4913,6 +4913,34 @@
   width: 100%;
 }
 
+.match_detail_applicant_more {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  min-width: 116px;
+  min-height: 38px;
+  padding: 8px 18px;
+  border: 1px solid var(--color-gray04);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-gray00);
+  font-family: var(--font-pretendard);
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-130);
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.match_detail_applicant_more:hover {
+  transform: translateY(-1px);
+}
+
 .match_detail_applicant_list.is_refreshing .match_detail_applicant {
   animation: matchDetailApplicantPulse 0.8s ease;
 }
@@ -5115,6 +5143,12 @@
 :root[data-theme='dark'] .match_detail_info_row dd,
 :root[data-theme='dark'] .match_detail_applicant_role {
   color: #d9d9d9;
+}
+
+:root[data-theme='dark'] .match_detail_applicant_more {
+  border-color: var(--color-lime);
+  background: var(--color-black);
+  color: var(--color-lime);
 }
 
 :root[data-theme='dark'] .match_detail_action_button {

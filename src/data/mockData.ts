@@ -387,9 +387,3 @@ export const highlights: Highlight[] = [
   },
 ]
 
-export const notifications = [
-  '신청한 경기가 내일 예정되어 있어요.',
-  '내 질문에 새 답변이 달렸어요.',
-  'MVP 투표가 시작되었어요.',
-  '초보자 가이드 퀴즈를 완료해보세요.',
-]

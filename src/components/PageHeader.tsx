@@ -36,6 +36,8 @@ type PageHeaderProps = {
   titleClassName?: string
   subtitleClassName?: string
   rightSlot?: ReactNode
+  rightLeadSlot?: ReactNode
+  rightTrailSlot?: ReactNode
   leftSlot?: ReactNode
   children?: ReactNode
   titleAs?: ElementType
@@ -43,6 +45,7 @@ type PageHeaderProps = {
   layout?: PageHeaderLayout
   hideLeft?: boolean
   hideRight?: boolean
+  hideProfile?: boolean
 }
 
 export function PageHeader({
@@ -59,6 +62,8 @@ export function PageHeader({
   titleClassName,
   subtitleClassName,
   rightSlot,
+  rightLeadSlot,
+  rightTrailSlot,
   leftSlot,
   children,
   titleAs: TitleTag = 'h1',
@@ -66,6 +71,7 @@ export function PageHeader({
   layout = 'custom',
   hideLeft = false,
   hideRight = false,
+  hideProfile = false,
 }: PageHeaderProps) {
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
   const [profileImage, setProfileImage] = useState<string>(() => localStorage.getItem(PROFILE_IMAGE_KEY) || userAvatar)
@@ -133,6 +139,7 @@ export function PageHeader({
         `page_header--${variant}`,
         `page_header--${layout}`,
         hideLeft ? 'page_header--hide-left' : '',
+        hideProfile ? 'page_header--hide-profile' : '',
         className,
       ].filter(Boolean).join(' ')}
     >
@@ -148,6 +155,7 @@ export function PageHeader({
           </div>
         ) : !hideRight ? (
           <div className="page_header__right" aria-label="테마와 프로필 바로가기">
+            {rightLeadSlot}
             <button
               className="page_header__circle_button"
               type="button"
@@ -162,6 +170,7 @@ export function PageHeader({
                 aria-hidden="true"
               />
             </button>
+            {rightTrailSlot}
             <Link className="page_header__circle_button page_header__profile_link" to="/my" aria-label="마이페이지로 이동">
               <img className="page_header__profile_image" src={profileImage} alt="" aria-hidden="true" />
             </Link>

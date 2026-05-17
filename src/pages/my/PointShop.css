@@ -1,5 +1,4 @@
 .point_shop_page {
-  padding: clamp(52px, 8vw, 60px) 0 20px;
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-pretendard);
@@ -15,12 +14,6 @@
   margin: 0 auto;
 }
 
-.point_shop_header {
-}
-
-.point_shop_header_left {
-}
-
 .point_shop_back_button,
 .point_shop_coupon_button,
 .point_shop_hero_button,
@@ -31,11 +24,6 @@
   cursor: pointer;
 }
 
-.point_shop_back_button {
-}
-
-.point_shop_back_icon {
-}
 
 .point_shop_title,
 .point_shop_section_title,
@@ -55,16 +43,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  padding: 10px 15px;
-  border-radius: 8px;
-  background: rgba(187, 226, 28, 0.15);
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--color-gray04);
+  border-radius: 999px;
+  background: var(--color-white);
   color: var(--color-gray00);
-  font-size: var(--font-size-14);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-130);
-  letter-spacing: var(--letter-spacing-tight);
-  white-space: nowrap;
+  overflow: hidden;
+}
+
+.point_shop_coupon_icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 .point_shop_hero_button {
@@ -348,6 +340,71 @@
   opacity: 0.35;
 }
 
+:root[data-theme='dark'] .mobile_frame:has(.point_shop_page),
+:root[data-theme='dark'] .mobile_frame:has(.point_shop_page) > main {
+  background: #1a1a1a;
+}
+
+:root[data-theme='dark'] .point_shop_page,
+:root[data-theme='dark'] .point_shop_header {
+  background: #1a1a1a;
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_title,
+:root[data-theme='dark'] .point_shop_section_title,
+:root[data-theme='dark'] .point_shop_best_title,
+:root[data-theme='dark'] .point_shop_list_title,
+:root[data-theme='dark'] .point_shop_price {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_back_icon,
+:root[data-theme='dark'] .point_shop_list_arrow,
+:root[data-theme='dark'] .point_shop_more_button .arrow_r {
+  filter: brightness(0) invert(1);
+}
+
+:root[data-theme='dark'] .point_shop_coupon_button {
+  border-color: var(--color-gray03);
+  background: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_hero {
+  background: #66753f;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='dark'] .point_shop_hero_label {
+  color: var(--color-white);
+}
+
+:root[data-theme='dark'] .point_shop_point_icon {
+  background: #bbe21c;
+}
+
+:root[data-theme='dark'] .point_shop_best_card,
+:root[data-theme='dark'] .point_shop_list_box {
+  border-color: #4b4b4b;
+  background: #000000;
+}
+
+:root[data-theme='dark'] .point_shop_list_thumb {
+  background: rgba(183, 183, 183, 0.2);
+}
+
+:root[data-theme='dark'] .point_shop_more_button {
+  color: #9f9f9f !important;
+}
+
+:root[data-theme='dark'] .point_shop_back_button:focus-visible,
+:root[data-theme='dark'] .point_shop_coupon_button:focus-visible,
+:root[data-theme='dark'] .point_shop_hero_button:focus-visible,
+:root[data-theme='dark'] .point_shop_more_button:focus-visible,
+:root[data-theme='dark'] .point_shop_list_item:focus-visible {
+  outline-color: var(--color-white);
+}
+
 .point_shop_back_button:focus-visible,
 .point_shop_coupon_button:focus-visible,
 .point_shop_hero_button:focus-visible,
@@ -360,11 +417,6 @@
 @media (min-width: 640px) {
   .point_shop_page {
     padding-bottom: 36px;
-  }
-
-  .point_shop_coupon_button {
-    min-height: 42px;
-    padding: 11px 18px;
   }
 
   .point_shop_hero {
@@ -452,5 +504,43 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: 24px;
     row-gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .point_shop_shell {
+    width: min(calc(100% - 64px), 1024px);
+  }
+
+  .point_shop_content {
+    gap: 18px;
+  }
+
+  .point_shop_hero {
+    min-height: 168px;
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .point_shop_hero_image {
+    right: 40px;
+    width: 158px;
+    height: 162px;
+  }
+
+  .point_shop_best_row {
+    grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+    gap: 14px;
+  }
+
+  .point_shop_best_card {
+    width: 100%;
+    max-width: none;
+  }
+
+  .point_shop_list_box {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+    row-gap: 18px;
   }
 }

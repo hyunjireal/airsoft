@@ -251,10 +251,11 @@ function MyPageHeader({ onBack }: { onBack: () => void }) {
       title="마이페이지"
       titleClassName="my_page_title"
       onBack={onBack}
-      rightSlot={(
-        <Link className="my_header_button my_bell_button" to="/notifications" aria-label="알림">
+      hideProfile
+      rightLeadSlot={(
+        <button className="my_header_button my_bell_button is_disabled" type="button" aria-label="알림 비활성화" aria-disabled="true">
           <BellIcon />
-        </Link>
+        </button>
       )}
     />
   )

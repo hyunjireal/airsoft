@@ -181,7 +181,7 @@ export function MediaHome() {
           layout="standard"
           title="크리에이터 랭킹"
           variant="overlay"
-          onBack={() => navigate(-1)}
+          onBack={() => navigate('/home')}
         />
 
         <div className="media_podium_row" aria-label="크리에이터 단상">
