@@ -617,7 +617,8 @@
 }
 
 @media (min-width: 1024px) {
-  .media_ranking_section {
+  .media_ranking_section,
+  .media_contents_section {
     padding-right: 36px;
     padding-left: 36px;
   }
