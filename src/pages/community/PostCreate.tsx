@@ -17,6 +17,12 @@ type PostCreateLocationState = {
   boardContext?: PostBoardContext
 }
 
+type AttachedImagePreview = {
+  id: string
+  name: string
+  url: string
+}
+
 const isVeteranUser = () => {
   if (typeof window === 'undefined') {
     return false
@@ -61,8 +67,10 @@ export function PostCreate() {
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
   const [fileName, setFileName] = useState('선택한 파일 없음')
+  const [attachedImages, setAttachedImages] = useState<AttachedImagePreview[]>([])
   const fileRef = useRef<HTMLInputElement>(null)
   const boardDropdownRef = useRef<HTMLDivElement>(null)
+  const attachedImagesRef = useRef<AttachedImagePreview[]>([])
   const currentBoard = boardOptions.find((option) => option.value === boardContext) ?? boardOptions[1]
 
   useEffect(() => {
@@ -97,9 +105,60 @@ export function PostCreate() {
     }
   }, [boardMenuOpen])
 
+  useEffect(() => {
+    attachedImagesRef.current = attachedImages
+  }, [attachedImages])
+
+  useEffect(() => {
+    return () => {
+      attachedImagesRef.current.forEach((image) => URL.revokeObjectURL(image.url))
+    }
+  }, [])
+
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    setFileName(file ? file.name : '선택한 파일 없음')
+    const files = Array.from(event.target.files ?? []).filter((file) => file.type.startsWith('image/'))
+
+    setAttachedImages((currentImages) => {
+      currentImages.forEach((image) => URL.revokeObjectURL(image.url))
+
+      return files.map((file, index) => ({
+        id: `${file.name}-${file.lastModified}-${file.size}-${index}`,
+        name: file.name,
+        url: URL.createObjectURL(file),
+      }))
+    })
+
+    if (files.length === 0) {
+      setFileName('선택한 파일 없음')
+    } else if (files.length === 1) {
+      setFileName(files[0].name)
+    } else {
+      setFileName(`${files[0].name} 외 ${files.length - 1}장`)
+    }
+  }
+
+  const clearAttachedImage = (imageId: string) => {
+    setAttachedImages((currentImages) => {
+      const targetImage = currentImages.find((image) => image.id === imageId)
+      if (targetImage) {
+        URL.revokeObjectURL(targetImage.url)
+      }
+
+      const nextImages = currentImages.filter((image) => image.id !== imageId)
+
+      if (nextImages.length === 0) {
+        setFileName('선택한 파일 없음')
+        if (fileRef.current) {
+          fileRef.current.value = ''
+        }
+      } else if (nextImages.length === 1) {
+        setFileName(nextImages[0].name)
+      } else {
+        setFileName(`${nextImages[0].name} 외 ${nextImages.length - 1}장`)
+      }
+
+      return nextImages
+    })
   }
 
   const handleBoardSelect = (nextBoard: PostBoardContext) => {
@@ -119,13 +178,12 @@ export function PostCreate() {
       return
     }
 
-    const attachedFile = fileRef.current?.files?.[0]
     const createdPost = createCommunityPost({
       boardContext,
       category: String(selectedCategory),
       title: trimmedTitle,
       body: trimmedBody,
-      fileName: attachedFile?.name,
+      fileName: attachedImages[0]?.name,
     })
     const destination = boardContext === 'beginner' ? '/community' : '/community/free'
 
@@ -141,10 +199,8 @@ export function PostCreate() {
     <div className="post_create_page">
       <PageHeader
         className="post_create_header"
-        backButtonClassName="post_create_back"
-        backContent="‹"
+        layout="standard"
         title="글 작성하기"
-        titleClassName="post_create_title"
         onBack={() => navigate(-1)}
       />
 
@@ -259,8 +315,28 @@ export function PostCreate() {
             <span className="post_create_file_name">{fileName}</span>
             <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFile} hidden />
           </div>
+          {attachedImages.length > 0 ? (
+            <div className="post_create_preview_grid" aria-label="첨부한 사진 미리보기">
+              {attachedImages.map((image) => (
+                <figure className="post_create_preview_item" key={image.id}>
+                  <img src={image.url} alt={image.name} />
+                  <figcaption>{image.name}</figcaption>
+                  <button
+                    type="button"
+                    className="post_create_preview_remove"
+                    aria-label={`${image.name} 첨부 삭제`}
+                    onClick={() => clearAttachedImage(image.id)}
+                  >
+                    ×
+                  </button>
+                </figure>
+              ))}
+            </div>
+          ) : null}
         </div>
+      </div>
 
+      <section className="post_create_cta">
         <button
           type="button"
           className="post_create_submit"
@@ -268,7 +344,7 @@ export function PostCreate() {
         >
           작성하기
         </button>
-      </div>
+      </section>
     </div>
   )
 }

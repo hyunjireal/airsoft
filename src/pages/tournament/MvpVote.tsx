@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
@@ -32,6 +32,8 @@ const teamThumbnails: Record<string, string> = {
   smokeline: thumbSmoke,
   deltaforce: thumbDeltaforce,
 }
+
+const formatRankName = (name: string) => (name.length >= 4 ? `${name.slice(0, 3)}...` : name)
 
 const matches = [
   {
@@ -84,14 +86,88 @@ const matches = [
   },
 ]
 
+const getCandidateMatchId = (candidateId: string) => {
+  for (const match of matches) {
+    for (const team of match.teams) {
+      if (team.candidates.some((candidate) => candidate.id === candidateId)) {
+        return match.id
+      }
+    }
+  }
+
+  return null
+}
+
+const readVotedMvpMatchIds = () => {
+  const storedMatchIds = localStorage.getItem('votedMvpMatchIds')
+  const matchIds = new Set<string>()
+
+  if (storedMatchIds) {
+    try {
+      const parsed = JSON.parse(storedMatchIds)
+      if (Array.isArray(parsed)) {
+        parsed.forEach((matchId) => {
+          if (typeof matchId === 'string') {
+            matchIds.add(matchId)
+          }
+        })
+      }
+    } catch {
+      // Ignore malformed local storage and fall back to the latest vote.
+    }
+  }
+
+  const latestMatchId = localStorage.getItem('votedMvpMatchId')
+  if (latestMatchId) {
+    matchIds.add(latestMatchId)
+  }
+
+  const latestCandidateId = localStorage.getItem('votedMvpId')
+  const inferredMatchId = latestCandidateId ? getCandidateMatchId(latestCandidateId) : null
+  if (inferredMatchId) {
+    matchIds.add(inferredMatchId)
+  }
+
+  return Array.from(matchIds)
+}
+
+const getFirstAvailableMatchId = (votedMatchIds: string[]) => (
+  matches.find((match) => !votedMatchIds.includes(match.id))?.id ?? null
+)
+
+const readInitialSelectedMatch = () => (
+  getFirstAvailableMatchId(readVotedMvpMatchIds())
+)
+
+const getMatchStatusLabel = (matchId: string, votedMatchIds: string[]) => (
+  votedMatchIds.includes(matchId) ? '투표 완료' : '투표 진행중'
+)
+
+const getMatchCardClassName = (matchId: string, selectedMatch: string | null, votedMatchIds: string[]) => {
+  const classNames = ['tournament_match_card']
+
+  if (selectedMatch === matchId) {
+    classNames.push('is_selected')
+  }
+
+  if (votedMatchIds.includes(matchId)) {
+    classNames.push('is_disabled')
+  }
+
+  return classNames.join(' ')
+}
+
 export function MvpVote() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
-  const [selectedMatch, setSelectedMatch] = useState<string | null>('quarter-3')
+  const matchSectionRef = useRef<HTMLElement | null>(null)
+  const [selectedMatch, setSelectedMatch] = useState<string | null>(readInitialSelectedMatch)
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
+  const [headerSolid, setHeaderSolid] = useState(false)
+  const [votedMatchIds, setVotedMatchIds] = useState<string[]>(readVotedMvpMatchIds)
   const heroImage = themeMode === 'dark' ? tournamentMainDarkImg : tournamentMainLightImg
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)
@@ -103,6 +179,7 @@ export function MvpVote() {
     .map((candidate, index) => ({
       rank: index + 1,
       name: candidate.name,
+      displayName: formatRankName(candidate.name),
       votes: candidate.votes,
       percent: Math.round((candidate.votes / topVotes) * 100),
     }))
@@ -115,13 +192,18 @@ export function MvpVote() {
   }
 
   const confirmVote = () => {
-    if (!selectedCandidate) return
+    if (!selectedCandidate || !selectedMatch) return
+    const nextVotedMatchIds = Array.from(new Set([...votedMatchIds, selectedMatch]))
     localStorage.setItem('votedMvpId', selectedCandidate)
+    localStorage.setItem('votedMvpMatchId', selectedMatch)
+    localStorage.setItem('votedMvpMatchIds', JSON.stringify(nextVotedMatchIds))
+    setVotedMatchIds(nextVotedMatchIds)
     setConfirmOpen(false)
     setTransitioning(true)
   }
 
   const selectMatch = (matchId: string) => {
+    if (votedMatchIds.includes(matchId)) return
     setSelectedMatch(matchId)
     setSelectedTeam(null)
     setSelectedCandidate(null)
@@ -132,8 +214,39 @@ export function MvpVote() {
     setSelectedCandidate(null)
   }
 
+  useLayoutEffect(() => {
+    const matchSection = matchSectionRef.current
+    if (!matchSection) return undefined
+
+    let frameId = 0
+
+    const updateHeaderSolid = () => {
+      frameId = 0
+      const header = document.querySelector<HTMLElement>('.tournament_mvp_vote_page .page_header')
+      const headerBottom = header?.getBoundingClientRect().bottom ?? 0
+      setHeaderSolid(matchSection.getBoundingClientRect().top <= headerBottom)
+    }
+
+    const requestHeaderSolidUpdate = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(updateHeaderSolid)
+    }
+
+    updateHeaderSolid()
+    window.addEventListener('scroll', requestHeaderSolidUpdate, { passive: true })
+    window.addEventListener('resize', requestHeaderSolidUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', requestHeaderSolidUpdate)
+      window.removeEventListener('resize', requestHeaderSolidUpdate)
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
+  }, [])
+
   return (
-    <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}`}>
+    <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}${headerSolid ? ' has_solid_header' : ''}`}>
       <PageHeader
         title="MVP 투표"
         variant="default"
@@ -154,13 +267,14 @@ export function MvpVote() {
         </div>
       </section>
 
-      <section className="tournament_match_section">
+      <section className="tournament_match_section" ref={matchSectionRef}>
         <h2>경기 선택</h2>
         <div className="tournament_match_list">
           <div className="tournament_match_list_top">
             <button
-              className={`tournament_match_card${selectedMatch === 'quarter-3' ? ' is_selected' : ''}`}
+              className={getMatchCardClassName('quarter-3', selectedMatch, votedMatchIds)}
               type="button"
+              disabled={votedMatchIds.includes('quarter-3')}
               onClick={() => selectMatch('quarter-3')}
             >
               <div className="tournament_match_info">
@@ -171,11 +285,12 @@ export function MvpVote() {
                   <span className="body_m_16">{matches[0].teams[1].name}</span>
                 </div>
               </div>
-              <em className="body_sb_14">투표 진행중</em>
+              <em className="body_sb_14">{getMatchStatusLabel('quarter-3', votedMatchIds)}</em>
             </button>
             <button
-              className={`tournament_match_card${selectedMatch === 'quarter-4' ? ' is_selected' : ''}`}
+              className={getMatchCardClassName('quarter-4', selectedMatch, votedMatchIds)}
               type="button"
+              disabled={votedMatchIds.includes('quarter-4')}
               onClick={() => selectMatch('quarter-4')}
             >
               <div className="tournament_match_info">
@@ -186,7 +301,7 @@ export function MvpVote() {
                   <span className="body_m_16">{matches[1].teams[1].name}</span>
                 </div>
               </div>
-              <em className="body_sb_14">투표 진행중</em>
+              <em className="body_sb_14">{getMatchStatusLabel('quarter-4', votedMatchIds)}</em>
             </button>
           </div>
           <button className="tournament_match_lock_card" type="button" disabled>
@@ -271,16 +386,21 @@ export function MvpVote() {
         ) : null}
       </section>
 
-      <section className={`tournament_live_rank_section${!isCandidateSelectOpen ? ' is_locked' : ''}`}>
+      <section
+        className={`tournament_live_rank_section${!isCandidateSelectOpen ? ' is_locked' : ''}${selectedCandidate ? ' has_rank_fill' : ''}`}
+      >
         <h2>실시간 랭킹</h2>
-        <div className="tournament_player_rank_list">
+        <div className="tournament_player_rank_list" key={selectedCandidate ?? selectedTeam ?? 'locked'}>
           {liveRanking.map((player) => (
             <div className="tournament_player_rank_item" key={player.rank}>
               <div className="tournament_player_rank_name">
-                <MainTag className={`tournament_rank_tag${player.rank === 1 ? ' is_first' : ''}`}>
+                <MainTag
+                  className={`tournament_rank_tag${player.rank === 1 ? ' is_first' : ''}`}
+                  style={{ padding: '1px 5px' }}
+                >
                   <span className="body_m_14">{player.rank}위</span>
                 </MainTag>
-                <strong className="body_sb_16">{player.name}</strong>
+                <strong className="body_sb_16" title={player.name}>{player.displayName}</strong>
               </div>
               <div className="tournament_player_rank_meter">
                 <i aria-hidden="true">

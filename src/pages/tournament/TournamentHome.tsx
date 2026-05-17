@@ -40,8 +40,8 @@ const heroSummary = {
   season: '5월 루키 토너먼트',
   headline: '곧 시작되는 4강전',
   nextMatchTime: '오늘 18:00',
-  venue: 'OO필드',
-  matchup: '바주카 · 블랙워터',
+  venue: '하남 OOO 에어소프트 파크',
+  matchup: '바주카 VS 블랙워터',
 }
 
 const bracketTabs: Array<{ id: BracketStage; label: string }> = [
@@ -59,13 +59,13 @@ const bracketStageIndex: Record<BracketStage, number> = {
 const quarterfinalMatches: QuarterfinalMatch[] = [
   { id: 'qf-1', label: '1경기', winner: '바주카', winnerScore: 2, loser: 'E팀', loserScore: 0, status: '완료' },
   { id: 'qf-2', label: '2경기', winner: '블랙워터', winnerScore: 2, loser: 'F팀', loserScore: 0, status: '완료' },
-  { id: 'qf-3', label: '3경기', winner: 'C팀', winnerScore: 2, loser: 'G팀', loserScore: 1, status: '완료' },
-  { id: 'qf-4', label: '4경기', winner: 'D팀', winnerScore: 2, loser: 'H팀', loserScore: 0, status: '완료' },
+  { id: 'qf-3', label: '3경기', winner: '스모크', winnerScore: 2, loser: 'G팀', loserScore: 1, status: '완료' },
+  { id: 'qf-4', label: '4경기', winner: '델타포스', winnerScore: 2, loser: 'H팀', loserScore: 0, status: '완료' },
 ]
 
 const semifinalMatches: KnockoutMatch[] = [
-  { id: 'sf-1', label: '1경기', matchup: '바주카 vs 블랙워터', time: '오늘 18:00', status: '진행 중' },
-  { id: 'sf-2', label: '2경기', matchup: 'C팀 vs D팀', time: '오늘 20:30', status: '진행 중' },
+  { id: 'sf-1', label: '1경기', matchup: '바주카 VS 블랙워터', time: '오늘 18:00', status: '진행 중' },
+  { id: 'sf-2', label: '2경기', matchup: '스모크 VS 델타포스', time: '오늘 20:30', status: '진행 중' },
 ]
 
 const highlightVideos = [
@@ -85,7 +85,7 @@ const infoCards = [
     id: 'location',
     icon: matchPinIcon,
     title: '장소',
-    lines: ['OO 에어소프트 필드', '경기도 OO시 OO로 123'],
+    lines: ['하남 OOO 에어소프트 파크', '경기도 하남시 OOO로 123'],
   },
   {
     id: 'entry',
@@ -107,6 +107,7 @@ export function TournamentHome() {
   const [activeStage, setActiveStage] = useState<BracketStage>('semifinal')
   const [bracketDirection, setBracketDirection] = useState<'next' | 'prev'>('next')
   const [isIntroAnimating, setIsIntroAnimating] = useState(true)
+  const [headerSolid, setHeaderSolid] = useState(false)
   const isDark = themeMode === 'dark'
   const heroImage = isDark ? tournamentMainDarkImage : tournamentMainLightImage
 
@@ -114,6 +115,32 @@ export function TournamentHome() {
     const timer = window.setTimeout(() => setIsIntroAnimating(false), 1250)
 
     return () => window.clearTimeout(timer)
+  }, [])
+
+  useEffect(() => {
+    let frameId = 0
+
+    const updateHeaderSolid = () => {
+      frameId = 0
+      setHeaderSolid(window.scrollY > 0)
+    }
+
+    const requestHeaderSolidUpdate = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(updateHeaderSolid)
+    }
+
+    updateHeaderSolid()
+    window.addEventListener('scroll', requestHeaderSolidUpdate, { passive: true })
+    window.addEventListener('resize', requestHeaderSolidUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', requestHeaderSolidUpdate)
+      window.removeEventListener('resize', requestHeaderSolidUpdate)
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
   }, [])
 
   const goBack = () => {
@@ -132,13 +159,8 @@ export function TournamentHome() {
     setActiveStage(nextStage)
   }
 
-  const moveToSemifinal = () => {
-    changeStage('semifinal')
-    document.getElementById('tournament-bracket')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
   return (
-    <div className={`tournament_main_page is_${themeMode}${isIntroAnimating ? ' is_intro' : ''}`}>
+    <div className={`tournament_main_page is_${themeMode}${isIntroAnimating ? ' is_intro' : ' has_status_fill'}${headerSolid ? ' has_solid_header' : ''}`}>
       <section
         className="tournament_main_hero"
         style={{ '--tournament-hero-image': `url(${heroImage})` } as CSSProperties}
@@ -163,13 +185,9 @@ export function TournamentHome() {
                 <div className="tournament_main_banner_status_tab is_active">
                   <span>진행 중</span>
                 </div>
-                <button
-                  className="tournament_main_banner_status_tab"
-                  type="button"
-                  onClick={moveToSemifinal}
-                >
+                <div className="tournament_main_banner_status_tab">
                   <span>4강</span>
-                </button>
+                </div>
               </div>
 
               <div className="tournament_main_banner_meta">

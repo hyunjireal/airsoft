@@ -100,13 +100,25 @@
 }
 
 .tournament_main_header {
-  position: absolute !important;
-  inset: 0 0 auto;
-  z-index: 2;
+  position: fixed !important;
+  top: 0;
+  left: 50%;
+  z-index: 30;
+  width: min(100%, 1024px);
   min-height: 130px !important;
   height: 130px !important;
   padding: calc(40px + env(safe-area-inset-top, 0px)) var(--tournament-shell-padding) 0 !important;
   background: transparent !important;
+  transform: translateX(-50%);
+  transition: background-color 0.24s ease, box-shadow 0.24s ease;
+}
+
+.tournament_main_page.has_solid_header.is_dark .tournament_main_header {
+  background: var(--tournament-page-bg) !important;
+}
+
+.tournament_main_page.has_solid_header.is_light .tournament_main_header {
+  background: var(--tournament-page-bg) !important;
 }
 
 .tournament_main_header .page_header__circle_button {
@@ -179,17 +191,44 @@
 }
 
 .tournament_main_banner_status {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding-bottom: 9px;
+}
+
+.tournament_main_banner_status::before,
+.tournament_main_banner_status::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  content: '';
+}
+
+.tournament_main_banner_status::before {
+  background: #d9d9d9;
+}
+
+.tournament_main_banner_status::after {
+  background: var(--tournament-stage-active);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.tournament_main_page.has_status_fill .tournament_main_banner_status::after {
+  animation: tournamentStatusFill 760ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
 }
 
 .tournament_main_banner_status_tab {
   display: inline-flex;
+  position: relative;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 5px 6px;
+  padding: 0 5px;
   border: 0;
-  border-bottom: 1px solid var(--tournament-stage-line);
   background: transparent;
   color: var(--tournament-stage-line);
   font-family: var(--font-pretendard);
@@ -198,12 +237,9 @@
   line-height: 1.3;
   letter-spacing: var(--letter-spacing-tight);
   text-align: left;
-  cursor: pointer;
 }
 
 .tournament_main_banner_status_tab.is_active {
-  border-bottom-width: 3px;
-  border-bottom-color: currentColor;
   color: var(--tournament-copy);
 }
 
@@ -395,9 +431,9 @@
   overflow: hidden;
   min-height: clamp(72px, calc(46px + 7vw), 100px);
   border-radius: 999px;
-  border-color: transparent;
+  border-color: var(--tournament-stage-card-border);
   background: var(--tournament-stage-card-bg);
-  box-shadow: none;
+  box-shadow: var(--tournament-stage-card-shadow);
 }
 
 .tournament_main_bracket_card.is_coming_soon::before {
@@ -415,7 +451,7 @@
   justify-content: center;
   align-self: stretch;
   padding-right: 4px;
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  border-right: 1px solid var(--tournament-stage-card-soft-border);
 }
 
 .tournament_main_bracket_label {
@@ -511,14 +547,14 @@
 }
 
 .tournament_main_coming_soon strong {
-  color: #ffffff;
+  color: var(--tournament-stage-card-text);
   font-size: clamp(14px, calc(10px + 1vw), 18px);
   font-weight: 700;
   letter-spacing: 0;
 }
 
 .tournament_main_coming_soon p {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--tournament-stage-card-subtext);
   font-size: clamp(12px, calc(9px + 0.75vw), 15px);
   font-weight: 500;
   letter-spacing: -0.02em;
@@ -636,6 +672,10 @@
   object-fit: contain;
 }
 
+.tournament_main_page.is_light .tournament_main_info_icon {
+  filter: brightness(0) saturate(100%) invert(78%) sepia(59%) saturate(1076%) hue-rotate(20deg) brightness(93%) contrast(89%);
+}
+
 .tournament_main_page.is_dark .tournament_main_info_icon,
 .tournament_main_page.is_dark .tournament_main_notice img {
   filter: brightness(0) saturate(100%) invert(88%) sepia(100%) saturate(235%) hue-rotate(8deg);
@@ -726,6 +766,28 @@
   }
 }
 
+@keyframes tournamentMainHeaderFadeDown {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, -8px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes tournamentStatusFill {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(0.5);
+  }
+}
+
 @keyframes tournamentBracketListNext {
   from {
     opacity: 0;
@@ -791,7 +853,7 @@
 }
 
 .tournament_main_page.is_intro .tournament_main_header {
-  animation: tournamentMainFadeDown 520ms ease 120ms both;
+  animation: tournamentMainHeaderFadeDown 520ms ease 120ms both;
 }
 
 .tournament_main_page.is_intro .tournament_main_banner {
@@ -877,6 +939,11 @@
     transition: none;
   }
 
+  .tournament_main_page.has_status_fill .tournament_main_banner_status::after {
+    animation: none;
+    transform: scaleX(0.5);
+  }
+
   .tournament_main_bracket_list.is_next,
   .tournament_main_bracket_list.is_prev,
   .tournament_main_bracket_list.is_next .tournament_main_bracket_card,
@@ -897,5 +964,9 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+
+  .tournament_main_page.is_intro .tournament_main_header {
+    transform: translateX(-50%);
   }
 }

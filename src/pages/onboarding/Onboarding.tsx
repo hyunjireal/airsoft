@@ -72,6 +72,14 @@ const onboardingSlides: OnboardingSlide[] = [
 
 const orderedOnboardingSlides = [onboardingSlides[0], onboardingSlides[2], onboardingSlides[1]]
 
+const MVP_VOTE_STORAGE_KEYS = [
+  'votedMvpId',
+  'votedMvpMatchId',
+  'votedMvpMatchIds',
+  'votedMvpTeamId',
+  'votedMvpTeamIds',
+]
+
 type OnboardingButtonProps = {
   label: string
   variant?: 'color' | 'nocolor'
@@ -108,6 +116,7 @@ export function Onboarding() {
   useEffect(() => {
     localStorage.removeItem(CREATED_MATCHES_KEY)
     localStorage.removeItem(CREATED_MATCH_FOCUS_DATE_KEY)
+    MVP_VOTE_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key))
   }, [])
 
   useEffect(() => {

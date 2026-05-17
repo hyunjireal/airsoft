@@ -354,11 +354,13 @@ export function BoardList() {
   const [activeCommunityTab, setActiveCommunityTab] = useState<'beginner' | 'free'>('free')
   const [switchingBoard, setSwitchingBoard] = useState(false)
   const [introComplete, setIntroComplete] = useState(false)
+  const [heroCollapsed, setHeroCollapsed] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
   const [storedPosts, setStoredPosts] = useState(() => readCommunityPosts())
+  const filtersRef = useRef<HTMLElement | null>(null)
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     const savedBookmarks = readCommunityBookmarks()
 
@@ -401,10 +403,20 @@ export function BoardList() {
         views: 320,
         commentsCount: post.commentsCount,
       }))
-  const sortedDisplayPosts =
-    selectedSort === 'popular'
-      ? [...displayPosts].sort((a, b) => b.commentsCount - a.commentsCount || b.views - a.views)
-      : displayPosts
+  const sortedDisplayPosts = [...displayPosts].sort((a, b) => {
+    const aBookmarked = bookmarkedIds.has(a.id)
+    const bBookmarked = bookmarkedIds.has(b.id)
+
+    if (aBookmarked !== bBookmarked) {
+      return aBookmarked ? -1 : 1
+    }
+
+    if (selectedSort === 'popular') {
+      return b.commentsCount - a.commentsCount || b.views - a.views
+    }
+
+    return 0
+  })
   const categoryKey = isFreeBoard ? selectedCategory : typedBoard
   const isExpanded = expandedCategories.has(categoryKey)
   const visiblePosts = isExpanded ? sortedDisplayPosts : sortedDisplayPosts.slice(0, INITIAL_VISIBLE_GENERAL_POST_COUNT)
@@ -487,9 +499,41 @@ export function BoardList() {
     return () => window.cancelAnimationFrame(frameId)
   }, [focusPostId, location.pathname, navigate, visiblePosts])
 
+  useEffect(() => {
+    if (!isFreeBoard) return undefined
+
+    const filters = filtersRef.current
+    if (!filters) return undefined
+
+    let frameId = 0
+    const collapseOffset = 112
+
+    const updateHeroCollapsed = () => {
+      frameId = 0
+      setHeroCollapsed(filters.getBoundingClientRect().top <= collapseOffset)
+    }
+
+    const requestHeroCollapsedUpdate = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(updateHeroCollapsed)
+    }
+
+    updateHeroCollapsed()
+    window.addEventListener('scroll', requestHeroCollapsedUpdate, { passive: true })
+    window.addEventListener('resize', requestHeroCollapsedUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', requestHeroCollapsedUpdate)
+      window.removeEventListener('resize', requestHeroCollapsedUpdate)
+      if (frameId) {
+        window.cancelAnimationFrame(frameId)
+      }
+    }
+  }, [isFreeBoard])
+
   if (isFreeBoard) {
     return (
-      <div className={`general_board_page${switchingBoard ? ' is_switching_content' : ''}`}>
+      <div className={`general_board_page${switchingBoard ? ' is_switching_content' : ''}${heroCollapsed ? ' is_hero_collapsed' : ''}`}>
         <CommunityTopbar activeTab={activeCommunityTab} onBeginnerClick={switchToBeginnerBoard} />
 
         <section className="general_board_hero">
@@ -543,7 +587,7 @@ export function BoardList() {
           </div>
         </section>
 
-        <section className="general_board_filters" aria-label="게시글 정렬과 카테고리">
+        <section className="general_board_filters" ref={filtersRef} aria-label="게시글 정렬과 카테고리">
           <div className="general_sort_tabs">
             <button
               className={selectedSort === 'latest' ? 'active' : ''}

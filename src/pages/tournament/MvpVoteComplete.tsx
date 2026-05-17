@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import MainTag from '../../components/MainTag'
 import { PageHeader } from '../../components/PageHeader'
@@ -31,6 +31,8 @@ type CandidateInfo = {
   ranking: RankItem[]
   profileImg: string
 }
+
+const formatRankName = (name: string) => (name.length >= 4 ? `${name.slice(0, 3)}...` : name)
 
 const candidateMap: Record<string, CandidateInfo> = {
   'bazooka-01': {
@@ -148,14 +150,51 @@ const defaultCandidate = candidateMap['bazooka-01']
 export function MvpVoteComplete() {
   const navigate = useNavigate()
   const themeMode = useThemeMode()
+  const rankSectionRef = useRef<HTMLElement | null>(null)
+  const [rankInView, setRankInView] = useState(false)
+  const [headerSolid, setHeaderSolid] = useState(false)
   const voted = useMemo<CandidateInfo>(() => {
     const id = localStorage.getItem('votedMvpId') ?? ''
     return candidateMap[id] ?? defaultCandidate
   }, [])
   const heroImage = tournamentMainCompleteDarkImg
 
+  useEffect(() => {
+    const updateHeaderSolid = () => {
+      setHeaderSolid(window.scrollY > 0)
+    }
+
+    updateHeaderSolid()
+    window.addEventListener('scroll', updateHeaderSolid, { passive: true })
+    window.addEventListener('resize', updateHeaderSolid)
+
+    return () => {
+      window.removeEventListener('scroll', updateHeaderSolid)
+      window.removeEventListener('resize', updateHeaderSolid)
+    }
+  }, [])
+
+  useEffect(() => {
+    const rankSection = rankSectionRef.current
+    if (!rankSection) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setRankInView(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.35 },
+    )
+
+    observer.observe(rankSection)
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <div className={`tournament_page mvp_vote_complete_page is_${themeMode}`}>
+    <div className={`tournament_page mvp_vote_complete_page is_${themeMode}${headerSolid ? ' has_solid_header' : ''}`}>
       <PageHeader
         title="투표 완료"
         variant="default"
@@ -210,16 +249,19 @@ export function MvpVoteComplete() {
       </section>
 
       {/* 실시간 랭킹 */}
-      <section className="mvpc_rank_section">
+      <section className={`mvpc_rank_section${rankInView ? ' has_rank_fill' : ''}`} ref={rankSectionRef}>
         <h2 className="body_sb_24">실시간 랭킹</h2>
         <div className="tournament_player_rank_list">
           {voted.ranking.map((player) => (
             <div className="tournament_player_rank_item" key={player.rank}>
               <div className="tournament_player_rank_name">
-                <MainTag className={`tournament_rank_tag${player.rank === 1 ? ' is_first' : ''}`}>
+                <MainTag
+                  className={`tournament_rank_tag${player.rank === 1 ? ' is_first' : ''}`}
+                  style={{ padding: '1px 5px' }}
+                >
                   <span className="body_m_14">{player.rank}위</span>
                 </MainTag>
-                <strong className="body_sb_16">{player.name}</strong>
+                <strong className="body_sb_16" title={player.name}>{formatRankName(player.name)}</strong>
               </div>
               <div className="tournament_player_rank_meter">
                 <i aria-hidden="true">

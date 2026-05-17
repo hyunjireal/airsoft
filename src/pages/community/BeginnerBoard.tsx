@@ -528,20 +528,30 @@ export function BeginnerBoard() {
     const collapseTrigger = collapseTriggerRef.current;
     if (!collapseTrigger) return undefined;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setHeroCollapsed(entry.isIntersecting);
-      },
-      {
-        root: null,
-        rootMargin: "-112px 0px -52% 0px",
-        threshold: 0.01,
-      },
-    );
+    let frameId = 0;
+    const collapseOffset = 112;
 
-    observer.observe(collapseTrigger);
+    const updateHeroCollapsed = () => {
+      frameId = 0;
+      setHeroCollapsed(collapseTrigger.getBoundingClientRect().top <= collapseOffset);
+    };
 
-    return () => observer.disconnect();
+    const requestHeroCollapsedUpdate = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(updateHeroCollapsed);
+    };
+
+    updateHeroCollapsed();
+    window.addEventListener("scroll", requestHeroCollapsedUpdate, { passive: true });
+    window.addEventListener("resize", requestHeroCollapsedUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestHeroCollapsedUpdate);
+      window.removeEventListener("resize", requestHeroCollapsedUpdate);
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
   }, []);
 
   return (
