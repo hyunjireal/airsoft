@@ -91,6 +91,14 @@
   overflow: hidden;
 }
 
+.home_hero_tournament_link {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .home_hero_inner {
   display: flex;
   flex-direction: column;
@@ -2475,26 +2483,26 @@
     margin-left: -36px;
     padding-right: 36px;
     padding-left: 36px;
-    overflow: visible;
-    touch-action: auto;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+
+  .home_team_scroll:active {
+    cursor: grabbing;
   }
 
   .home_team_track {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
+    display: flex;
     gap: 14px;
-    width: 100%;
-    transform: none !important;
-    will-change: auto;
+    width: max-content;
+    will-change: transform;
   }
 
   .home_team_card {
-    width: 100%;
+    flex: 0 0 clamp(94px, calc((100vw - 72px - 70px) / 6), calc((var(--app-max-width) - 72px - 70px) / 6));
+    width: clamp(94px, calc((100vw - 72px - 70px) / 6), calc((var(--app-max-width) - 72px - 70px) / 6));
     min-height: 142px;
-  }
-
-  .home_team_card.is_duplicate {
-    display: none;
   }
 
   .buddy_bottom,

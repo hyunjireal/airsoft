@@ -41,6 +41,7 @@ import mainTeamImg01 from '../../asset/images/main_teamImg01.png'
 import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
 import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
 import mainTeamImg04 from '../../asset/images/main_teamImg04.png'
+import { primaryAiRecommendedMatch } from '../../data/aiRecommendedMatches'
 import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
 import './Home.css'
 
@@ -354,6 +355,9 @@ export function Home() {
   const teamAutoResumeTimerRef = useRef<number | null>(null)
   const teamOffsetRef = useRef(0)
   const teamLoopWidthRef = useRef(0)
+  const isTeamDraggingRef = useRef(false)
+  const teamDragStartXRef = useRef(0)
+  const teamDragStartOffsetRef = useRef(0)
   const matchDragScroll = useDragScroll()
   const bannerDragScroll = useDragScroll()
   const cameraInputRef = useRef<HTMLInputElement>(null)
@@ -402,6 +406,7 @@ export function Home() {
   const homeScheduleCards = useMemo(() => {
     return createHomeScheduleCards()
   }, [scheduleRevision])
+  const homeAiRecommendedMatchTitleLines = primaryAiRecommendedMatch.title.split('\n')
 
   useEffect(() => {
     if (isHomeOpeningDone) return undefined
@@ -457,21 +462,17 @@ export function Home() {
     let frameId = 0
     let previousTime = performance.now()
     const speed = 18
-    const desktopGridQuery = window.matchMedia('(min-width: 1024px)')
+
+    const renderTeamTrack = () => {
+      trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
+    }
 
     const updateLoopWidth = () => {
-      if (desktopGridQuery.matches) {
-        teamLoopWidthRef.current = 0
-        teamOffsetRef.current = 0
-        trackElement.style.transform = 'none'
-        return
-      }
-
       teamLoopWidthRef.current = trackElement.scrollWidth / 2
 
       if (teamLoopWidthRef.current > 0) {
         teamOffsetRef.current %= teamLoopWidthRef.current
-        trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
+        renderTeamTrack()
       }
     }
 
@@ -485,20 +486,18 @@ export function Home() {
 
       const loopWidth = teamLoopWidthRef.current
 
-      if (!desktopGridQuery.matches && !isTeamAutoPausedRef.current && loopWidth > 0) {
+      if (!isTeamAutoPausedRef.current && !isTeamDraggingRef.current && loopWidth > 0) {
         teamOffsetRef.current = (teamOffsetRef.current + speed * deltaSeconds) % loopWidth
-        trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
+        renderTeamTrack()
       }
 
       frameId = window.requestAnimationFrame(animate)
     }
 
     frameId = window.requestAnimationFrame(animate)
-    desktopGridQuery.addEventListener('change', updateLoopWidth)
 
     return () => {
       window.cancelAnimationFrame(frameId)
-      desktopGridQuery.removeEventListener('change', updateLoopWidth)
       resizeObserver.disconnect()
 
       if (teamAutoResumeTimerRef.current) {
@@ -595,6 +594,46 @@ export function Home() {
       isTeamAutoPausedRef.current = false
       teamAutoResumeTimerRef.current = null
     }, 900)
+  }
+
+  const normalizeTeamOffset = (offset: number) => {
+    const loopWidth = teamLoopWidthRef.current
+    if (loopWidth <= 0) return 0
+    return ((offset % loopWidth) + loopWidth) % loopWidth
+  }
+
+  const renderTeamTrackOffset = () => {
+    const trackElement = teamTrackRef.current
+    if (!trackElement) return
+    trackElement.style.transform = `translate3d(${-teamOffsetRef.current}px, 0, 0)`
+  }
+
+  const handleTeamPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0 && event.pointerType === 'mouse') return
+
+    pauseTeamAutoScroll()
+    isTeamDraggingRef.current = true
+    teamDragStartXRef.current = event.clientX
+    teamDragStartOffsetRef.current = teamOffsetRef.current
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+
+  const handleTeamPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!isTeamDraggingRef.current) return
+
+    const deltaX = event.clientX - teamDragStartXRef.current
+    teamOffsetRef.current = normalizeTeamOffset(teamDragStartOffsetRef.current - deltaX)
+    renderTeamTrackOffset()
+    event.preventDefault()
+  }
+
+  const handleTeamPointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (isTeamDraggingRef.current) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId)
+    }
+
+    isTeamDraggingRef.current = false
+    resumeTeamAutoScrollSoon()
   }
 
   const updateProfileImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -708,7 +747,9 @@ export function Home() {
       <PageHeader className="home_page_header" layout="standard" hideLeft />
       <section className="home_main">
         {/* ① 히어로 섹션 */}
-        <TournamentHero skipIntro={hasSeenHomeHeroIntro} />
+        <Link className="home_hero_tournament_link" to="/tournament" aria-label="토너먼트 페이지로 이동">
+          <TournamentHero skipIntro={hasSeenHomeHeroIntro} />
+        </Link>
 
         {/* ② 사용자 정보 + 경기 일정 */}
         <div className="home_userinfo_bg">
@@ -819,20 +860,23 @@ export function Home() {
                     '--home-ai-bg': `url(${mainAiBg})`,
                   } as CSSProperties
                 }
-                aria-label="AI 추천 매치 보러가기"
+                aria-label={`AI 추천 매치 보러가기, 매칭률 ${primaryAiRecommendedMatch.matchRate}%`}
               >
                 <img src={mainAiImg} alt="" className="home_ai_recommend_image" aria-hidden="true" />
                 <div className="home_ai_recommend_textbox">
                   <span className="home_ai_recommend_tag">AI 추천</span>
                   <p className="home_ai_recommend_title">
-                    하남시 몬드필드
-                    <br />
-                    주말 정기전
+                    {homeAiRecommendedMatchTitleLines.map((line, index) => (
+                      <span key={`${line}-${index}`}>
+                        {line}
+                        {index < homeAiRecommendedMatchTitleLines.length - 1 ? <br /> : null}
+                      </span>
+                    ))}
                   </p>
                 </div>
-                <div className="home_ai_recommend_match_rate" aria-label="매칭률 87%">
+                <div className="home_ai_recommend_match_rate" aria-label={`매칭률 ${primaryAiRecommendedMatch.matchRate}%`}>
                   <span className="home_ai_recommend_match_label">매칭률</span>
-                  <strong>87%</strong>
+                  <strong>{primaryAiRecommendedMatch.matchRate}%</strong>
                 </div>
               </Link>
             </div>
@@ -973,18 +1017,11 @@ export function Home() {
             <div className="home_team_con">
               <div
                 className="home_team_scroll"
-                onPointerDown={() => {
-                  pauseTeamAutoScroll()
-                }}
-                onPointerUp={() => {
-                  resumeTeamAutoScrollSoon()
-                }}
-                onPointerCancel={() => {
-                  resumeTeamAutoScrollSoon()
-                }}
-                onPointerLeave={() => {
-                  resumeTeamAutoScrollSoon()
-                }}
+                onPointerDown={handleTeamPointerDown}
+                onPointerMove={handleTeamPointerMove}
+                onPointerUp={handleTeamPointerEnd}
+                onPointerCancel={handleTeamPointerEnd}
+                onPointerLeave={handleTeamPointerEnd}
               >
                 <div className="home_team_track" ref={teamTrackRef}>
                   {[...visibleTeamCards, ...visibleTeamCards].map((team, index) => (

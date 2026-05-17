@@ -105,9 +105,9 @@
   left: 50%;
   z-index: 30;
   width: min(100%, 1024px);
-  min-height: 130px !important;
-  height: 130px !important;
-  padding: calc(40px + env(safe-area-inset-top, 0px)) var(--tournament-shell-padding) 0 !important;
+  min-height: 100px !important;
+  height: 100px !important;
+  padding: 0 var(--tournament-shell-padding) 16px !important;
   background: transparent !important;
   transform: translateX(-50%);
   transition: background-color 0.24s ease, box-shadow 0.24s ease;

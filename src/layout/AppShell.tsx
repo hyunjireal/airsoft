@@ -26,6 +26,7 @@ export function AppShell() {
   const isPointShopPage = location.pathname === '/my/point-shop'
   const isPointShopCouponsPage = location.pathname === '/my/point-shop/coupons'
   const isPointHistoryPage = location.pathname === '/my/point-shop/history'
+  const isGuidePage = location.pathname === '/guide' || location.pathname.startsWith('/guide/')
   const isGuideHubPage = location.pathname === '/guide'
   const isGuideQuizPage = location.pathname === '/guide/quiz'
   const isMatchEditPage = /^\/match\/edit\/[^/]+$/.test(location.pathname)
@@ -40,7 +41,7 @@ export function AppShell() {
     !isChatAnalysisPage &&
     !isBuddyDetailPage &&
     !isBuddyPage &&
-    !isGuideQuizPage &&
+    !isGuidePage &&
     !location.pathname.startsWith('/match/schedule/') &&
     !isMatchEditPage &&
     !isMatchApplyPage &&
