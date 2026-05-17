@@ -49,7 +49,7 @@ export function ThemeToggle() {
       >
         <img
           className="global_theme_toggle_icon"
-          src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
+          src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
           alt=""
         />
       </button>
