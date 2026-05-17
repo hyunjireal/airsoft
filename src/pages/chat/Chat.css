@@ -1193,6 +1193,71 @@
   text-align: center;
 }
 
+.chat_media_picker_sample {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 70px;
+  padding: 8px 12px;
+  border: 1px solid rgba(223, 255, 34, 0.28);
+  border-radius: 10px;
+  background: rgba(223, 255, 34, 0.08);
+  cursor: pointer;
+  text-align: center;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.chat_media_picker_sample:hover,
+.chat_media_picker_sample:focus-visible {
+  border-color: rgba(223, 255, 34, 0.58);
+  background: rgba(223, 255, 34, 0.12);
+  transform: translateY(-1px);
+}
+
+.chat_media_picker_sample:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.chat_media_picker_sample img {
+  display: block;
+  width: 64px;
+  height: 52px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.chat_media_picker_sample span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.chat_media_picker_sample strong,
+.chat_media_picker_sample small {
+  font-family: var(--font-pretendard);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.chat_media_picker_sample strong {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.chat_media_picker_sample small {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .chat_media_picker_cancel {
   display: flex;
   align-items: center;
@@ -1352,8 +1417,8 @@
   top: calc(50% - clamp(8px, 2vh, 18px));
   left: 50%;
   z-index: 2;
-  width: min(72vw, 420px);
-  height: min(44vh, 440px);
+  width: min(78vw, 520px);
+  height: min(50vh, 560px);
   transform: translate(-50%, -48%);
 }
 
@@ -1407,6 +1472,61 @@
   line-height: 1.45;
   text-align: center;
   transform: translateX(-50%);
+}
+
+.gai_camera_sample_button {
+  position: absolute;
+  right: var(--chat-pad);
+  bottom: calc(102px + env(safe-area-inset-bottom, 0px));
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  max-width: min(48vw, 210px);
+  padding: 6px 10px 6px 6px;
+  border: 1px solid rgba(223, 255, 34, 0.38);
+  border-radius: 999px;
+  background: rgba(24, 27, 25, 0.92);
+  color: #ffffff;
+  font-family: var(--font-pretendard);
+  font-size: clamp(12px, 2vw, 14px);
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.gai_camera_sample_button:hover,
+.gai_camera_sample_button:focus-visible {
+  border-color: var(--chat-lime);
+  background: rgba(34, 39, 35, 0.96);
+  transform: translateY(-1px);
+}
+
+.gai_camera_sample_button:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.gai_camera_sample_button img {
+  display: block;
+  width: 38px;
+  height: 32px;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.gai_camera_sample_button span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .gai_camera_actions {
@@ -1686,6 +1806,21 @@
   color: #1a1a1a;
 }
 
+:root[data-theme='light'] .chat_media_picker_sample {
+  border-color: rgba(129, 143, 84, 0.38);
+  background: #eef2df;
+}
+
+:root[data-theme='light'] .chat_media_picker_sample:hover,
+:root[data-theme='light'] .chat_media_picker_sample:focus-visible {
+  border-color: rgba(103, 107, 93, 0.62);
+  background: #e5ebcf;
+}
+
+:root[data-theme='light'] .chat_media_picker_sample strong {
+  color: #4d5638;
+}
+
 :root[data-theme='light'] .chat_media_picker_cancel {
   background: rgba(26, 26, 26, 0.04);
   color: rgba(26, 26, 26, 0.56);
@@ -1889,6 +2024,16 @@
     line-height: 1.48;
   }
 
+  .gai_scan_frame {
+    width: min(72vw, 720px);
+    height: min(54vh, 620px);
+  }
+
+  .gai_scan_frame span {
+    width: clamp(44px, 5.8vw, 64px);
+    height: clamp(44px, 5.8vw, 64px);
+  }
+
   .chat_message_frame.user .chat_bubble {
     font-size: clamp(14px, 1.6vw, 16px);
   }
@@ -1956,6 +2101,21 @@
   .chat_result_item img {
     width: 26px;
     height: 26px;
+  }
+
+  .gai_camera_sample_button {
+    bottom: calc(146px + env(safe-area-inset-bottom, 0px));
+    min-height: 42px;
+    padding: 5px;
+  }
+
+  .gai_camera_sample_button img {
+    width: 44px;
+    height: 34px;
+  }
+
+  .gai_camera_sample_button span {
+    display: none;
   }
 }
 

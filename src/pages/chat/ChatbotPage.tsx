@@ -16,6 +16,7 @@ import chatbotResultAlertIcon from "../../asset/icons/chatbot_result_alert.svg";
 import chatbotResultSafetyIcon from "../../asset/icons/chatbot_result_safety.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
 import gaiImage from "../../asset/images/gai.png";
+import sampleEquipmentImage from "../../asset/images/chatbot_sample_equipment.png";
 import type { ChatAttachment, ChatMessage } from "../../services/chatApi";
 import "./Chat.css";
 
@@ -86,7 +87,7 @@ const mockAnalysisResults: AnalysisResult[] = [
   {
     title: "안전 분석 요약",
     summary:
-      "입문용 CQB 세팅에 적합한 전동식 장난감총이에요. 전반적으로 양호하지만, 개선하면 더 좋은 퍼포먼스를 낼 수 있어요!",
+      "입문용 CQB 세팅에 적합한 전동식 에어소프트건이에요. 전반적으로 양호하지만, 개선하면 더 좋은 퍼포먼스를 낼 수 있어요!",
     score: {
       label: "종합 점수",
       value: 82,
@@ -244,6 +245,15 @@ function readFileAsDataUrl(file: File) {
         new Error("사진을 불러오지 못했어요. 다른 사진으로 다시 시도해주세요."),
       );
     reader.readAsDataURL(file);
+  });
+}
+
+function readBlobAsDataUrl(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(new Error("샘플 이미지를 불러오지 못했어요."));
+    reader.readAsDataURL(blob);
   });
 }
 
@@ -898,6 +908,28 @@ export function ChatbotPage() {
     albumInputRef.current?.click();
   };
 
+  const pickSamplePhoto = async () => {
+    if (isSending) {
+      return;
+    }
+
+    setIsMediaPickerOpen(false);
+    closeCamera();
+
+    try {
+      const response = await fetch(sampleEquipmentImage);
+      const blob = await response.blob();
+      const dataUrl = await readBlobAsDataUrl(blob);
+      await sendEquipmentPhoto(
+        dataUrlToAttachment(dataUrl, "demo-equipment-sample.png"),
+      );
+    } catch {
+      await typeAssistantAnswer(
+        "예시 이미지를 불러오지 못했어요. 앨범에서 이미지를 선택해 주세요.",
+      );
+    }
+  };
+
   const goBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -1295,6 +1327,17 @@ export function ChatbotPage() {
                 <span>앨범에서 가져오기</span>
               </button>
               <button
+                className="chat_media_picker_sample"
+                type="button"
+                onClick={() => void pickSamplePhoto()}
+                disabled={isSending}
+              >
+                <img src={sampleEquipmentImage} alt="" aria-hidden="true" />
+                <span>
+                  <strong>예시 이미지 사용하기</strong>
+                </span>
+              </button>
+              <button
                 className="chat_media_picker_cancel"
                 type="button"
                 onClick={() => setIsMediaPickerOpen(false)}
@@ -1340,6 +1383,15 @@ export function ChatbotPage() {
             {!isCameraReady && !cameraError ? (
               <p className="gai_camera_error">카메라를 준비하고 있어요.</p>
             ) : null}
+            <button
+              className="gai_camera_sample_button"
+              type="button"
+              onClick={() => void pickSamplePhoto()}
+              disabled={isSending}
+            >
+              <img src={sampleEquipmentImage} alt="" aria-hidden="true" />
+              <span>예시 이미지</span>
+            </button>
             <div className="gai_camera_actions">
               <LoginButton
                 className="gai_camera_capture_button"
