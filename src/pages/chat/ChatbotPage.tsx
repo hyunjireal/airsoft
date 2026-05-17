@@ -126,7 +126,7 @@ const welcomeMessage: TimedChatMessage = {
 }
 
 const welcomeMessageText =
-  '에어소프트 AI 챗봇 가이(GAI)입니다.\n\n장비 사진을 업로드하면  안전 · 규정 · 세팅을 분석해드려요. 입문자 장비 추천부터 수리 · 커스텀 가이드까지 도와드릴 수 있어요.'
+  '건잇 AI 챗봇 가이입니다. 장비 사진 분석을 통해 안전 체크와 장비 진단을 도와드려요. 입문자 장비 추천, 세팅, 수리·커스텀 가이드까지 지원합니다.'
 
 function wait(ms: number) {
   return new Promise<void>((resolve) => {
@@ -772,7 +772,7 @@ export function ChatbotPage() {
               <img src={gaiImage} alt="" aria-hidden="true" />
               <div>
                 <strong>장비 전체 사진을 보내주세요</strong>
-                <span>AI 챗봇 가이가 장비 분석부터 관리·튜닝 팁까지 도와드려요</span>
+                <span>정면이 잘 보이게 촬영하면 더 정확하게 분석할 수 있어요</span>
               </div>
               <button type="button" onClick={openCamera} disabled={isSending}>
                 <img src={imageIcon} alt="" aria-hidden="true" />
