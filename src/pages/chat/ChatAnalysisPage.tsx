@@ -174,7 +174,6 @@ export function ChatAnalysisPage() {
                   <strong>{item.title}</strong>
                   <small>{item.desc}</small>
                 </span>
-                <span className="gai_report_improvement_arrow" aria-hidden="true">›</span>
               </button>
             ))}
           </div>

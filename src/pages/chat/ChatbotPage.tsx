@@ -12,7 +12,8 @@ import { LoginButton } from "../../components/LoginButton";
 import { PageHeader } from "../../components/PageHeader";
 import chatbotCameraIcon from "../../asset/icons/chatbot_camera.svg";
 import chatbotCalendarIcon from "../../asset/icons/chatbot_cal.svg";
-import imageIcon from "../../asset/icons/match_img.svg";
+import chatbotResultAlertIcon from "../../asset/icons/chatbot_result_alert.svg";
+import chatbotResultSafetyIcon from "../../asset/icons/chatbot_result_safety.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
 import gaiImage from "../../asset/images/gai.png";
 import type { ChatAttachment, ChatMessage } from "../../services/chatApi";
@@ -25,12 +26,18 @@ type AnalysisItem = {
   value: string;
   detail: string;
   tone: AnalysisTone;
+  icon: string;
 };
 
 type AnalysisResult = {
   title: string;
-  confidence: string;
   summary: string;
+  score: {
+    label: string;
+    value: number;
+    max: number;
+    rating: string;
+  };
   items: AnalysisItem[];
 };
 
@@ -77,116 +84,29 @@ const typingLoadingLabels = [
 
 const mockAnalysisResults: AnalysisResult[] = [
   {
-    title: "입문자 장비 안전 분석",
-    confidence: "AI 체크 완료",
+    title: "안전 분석 요약",
     summary:
-      "전체 구성은 입문자가 사용하기에 무난해요. 다만 얼굴 보호와 탄속 확인은 필드 방문 전에 한 번 더 챙기는 편이 좋아요.",
+      "입문용 CQB 세팅에 적합한 전동식 장난감총이에요. 전반적으로 양호하지만, 개선하면 더 좋은 퍼포먼스를 낼 수 있어요!",
+    score: {
+      label: "종합 점수",
+      value: 82,
+      max: 100,
+      rating: "보통",
+    },
     items: [
       {
-        label: "보호장비",
-        value: "적절해요",
-        detail: "기본 장비 구성은 안정적으로 보여요.",
+        label: "개선 필요",
+        value: "3개",
+        detail: "확인 필요",
+        tone: "warn",
+        icon: chatbotResultAlertIcon,
+      },
+      {
+        label: "안전 상태",
+        value: "양호",
+        detail: "문제 없음",
         tone: "good",
-      },
-      {
-        label: "안전",
-        value: "고글 착용 권장",
-        detail: "눈 보호는 가장 먼저 확인해야 해요.",
-        tone: "warn",
-      },
-      {
-        label: "추천",
-        value: "메쉬 마스크 추천",
-        detail: "근거리 CQB에서는 하관 보호가 있으면 좋아요.",
-        tone: "info",
-      },
-      {
-        label: "규제",
-        value: "탄속 확인 필요",
-        detail: "방문 필드 기준에 맞는지 크로노 측정이 필요해요.",
-        tone: "warn",
-      },
-      {
-        label: "관리",
-        value: "배터리 상태 점검",
-        detail: "게임 전 충전량과 커넥터 상태를 확인하세요.",
-        tone: "info",
-      },
-    ],
-  },
-  {
-    title: "필드 입장 전 빠른 점검",
-    confidence: "데모 분석 완료",
-    summary:
-      "사진 기준으로는 바로 게임 준비가 가능해 보이지만, 마스크와 여분 배터리를 준비하면 훨씬 안정적인 세팅이에요.",
-    items: [
-      {
-        label: "보호장비",
-        value: "기본 구성 양호",
-        detail: "장갑과 고글을 함께 챙기면 좋아요.",
-        tone: "good",
-      },
-      {
-        label: "안전",
-        value: "렌즈 손상 확인",
-        detail: "고글 렌즈에 균열이나 흠집이 없는지 봐주세요.",
-        tone: "warn",
-      },
-      {
-        label: "추천",
-        value: "예비 탄창 준비",
-        detail: "초보자는 1개보다 2개 이상이 편해요.",
-        tone: "info",
-      },
-      {
-        label: "규제",
-        value: "필드 규정 확인",
-        detail: "실내/실외 필드마다 허용 탄속이 달라요.",
-        tone: "warn",
-      },
-      {
-        label: "관리",
-        value: "홉업 초기화",
-        detail: "첫 게임 전에는 기본값에서 조금씩 조절하세요.",
-        tone: "info",
-      },
-    ],
-  },
-  {
-    title: "초보자 맞춤 장비 코칭",
-    confidence: "추천 생성 완료",
-    summary:
-      "현재 장비는 시작용으로 충분해 보여요. 안전 장비 우선순위를 높이고, 소모품은 여유 있게 준비하는 구성이 좋습니다.",
-    items: [
-      {
-        label: "보호장비",
-        value: "상체 보호 보완",
-        detail: "얇은 긴팔이나 패딩감 있는 의류가 도움이 돼요.",
-        tone: "info",
-      },
-      {
-        label: "안전",
-        value: "고글 필수",
-        detail: "일반 안경은 보호장비로 충분하지 않아요.",
-        tone: "warn",
-      },
-      {
-        label: "추천",
-        value: "메쉬 마스크 추천",
-        detail: "입문자에게 체감 만족도가 높은 장비예요.",
-        tone: "good",
-      },
-      {
-        label: "규제",
-        value: "칼라파트 유지",
-        detail: "외관 규정은 이동 중에도 유지하는 편이 안전해요.",
-        tone: "warn",
-      },
-      {
-        label: "관리",
-        value: "탄창 청소",
-        detail: "먼지와 BB탄 잔여물을 가볍게 제거하세요.",
-        tone: "info",
+        icon: chatbotResultSafetyIcon,
       },
     ],
   },
@@ -413,17 +333,99 @@ function renderMessageText(text: string) {
   );
 }
 
+type TypewriterTextProps = {
+  text: string;
+  delay?: number;
+  speed?: number;
+  className?: string;
+};
+
+function TypewriterText({
+  text,
+  delay = 0,
+  speed = 24,
+  className,
+}: TypewriterTextProps) {
+  const [visibleText, setVisibleText] = useState("");
+
+  useEffect(() => {
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+
+    if (prefersReducedMotion) {
+      setVisibleText(text);
+      return;
+    }
+
+    const timers: number[] = [];
+    setVisibleText("");
+
+    const startTimer = window.setTimeout(() => {
+      let characterIndex = 0;
+
+      const typeNextCharacter = () => {
+        characterIndex += 1;
+        setVisibleText(text.slice(0, characterIndex));
+
+        if (characterIndex < text.length) {
+          timers.push(window.setTimeout(typeNextCharacter, speed));
+        }
+      };
+
+      typeNextCharacter();
+    }, delay);
+
+    timers.push(startTimer);
+
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [delay, speed, text]);
+
+  return (
+    <span className={["chat_result_type_text", className].filter(Boolean).join(" ")} aria-label={text}>
+      {visibleText}
+    </span>
+  );
+}
+
 function renderAnalysisCard(analysis: AnalysisResult, onDetail?: () => void) {
   return (
     <section className="chat_result_card" aria-label="AI 분석 결과 카드">
       <div className="chat_result_card_head">
         <div>
-          <span className="chat_result_badge">AI 분석 결과</span>
-          <strong>{analysis.title}</strong>
+          <span className="chat_result_badge">
+            <TypewriterText text="AI 분석 결과" delay={120} speed={26} />
+          </span>
+          <strong>
+            <TypewriterText text={analysis.title} delay={420} speed={30} />
+          </strong>
         </div>
-        <span className="chat_result_confidence">{analysis.confidence}</span>
       </div>
-      <p>{analysis.summary}</p>
+      <div className="chat_result_overview">
+        <div className="chat_result_score">
+          <span>
+            <TypewriterText text={analysis.score.label} delay={760} speed={28} />
+          </span>
+          <strong>
+            <TypewriterText
+              className="chat_result_score_value"
+              text={String(analysis.score.value)}
+              delay={980}
+              speed={90}
+            />
+            <small>
+              <TypewriterText text={`/${analysis.score.max}`} delay={1180} speed={60} />
+            </small>
+          </strong>
+          <em>
+            <TypewriterText text={analysis.score.rating} delay={1380} speed={70} />
+          </em>
+        </div>
+        <p>
+          <TypewriterText text={analysis.summary} delay={900} speed={22} />
+        </p>
+      </div>
       <div className="chat_result_grid">
         {analysis.items.map((item, index) => (
           <article
@@ -431,14 +433,23 @@ function renderAnalysisCard(analysis: AnalysisResult, onDetail?: () => void) {
             key={item.label}
             style={{ "--result-index": index } as CSSProperties}
           >
-            <span>{item.label}</span>
-            <strong>{item.value}</strong>
-            <small>{item.detail}</small>
+            <img src={item.icon} alt="" aria-hidden="true" />
+            <div>
+              <span>
+                <TypewriterText text={item.label} delay={1700 + index * 260} speed={30} />
+              </span>
+              <strong>
+                <TypewriterText text={item.value} delay={1880 + index * 260} speed={70} />
+              </strong>
+              <small>
+                <TypewriterText text={item.detail} delay={2060 + index * 260} speed={32} />
+              </small>
+            </div>
           </article>
         ))}
       </div>
       <LoginButton className="chat_result_cta" variant="accent" onClick={onDetail}>
-        상세 결과 보기
+        <TypewriterText text="상세 결과 보기" delay={2520} speed={32} />
       </LoginButton>
     </section>
   );
@@ -1100,7 +1111,7 @@ export function ChatbotPage() {
                         onClick={openCamera}
                         disabled={isSending}
                       >
-                        <img src={imageIcon} alt="" aria-hidden="true" />
+                        <img src={chatbotCameraIcon} alt="" aria-hidden="true" />
                         사진 촬영하기
                       </button>
                     </div>
