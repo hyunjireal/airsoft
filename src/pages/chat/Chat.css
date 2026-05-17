@@ -598,7 +598,8 @@
 .chat_faq_tags {
   position: relative;
   display: block;
-  width: 100%;
+  width: calc(100% + (var(--chat-pad) * 2));
+  margin-inline: calc(var(--chat-pad) * -1);
   overflow-x: auto;
   padding: 4px 0 3px;
   scrollbar-width: none;
@@ -618,6 +619,14 @@
 .chat_faq_track {
   display: flex;
   width: max-content;
+  animation: chat_faq_marquee 26s linear infinite;
+  will-change: transform;
+}
+
+.chat_faq_tags:hover .chat_faq_track,
+.chat_faq_tags:focus-within .chat_faq_track,
+.chat_faq_tags.is_dragging .chat_faq_track {
+  animation-play-state: paused;
 }
 
 .chat_faq_group {
@@ -684,6 +693,7 @@
 }
 
 .chat_input_bar {
+  position: relative;
   display: grid;
   flex: 1 1 auto;
   grid-template-columns: minmax(0, 1fr) 36px;
@@ -710,6 +720,8 @@
 }
 
 .chat_input_bar input {
+  grid-column: 1;
+  grid-row: 1;
   min-width: 0;
   width: 100%;
   height: 100%;
@@ -724,6 +736,22 @@
   line-height: 1.3;
   letter-spacing: -0.32px;
   text-align: left;
+}
+
+.chat_input_placeholder {
+  grid-column: 1;
+  grid-row: 1;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.38);
+  font-family: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.32px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  animation: chat_placeholder_cycle 2.8s ease both;
 }
 
 .chat_input_bar input::placeholder {
@@ -769,8 +797,8 @@
 }
 
 .chat_capture_inline img {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -1061,6 +1089,7 @@
 .chat_media_picker_item {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 56px;
   padding: 0 20px;
@@ -1081,6 +1110,7 @@
   font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.2px;
+  text-align: center;
 }
 
 .chat_media_picker_cancel {
@@ -1394,6 +1424,34 @@
   }
 }
 
+@keyframes chat_placeholder_cycle {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  18%,
+  82% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes chat_faq_marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes chat_result_card_reveal {
   from {
     opacity: 0;
@@ -1442,6 +1500,8 @@
   .chat_result_card p,
   .chat_result_item,
   .chat_send_loading,
+  .chat_input_placeholder,
+  .chat_faq_track,
   .chat_analysis_orbit,
   .chat_inline_typing i,
   .chat_typing_dots i {

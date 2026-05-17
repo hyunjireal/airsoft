@@ -10,7 +10,7 @@ import type { CSSProperties, ChangeEvent, FormEvent, MouseEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginButton } from "../../components/LoginButton";
 import { PageHeader } from "../../components/PageHeader";
-import chatbotPlusIcon from "../../asset/icons/chatbot_plus.svg";
+import chatbotCameraIcon from "../../asset/icons/chatbot_camera.svg";
 import chatbotCalendarIcon from "../../asset/icons/chatbot_cal.svg";
 import imageIcon from "../../asset/icons/match_img.svg";
 import sendIcon from "../../asset/icons/com_send.svg";
@@ -455,7 +455,6 @@ export function ChatbotPage() {
     scrollLeft: 0,
     moved: false,
   });
-  const faqAnimRef = useRef<number | null>(null);
   const faqPausedRef = useRef(false);
   const threadEndRef = useRef<HTMLDivElement | null>(null);
   const scrollFrameRef = useRef<number | null>(null);
@@ -918,30 +917,6 @@ export function ChatbotPage() {
   }, [messages, isSending, loadingText, typingMessageId, analysisThinkingStep]);
 
   useEffect(() => {
-    const el = faqTagsRef.current;
-    if (!el) return;
-
-    const tick = () => {
-      if (!faqPausedRef.current) {
-        el.scrollLeft += 0.3;
-        const halfWidth = el.scrollWidth / 2;
-        if (el.scrollLeft >= halfWidth) {
-          el.scrollLeft -= halfWidth;
-        }
-      }
-      faqAnimRef.current = window.requestAnimationFrame(tick);
-    };
-
-    faqAnimRef.current = window.requestAnimationFrame(tick);
-
-    return () => {
-      if (faqAnimRef.current) {
-        window.cancelAnimationFrame(faqAnimRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const page = pageRef.current;
     const bottom = bottomRef.current;
 
@@ -1142,15 +1117,24 @@ export function ChatbotPage() {
               disabled={isSending}
               aria-label="사진 추가"
             >
-              <img src={chatbotPlusIcon} alt="" aria-hidden="true" />
+              <img src={chatbotCameraIcon} alt="" aria-hidden="true" />
             </button>
             <div className={`chat_input_bar${input.trim() ? " is_ready" : ""}`}>
+              {!input && !inputFocused ? (
+                <span
+                  className="chat_input_placeholder"
+                  key={promptIndex}
+                  aria-hidden="true"
+                >
+                  {chatPlaceholders[promptIndex]}
+                </span>
+              ) : null}
               <input
                 value={input}
                 placeholder={
                   inputFocused
                     ? "에어소프트에 대해 물어보세요!"
-                    : chatPlaceholders[promptIndex]
+                    : ""
                 }
                 onChange={(event) => setInput(event.target.value)}
                 onFocus={() => setInputFocused(true)}
