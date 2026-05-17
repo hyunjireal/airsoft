@@ -473,7 +473,7 @@ export function BeginnerBoard() {
   useEffect(() => {
     introTimerRef.current = window.setTimeout(() => {
       setIntroComplete(true);
-    }, 1450);
+    }, 760);
 
     return () => {
       if (switchTimerRef.current !== null) {
@@ -758,8 +758,8 @@ export function BeginnerBoard() {
                       tabIndex={-1}
                       style={{
                         animationDelay: introComplete
-                          ? `${questionIndex * 0.045}s`
-                          : `${1.16 + questionIndex * 0.09}s`,
+                          ? `${questionIndex * 0.035}s`
+                          : `${0.18 + questionIndex * 0.025}s`,
                       }}
 	                    onClick={() => navigate(`/community/post/${question.id}`)}
 	                  >

@@ -460,7 +460,7 @@ export function BoardList() {
   useEffect(() => {
     introTimerRef.current = window.setTimeout(() => {
       setIntroComplete(true)
-    }, 1280)
+    }, 760)
 
     return () => {
       if (switchTimerRef.current !== null) {
@@ -562,8 +562,8 @@ export function BoardList() {
                 type="button"
                 style={{
                   animationDelay: introComplete
-                    ? `${postIndex * 0.045}s`
-                    : `${0.82 + postIndex * 0.08}s`,
+                    ? `${postIndex * 0.035}s`
+                    : `${0.13 + postIndex * 0.025}s`,
                 }}
                 onClick={() => openPost(post.id)}
               >
@@ -631,8 +631,8 @@ export function BoardList() {
               data-community-post-id={post.id}
               style={{
                 animationDelay: introComplete
-                  ? `${postIndex * 0.045}s`
-                  : `${1.12 + postIndex * 0.09}s`,
+                  ? `${postIndex * 0.035}s`
+                  : `${0.18 + postIndex * 0.025}s`,
               }}
               onClick={() => openPost(post.id)}
             >

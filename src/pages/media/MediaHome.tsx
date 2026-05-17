@@ -158,7 +158,7 @@ export function MediaHome() {
     }, 1800)
     const introTimer = window.setTimeout(() => {
       setIntroComplete(true)
-    }, 2350)
+    }, 760)
 
     return () => {
       window.clearInterval(timer)
@@ -250,8 +250,8 @@ export function MediaHome() {
               key={item.id}
               style={{
                 animationDelay: introComplete
-                  ? `${itemIndex * 0.055}s`
-                  : `${1.88 + itemIndex * 0.08}s`,
+                  ? `${itemIndex * 0.035}s`
+                  : `${0.18 + itemIndex * 0.025}s`,
               }}
               href={CREATOR_CONTENT_VIDEO_URL}
               target="_blank"

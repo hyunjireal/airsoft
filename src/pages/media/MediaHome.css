@@ -20,7 +20,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   transform-origin: center top;
-  animation: media_home_background_in 520ms ease both;
+  animation: media_home_background_in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .media_home_top {
@@ -29,7 +29,7 @@
   z-index: 1;
   height: fit-content;
   background: transparent;
-  animation: media_home_title_in 520ms cubic-bezier(0.22, 1, 0.36, 1) 280ms both;
+  animation: media_home_title_in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .media_home_top .page_header__title {
@@ -66,15 +66,15 @@
 }
 
 .media_podium_profile:nth-child(1) {
-  animation-delay: 560ms;
+  animation-delay: 40ms;
 }
 
 .media_podium_profile:nth-child(2) {
-  animation-delay: 700ms;
+  animation-delay: 90ms;
 }
 
 .media_podium_profile:nth-child(3) {
-  animation-delay: 840ms;
+  animation-delay: 140ms;
 }
 
 .media_podium_image {
@@ -177,7 +177,7 @@
   justify-content: center;
   gap: 5px;
   color: var(--media-light-txt-main);
-  animation: media_home_stack_in 480ms cubic-bezier(0.22, 1, 0.36, 1) 1460ms both;
+  animation: media_home_stack_in 520ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both;
 }
 
 .media_section_title img {
@@ -199,7 +199,7 @@
   width: 100%;
   padding: 15px 20px;
   border: 1px solid var(--media-light-border);
-  animation: media_home_stack_in 500ms cubic-bezier(0.22, 1, 0.36, 1) 1580ms both;
+  animation: media_home_stack_in 520ms cubic-bezier(0.22, 1, 0.36, 1) 190ms both;
 }
 
 .media_ranking_toggle {
@@ -251,48 +251,48 @@
 @keyframes media_home_background_in {
   from {
     opacity: 0;
-    transform: scale(1.015);
+    transform: translate3d(0, 8px, 0);
   }
 
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes media_home_title_in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translate3d(0, 8px, 0);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes media_home_podium_in {
   from {
     opacity: 0;
-    transform: translateY(22px) scale(0.96);
+    transform: translate3d(0, 8px, 0);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes media_home_stack_in {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    transform: translate3d(0, 6px, 0);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -390,7 +390,7 @@
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  animation: media_home_stack_in 500ms cubic-bezier(0.22, 1, 0.36, 1) 1740ms both;
+  animation: media_home_stack_in 520ms cubic-bezier(0.22, 1, 0.36, 1) 190ms both;
 }
 
 .media_contents_head h2 {
@@ -442,7 +442,7 @@
   min-width: 0;
   color: inherit;
   text-decoration: none;
-  animation: media_home_stack_in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: media_home_stack_in 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .media_video_thumb {
