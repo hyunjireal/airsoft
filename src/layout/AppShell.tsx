@@ -41,6 +41,7 @@ export function AppShell() {
     !isChatAnalysisPage &&
     !isBuddyDetailPage &&
     !isBuddyPage &&
+    !isBuddyRecommendPage &&
     !isGuidePage &&
     !location.pathname.startsWith('/match/schedule/') &&
     !isMatchEditPage &&

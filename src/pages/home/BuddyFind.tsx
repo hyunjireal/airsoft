@@ -3,6 +3,9 @@ import { LazyMotion, domAnimation, m } from 'framer-motion'
 import { useNavigate, useParams } from 'react-router-dom'
 import arrowLeftIcon from '../../asset/icons/arrow_l.svg'
 import buddyCalendarIcon from '../../asset/icons/buddy_cal.png'
+import buddyCheckIcon from '../../asset/icons/buddy_check.svg'
+import buddyShieldIcon from '../../asset/icons/buddy_shield.svg'
+import buddySmileIcon from '../../asset/icons/buddy_smile.svg'
 import buddyHeroDark from '../../asset/images/buddy_bg_d.png'
 import buddyHeroLight from '../../asset/images/buddy_bg_l.png'
 import buddyLoadingFigmaBg from '../../asset/images/buddy_loading_figma_bg.png'
@@ -566,28 +569,52 @@ export function BuddyFind() {
 export function BuddyLoading() {
   const navigate = useNavigate()
 
-  const goRecommend = () => {
-    navigate('/buddy/recommend')
-  }
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      navigate('/buddy/recommend')
+    }, 3200)
 
-  const handleLoadingKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return
-    event.preventDefault()
-    goRecommend()
-  }
+    return () => window.clearTimeout(timer)
+  }, [navigate])
 
   return (
     <article
       className="buddy_loading_page"
       aria-live="polite"
       aria-busy="true"
-      role="button"
-      tabIndex={0}
-      onClick={goRecommend}
-      onKeyDown={handleLoadingKeyDown}
     >
+      {/* 왼쪽 상단: 방패 + 체크 아이콘 */}
+      <span className="buddy_loading_deco_icon deco_shield" aria-hidden="true">
+        <img className="buddy_loading_deco_image buddy_loading_deco_image--shield" src={buddyShieldIcon} alt="" />
+      </span>
+
+      {/* 상단 중앙: 원형 체크 아이콘 */}
+      <span className="buddy_loading_deco_icon deco_check" aria-hidden="true">
+        <img className="buddy_loading_deco_image buddy_loading_deco_image--check" src={buddyCheckIcon} alt="" />
+      </span>
+
+      {/* 오른쪽 상단: 스마일 아이콘 */}
+      <span className="buddy_loading_deco_icon deco_smile" aria-hidden="true">
+        <img className="buddy_loading_deco_image" src={buddySmileIcon} alt="" />
+      </span>
+
+      {/* 파티클 */}
+      <span className="buddy_loading_particle lp1" aria-hidden="true">✦</span>
+      <span className="buddy_loading_particle lp2" aria-hidden="true">+</span>
+      <span className="buddy_loading_particle lp3" aria-hidden="true">•</span>
+      <span className="buddy_loading_particle lp4" aria-hidden="true">✦</span>
+      <span className="buddy_loading_particle lp5" aria-hidden="true">+</span>
+      <span className="buddy_loading_particle lp6" aria-hidden="true">•</span>
+      <span className="buddy_loading_particle lp7" aria-hidden="true">✦</span>
+      <span className="buddy_loading_particle lp8" aria-hidden="true">•</span>
+
       <section className="buddy_loading_text">
-        <h1>버디 찾는 중</h1>
+        <h1>
+          버디 찾는 중
+          <span className="buddy_loading_dots" aria-hidden="true">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        </h1>
         <p>
           당신에게 맞는 버디를 찾고있어요
           <br />
@@ -599,6 +626,9 @@ export function BuddyLoading() {
         <img className="buddy_loading_visual" src={buddyLoadingFigmaBg} alt="" />
       </div>
 
+      <div className="buddy_loading_progress" aria-hidden="true">
+        <div className="buddy_loading_progress__bar" />
+      </div>
     </article>
   )
 }
