@@ -354,7 +354,7 @@ export function Onboarding() {
                       <span className="onboarding_rebuilt__copy_segment is-accent is-strong">
                         정확하게 안내
                       </span>
-                      <span className="onboarding_rebuilt__copy_segment">해요.</span>
+                      <span className="onboarding_rebuilt__copy_segment">해요</span>
                     </span>
                   </>
                 ) : (

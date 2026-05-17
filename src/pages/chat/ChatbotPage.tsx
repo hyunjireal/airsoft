@@ -126,7 +126,7 @@ const welcomeMessage: TimedChatMessage = {
 }
 
 const welcomeMessageText =
-  '안녕하세요. AI 장비 코치 가이예요.\n장비 사진을 보내주시면 입문자 기준으로 안전, 규제, 관리 포인트를 빠르게 체크해드릴게요.'
+  '에어소프트 AI 챗봇 가이(GAI)입니다.\n\n장비 사진을 업로드하면  안전 · 규정 · 세팅을 분석해드려요. 입문자 장비 추천부터 수리 · 커스텀 가이드까지 도와드릴 수 있어요.'
 
 function wait(ms: number) {
   return new Promise<void>((resolve) => {
@@ -734,18 +734,6 @@ export function ChatbotPage() {
               오늘
             </div>
 
-            <div className="chat_scan_prompt">
-              <img src={gaiImage} alt="" aria-hidden="true" />
-              <div>
-                <strong>장비 전체 사진을 보내주세요</strong>
-                <span>AI 챗봇 가이가 장비 분석부터 관리·튜닝 팁까지 도와드려요</span>
-              </div>
-              <button type="button" onClick={openCamera} disabled={isSending}>
-                <img src={imageIcon} alt="" aria-hidden="true" />
-                사진 촬영하기
-              </button>
-            </div>
-
             {messages.map((message) => {
               const isTyping = message.id === typingMessageId
 
@@ -779,6 +767,18 @@ export function ChatbotPage() {
                 </article>
               )
             })}
+
+            <div className="chat_scan_prompt">
+              <img src={gaiImage} alt="" aria-hidden="true" />
+              <div>
+                <strong>장비 전체 사진을 보내주세요</strong>
+                <span>AI 챗봇 가이가 장비 분석부터 관리·튜닝 팁까지 도와드려요</span>
+              </div>
+              <button type="button" onClick={openCamera} disabled={isSending}>
+                <img src={imageIcon} alt="" aria-hidden="true" />
+                사진 촬영하기
+              </button>
+            </div>
 
             {isSending && !typingMessageId ? (
               <article className="chat_message_frame assistant is_entering">
