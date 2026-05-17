@@ -1301,12 +1301,16 @@
 .gai_camera_actions {
   position: relative;
   z-index: 2;
+  display: flex;
+  justify-content: center;
   padding: 0 var(--chat-pad) calc(24px + env(safe-area-inset-bottom, 0px));
 }
 
 .gai_camera_capture_button {
-  margin: 0 auto;
-  max-width: 720px;
+  --app-action-min-height: clamp(50px, 7vw, 58px);
+  --app-action-font-size: clamp(16px, 2.2vw, 18px);
+  flex: 0 1 720px;
+  width: min(100%, 720px);
 }
 
 .gai_camera_capture_button:disabled {
@@ -1729,6 +1733,34 @@
 
   .chat_scan_prompt button {
     grid-column: auto;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1180px) {
+  .chat_bubble {
+    font-size: clamp(15px, 1.75vw, 18px);
+    line-height: 1.48;
+  }
+
+  .chat_message_frame.user .chat_bubble {
+    font-size: clamp(14px, 1.6vw, 16px);
+  }
+
+  .chat_faq p {
+    font-size: clamp(14px, 1.65vw, 16px);
+  }
+
+  .chat_faq_tag,
+  .chat_scan_prompt button,
+  .chat_result_cta.app_action_button {
+    font-size: clamp(13px, 1.55vw, 15px);
+  }
+
+  .gai_camera_capture_button {
+    --app-action-min-height: clamp(48px, 5.6vw, 56px);
+    --app-action-font-size: clamp(15px, 1.75vw, 17px);
+    flex-basis: min(100%, 720px);
+    width: min(100%, 720px);
   }
 }
 

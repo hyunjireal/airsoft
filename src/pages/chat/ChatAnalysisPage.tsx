@@ -6,30 +6,13 @@ import resultBatteryIcon from '../../asset/icons/chatbot_result_battery.svg'
 import resultDartIcon from '../../asset/icons/chatbot_result_dart.svg'
 import resultPerformanceIcon from '../../asset/icons/chatbot_result_performance.svg'
 import resultToolIcon from '../../asset/icons/chatbot_result_tool.svg'
+import upgradeDotSightImage from '../../asset/images/chatbot_result_img01.png'
+import upgradeGripImage from '../../asset/images/chatbot_result_img02.png'
+import upgradeBatteryImage from '../../asset/images/chatbot_result_img03.png'
 import gaiImage from '../../asset/images/gai.png'
 import './ChatAnalysis.css'
 
 const getAnalysisImage = () => sessionStorage.getItem('gai_analysis_image') ?? gaiImage
-
-const detectionPoints = [
-  { id: 'goggle', status: 'ok', label: '고글', desc: '안전 등급 보호 고글 착용 확인됨' },
-  { id: 'mask', status: 'warn', label: '마스크', desc: '하관 보호 마스크 미착용 — 착용 권장' },
-  { id: 'battery', status: 'ok', label: '배터리', desc: '리포 배터리 상태 정상 범위 확인' },
-  { id: 'magazine', status: 'ok', label: '탄창', desc: '탄창 구성 적절, 용량 기준 이내' },
-  { id: 'glove', status: 'warn', label: '장갑', desc: '손 보호 장비 미감지 — 착용 권장' },
-]
-
-const riskItems = [
-  { id: 'lens', label: '렌즈 스크래치 가능성', desc: '고글 렌즈 표면 손상 여부를 출전 전 반드시 확인해주세요.' },
-  { id: 'battery2', label: '여분 배터리 없음', desc: '장시간 게임 시 배터리 방전 위험. 예비 배터리 지참을 권장합니다.' },
-  { id: 'glove2', label: '장갑 미착용', desc: '근거리 전투 및 장애물 이동 시 손 부상 위험이 있습니다.' },
-]
-
-const recommendItems = [
-  { id: 'mesh', icon: '🛡', title: '메쉬 마스크 추천', desc: 'CQB 환경에서 하관 보호 효과 높음. 통기성도 양호해 초보자에게 적합합니다.', tag: 'SAFETY' },
-  { id: 'mag', icon: '🎯', title: '예비 탄창 추가', desc: '기본 탄창 외 1–2개 추가 권장. 게임 흐름을 끊지 않고 빠른 교체가 가능합니다.', tag: 'GEAR' },
-  { id: 'hop', icon: '⚙️', title: '홉업 초기 세팅 권장', desc: '처음 사용 시 홉업을 기본값으로 초기화 후 소량씩 조정하는 것이 안전합니다.', tag: 'SETUP' },
-]
 
 const regulationItems = [
   { label: '실내 필드 탄속', value: '0.98J 이하 (약 90m/s)' },
@@ -49,6 +32,27 @@ const improvementItems = [
   { id: 'light', title: '광학 장비 미장착', desc: '도트사이트 추가로 명중률 향상 가능' },
   { id: 'battery', title: '배터리 위치 노출', desc: '외부 충격 시 손상 위험 존재' },
   { id: 'hopup', title: '홉업 세팅 미확인', desc: '정확도 편차가 발생할 수 있어요' },
+]
+
+const upgradeItems = [
+  {
+    id: 'dot-sight',
+    image: upgradeDotSightImage,
+    title: '도트사이트',
+    desc: '명중률 크게 향상',
+  },
+  {
+    id: 'short-grip',
+    image: upgradeGripImage,
+    title: '숏그립',
+    desc: 'CQB 조작성 개선',
+  },
+  {
+    id: 'battery',
+    image: upgradeBatteryImage,
+    title: '11.1V 배터리',
+    desc: '반응 속도 향상',
+  },
 ]
 
 export function ChatAnalysisPage() {
@@ -140,7 +144,7 @@ export function ChatAnalysisPage() {
                 key={item.id}
                 style={{ '--reveal-delay': `${i * 70}ms` } as React.CSSProperties}
               >
-                <span className="gai_report_core_icon" aria-hidden="true">
+                <span className={`gai_report_core_icon is_${item.tone}`} aria-hidden="true">
                   <img src={item.icon} alt="" />
                 </span>
                 <strong>{item.label}</strong>
@@ -176,86 +180,32 @@ export function ChatAnalysisPage() {
           </div>
         </section>
 
-        {/* Detection */}
-        <section className="gai_report_section gai_reveal" ref={setRef(2)}>
-          <h2 className="gai_report_section_title">
-            <span className="gai_report_section_dot" aria-hidden="true" />
-            AI 감지 포인트
-          </h2>
-          <div className="gai_report_detect_list">
-            {detectionPoints.map((item, i) => (
-              <div
-                className={`gai_report_detect_item gai_reveal_item`}
+        <section className="gai_report_upgrade_section gai_reveal" ref={setRef(2)}>
+          <div className="gai_report_upgrade_head">
+            <h2>AI 추천 업그레이드</h2>
+          </div>
+          <div className="gai_report_upgrade_grid">
+            {upgradeItems.map((item, i) => (
+              <article
+                className="gai_report_upgrade_card gai_reveal_item"
                 key={item.id}
                 style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}
               >
-                <span className={`gai_report_detect_icon is_${item.status}`} aria-hidden="true">
-                  {item.status === 'ok' ? '✓' : '!'}
-                </span>
-                <div className="gai_report_detect_body">
-                  <strong>{item.label}</strong>
-                  <span>{item.desc}</span>
+                <span className="gai_report_upgrade_rank">{i + 1}</span>
+                <div className="gai_report_upgrade_image">
+                  <img src={item.image} alt="" />
                 </div>
-                <span className={`gai_report_detect_badge is_${item.status}`}>
-                  {item.status === 'ok' ? '확인됨' : '미확인'}
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Risk */}
-        <section className="gai_report_section gai_reveal" ref={setRef(3)}>
-          <h2 className="gai_report_section_title">
-            <span className="gai_report_section_dot is_warn" aria-hidden="true" />
-            위험 요소
-          </h2>
-          <div className="gai_report_risk_list">
-            {riskItems.map((item, i) => (
-              <div
-                className="gai_report_risk_item gai_reveal_item"
-                key={item.id}
-                style={{ '--reveal-delay': `${i * 80}ms` } as React.CSSProperties}
-              >
-                <span className="gai_report_risk_icon" aria-hidden="true">⚠</span>
-                <div>
-                  <strong>{item.label}</strong>
-                  <span>{item.desc}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Recommend */}
-        <section className="gai_report_section gai_reveal" ref={setRef(4)}>
-          <h2 className="gai_report_section_title">
-            <span className="gai_report_section_dot is_lime" aria-hidden="true" />
-            AI 추천 액션
-          </h2>
-          <div className="gai_report_rec_list">
-            {recommendItems.map((item, i) => (
-              <div
-                className="gai_report_rec_item gai_reveal_item"
-                key={item.id}
-                style={{ '--reveal-delay': `${i * 100}ms` } as React.CSSProperties}
-              >
-                <div className="gai_report_rec_head">
-                  <span className="gai_report_rec_icon" aria-hidden="true">{item.icon}</span>
-                  <strong>{item.title}</strong>
-                  <span className="gai_report_rec_tag">{item.tag}</span>
-                </div>
+                <strong>{item.title}</strong>
                 <p>{item.desc}</p>
-              </div>
+              </article>
             ))}
           </div>
         </section>
 
         {/* Regulation */}
-        <section className="gai_report_section gai_reveal" ref={setRef(5)}>
-          <h2 className="gai_report_section_title">
-            <span className="gai_report_section_dot is_muted" aria-hidden="true" />
-            국내 필드 규정 참고
+        <section className="gai_report_section gai_report_reg_section gai_reveal" ref={setRef(3)}>
+          <h2 className="gai_report_section_title gai_report_reg_title">
+            국내 장비 규정
           </h2>
           <div className="gai_report_reg_card">
             {regulationItems.map((item) => (
