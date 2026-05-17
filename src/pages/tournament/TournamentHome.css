@@ -705,7 +705,7 @@
 
 .tournament_main_page.is_dark .tournament_main_info_icon,
 .tournament_main_page.is_dark .tournament_main_notice img {
-  filter: brightness(0) saturate(100%) invert(88%) sepia(100%) saturate(235%) hue-rotate(8deg);
+  filter: brightness(0) saturate(100%) invert(92%) sepia(91%) saturate(1127%) hue-rotate(10deg) brightness(104%) contrast(99%);
 }
 
 .tournament_main_info_copy {
