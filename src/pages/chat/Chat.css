@@ -190,9 +190,7 @@
   background: #e2fd34;
   color: #0f120a;
   padding: 11px 16px;
-  box-shadow:
-    0 0 0 1px rgba(223, 255, 34, 0.24),
-    0 12px 26px rgba(190, 255, 17, 0.16);
+  box-shadow: none;
   line-height: 1.38;
 }
 
@@ -578,25 +576,25 @@
   position: relative;
   display: block;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
   padding: 4px 0 3px;
   scrollbar-width: none;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  user-select: none;
 }
 
 .chat_faq_tags::-webkit-scrollbar {
   display: none;
 }
 
+.chat_faq_tags.is_dragging {
+  cursor: grabbing;
+}
+
 .chat_faq_track {
   display: flex;
   width: max-content;
-  animation: chat_faq_marquee 26s linear infinite;
-  will-change: transform;
-}
-
-.chat_faq_tags:hover .chat_faq_track,
-.chat_faq_tags:focus-within .chat_faq_track {
-  animation-play-state: paused;
 }
 
 .chat_faq_group {
@@ -740,25 +738,21 @@
   object-fit: contain;
 }
 
-.chat_send_button {
+.chat_input_bar .chat_send_button {
   flex: 0 0 auto;
-  background: var(--color-lime);
+  background: var(--color-black);
   opacity: 1;
 }
 
 .chat_send_button img {
   width: 22px;
   height: 22px;
-  filter: brightness(0) saturate(100%) invert(7%) sepia(15%) saturate(873%) hue-rotate(43deg) brightness(94%) contrast(92%);
+  filter: brightness(0) saturate(100%) invert(100%);
 }
 
-.chat_input_bar:focus-within .chat_send_button {
-  background: var(--color-lime);
-  opacity: 0.96;
-}
-
+.chat_input_bar:focus-within .chat_send_button,
 .chat_input_bar.is_ready .chat_send_button {
-  background: var(--color-lime);
+  background: var(--color-black);
   opacity: 1;
 }
 
@@ -1254,15 +1248,6 @@
   }
 }
 
-@keyframes chat_faq_marquee {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 @keyframes chat_result_card_reveal {
   from {
@@ -1312,7 +1297,6 @@
   .chat_result_card p,
   .chat_result_item,
   .chat_send_loading,
-  .chat_faq_track,
   .chat_analysis_orbit,
   .chat_inline_typing i,
   .chat_typing_dots i {

@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties, ChangeEvent, FormEvent } from 'react'
+import type { CSSProperties, ChangeEvent, FormEvent, MouseEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
@@ -329,6 +329,10 @@ export function ChatbotPage() {
   const chatScrollRef = useRef<HTMLElement | null>(null)
   const pageRef = useRef<HTMLDivElement | null>(null)
   const bottomRef = useRef<HTMLDivElement | null>(null)
+  const faqTagsRef = useRef<HTMLDivElement | null>(null)
+  const faqDrag = useRef({ active: false, startX: 0, scrollLeft: 0, moved: false })
+  const faqAnimRef = useRef<number | null>(null)
+  const faqPausedRef = useRef(false)
   const threadEndRef = useRef<HTMLDivElement | null>(null)
   const scrollFrameRef = useRef<number | null>(null)
   const scrollTimerRef = useRef<number | null>(null)
@@ -624,6 +628,44 @@ export function ChatbotPage() {
     }
   }
 
+  const onFaqMouseDown = (e: MouseEvent<HTMLDivElement>) => {
+    const el = faqTagsRef.current
+    if (!el) return
+    faqPausedRef.current = true
+    faqDrag.current = { active: true, startX: e.clientX, scrollLeft: el.scrollLeft, moved: false }
+    el.classList.add('is_dragging')
+  }
+
+  const onFaqMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!faqDrag.current.active) return
+    const el = faqTagsRef.current
+    if (!el) return
+    const dx = e.clientX - faqDrag.current.startX
+    if (Math.abs(dx) > 3) faqDrag.current.moved = true
+    el.scrollLeft = faqDrag.current.scrollLeft - dx
+  }
+
+  const stopFaqDrag = () => {
+    faqDrag.current.active = false
+    faqPausedRef.current = false
+    faqTagsRef.current?.classList.remove('is_dragging')
+  }
+
+  const onFaqClickCapture = (e: MouseEvent) => {
+    if (faqDrag.current.moved) {
+      e.stopPropagation()
+      faqDrag.current.moved = false
+    }
+  }
+
+  const onFaqTouchStart = () => {
+    faqPausedRef.current = true
+  }
+
+  const onFaqTouchEnd = () => {
+    faqPausedRef.current = false
+  }
+
   const goBack = () => {
     if (window.history.length > 1) {
       navigate(-1)
@@ -692,6 +734,30 @@ export function ChatbotPage() {
   useLayoutEffect(() => {
     scrollToLatestMessage()
   }, [messages, isSending, loadingText, typingMessageId, analysisThinkingStep])
+
+  useEffect(() => {
+    const el = faqTagsRef.current
+    if (!el) return
+
+    const tick = () => {
+      if (!faqPausedRef.current) {
+        el.scrollLeft += 0.5
+        const halfWidth = el.scrollWidth / 2
+        if (el.scrollLeft >= halfWidth) {
+          el.scrollLeft -= halfWidth
+        }
+      }
+      faqAnimRef.current = window.requestAnimationFrame(tick)
+    }
+
+    faqAnimRef.current = window.requestAnimationFrame(tick)
+
+    return () => {
+      if (faqAnimRef.current) {
+        window.cancelAnimationFrame(faqAnimRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const page = pageRef.current
@@ -808,7 +874,17 @@ export function ChatbotPage() {
         <div className="chat_bottom chat_bottom_scan" ref={bottomRef}>
           <div className="chat_faq">
             <p className="body_m_14">자주 묻는 질문</p>
-            <div className="chat_faq_tags">
+            <div
+              className="chat_faq_tags"
+              ref={faqTagsRef}
+              onMouseDown={onFaqMouseDown}
+              onMouseMove={onFaqMouseMove}
+              onMouseUp={stopFaqDrag}
+              onMouseLeave={stopFaqDrag}
+              onTouchStart={onFaqTouchStart}
+              onTouchEnd={onFaqTouchEnd}
+              onClickCapture={onFaqClickCapture}
+            >
               <div className="chat_faq_track">
                 <div className="chat_faq_group">
                   {frequentQuestions.map((question) => (
