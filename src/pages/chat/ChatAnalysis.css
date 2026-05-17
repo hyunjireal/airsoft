@@ -1,9 +1,9 @@
 /* ── Layout ──────────────────────────────────── */
 .gai_report_page {
   --rp: clamp(24px, 6vw, 36px);
-  --lime: #d7ff00;
-  --lime-soft: rgba(215, 255, 0, 0.12);
-  --lime-glow: rgba(215, 255, 0, 0.22);
+  --lime: #e2fd34;
+  --lime-soft: rgba(226, 253, 52, 0.12);
+  --lime-glow: rgba(226, 253, 52, 0.22);
   --warn: #ffb84d;
   --warn-soft: rgba(255, 184, 77, 0.12);
   --ok: #57ffa8;
@@ -50,22 +50,18 @@
   height: 7px;
   border-radius: 50%;
   background: var(--lime);
-  box-shadow: 0 0 8px var(--lime-glow);
 }
 
 .gai_report_section_dot.is_warn {
   background: var(--warn);
-  box-shadow: 0 0 8px rgba(255, 184, 77, 0.4);
 }
 
 .gai_report_section_dot.is_lime {
   background: var(--lime);
-  box-shadow: 0 0 10px var(--lime-glow);
 }
 
 .gai_report_section_dot.is_muted {
   background: rgba(255, 255, 255, 0.28);
-  box-shadow: none;
 }
 
 /* ── Hero ────────────────────────────────────── */
@@ -73,13 +69,23 @@
   padding: 20px var(--rp) 28px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
+}
+
+.gai_report_hero_title {
+  margin: 0 0 -2px;
+  color: var(--text);
+  font-family: var(--font-pretendard);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .gai_report_image_wrap {
   position: relative;
   width: 100%;
-  border-radius: 20px;
+  border-radius: 10px;
   overflow: hidden;
   background: var(--surface2);
   aspect-ratio: 4 / 3;
@@ -91,6 +97,230 @@
   height: 100%;
   object-fit: cover;
   opacity: 0.82;
+}
+
+.gai_report_equipment_summary {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: -8px;
+}
+
+.gai_report_equipment_summary strong {
+  color: var(--text);
+  font-size: clamp(20px, 4.8vw, 28px);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.gai_report_equipment_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gai_report_equipment_tags span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gai_report_core_section {
+  margin: 0 var(--rp) 32px;
+  padding: 20px clamp(16px, 4vw, 24px) 22px;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.gai_report_core_title {
+  margin: 0 0 18px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.gai_report_core_grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 2.4vw, 16px);
+}
+
+.gai_report_core_item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-align: center;
+}
+
+.gai_report_core_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(42px, 12vw, 58px);
+  height: clamp(42px, 12vw, 58px);
+  border: 1px solid rgba(226, 253, 52, 0.18);
+  border-radius: 50%;
+  background: rgba(226, 253, 52, 0.055);
+}
+
+.gai_report_core_icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(92%) sepia(88%) saturate(746%)
+    hue-rotate(13deg) brightness(105%) contrast(98%);
+}
+
+.gai_report_core_item strong,
+.gai_report_core_item em {
+  display: block;
+  font-style: normal;
+  line-height: 1.25;
+}
+
+.gai_report_core_item strong {
+  color: var(--text);
+  font-size: clamp(11px, 3vw, 15px);
+  font-weight: 800;
+}
+
+.gai_report_core_item em {
+  color: var(--lime);
+  font-size: clamp(11px, 3vw, 15px);
+  font-weight: 800;
+}
+
+.gai_report_core_item em.is_green {
+  color: #4dff9a;
+}
+
+.gai_report_core_item em.is_blue {
+  color: #5db8ff;
+}
+
+.gai_report_improvement_section {
+  margin: 0 var(--rp) 32px;
+  padding: 18px clamp(14px, 4vw, 20px) 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.gai_report_improvement_head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.gai_report_improvement_head h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.gai_report_improvement_head span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.gai_report_improvement_list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gai_report_improvement_item {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 58px;
+  padding: 10px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: #1c1e1d;
+  color: inherit;
+  font-family: var(--font-pretendard);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gai_report_improvement_icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(205, 92, 82, 0.58);
+  border-radius: 50%;
+  background: rgba(205, 92, 82, 0.12);
+}
+
+.gai_report_improvement_icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(46%) sepia(32%) saturate(1360%)
+    hue-rotate(319deg) brightness(94%) contrast(92%);
+}
+
+.gai_report_improvement_body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.gai_report_improvement_body strong {
+  overflow: hidden;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gai_report_improvement_body small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gai_report_improvement_arrow {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 1;
 }
 
 /* scan overlay */
@@ -107,7 +337,6 @@
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--lime), transparent);
-  box-shadow: 0 0 18px var(--lime);
   animation: gai_scan 2.6s ease-in-out infinite;
 }
 
@@ -124,12 +353,11 @@
   height: 20px;
   border-color: var(--lime);
   border-style: solid;
-  filter: drop-shadow(0 0 6px var(--lime));
 }
-.gai_report_corner.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
-.gai_report_corner.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
-.gai_report_corner.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
-.gai_report_corner.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+.gai_report_corner.tl { top: 12px; left: 12px; border-width: 2px 0 0 2px; border-radius: 2px 0 0 0; }
+.gai_report_corner.tr { top: 12px; right: 12px; border-width: 2px 2px 0 0; border-radius: 0 2px 0 0; }
+.gai_report_corner.bl { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; border-radius: 0 0 0 2px; }
+.gai_report_corner.br { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; border-radius: 0 0 2px 0; }
 
 .gai_report_done_badge {
   position: absolute;
@@ -147,8 +375,6 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .gai_report_done_dot {
@@ -156,7 +382,6 @@
   height: 7px;
   border-radius: 50%;
   background: var(--ok);
-  box-shadow: 0 0 8px rgba(87, 255, 168, 0.6);
   animation: gai_dot_pulse 1.8s ease-in-out infinite;
 }
 
@@ -177,7 +402,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: var(--surface);
   border: 1px solid var(--stroke);
   transition: border-color 240ms ease;
@@ -206,13 +431,11 @@
 .gai_report_detect_icon.is_ok {
   background: var(--ok-soft);
   color: var(--ok);
-  box-shadow: 0 0 12px rgba(87, 255, 168, 0.18);
 }
 
 .gai_report_detect_icon.is_warn {
   background: var(--warn-soft);
   color: var(--warn);
-  box-shadow: 0 0 12px rgba(255, 184, 77, 0.18);
 }
 
 .gai_report_detect_body {
@@ -265,7 +488,7 @@
   gap: 14px;
   align-items: flex-start;
   padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: 8px;
   background: rgba(255, 110, 50, 0.07);
   border: 1px solid rgba(255, 140, 60, 0.2);
 }
@@ -303,10 +526,9 @@
 
 .gai_report_rec_item {
   padding: 18px 18px 16px;
-  border-radius: 16px;
+  border-radius: 8px;
   background: linear-gradient(135deg, rgba(215, 255, 0, 0.07) 0%, rgba(215, 255, 0, 0.02) 100%);
   border: 1px solid rgba(215, 255, 0, 0.14);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
 .gai_report_rec_head {
@@ -349,7 +571,7 @@
 
 /* ── Regulation ──────────────────────────────── */
 .gai_report_reg_card {
-  border-radius: 16px;
+  border-radius: 10px;
   background: var(--surface);
   border: 1px solid var(--stroke);
   overflow: hidden;
@@ -400,7 +622,7 @@
   align-items: center;
   justify-content: center;
   height: 50px;
-  border-radius: 14px;
+  border-radius: 8px;
   border: 0;
   font-family: var(--font-pretendard);
   font-size: 15px;
@@ -453,18 +675,69 @@
 :root[data-theme='light'] .gai_report_image_wrap {
   background: var(--surface2);
   border-color: rgba(26, 26, 26, 0.08);
-  box-shadow: 0 14px 32px rgba(31, 37, 18, 0.08);
 }
 
 :root[data-theme='light'] .gai_report_hero_img {
   opacity: 0.94;
 }
 
+:root[data-theme='light'] .gai_report_equipment_tags span {
+  border-color: rgba(26, 26, 26, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  color: rgba(26, 26, 26, 0.72);
+}
+
+:root[data-theme='light'] .gai_report_core_section {
+  border-color: rgba(26, 26, 26, 0.08);
+  background: #ffffff;
+}
+
+:root[data-theme='light'] .gai_report_core_icon {
+  border-color: rgba(103, 107, 93, 0.2);
+  background: rgba(103, 107, 93, 0.07);
+}
+
+:root[data-theme='light'] .gai_report_core_icon img {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(9%) saturate(426%)
+    hue-rotate(40deg) brightness(92%) contrast(88%);
+}
+
+:root[data-theme='light'] .gai_report_core_item em.is_green {
+  color: #168f4c;
+}
+
+:root[data-theme='light'] .gai_report_core_item em.is_blue {
+  color: #1f6fb8;
+}
+
+:root[data-theme='light'] .gai_report_improvement_section {
+  border-color: rgba(26, 26, 26, 0.08);
+  background: #ffffff;
+}
+
+:root[data-theme='light'] .gai_report_improvement_item {
+  border-color: rgba(26, 26, 26, 0.08);
+  background: #f7f7f7;
+}
+
+:root[data-theme='light'] .gai_report_improvement_icon {
+  border-color: rgba(180, 74, 66, 0.5);
+  background: rgba(180, 74, 66, 0.1);
+}
+
+:root[data-theme='light'] .gai_report_improvement_icon img {
+  filter: brightness(0) saturate(100%) invert(36%) sepia(34%) saturate(1210%)
+    hue-rotate(321deg) brightness(92%) contrast(94%);
+}
+
+:root[data-theme='light'] .gai_report_improvement_arrow {
+  color: rgba(26, 26, 26, 0.48);
+}
+
 :root[data-theme='light'] .gai_report_done_badge {
   background: rgba(255, 255, 255, 0.82);
   border-color: rgba(31, 156, 91, 0.2);
   color: var(--ok);
-  box-shadow: 0 8px 22px rgba(31, 37, 18, 0.08);
 }
 
 :root[data-theme='light'] .gai_report_section_dot.is_muted {
@@ -475,7 +748,6 @@
 :root[data-theme='light'] .gai_report_reg_card {
   background: var(--surface);
   border-color: var(--stroke);
-  box-shadow: 0 10px 26px rgba(31, 37, 18, 0.06);
 }
 
 :root[data-theme='light'] .gai_report_detect_item:has(.is_ok) {
@@ -509,7 +781,6 @@
 :root[data-theme='light'] .gai_report_rec_item {
   background: linear-gradient(135deg, rgba(103, 107, 93, 0.1) 0%, rgba(255, 255, 255, 0.92) 100%);
   border-color: rgba(103, 107, 93, 0.2);
-  box-shadow: 0 10px 26px rgba(31, 37, 18, 0.07);
 }
 
 :root[data-theme='light'] .gai_report_rec_tag {
@@ -539,13 +810,11 @@
   background: #ffffff;
   border-color: rgba(26, 26, 26, 0.1);
   color: #1a1a1a;
-  box-shadow: 0 8px 20px rgba(31, 37, 18, 0.07);
 }
 
 :root[data-theme='light'] .gai_report_cta_btn.is_primary {
   background: #676b5d;
   color: #ffffff;
-  box-shadow: 0 10px 22px rgba(103, 107, 93, 0.24);
 }
 
 /* ── Scroll reveal ───────────────────────────── */

@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
+import resultAlertIcon from '../../asset/icons/chatbot_result_alert.svg'
+import resultBatteryIcon from '../../asset/icons/chatbot_result_battery.svg'
+import resultDartIcon from '../../asset/icons/chatbot_result_dart.svg'
+import resultPerformanceIcon from '../../asset/icons/chatbot_result_performance.svg'
+import resultToolIcon from '../../asset/icons/chatbot_result_tool.svg'
 import gaiImage from '../../asset/images/gai.png'
 import './ChatAnalysis.css'
 
@@ -31,6 +36,19 @@ const regulationItems = [
   { label: '실외 필드 탄속', value: '1.0J 이하 (약 100m/s)' },
   { label: '보호장비', value: '고글 착용 필수 (ANSI Z87.1 이상)' },
   { label: '칼라파트', value: '이동 중 항상 장착 유지' },
+]
+
+const coreAnalysisItems = [
+  { id: 'performance', icon: resultPerformanceIcon, label: '성능', value: '양호', tone: 'lime' },
+  { id: 'accuracy', icon: resultDartIcon, label: '정확도', value: '보통', tone: 'green' },
+  { id: 'battery', icon: resultBatteryIcon, label: '전력 효율', value: '양호', tone: 'lime' },
+  { id: 'custom', icon: resultToolIcon, label: '커스텀 여지', value: '높음', tone: 'blue' },
+]
+
+const improvementItems = [
+  { id: 'light', title: '광학 장비 미장착', desc: '도트사이트 추가로 명중률 향상 가능' },
+  { id: 'battery', title: '배터리 위치 노출', desc: '외부 충격 시 손상 위험 존재' },
+  { id: 'hopup', title: '홉업 세팅 미확인', desc: '정확도 편차가 발생할 수 있어요' },
 ]
 
 export function ChatAnalysisPage() {
@@ -86,6 +104,7 @@ export function ChatAnalysisPage() {
       <div className="gai_report_scroll">
         {/* Hero */}
         <section className="gai_report_hero">
+          <h2 className="gai_report_hero_title">분석 완료 장비</h2>
           <div className="gai_report_image_wrap">
             <div className="gai_report_scan_overlay" aria-hidden="true">
               <div className="gai_report_scan_line" />
@@ -101,10 +120,64 @@ export function ChatAnalysisPage() {
             </div>
           </div>
 
+          <div className="gai_report_equipment_summary">
+            <strong>M4A1 계열 (전동건)</strong>
+            <div className="gai_report_equipment_tags" aria-label="감지된 장비 정보">
+              <span>전동식 (AEG)</span>
+              <span>CQB 적합</span>
+              <span>6mm BB</span>
+              <span>약 1.1kg</span>
+            </div>
+          </div>
+        </section>
+
+        <section className="gai_report_core_section gai_reveal" ref={setRef(0)}>
+          <h2 className="gai_report_core_title">핵심 분석</h2>
+          <div className="gai_report_core_grid">
+            {coreAnalysisItems.map((item, i) => (
+              <div
+                className="gai_report_core_item gai_reveal_item"
+                key={item.id}
+                style={{ '--reveal-delay': `${i * 70}ms` } as React.CSSProperties}
+              >
+                <span className="gai_report_core_icon" aria-hidden="true">
+                  <img src={item.icon} alt="" />
+                </span>
+                <strong>{item.label}</strong>
+                <em className={`is_${item.tone}`}>{item.value}</em>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="gai_report_improvement_section gai_reveal" ref={setRef(1)}>
+          <div className="gai_report_improvement_head">
+            <h2>개선이 필요한 항목</h2>
+            <span>전체 3개</span>
+          </div>
+          <div className="gai_report_improvement_list">
+            {improvementItems.map((item, i) => (
+              <button
+                className="gai_report_improvement_item gai_reveal_item"
+                key={item.id}
+                type="button"
+                style={{ '--reveal-delay': `${i * 70}ms` } as React.CSSProperties}
+              >
+                <span className="gai_report_improvement_icon" aria-hidden="true">
+                  <img src={resultAlertIcon} alt="" />
+                </span>
+                <span className="gai_report_improvement_body">
+                  <strong>{item.title}</strong>
+                  <small>{item.desc}</small>
+                </span>
+                <span className="gai_report_improvement_arrow" aria-hidden="true">›</span>
+              </button>
+            ))}
+          </div>
         </section>
 
         {/* Detection */}
-        <section className="gai_report_section gai_reveal" ref={setRef(0)}>
+        <section className="gai_report_section gai_reveal" ref={setRef(2)}>
           <h2 className="gai_report_section_title">
             <span className="gai_report_section_dot" aria-hidden="true" />
             AI 감지 포인트
@@ -132,7 +205,7 @@ export function ChatAnalysisPage() {
         </section>
 
         {/* Risk */}
-        <section className="gai_report_section gai_reveal" ref={setRef(1)}>
+        <section className="gai_report_section gai_reveal" ref={setRef(3)}>
           <h2 className="gai_report_section_title">
             <span className="gai_report_section_dot is_warn" aria-hidden="true" />
             위험 요소
@@ -155,7 +228,7 @@ export function ChatAnalysisPage() {
         </section>
 
         {/* Recommend */}
-        <section className="gai_report_section gai_reveal" ref={setRef(2)}>
+        <section className="gai_report_section gai_reveal" ref={setRef(4)}>
           <h2 className="gai_report_section_title">
             <span className="gai_report_section_dot is_lime" aria-hidden="true" />
             AI 추천 액션
@@ -179,7 +252,7 @@ export function ChatAnalysisPage() {
         </section>
 
         {/* Regulation */}
-        <section className="gai_report_section gai_reveal" ref={setRef(3)}>
+        <section className="gai_report_section gai_reveal" ref={setRef(5)}>
           <h2 className="gai_report_section_title">
             <span className="gai_report_section_dot is_muted" aria-hidden="true" />
             국내 필드 규정 참고
