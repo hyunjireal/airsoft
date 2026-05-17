@@ -522,7 +522,7 @@
 
 .chat_result_item strong {
   color: #ffffff;
-  font-size: clamp(14px, 2.2vw, 17px);
+  font-size: clamp(16px, 2.45vw, 19px);
   font-weight: 800;
   line-height: 1.28;
   letter-spacing: 0;

@@ -40,7 +40,7 @@ const heroSummary = {
   season: '5월 루키 토너먼트',
   headline: '곧 시작되는 4강전',
   nextMatchTime: '오늘 18:00',
-  venue: '하남 OOO 에어소프트 파크',
+  venue: '하남 TAC FIELD',
   matchup: '바주카 VS 블랙워터',
 }
 
@@ -57,10 +57,10 @@ const bracketStageIndex: Record<BracketStage, number> = {
 }
 
 const quarterfinalMatches: QuarterfinalMatch[] = [
-  { id: 'qf-1', label: '1경기', winner: '바주카', winnerScore: 2, loser: 'E팀', loserScore: 0, status: '완료' },
-  { id: 'qf-2', label: '2경기', winner: '블랙워터', winnerScore: 2, loser: 'F팀', loserScore: 0, status: '완료' },
-  { id: 'qf-3', label: '3경기', winner: '스모크', winnerScore: 2, loser: 'G팀', loserScore: 1, status: '완료' },
-  { id: 'qf-4', label: '4경기', winner: '델타포스', winnerScore: 2, loser: 'H팀', loserScore: 0, status: '완료' },
+  { id: 'qf-1', label: '1경기', winner: '바주카', winnerScore: 2, loser: '에코', loserScore: 0, status: '완료' },
+  { id: 'qf-2', label: '2경기', winner: '블랙워터', winnerScore: 2, loser: '팔콘', loserScore: 0, status: '완료' },
+  { id: 'qf-3', label: '3경기', winner: '스모크', winnerScore: 2, loser: '고스트', loserScore: 1, status: '완료' },
+  { id: 'qf-4', label: '4경기', winner: '델타포스', winnerScore: 2, loser: '아이언', loserScore: 0, status: '완료' },
 ]
 
 const semifinalMatches: KnockoutMatch[] = [
@@ -85,7 +85,7 @@ const infoCards = [
     id: 'location',
     icon: matchPinIcon,
     title: '장소',
-    lines: ['하남 OOO 에어소프트 파크', '경기도 하남시 OOO로 123'],
+    lines: ['하남 TAC FIELD', '경기도 하남시 서하남로 184'],
   },
   {
     id: 'entry',
