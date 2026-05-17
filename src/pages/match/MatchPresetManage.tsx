@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import AnimatedContent from '../../components/AnimatedContent'
 import AnimatedList from '../../components/AnimatedList'
@@ -12,6 +12,7 @@ import {
   findMatchPreset,
   readAppliedMatchPresetId,
   readMatchPresets,
+  writeAppliedMatchPresetId,
   type MatchPresetItem,
 } from './matchPresetStorage'
 import './match.css'
@@ -19,10 +20,26 @@ import './match.css'
 function PresetActionButtons({ onDelete, onEdit }: { onDelete: () => void; onEdit?: () => void }) {
   return (
     <div className="match_preset_manage_actions" aria-label="프리셋 관리 작업">
-      <button className="match_preset_manage_action is_edit" type="button" aria-label="프리셋 수정" onClick={onEdit}>
+      <button
+        className="match_preset_manage_action is_edit"
+        type="button"
+        aria-label="프리셋 수정"
+        onClick={(event) => {
+          event.stopPropagation()
+          onEdit?.()
+        }}
+      >
         <img src={presetPencilIcon} alt="" aria-hidden="true" />
       </button>
-      <button className="match_preset_manage_action is_delete" type="button" aria-label="프리셋 삭제" onClick={onDelete}>
+      <button
+        className="match_preset_manage_action is_delete"
+        type="button"
+        aria-label="프리셋 삭제"
+        onClick={(event) => {
+          event.stopPropagation()
+          onDelete()
+        }}
+      >
         <img src={presetTrashIcon} alt="" aria-hidden="true" />
       </button>
     </div>
@@ -32,14 +49,18 @@ function PresetActionButtons({ onDelete, onEdit }: { onDelete: () => void; onEdi
 function PresetCard({
   preset,
   active = false,
+  switching = false,
   onDelete,
   onEdit,
+  onApply,
   useListExit = false,
 }: {
   preset: MatchPresetItem
   active?: boolean
+  switching?: boolean
   onDelete: () => void
   onEdit?: () => void
+  onApply?: () => void
   useListExit?: boolean
 }) {
   const cardRef = useRef<HTMLElement>(null)
@@ -68,7 +89,19 @@ function PresetCard({
   }
 
   return (
-    <article ref={cardRef} className={`match_preset_manage_card${active ? ' is_active' : ''}`}>
+    <article
+      ref={cardRef}
+      className={`match_preset_manage_card${active ? ' is_active' : ''}${onApply ? ' is_clickable' : ''}${switching ? ' is_switching' : ''}`}
+      role={onApply ? 'button' : undefined}
+      tabIndex={onApply ? 0 : undefined}
+      aria-pressed={onApply ? active : undefined}
+      onClick={onApply}
+      onKeyDown={(event) => {
+        if (!onApply || (event.key !== 'Enter' && event.key !== ' ')) return
+        event.preventDefault()
+        onApply()
+      }}
+    >
       <div className="match_preset_manage_card_text">
         <h3>{preset.title}</h3>
         <p>{preset.description}</p>
@@ -82,14 +115,38 @@ export function MatchPresetManage() {
   const navigate = useNavigate()
   const [isAppliedVisible, setIsAppliedVisible] = useState(true)
   const [managedPresets, setManagedPresets] = useState(readMatchPresets)
-  const appliedPreset = findMatchPreset(readAppliedMatchPresetId()) ?? managedPresets[0]
+  const [appliedPresetId, setAppliedPresetId] = useState(readAppliedMatchPresetId)
+  const [switchingPresetId, setSwitchingPresetId] = useState<string | null>(null)
+  const switchingTimerRef = useRef<number | null>(null)
+  const appliedPreset = findMatchPreset(appliedPresetId) ?? managedPresets[0]
 
-  const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
+  const applyPreset = (presetId: string) => {
+    if (presetId === appliedPresetId) return
+
+    writeAppliedMatchPresetId(presetId)
+    setAppliedPresetId(presetId)
+    setSwitchingPresetId(presetId)
+    setIsAppliedVisible(true)
+
+    if (switchingTimerRef.current) {
+      window.clearTimeout(switchingTimerRef.current)
     }
 
+    switchingTimerRef.current = window.setTimeout(() => {
+      setSwitchingPresetId(null)
+      switchingTimerRef.current = null
+    }, 560)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (switchingTimerRef.current) {
+        window.clearTimeout(switchingTimerRef.current)
+      }
+    }
+  }, [])
+
+  const goBack = () => {
     navigate('/match')
   }
 
@@ -111,7 +168,13 @@ export function MatchPresetManage() {
           </h2>
           {isAppliedVisible && appliedPreset ? (
             <AnimatedContent distance={28} duration={0.85} ease="power3.out" threshold={0.05} className="match_preset_manage_motion_card">
-              <PresetCard preset={appliedPreset} active onDelete={() => setIsAppliedVisible(false)} />
+              <PresetCard
+                key={appliedPreset.id}
+                preset={appliedPreset}
+                active
+                switching={switchingPresetId === appliedPreset.id}
+                onDelete={() => setIsAppliedVisible(false)}
+              />
             </AnimatedContent>
           ) : null}
         </section>
@@ -145,11 +208,19 @@ export function MatchPresetManage() {
             renderItem={(preset) => (
               <PresetCard
                 preset={preset}
+                active={preset.id === appliedPresetId}
                 useListExit
+                onApply={() => applyPreset(preset.id)}
                 onEdit={() => navigate(`/match/presets/${preset.id}/edit`)}
                 onDelete={() => {
                   deleteMatchPreset(preset.id)
-                  setManagedPresets(readMatchPresets())
+                  const nextPresets = readMatchPresets()
+                  setManagedPresets(nextPresets)
+                  if (preset.id === appliedPresetId) {
+                    const nextAppliedPresetId = nextPresets[0]?.id ?? 'weekend'
+                    writeAppliedMatchPresetId(nextAppliedPresetId)
+                    setAppliedPresetId(nextAppliedPresetId)
+                  }
                 }}
               />
             )}

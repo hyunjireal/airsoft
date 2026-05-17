@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
@@ -71,8 +72,11 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
   const { presetId = 'weekend' } = useParams()
   const isCreateMode = mode === 'create'
   const editingPreset = useMemo(() => (isCreateMode ? undefined : findMatchPreset(presetId)), [isCreateMode, presetId])
+  const nameFieldRef = useRef<HTMLElement | null>(null)
+  const nameInputRef = useRef<HTMLInputElement | null>(null)
   const [presetFormId] = useState(() => editingPreset?.id ?? createMatchPresetId())
   const [name, setName] = useState(editingPreset?.title ?? '')
+  const [nameError, setNameError] = useState(false)
   const [description, setDescription] = useState(editingPreset?.description ?? '')
   const [level, setLevel] = useState(editingPreset?.level ?? ['초보'])
   const [distance, setDistance] = useState(editingPreset?.distance ?? ['근거리'])
@@ -86,13 +90,20 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
   const [purpose, setPurpose] = useState(editingPreset?.purpose ?? ['실력 향상', '스트레스 해소', '취미'])
 
   const goBack = () => {
-    navigate('/match/presets')
+    navigate('/match/presets', { replace: true })
   }
 
   const savePreset = () => {
+    if (!name.trim()) {
+      setNameError(true)
+      nameFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      window.setTimeout(() => nameInputRef.current?.focus(), 220)
+      return
+    }
+
     upsertMatchPreset({
       id: presetFormId,
-      title: name.trim() || '새 프리셋',
+      title: name.trim(),
       description: description.trim() || '직접 설정하는 맞춤 프리셋',
       level,
       distance,
@@ -106,7 +117,7 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
       purpose,
       isCustom: isCreateMode || editingPreset?.isCustom,
     })
-    navigate('/match/presets')
+    navigate('/match/presets', { replace: true })
   }
 
   const updateDistanceByIndex = (index: number) => {
@@ -124,6 +135,7 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
     setDistanceValue(value)
     setDistance([distanceOptions[selectedIndex].label])
   }
+  const distanceRangePercent = `${Math.min(Math.max(distanceValue / 50, 0), 1) * 100}%`
 
   return (
     <div className="match_preset_edit_page">
@@ -137,17 +149,30 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
       />
 
       <main className="match_preset_edit_body">
-        <section className="match_preset_edit_field">
+        <section className="match_preset_edit_field" ref={nameFieldRef}>
           <h2>프리셋 이름</h2>
           <label className="match_preset_edit_input_box">
             <input
+              ref={nameInputRef}
               value={name}
               maxLength={20}
               placeholder="예) 주말 즐겜용"
-              onChange={(event) => setName(event.target.value)}
+              aria-invalid={nameError ? 'true' : undefined}
+              aria-describedby={nameError ? 'match-preset-name-error' : undefined}
+              onChange={(event) => {
+                setName(event.target.value)
+                if (nameError && event.target.value.trim()) {
+                  setNameError(false)
+                }
+              }}
             />
             <span>{name.length}/20</span>
           </label>
+          {nameError ? (
+            <p id="match-preset-name-error" className="match_preset_edit_error">
+              프리셋 이름을 입력해주세요.
+            </p>
+          ) : null}
         </section>
 
         <section className="match_preset_edit_field">
@@ -177,7 +202,10 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
             selected={distance}
             onToggle={(value) => updateDistanceByIndex(distanceOptions.findIndex((option) => option.label === value))}
           />
-          <div className="match_preset_edit_range">
+          <div
+            className="match_preset_edit_range"
+            style={{ '--match-distance-range-percent': distanceRangePercent } as CSSProperties}
+          >
             <input
               type="range"
               min="0"
@@ -186,7 +214,7 @@ export function MatchPresetEdit({ mode = 'edit' }: MatchPresetEditProps) {
               aria-label="거리"
               onChange={(event) => updateDistanceValue(Number(event.target.value))}
             />
-            <span style={{ left: `${Math.min(Math.max(distanceValue / 50, 0), 1) * 100}%` }}>{distanceValue}km</span>
+            <span style={{ left: distanceRangePercent }}>{distanceValue}km</span>
           </div>
         </section>
 

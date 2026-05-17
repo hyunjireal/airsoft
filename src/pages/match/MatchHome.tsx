@@ -2,7 +2,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useRef } from 'react'
-import type { CSSProperties } from 'react'
+import type { CSSProperties, PointerEvent } from 'react'
 import { consumeMatchRegistrationToastPending, MatchRegistrationToast } from './MatchRegistrationToast'
 import { MatchTypeSheet } from './MatchTypeSheet'
 import AnimatedList from '../../components/AnimatedList'
@@ -408,6 +408,7 @@ function formatCalendarTitle(month: Date) {
 }
 
 const weekDayLabels = ['일', '월', '화', '수', '목', '금', '토']
+const WEEK_SWIPE_THRESHOLD = 48
 
 function getWeekDates(date: Date) {
   const start = new Date(date)
@@ -541,6 +542,8 @@ export function MatchHome() {
   const location = useLocation()
   const scheduleSectionRef = useRef<HTMLElement | null>(null)
   const aiSectionRef = useRef<HTMLElement | null>(null)
+  const weekDragRef = useRef<{ pointerId: number; startX: number; startY: number } | null>(null)
+  const suppressWeekDayClickRef = useRef(false)
   const [selectedDate, setSelectedDate] = useState<Date>(() => readFocusedMatchDate())
   const [calendarMonth, setCalendarMonth] = useState<Date>(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
@@ -553,6 +556,8 @@ export function MatchHome() {
   const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>(readAppliedMatchPresetId)
   const [selectedPresetId, setSelectedPresetId] = useState<MatchPresetId>(readAppliedMatchPresetId)
   const [weekSlideDirection, setWeekSlideDirection] = useState<WeekSlideDirection>(null)
+  const [weekDragOffset, setWeekDragOffset] = useState(0)
+  const [isWeekDragging, setIsWeekDragging] = useState(false)
   const [aiMatchIndex, setAiMatchIndex] = useState(0)
   const [isAiMatchRefreshing, setIsAiMatchRefreshing] = useState(false)
   const myMatchGroups = getMyMatchGroups()
@@ -607,6 +612,58 @@ export function MatchHome() {
   }
   const goNextWeek = () => {
     moveWeek('next')
+  }
+  const handleWeekPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+
+    weekDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+    }
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+  const handleWeekPointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const dragState = weekDragRef.current
+    if (!dragState || dragState.pointerId !== event.pointerId) return
+
+    const deltaX = event.clientX - dragState.startX
+    const deltaY = event.clientY - dragState.startY
+    const isHorizontalDrag = Math.abs(deltaX) > 6 && Math.abs(deltaX) > Math.abs(deltaY)
+
+    if (!isHorizontalDrag) return
+
+    event.preventDefault()
+    setIsWeekDragging(true)
+    setWeekDragOffset(Math.max(-72, Math.min(72, deltaX * 0.45)))
+  }
+  const handleWeekPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+    const dragState = weekDragRef.current
+    if (!dragState || dragState.pointerId !== event.pointerId) return
+
+    weekDragRef.current = null
+    event.currentTarget.releasePointerCapture?.(event.pointerId)
+    setIsWeekDragging(false)
+    setWeekDragOffset(0)
+
+    const deltaX = event.clientX - dragState.startX
+    const deltaY = event.clientY - dragState.startY
+    const isHorizontalSwipe = Math.abs(deltaX) >= WEEK_SWIPE_THRESHOLD && Math.abs(deltaX) > Math.abs(deltaY) * 1.2
+
+    if (!isHorizontalSwipe) return
+
+    suppressWeekDayClickRef.current = true
+    moveWeek(deltaX < 0 ? 'next' : 'prev')
+    window.setTimeout(() => {
+      suppressWeekDayClickRef.current = false
+    }, 350)
+  }
+  const handleWeekPointerCancel = (event: PointerEvent<HTMLDivElement>) => {
+    if (weekDragRef.current?.pointerId === event.pointerId) {
+      weekDragRef.current = null
+      setIsWeekDragging(false)
+      setWeekDragOffset(0)
+    }
   }
   const goBack = () => {
     if (window.history.length > 1) {
@@ -881,10 +938,18 @@ export function MatchHome() {
                   'match_week_calendar',
                   weekSlideDirection === 'prev' ? 'is_sliding_prev' : '',
                   weekSlideDirection === 'next' ? 'is_sliding_next' : '',
+                  isWeekDragging ? 'is_dragging' : '',
                 ].filter(Boolean).join(' ')}
-                style={{ '--selected-day-index': selectedWeekDayIndex } as CSSProperties}
+                style={{
+                  '--selected-day-index': selectedWeekDayIndex,
+                  '--week-drag-offset': `${weekDragOffset}px`,
+                } as CSSProperties}
                 role="list"
                 aria-label="주간 매치 일정 달력"
+                onPointerDown={handleWeekPointerDown}
+                onPointerMove={handleWeekPointerMove}
+                onPointerUp={handleWeekPointerUp}
+                onPointerCancel={handleWeekPointerCancel}
                 onAnimationEnd={() => setWeekSlideDirection(null)}
               >
               {weekDates.map((date) => {
@@ -906,6 +971,10 @@ export function MatchHome() {
                     type="button"
                     key={date.toISOString()}
                     onClick={() => {
+                      if (suppressWeekDayClickRef.current) {
+                        suppressWeekDayClickRef.current = false
+                        return
+                      }
                       setSelectedDate(date)
                       setCalendarMonth(new Date(date.getFullYear(), date.getMonth(), 1))
                     }}
@@ -1119,7 +1188,11 @@ export function MatchHome() {
                       </span>
                       <span className="match_preset_option_icon_wrap" aria-hidden="true">
                         {isSelected || preset.isCreateAction ? (
-                          <img src={preset.icon} alt="" className="match_preset_option_icon" />
+                          <img
+                            src={preset.icon}
+                            alt=""
+                            className={`match_preset_option_icon${preset.isCreateAction ? ' is_plus' : ''}`}
+                          />
                         ) : (
                           <span className="match_preset_option_empty_icon" />
                         )}
