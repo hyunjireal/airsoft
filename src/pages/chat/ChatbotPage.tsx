@@ -493,6 +493,18 @@ export function ChatbotPage() {
     return labels[loadingIndex % labels.length];
   }, [loadingIndex, loadingMode]);
 
+  useEffect(() => {
+    if (inputFocused || input.trim()) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setPromptIndex((index) => (index + 1) % chatPlaceholders.length);
+    }, 3200);
+
+    return () => window.clearInterval(timer);
+  }, [input, inputFocused]);
+
   const scrollToLatestMessage = () => {
     if (scrollFrameRef.current) {
       window.cancelAnimationFrame(scrollFrameRef.current);
@@ -1135,8 +1147,14 @@ export function ChatbotPage() {
             <div className={`chat_input_bar${input.trim() ? " is_ready" : ""}`}>
               <input
                 value={input}
-                placeholder="에어소프트에 대해 물어보세요!"
+                placeholder={
+                  inputFocused
+                    ? "에어소프트에 대해 물어보세요!"
+                    : chatPlaceholders[promptIndex]
+                }
                 onChange={(event) => setInput(event.target.value)}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
                 disabled={isSending}
               />
               <button
