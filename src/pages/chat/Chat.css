@@ -170,13 +170,9 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   border-top-left-radius: 8px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.025)),
-    var(--chat-panel);
+  background: #19191b;
   color: var(--chat-text);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 10px 26px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
   font-family: var(--font-pretendard);
   font-size: clamp(14px, 2.45vw, 22px);
   font-weight: 400;
@@ -184,8 +180,6 @@
   letter-spacing: 0;
   word-break: keep-all;
   overflow-wrap: anywhere;
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 .chat_message_frame.user .chat_bubble {
@@ -203,7 +197,6 @@
 
 .chat_bubble.is_typing {
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(223, 255, 34, 0.12),
     0 18px 34px rgba(0, 0, 0, 0.28);
 }
@@ -213,9 +206,7 @@
   padding: clamp(10px, 1.8vw, 14px);
   border-color: rgba(223, 255, 34, 0.26);
   border-radius: 18px;
-  background:
-    linear-gradient(150deg, rgba(223, 255, 34, 0.115), rgba(95, 143, 255, 0.055)),
-    rgba(13, 17, 15, 0.92);
+  background: #19191b;
 }
 
 .chat_text,
@@ -788,16 +779,12 @@
   border: 1px solid var(--chat-stroke);
   border-radius: 18px;
   border-top-left-radius: 8px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.105), rgba(255, 255, 255, 0.025)),
-    var(--chat-panel);
+  background: #19191b;
   color: rgba(255, 255, 255, 0.9);
   font-family: var(--font-pretendard);
   font-size: clamp(13px, 2.15vw, 16px);
   font-weight: 700;
   line-height: 1.4;
-  backdrop-filter: blur(18px) saturate(128%);
-  -webkit-backdrop-filter: blur(18px) saturate(128%);
 }
 
 .chat_analysis_state_steps {
@@ -807,11 +794,8 @@
   align-items: stretch;
   gap: 14px;
   border-color: rgba(223, 255, 34, 0.28);
-  background:
-    linear-gradient(145deg, rgba(223, 255, 34, 0.09), rgba(255, 255, 255, 0.025)),
-    rgba(17, 20, 18, 0.94);
+  background: #19191b;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(223, 255, 34, 0.08),
     0 18px 36px rgba(0, 0, 0, 0.34);
 }
