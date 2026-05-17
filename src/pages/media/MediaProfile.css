@@ -527,8 +527,8 @@
 
 @media (min-width: 560px) {
   .creator_detail_hero {
-    padding-right: 32px;
-    padding-left: 32px;
+    padding-right: 36px;
+    padding-left: 36px;
     padding-bottom: calc(var(--creator-detail-card-overlap) + var(--creator-detail-media-gap));
   }
 
@@ -539,8 +539,8 @@
 
   .creator_detail_topbar {
     top: calc(env(safe-area-inset-top, 0px) + 28px);
-    left: 32px;
-    right: 32px;
+    left: 36px;
+    right: 36px;
   }
 
   .creator_detail_socials {
@@ -555,6 +555,17 @@
 
   .creator_detail_main {
     padding-top: 84px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .creator_detail_section {
+    width: min(calc(100% - 72px), 952px);
+  }
+
+  .creator_detail_stats_card {
+    right: 36px;
+    left: 36px;
   }
 }
 

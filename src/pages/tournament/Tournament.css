@@ -2045,7 +2045,7 @@
 
 @media (min-width: 600px) and (max-width: 1024px) {
   .mvp_vote_complete_page .mvpc_point_section {
-    padding: 24px 32px 0;
+    padding: 24px 36px 0;
   }
 
   .mvp_vote_complete_page .mvpc_point_card {
@@ -2577,4 +2577,23 @@
 :root[data-theme='dark'] .mvp_confirm_submit {
   background: var(--tournament-dark-btn-bg);
   color: var(--tournament-dark-btn-txt);
+}
+
+@media (min-width: 1024px) {
+  .tournament_intro_card,
+  .tournament_match_section,
+  .tournament_schedule_section,
+  .tournament_player_section,
+  .tournament_notice_section,
+  .tournament_reward_section,
+  .tournament_action_section,
+  .mvpc_hero,
+  .mvpc_point_section,
+  .mvpc_player_section,
+  .mvpc_rank_section,
+  .mvpc_cta_section,
+  .mvp_confirm_sheet {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
 }

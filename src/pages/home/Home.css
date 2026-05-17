@@ -2130,7 +2130,7 @@
   .home_tournament_team {
     width: min(74vw, 650px);
     min-height: 92px;
-    padding: 18px 48px;
+    padding: 18px 36px;
     justify-content: center;
     gap: 20px;
   }
@@ -2452,6 +2452,34 @@
 
 .buddy.is_visible .buddy_bottom {
   animation: home_section_child_up 680ms cubic-bezier(0.22, 1, 0.36, 1) 320ms both;
+}
+
+@media (min-width: 1024px) {
+  .home_hero_inner,
+  .home_team_content_box,
+  .home_banner,
+  .home_tournament_join_button_wrap,
+  .home_userinfo_match,
+  .home_userinfo_match_header,
+  .buddy_top,
+  .buddy_bottom {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .home_team_scroll {
+    width: calc(100% + 72px);
+    margin-right: -36px;
+    margin-left: -36px;
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .buddy_bottom,
+  .buddy_con {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
 }
 
 .banner_bottom.is_visible .left {

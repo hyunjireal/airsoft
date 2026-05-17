@@ -616,6 +616,13 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .media_ranking_section {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+}
+
 .creator_list_page {
   min-height: 100vh;
   padding: 77px 24px 196px;
@@ -725,4 +732,11 @@
   font-family: var(--font-pretendard);
   font-size: 12px;
   font-weight: 400;
+}
+
+@media (min-width: 1024px) {
+  .creator_list_page {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
 }

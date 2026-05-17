@@ -20,7 +20,7 @@
   color: var(--color-white);
   isolation: isolate;
   --onboarding-shell-max-width: 1024px;
-  --onboarding-edge-padding: 24px;
+  --onboarding-edge-padding: clamp(24px, 3.52vw, 36px);
   --onboarding-top-offset: clamp(125px, 14.7svh, 200px);
   --onboarding-content-gap: clamp(56px, 8svh, 110px);
   --onboarding-top-gap: clamp(23px, 3.6svh, 44px);

@@ -8362,3 +8362,41 @@
   background: rgba(255, 255, 255, 0.13);
 }
 
+@media (min-width: 1024px) {
+  .match_preset_sheet_top,
+  .match_preset_sheet_body,
+  .match_preset_edit_bottom,
+  .match_preset_finish_body,
+  .match_recommend_page,
+  .match_recommend_hero,
+  .match_detail_action_area,
+  .match_apply_actions,
+  .match_apply_body,
+  .match_apply_top,
+  .match_flow_page,
+  .match_create_page,
+  .match_create_body,
+  .match_create_section,
+  .match_apply_page,
+  .match_apply_form_section,
+  .match_tournament_page,
+  .match_tournament_body,
+  .match_tournament_section,
+  .match_team_page,
+  .match_team_body {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .match_recommend_hero {
+    margin-right: -36px;
+    margin-left: -36px;
+  }
+
+  .match_detail_action_button {
+    width: calc(100% - 72px);
+    margin-right: 36px;
+    margin-left: 36px;
+  }
+}
+

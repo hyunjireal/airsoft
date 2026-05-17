@@ -501,6 +501,58 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .point_shop_coupons_shell {
+    width: min(calc(100% - 72px), 1024px);
+  }
+
+  .point_shop_coupons_content {
+    gap: 18px;
+  }
+
+  .point_shop_coupons_tabs {
+    padding-bottom: 8px;
+  }
+
+  .point_shop_coupons_list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 24px;
+    max-width: none;
+    padding-bottom: 132px;
+  }
+
+  .point_shop_coupon_card {
+    min-height: 214px;
+    padding: 32px 24px;
+  }
+
+  .point_shop_coupon_card_box {
+    gap: 24px;
+  }
+
+  .point_shop_coupon_media {
+    width: 112px;
+    height: 82px;
+  }
+
+  .point_shop_coupon_title {
+    font-size: 20px;
+  }
+
+  .point_shop_coupon_validity {
+    font-size: var(--font-size-14);
+  }
+
+  .point_shop_coupon_action {
+    min-height: 54px;
+  }
+
+  .point_shop_coupon_modal {
+    width: min(100%, 520px);
+  }
+}
+
 @media (max-width: 480px) {
   .point_shop_coupon_card_box {
     gap: 16px;

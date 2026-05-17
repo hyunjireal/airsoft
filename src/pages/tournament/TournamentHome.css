@@ -113,6 +113,12 @@
   transition: background-color 0.24s ease, box-shadow 0.24s ease;
 }
 
+@media (min-width: 1024px) {
+  .tournament_main_page {
+    --tournament-shell-padding: 36px;
+  }
+}
+
 .tournament_main_page.has_solid_header.is_dark .tournament_main_header {
   background: var(--tournament-page-bg) !important;
 }

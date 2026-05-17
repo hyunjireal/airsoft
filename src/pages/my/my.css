@@ -1580,7 +1580,7 @@
 @media (min-width: 1024px) {
   .my_page {
     --my-section-max-width: 1024px;
-    --my-section-inline-padding: 32px;
+    --my-section-inline-padding: 36px;
     padding-bottom: 48px;
   }
 

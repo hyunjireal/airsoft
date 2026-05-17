@@ -466,7 +466,7 @@
 
 @media (min-width: 1024px) {
   .point_history_shell {
-    width: min(calc(100% - 64px), 1024px);
+    width: min(calc(100% - 72px), 1024px);
   }
 
   .point_history_content {

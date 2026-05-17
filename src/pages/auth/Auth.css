@@ -18,7 +18,7 @@ body.auth_body {
 .auth_screen {
   --auth-shell-max-width: 1024px;
   --auth-fluid-range: clamp(0px, calc(100vw - 393px), 631px);
-  --auth-page-padding: calc(20px + 36 * (var(--auth-fluid-range) / 631));
+  --auth-page-padding: calc(20px + 16 * (var(--auth-fluid-range) / 631));
   --auth-modal-max-width: calc(1020px - (var(--auth-page-padding) * 2));
 }
 

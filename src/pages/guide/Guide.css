@@ -302,8 +302,8 @@
 
 @media (min-width: 768px) {
   .beginner_guide_page {
-    padding-left: clamp(40px, 6vw, 56px);
-    padding-right: clamp(40px, 6vw, 56px);
+    padding-left: 36px;
+    padding-right: 36px;
   }
 }
 

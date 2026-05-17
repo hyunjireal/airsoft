@@ -813,7 +813,7 @@
   justify-items: center;
   gap: clamp(8px, 1.4vw, 14px);
   /* 상단: 헤더 높이(약 56px) + statusbar(40px) + 여백 */
-  padding: clamp(70px, 12vw, 120px) clamp(20px, 4vw, 48px) 0;
+  padding: clamp(70px, 12vw, 120px) clamp(20px, 4vw, 36px) 0;
   text-align: center;
 }
 

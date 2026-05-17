@@ -4421,6 +4421,150 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .community_header {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .community_header_inner {
+    width: 100%;
+  }
+
+  .community_tabs {
+    width: 260px;
+    height: 50px;
+    padding: 6px;
+  }
+
+  .community_tabs::before {
+    top: 6px;
+    left: 6px;
+    width: 120px;
+    height: 38px;
+  }
+
+  .community_tabs--free::before {
+    transform: translateX(128px);
+  }
+
+  .community_tabs a {
+    width: 120px;
+    min-height: 38px;
+    padding: 8px 16px;
+    font-size: 17px;
+  }
+
+  .general_board_hero {
+    min-height: 320px;
+    padding: 148px 36px 32px;
+  }
+
+  .general_board_hero::after {
+    right: 36px;
+    width: 340px;
+    height: 164px;
+  }
+
+  .general_board_hero_copy h1,
+  .beginner_hero h1 {
+    font-size: 40px;
+  }
+
+  .general_hot_section {
+    padding: 34px 36px 24px;
+  }
+
+  .general_section_header {
+    padding-right: 0;
+  }
+
+  .general_hot_scroller {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .general_hot_card,
+  .general_hot_image {
+    width: 100%;
+  }
+
+  .general_hot_card {
+    flex: 1 1 auto;
+  }
+
+  .general_board_filters,
+  .general_post_list,
+  .general_post_more_wrap {
+    width: min(calc(100% - 72px), 952px);
+  }
+
+  .general_post_list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .general_post_card {
+    min-height: 128px;
+    padding: 22px 24px;
+  }
+
+  .beginner_hero {
+    min-height: 372px;
+    padding: 236px 36px 32px;
+  }
+
+  .beginner_hero_art {
+    top: 164px;
+    right: 36px;
+    width: 320px;
+    height: 232px;
+  }
+
+  .beginner_body {
+    width: min(calc(100% - 72px), 952px);
+    padding-top: 86px;
+  }
+
+  .beginner_guide_inner {
+    gap: 16px;
+  }
+
+  .beginner_start_card {
+    min-height: 150px;
+    padding: 20px;
+  }
+
+  .beginner_questions_section {
+    padding-top: 56px;
+  }
+
+  .beginner_question_card_list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .beginner_question_card {
+    min-height: 128px;
+    padding: 22px 24px;
+  }
+
+  .post_detail_comments h2,
+  .post_create_cta {
+    padding-right: 36px;
+    padding-left: 36px;
+  }
+
+  .post_detail_comments_head .post_detail_comment_searchbar {
+    width: calc(100% - 72px);
+    margin-right: 36px;
+    margin-left: 36px;
+  }
+}
+
 @media (max-width: 420px) {
   .community_tabs {
     max-width: calc(100% - 32px);

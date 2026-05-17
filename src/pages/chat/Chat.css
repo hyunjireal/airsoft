@@ -1759,7 +1759,7 @@
 
 @media (min-width: 768px) {
   .chat_page {
-    --chat-pad: clamp(30px, 4vw, 52px);
+    --chat-pad: clamp(30px, 4vw, 36px);
     --chat-thread-width: min(100%, 960px);
   }
 
