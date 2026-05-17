@@ -165,118 +165,6 @@
   50% { opacity: 0.5; transform: scale(0.8); }
 }
 
-/* score */
-.gai_report_score_wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 18px;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 600ms ease, transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gai_report_score_wrap.is_visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.gai_report_score_ring_wrap {
-  position: relative;
-  width: 140px;
-  height: 140px;
-}
-
-.gai_report_ring {
-  width: 140px;
-  height: 140px;
-  transform: rotate(-90deg);
-}
-
-.gai_report_ring_track {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.07);
-  stroke-width: 7;
-}
-
-.gai_report_ring_fill {
-  fill: none;
-  stroke: var(--lime);
-  stroke-width: 7;
-  stroke-linecap: round;
-  filter: drop-shadow(0 0 8px var(--lime));
-  transition: stroke-dasharray 1200ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.gai_report_score_inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-}
-
-.gai_report_score_label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  color: var(--lime);
-  text-transform: uppercase;
-}
-
-.gai_report_score_num {
-  font-size: 36px;
-  font-weight: 900;
-  line-height: 1;
-  color: #fff;
-  letter-spacing: -1px;
-}
-
-.gai_report_score_num span {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--muted);
-}
-
-.gai_report_chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-
-.gai_report_chip {
-  display: inline-flex;
-  align-items: center;
-  height: 26px;
-  padding: 0 12px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  border: 1px solid transparent;
-}
-
-.gai_report_chip.is_safe {
-  background: var(--ok-soft);
-  border-color: rgba(87, 255, 168, 0.28);
-  color: var(--ok);
-}
-
-.gai_report_chip.is_beginner {
-  background: rgba(128, 176, 255, 0.1);
-  border-color: rgba(128, 176, 255, 0.28);
-  color: #80b0ff;
-}
-
-.gai_report_chip.is_field {
-  background: var(--lime-soft);
-  border-color: rgba(215, 255, 0, 0.3);
-  color: var(--lime);
-}
-
 /* ── Detection ───────────────────────────────── */
 .gai_report_detect_list {
   display: flex;
@@ -502,10 +390,8 @@
   display: flex;
   gap: 10px;
   width: min(100%, var(--app-max-width, 480px));
-  padding: 14px var(--rp) calc(18px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, transparent, rgba(13, 15, 14, 0.96) 28%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 14px var(--rp) calc(30px + env(safe-area-inset-bottom, 0px));
+  background: transparent;
 }
 
 .gai_report_cta_btn {
@@ -526,12 +412,14 @@
 .gai_report_cta_btn:active { transform: scale(0.97); }
 
 .gai_report_cta_btn.is_secondary {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.8);
+  flex: 0.86 1 0;
+  background: #242624;
+  border: 1px solid #3f433f;
+  color: #ffffff;
 }
 
 .gai_report_cta_btn.is_primary {
+  flex: 1.14 1 0;
   background: var(--lime);
   color: #0f1208;
 }
@@ -575,27 +463,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .gai_report_score_ring_wrap {
-    width: 160px;
-    height: 160px;
-  }
-
-  .gai_report_ring {
-    width: 160px;
-    height: 160px;
-  }
-
-  .gai_report_score_num {
-    font-size: 42px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .gai_report_scan_line,
   .gai_report_done_dot,
   .gai_reveal,
-  .gai_reveal_item,
-  .gai_report_score_wrap {
+  .gai_reveal_item {
     animation: none;
     opacity: 1;
     transform: none;

@@ -17,6 +17,7 @@ export function AppShell() {
   const isTournamentExperience = isTournamentMain || isTournamentMvpVote || isTournamentMvpComplete
   const hasTournamentBottomNav = isTournamentMain || isTournamentMvpVote
   const isChatPage = location.pathname === '/chat'
+  const isChatAnalysisPage = location.pathname === '/chat/analysis'
   const isBuddyPage = location.pathname === '/buddy' || location.pathname === '/buddy/loading'
   const isBuddyRecommendPage = location.pathname === '/buddy/recommend'
   const isBuddyDetailPage = /^\/buddy\/recommend\/[^/]+$/.test(location.pathname)
@@ -35,6 +36,7 @@ export function AppShell() {
   const showBottomNav =
     !isCommunityPostDetail &&
     !isChatPage &&
+    !isChatAnalysisPage &&
     !isBuddyDetailPage &&
     !isBuddyPage &&
     !isGuideQuizPage &&

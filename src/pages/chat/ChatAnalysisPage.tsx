@@ -4,9 +4,7 @@ import { PageHeader } from '../../components/PageHeader'
 import gaiImage from '../../asset/images/gai.png'
 import './ChatAnalysis.css'
 
-const uploadedImage = sessionStorage.getItem('gai_analysis_image') ?? gaiImage
-
-const SCORE = 82
+const getAnalysisImage = () => sessionStorage.getItem('gai_analysis_image') ?? gaiImage
 
 const detectionPoints = [
   { id: 'goggle', status: 'ok', label: '고글', desc: '안전 등급 보호 고글 착용 확인됨' },
@@ -35,57 +33,30 @@ const regulationItems = [
   { label: '칼라파트', value: '이동 중 항상 장착 유지' },
 ]
 
-function ScoreRing({ score, visible }: { score: number; visible: boolean }) {
-  const r = 44
-  const circ = 2 * Math.PI * r
-  const dash = visible ? circ * (score / 100) : 0
-
-  return (
-    <svg className="gai_report_ring" viewBox="0 0 100 100" aria-hidden="true">
-      <circle cx="50" cy="50" r={r} className="gai_report_ring_track" />
-      <circle
-        cx="50"
-        cy="50"
-        r={r}
-        className="gai_report_ring_fill"
-        strokeDasharray={`${dash} ${circ}`}
-        strokeDashoffset={circ * 0.25}
-      />
-    </svg>
-  )
-}
-
 export function ChatAnalysisPage() {
   const navigate = useNavigate()
-  const [scoreVisible, setScoreVisible] = useState(false)
-  const [displayScore, setDisplayScore] = useState(0)
+  const [uploadedImage, setUploadedImage] = useState(getAnalysisImage)
   const [sectionsVisible, setSectionsVisible] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
-    const t1 = window.setTimeout(() => setScoreVisible(true), 300)
-    const t2 = window.setTimeout(() => setSectionsVisible(true), 600)
+    const syncImage = () => setUploadedImage(getAnalysisImage())
+
+    syncImage()
+    window.addEventListener('focus', syncImage)
+    window.addEventListener('storage', syncImage)
+
     return () => {
-      window.clearTimeout(t1)
-      window.clearTimeout(t2)
+      window.removeEventListener('focus', syncImage)
+      window.removeEventListener('storage', syncImage)
     }
   }, [])
 
   useEffect(() => {
-    if (!scoreVisible) return
-    let frame: number
-    const start = performance.now()
-    const duration = 1200
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / duration, 1)
-      const ease = 1 - Math.pow(1 - p, 3)
-      setDisplayScore(Math.round(SCORE * ease))
-      if (p < 1) frame = requestAnimationFrame(tick)
-    }
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
-  }, [scoreVisible])
+    const timer = window.setTimeout(() => setSectionsVisible(true), 300)
+    return () => window.clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -110,7 +81,7 @@ export function ChatAnalysisPage() {
 
   return (
     <div className="gai_report_page">
-      <PageHeader title="GAI 분석 리포트" onBack={() => navigate(-1)} />
+      <PageHeader title="분석 리포트" onBack={() => navigate(-1)} />
 
       <div className="gai_report_scroll">
         {/* Hero */}
@@ -130,20 +101,6 @@ export function ChatAnalysisPage() {
             </div>
           </div>
 
-          <div className={`gai_report_score_wrap${scoreVisible ? ' is_visible' : ''}`}>
-            <div className="gai_report_score_ring_wrap">
-              <ScoreRing score={SCORE} visible={scoreVisible} />
-              <div className="gai_report_score_inner">
-                <span className="gai_report_score_label">FIELD READY</span>
-                <strong className="gai_report_score_num">{displayScore}<span>%</span></strong>
-              </div>
-            </div>
-            <div className="gai_report_chips">
-              <span className="gai_report_chip is_safe">SAFE</span>
-              <span className="gai_report_chip is_beginner">BEGINNER SETUP</span>
-              <span className="gai_report_chip is_field">FIELD READY</span>
-            </div>
-          </div>
         </section>
 
         {/* Detection */}
@@ -245,9 +202,9 @@ export function ChatAnalysisPage() {
         <button
           className="gai_report_cta_btn is_secondary"
           type="button"
-          onClick={() => navigate('/chat')}
+          onClick={() => navigate('/home')}
         >
-          다시 분석하기
+          홈으로 돌아가기
         </button>
         <button
           className="gai_report_cta_btn is_primary"
