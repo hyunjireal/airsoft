@@ -2023,10 +2023,21 @@
   background-image: url('../../asset/images/main_ow02.png');
 }
 
+.home_banner_inner_third {
+  padding: 14px 16px;
+  background-image: url('../../asset/images/main_ow03.png');
+  background-position: center;
+}
+
 .home_banner_txt {
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 5px;
+  padding: 0 12px;
+}
+
+.home_banner_txt_r6 {
   gap: 5px;
   padding: 0 12px;
 }
@@ -2041,6 +2052,12 @@
   color: #A8918E;
 }
 
+.home_banner_label_r6 {
+  color: #A8918E;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .home_banner_title {
   margin: 0;
   font-family: var(--font-kbl-jump);
@@ -2051,7 +2068,18 @@
   color: #fff;
 }
 
+.home_banner_title_r6 {
+  font-size: 16px;
+  line-height: 130%;
+  letter-spacing: 0.02em;
+  text-shadow: none;
+}
+
 .home_banner_title_accent {
+  color: #F1FF93;
+}
+
+.home_banner_title_accent_r6 {
   color: #F1FF93;
 }
 
@@ -2067,6 +2095,15 @@
   color: #fff;
   padding: 2px 10px;
   border-radius: 555px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.home_banner_pg_nav_r6 {
+  align-self: auto;
+  margin-bottom: 0;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 400;
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -2435,6 +2472,18 @@
 }
 
 @media (min-width: 768px) {
+  .home_match_scroll {
+    --home-match-gap: clamp(8px, 1.2vw, 12px);
+    gap: var(--home-match-gap);
+  }
+
+  .home_match_card {
+    flex: 1 0 calc((100% - var(--home-match-gap) - var(--home-match-gap) - var(--home-match-gap)) / 4);
+    width: auto;
+    min-width: 170px;
+    height: 191px;
+  }
+
   .home_userinfo_match.is_visible .home_userinfo_match_header {
     animation-delay: 880ms;
   }
@@ -2469,8 +2518,6 @@
   .home_team_content_box,
   .home_banner,
   .home_tournament_join_button_wrap,
-  .home_userinfo_match,
-  .home_userinfo_match_header,
   .buddy_top,
   .buddy_bottom {
     padding-right: 36px;
@@ -2576,6 +2623,10 @@
 
 .home_banner.is_visible .home_banner_inner:nth-child(2) {
   animation-delay: 260ms;
+}
+
+.home_banner.is_visible .home_banner_inner:nth-child(3) {
+  animation-delay: 400ms;
 }
 
 @keyframes home_section_reveal {
@@ -2858,6 +2909,18 @@
 :root[data-theme='dark'] .home_banner_pg_nav {
   background: rgba(0, 0, 0, 0.6);
   color: var(--color-white);
+}
+
+:root[data-theme='dark'] .home_banner_label_r6 {
+  color: #a8918e;
+}
+
+:root[data-theme='dark'] .home_banner_title_accent_r6 {
+  color: #e2fd34;
+}
+
+:root[data-theme='dark'] .home_banner_pg_nav_r6 {
+  background: rgba(0, 0, 0, 0.6);
 }
 
 :root[data-theme='dark'] .home_tournament_team {

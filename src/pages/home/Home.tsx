@@ -929,12 +929,12 @@ export function Home() {
               </div>
               <div className="buddy_info">
                 <p className="buddy_info_title">
-                  첫 게임이 걱정된다면
+                  첫 게임이 걱정된다면{' '}
                   <br className="buddy_desktop_hidden_break" />
                   <span className="buddy_lime_text">함께할 버디</span>를 연결해드려요
                 </p>
                 <p className="buddy_info_desc">
-                  어색해도 겁내지 마세요!
+                  어색해도 겁내지 마세요!{' '}
                   <br className="buddy_desktop_hidden_break" />
                   경험자가 준비와 진행을 도와줘요
                 </p>
@@ -1054,14 +1054,21 @@ export function Home() {
               <p className="home_banner_label">건잇 x 오버워치</p>
               <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
             </div>
-            <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
+            <p className="home_banner_pg_nav">1&nbsp;&nbsp;/&nbsp;&nbsp;3</p>
           </Link>
           <Link className="home_banner_inner home_banner_inner_second" to="/guide/quiz">
             <div className="home_banner_txt">
               <p className="home_banner_label">건잇 x 오버워치</p>
               <h3 className="home_banner_title">초보자 퀴즈 풀고<br /><span className="home_banner_title_accent">오버워치 스킨</span> 받자!</h3>
             </div>
-            <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;2</p>
+            <p className="home_banner_pg_nav">2&nbsp;&nbsp;/&nbsp;&nbsp;3</p>
+          </Link>
+          <Link className="home_banner_inner home_banner_inner_third" to="/match" state={{ scrollTo: 'ai-recommend' }}>
+            <div className="home_banner_txt home_banner_txt_r6">
+              <p className="home_banner_label home_banner_label_r6">건잇 x R6</p>
+              <h3 className="home_banner_title home_banner_title_r6">팀 전술 플레이 이벤트<br /><span className="home_banner_title_accent_r6">오퍼레이터 스킨 받자!</span></h3>
+            </div>
+            <p className="home_banner_pg_nav home_banner_pg_nav_r6">3&nbsp;&nbsp;/&nbsp;&nbsp;3</p>
           </Link>
         </section>
 
