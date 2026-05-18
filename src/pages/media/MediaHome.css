@@ -389,6 +389,7 @@
 .media_ranking_item_left {
   display: inline-flex;
   align-items: center;
+  flex: 1 1 auto;
   gap: 19px;
   min-width: 0;
 }
@@ -405,10 +406,11 @@
 
 .media_ranking_item_left strong {
   min-width: 0;
-  overflow: hidden;
   color: var(--media-light-txt-main);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .media_ranking_item_score {
