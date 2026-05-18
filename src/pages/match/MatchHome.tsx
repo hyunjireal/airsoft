@@ -409,6 +409,30 @@ function getAiMatchTime(match: AiRecommendedMatch) {
   return match.time.match(/\d{1,2}:\d{2}/)?.[0] ?? match.time
 }
 
+function getAiMatchScheduleDate(match: AiRecommendedMatch) {
+  const dateValue = getAiMatchDateValue(match)
+  const matchedTime = getAiMatchTime(match).match(/(\d{1,2}):(\d{2})/)
+
+  if (!dateValue || !matchedTime) {
+    return null
+  }
+
+  const [, hour, minute] = matchedTime
+  const scheduleDate = new Date(`${dateValue}T${hour.padStart(2, '0')}:${minute}:00`)
+
+  return Number.isNaN(scheduleDate.getTime()) ? null : scheduleDate
+}
+
+function isPastAiRecommendedMatch(match: AiRecommendedMatch) {
+  const scheduleDate = getAiMatchScheduleDate(match)
+
+  if (!scheduleDate) {
+    return false
+  }
+
+  return scheduleDate.getTime() < Date.now()
+}
+
 const matchTypeColor: Record<MatchType, string> = {
   team: 'var(--color-navy)',
   personal: 'var(--color-teal)',
@@ -504,7 +528,8 @@ export function MatchHome() {
   const appliedPresetSummary = appliedPreset
     ? `${appliedPreset.distance[0] ?? '거리 미정'} · ${appliedPreset.weekdays.join(', ') || '요일 미정'} · ${appliedPreset.level[0] ?? '숙련도 미정'}`
     : '프리셋을 만들어 추천 조건을 설정하세요'
-  const aiRecommendedMatch = aiRecommendedMatches[aiMatchIndex]
+  const availableAiRecommendedMatches = aiRecommendedMatches.filter((match) => !isPastAiRecommendedMatch(match))
+  const aiRecommendedMatch = availableAiRecommendedMatches[aiMatchIndex] ?? availableAiRecommendedMatches[0]
   const hiddenAiMemberCount = Math.max(aiRecommendedMatch.currentMembers - 3, 0)
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
@@ -535,6 +560,13 @@ export function MatchHome() {
   const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
   const weekDates = getWeekDates(selectedDate)
   const selectedWeekDayIndex = Math.max(weekDates.findIndex((date) => isSameDay(date, selectedDate)), 0)
+
+  useEffect(() => {
+    if (availableAiRecommendedMatches.length > 0 && aiMatchIndex >= availableAiRecommendedMatches.length) {
+      setAiMatchIndex(0)
+    }
+  }, [aiMatchIndex, availableAiRecommendedMatches.length])
+
   const moveWeek = (direction: Exclude<WeekSlideDirection, null>) => {
     setWeekSlideDirection(direction)
     setSelectedDate((date) => {
@@ -680,12 +712,12 @@ export function MatchHome() {
     setIsAiMatchRefreshing(true)
     window.setTimeout(() => {
       setAiMatchIndex((currentIndex) => {
-        if (aiRecommendedMatches.length <= 1) return currentIndex
+        if (availableAiRecommendedMatches.length <= 1) return currentIndex
 
         let nextIndex = currentIndex
 
         while (nextIndex === currentIndex) {
-          nextIndex = Math.floor(Math.random() * aiRecommendedMatches.length)
+          nextIndex = Math.floor(Math.random() * availableAiRecommendedMatches.length)
         }
 
         return nextIndex

@@ -496,7 +496,7 @@
   gap: 4px;
   height: 35px;
   padding: 0 12px;
-  border: 1px solid var(--color-gray05);
+  border: 1px solid rgba(173, 173, 173, 0.3);
   border-radius: 8px;
   background: var(--color-gray05);
   color: var(--color-black);
@@ -2218,10 +2218,9 @@
 .match_month_card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   width: 100%;
   padding: 0;
-  border: 1px solid var(--color-gray05);
+  border: 1px solid rgba(173, 173, 173, 0.3);
   border-radius: 10px;
   background: var(--color-white);
   box-shadow: none;
@@ -2232,7 +2231,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px 0;
+  padding: 8px 10px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .match_month_header h3 {
@@ -2252,10 +2252,11 @@
   height: 28px;
   border: 0;
   background: transparent;
-  color: var(--color-gray02);
-  font-size: 20px;
+  color: var(--color-gray03);
+  font-size: 15px;
   font-weight: var(--font-weight-medium);
   cursor: pointer;
+  opacity: 0.65;
 }
 
 .match_week_calendar_view {
@@ -2284,7 +2285,7 @@
   z-index: 0;
   width: calc(100% / 7);
   border-radius: 8px;
-  background: var(--color-black);
+  background: #2b2e29;
   pointer-events: none;
   transform: translateX(calc(var(--selected-day-index, 0) * 100%));
   transition:
@@ -2294,7 +2295,7 @@
 }
 
 .match_week_calendar:has(.match_week_day.is_selected.is_past)::before {
-  background: var(--color-gray05);
+  background: #2b2e29;
 }
 
 .match_week_calendar.is_sliding_prev {
@@ -2338,7 +2339,7 @@
 }
 
 .match_week_day.has_match i {
-  background: var(--color-orange-red);
+  background: rgba(140, 152, 136, 0.7);
 }
 
 .match_week_day strong {
@@ -2382,7 +2383,7 @@
 
 .match_week_day.is_selected strong,
 .match_week_day.is_selected span {
-  color: var(--color-white);
+  color: var(--color-lime, #e2fd34);
 }
 
 .match_week_day.is_past {
@@ -8271,9 +8272,14 @@
 
 :root[data-theme='dark'] .match_month_card,
 :root[data-theme='dark'] .match_selected_schedule {
-  background: #000;
+  background: #0d0f0d;
+  border-color: rgba(255, 255, 255, 0.08);
   color: var(--color-white);
   box-shadow: 0 1px 13.4px rgba(0, 0, 0, 0.11);
+}
+
+:root[data-theme='dark'] .match_month_header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 :root[data-theme='dark'] .match_selected_item.is_mine {
@@ -8341,16 +8347,22 @@
 }
 
 :root[data-theme='dark'] .match_month_header button {
-  color: var(--color-white);
+  filter: none;
+  color: rgba(255, 255, 255, 0.38);
+  opacity: 1;
 }
 
 :root[data-theme='dark'] .match_week_day:not(.is_selected):not(.is_sunday):not(.is_saturday) strong,
 :root[data-theme='dark'] .match_week_day:not(.is_selected):not(.is_sunday):not(.is_saturday) span {
-  color: var(--color-white);
+  color: rgba(255, 255, 255, 0.70);
 }
 
 :root[data-theme='dark'] .match_week_calendar::before {
-  background: var(--color-white);
+  background: #2b2e29;
+}
+
+:root[data-theme='dark'] .match_week_day.has_match i {
+  background: rgba(226, 253, 52, 0.65);
 }
 
 :root[data-theme='dark'] .match_week_day.is_selected {
@@ -8359,7 +8371,12 @@
 
 :root[data-theme='dark'] .match_week_day.is_selected strong,
 :root[data-theme='dark'] .match_week_day.is_selected span {
-  color: var(--color-black);
+  color: var(--color-lime);
+}
+
+:root[data-theme='dark'] .match_week_day.is_selected.is_past strong,
+:root[data-theme='dark'] .match_week_day.is_selected.is_past span {
+  color: var(--color-gray03);
 }
 
 :root[data-theme='dark'] .match_day_picker {
