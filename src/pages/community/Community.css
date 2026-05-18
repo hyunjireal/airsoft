@@ -1,5 +1,6 @@
 .community_page {
   min-height: 100vh;
+  overflow-x: clip;
   padding: 0;
   background: var(--color-white);
 }
@@ -190,6 +191,7 @@
   position: relative;
   width: min(100%, var(--app-max-width));
   min-height: 100vh;
+  overflow-x: clip;
   margin: 0 auto;
   padding-bottom: 0;
   background:
@@ -667,6 +669,7 @@
   position: relative;
   width: min(100%, var(--app-max-width));
   min-height: 100vh;
+  overflow-x: clip;
   margin: 0 auto;
   padding: 0 0 208px;
   background: var(--color-white);
@@ -4736,6 +4739,14 @@
     overflow-x: auto;
     overflow-y: hidden;
     padding-right: 4px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .beginner_hashtag_button,
+  .beginner_hashtag {
+    min-width: 0;
+    max-width: 100%;
   }
 
   .beginner_guide_inner {
