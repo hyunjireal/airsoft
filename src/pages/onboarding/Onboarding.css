@@ -43,7 +43,7 @@
   );
   --onboarding-auth-actions-height: calc(
     var(--onboarding-button-height) + var(--onboarding-button-height) +
-      var(--onboarding-button-gap) + 60px + env(safe-area-inset-bottom, 0px)
+      var(--onboarding-button-gap) + 32px + env(safe-area-inset-bottom, 0px)
   );
 }
 
