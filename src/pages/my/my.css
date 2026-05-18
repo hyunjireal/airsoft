@@ -1350,7 +1350,51 @@
   width: 100%;
   padding: 24px;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
+}
+
+.my_schedule_tab_panel {
+  width: 100%;
+  animation-duration: 180ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+  will-change: transform;
+}
+
+.my_schedule_tab_panel_applied {
+  animation-name: my_schedule_slide_from_left;
+}
+
+.my_schedule_tab_panel_confirmed {
+  animation-name: my_schedule_slide_from_right;
+}
+
+@keyframes my_schedule_slide_from_left {
+  from {
+    transform: translate3d(-16px, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes my_schedule_slide_from_right {
+  from {
+    transform: translate3d(16px, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .my_schedule_tab_panel {
+    animation: none;
+    transform: none;
+  }
 }
 
 .my_schedule_match_list {

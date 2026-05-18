@@ -46,7 +46,7 @@ import matchImg02 from '../../asset/images/main_img04.jpg'
 import matchImg03 from '../../asset/images/main_img05.jpg'
 import matchImg04 from '../../asset/images/main_img06.jpg'
 import { primaryAiRecommendedMatch } from '../../data/aiRecommendedMatches'
-import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
+import { getMyMatchGroups, type MyMatchItem } from '../my/myMatchData'
 import './Home.css'
 
 type HomeMatchCard = {
@@ -344,8 +344,8 @@ export function Home() {
     savedProfileBadge === 'badge03' || savedLevel === '숙련자' || savedSkillAlias === '베테랑'
   const homeProfileBadge = isVeteranProfile ? badge03 : symbolBeginner
   const homeProfileTitle = savedProfileTitle || (isVeteranProfile ? '베테랑 숙련자' : '안전제일 뉴비')
-  const homeScheduleCards = getMyMatches()
-    .filter((match) => match.status !== 'past')
+  const homeScheduleCards = getMyMatchGroups()
+    .confirmed
     .slice(0, 4)
     .map(toHomeScheduleCard)
   const homeAiRecommendedMatchTitleLines = primaryAiRecommendedMatch.title.split('\n')
@@ -836,7 +836,7 @@ export function Home() {
             >
               <div className="home_userinfo_match_header">
                 <h2 className="home_userinfo_match_title">내 경기 일정</h2>
-                <Link className="home_more_link" to="/my/schedule" state={{ from: '/home' }} aria-label="내 경기 일정 더보기">
+                <Link className="home_more_link" to="/my/schedule?tab=confirmed" state={{ from: '/home' }} aria-label="내 경기 일정 더보기">
                   <More />
                 </Link>
               </div>

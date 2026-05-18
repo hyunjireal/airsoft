@@ -23,7 +23,7 @@ const tabs: ScheduleTab[] = [
 
 export function MySchedule() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const initialTab = searchParams.get('tab') === 'confirmed' ? 'confirmed' : 'applied'
   const [selectedTab, setSelectedTab] = useState<ScheduleStatus>(initialTab)
   const [scheduleRevision, setScheduleRevision] = useState(0)
@@ -75,7 +75,10 @@ export function MySchedule() {
             className={`my_schedule_tab body_m_16 ${selectedTab === tab.value ? 'is_active' : ''}`}
             type="button"
             key={tab.value}
-            onClick={() => setSelectedTab(tab.value)}
+            onClick={() => {
+              setSelectedTab(tab.value)
+              setSearchParams({ tab: tab.value })
+            }}
           >
             {tab.label}
           </button>
@@ -83,6 +86,10 @@ export function MySchedule() {
       </section>
 
       <section className="my_schedule_list_section" aria-live="polite">
+        <div
+          className={`my_schedule_tab_panel my_schedule_tab_panel_${selectedTab}`}
+          key={selectedTab}
+        >
         {filteredSchedules.length > 0 ? (
           <div className="my_schedule_match_list">
             {filteredSchedules.map((match) => {
@@ -185,6 +192,7 @@ export function MySchedule() {
             <p>매치 페이지에서 새로운 일정을 찾아보세요.</p>
           </article>
         )}
+        </div>
       </section>
     </div>
   )

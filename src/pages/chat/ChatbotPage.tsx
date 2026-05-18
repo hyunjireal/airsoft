@@ -1069,7 +1069,15 @@ export function ChatbotPage() {
   return (
     <div className="chat_page" ref={pageRef}>
       <div className="chat_con">
-        <PageHeader title="AI 챗봇 가이" onBack={goBack} />
+        <PageHeader
+          title={(
+            <span className="chat_header_title">
+              <span className="chat_header_title_main">AI 챗봇</span>
+              <span className="chat_header_title_gai">가이</span>
+            </span>
+          )}
+          onBack={goBack}
+        />
 
         <main className="chat" ref={chatScrollRef}>
           <section className="chat_thread" aria-live="polite">

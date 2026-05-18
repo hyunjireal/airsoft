@@ -63,6 +63,22 @@
   opacity: 0.38;
 }
 
+.chat_header_title {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.chat_header_title_main {
+  font-weight: 500;
+}
+
+.chat_header_title_gai {
+  color: var(--chat-lime);
+  font-weight: 700;
+}
+
 .chat {
   position: relative;
   z-index: 1;
