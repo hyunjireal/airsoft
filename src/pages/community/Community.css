@@ -4017,8 +4017,8 @@
 
 .beginner_write_floating {
   left: auto;
-  right: max(11.5px, calc((100vw - var(--app-max-width)) / 2 + 11.5px));
-  bottom: calc(var(--app-bottom-nav-space) - 4px);
+  right: max(18px, calc((100vw - var(--app-max-width)) / 2 + 18px));
+  bottom: calc(var(--app-bottom-nav-space) - 18px);
   gap: 0;
   width: 60px;
   min-width: 60px;

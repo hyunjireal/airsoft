@@ -1023,6 +1023,32 @@ a {
   background: linear-gradient(180deg, rgba(26, 26, 26, 0) 0%, rgba(26, 26, 26, 0) 40%, rgba(26, 26, 26, 0.72) 76%, rgba(26, 26, 26, 0.98) 100%);
 }
 
+@media (min-width: 1024px) {
+  :root {
+    --app-header-height: 156px;
+    --app-bottom-nav-space: calc(154px + env(safe-area-inset-bottom, 0px) + 16px);
+  }
+
+  .app_header {
+    padding: 22px 18px 44px;
+  }
+
+  .app_header_left,
+  .app_header_right {
+    height: 78px;
+  }
+
+  .app_header_right {
+    flex-basis: 78px;
+    width: 78px;
+  }
+
+  .app_header_gai {
+    width: 68px;
+    height: 52px;
+  }
+}
+
 .modal_backdrop {
   position: fixed;
   inset: 0;
