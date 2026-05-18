@@ -173,14 +173,6 @@ const homeProfileGreetings = [
   '침착하게, 안전하게, 재미있게 즐겨요!',
 ]
 
-function getProfileGreetingSeed(...values: Array<string | null | undefined>) {
-  const seedText = values.filter(Boolean).join('|') || 'airsoft'
-
-  return Array.from(seedText).reduce((seed, character) => {
-    return (seed * 31 + character.charCodeAt(0)) % homeProfileGreetings.length
-  }, 0)
-}
-
 function saveProfileImage(dataUrl: string) {
   try {
     localStorage.setItem(HOME_PROFILE_IMAGE_KEY, dataUrl)
@@ -338,6 +330,11 @@ export function Home() {
     banner: false,
   })
   const [isTournamentVisible, setIsTournamentVisible] = useState(false)
+  const [homeProfileGreeting] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * homeProfileGreetings.length)
+
+    return homeProfileGreetings[randomIndex]
+  })
   const savedProfileBadge = localStorage.getItem('homeProfileBadge')
   const savedProfileTitle = localStorage.getItem('homeProfileTitle')
   const savedLevel = localStorage.getItem('level')
@@ -347,9 +344,6 @@ export function Home() {
     savedProfileBadge === 'badge03' || savedLevel === '숙련자' || savedSkillAlias === '베테랑'
   const homeProfileBadge = isVeteranProfile ? badge03 : symbolBeginner
   const homeProfileTitle = savedProfileTitle || (isVeteranProfile ? '베테랑 숙련자' : '안전제일 뉴비')
-  const homeProfileGreeting = homeProfileGreetings[
-    getProfileGreetingSeed(savedNickname, homeProfileTitle, savedLevel, savedSkillAlias)
-  ]
   const homeScheduleCards = getMyMatches()
     .filter((match) => match.status !== 'past')
     .slice(0, 4)
