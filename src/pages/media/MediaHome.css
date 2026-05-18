@@ -1080,7 +1080,9 @@
   background: transparent;
   color: var(--color-white);
   font-family: var(--font-pretendard);
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: -0.48px;
 }
 
 .creator_list_filters {
