@@ -33,6 +33,7 @@
   --onboarding-dot-size: clamp(8px, 1.3vw, 12px);
   --onboarding-dot-active-width: clamp(32px, 5vw, 50px);
   --onboarding-dot-gap: clamp(10px, 1.8vw, 16px);
+  --onboarding-rebuilt-top-shift: -28px;
   --onboarding-button-height: clamp(50px, 7vw, 72px);
   --onboarding-button-gap: clamp(10px, 2vw, 18px);
   --onboarding-button-font-size: clamp(18px, 2.6vw, 26px);
@@ -183,6 +184,7 @@
   align-items: center;
   gap: var(--onboarding-top-gap);
   width: 100%;
+  transform: translateY(var(--onboarding-rebuilt-top-shift));
 }
 
 .onboarding_rebuilt__logo {
@@ -694,6 +696,7 @@
     --onboarding-top-offset: 72px;
     --onboarding-content-gap: 40px;
     --onboarding-top-gap: 18px;
+    --onboarding-rebuilt-top-shift: -18px;
     --onboarding-single-actions-bottom: 44px;
     --onboarding-auth-actions-bottom: 16px;
   }
