@@ -39,10 +39,10 @@
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: var(--font-pretendard);
-  color: #111111;
-  background: var(--color-white);
+  color: #ffffff;
+  background: #1a1a1a;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -152,6 +152,8 @@
 
 :root[data-theme='light'] {
   color-scheme: light;
+  color: #111111;
+  background: var(--color-white);
 }
 
 :root[data-theme='dark'] {
