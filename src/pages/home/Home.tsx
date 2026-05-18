@@ -46,6 +46,7 @@ import matchImg02 from '../../asset/images/main_img04.jpg'
 import matchImg03 from '../../asset/images/main_img05.jpg'
 import matchImg04 from '../../asset/images/main_img06.jpg'
 import { primaryAiRecommendedMatch } from '../../data/aiRecommendedMatches'
+import { getMyMatches, type MyMatchItem } from '../my/myMatchData'
 import './Home.css'
 
 type HomeMatchCard = {
@@ -72,47 +73,46 @@ const tournamentCards = [
   { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
 ]
 
-const matchCards: HomeMatchCard[] = [
-  {
-    id: 1,
-    dday: '경기 25일 전',
-    notice: '초보자 브리핑과 장비 점검이 함께 진행돼요',
-    place: '경기도 하남시 밀리터리 필드',
-    datetime: '2026.08.08 오후 06:30',
-    img: matchImg01,
-  },
-  {
-    id: 2,
-    dday: '경기 18일 전',
-    notice: '친환경 바이오 BB탄 필수 사용 구역',
-    place: '경기도 파주시 CQB 아레나',
-    datetime: '2026.08.15 오전 10:00',
-    img: matchImg02,
-  },
-  {
-    id: 3,
-    dday: '경기 12일 전',
-    notice: '팀 밸런스 매칭 후 라운드가 배정돼요',
-    place: '서울 강서 실내 필드',
-    datetime: '2026.08.21 오후 02:00',
-    img: matchImg03,
-  },
-  {
-    id: 4,
-    dday: '경기 5일 전',
-    notice: '야간전 참여 전 라이트 규정을 확인해주세요',
-    place: '인천 서구 야외 필드',
-    datetime: '2026.08.28 오후 07:30',
-    img: matchImg04,
-  },
-]
+const homeMatchFallbackImages = [matchImg01, matchImg02, matchImg03, matchImg04]
 
-const sortedMatchCards = [...matchCards].sort((a, b) => {
-  const aDay = Number(a.dday.match(/\d+/)?.[0] ?? 0)
-  const bDay = Number(b.dday.match(/\d+/)?.[0] ?? 0)
+function formatHomeDday(tagLabel: string) {
+  if (tagLabel === 'D-DAY') return '경기 당일'
 
-  return aDay - bDay
-})
+  const daysUntil = tagLabel.match(/^D-(\d+)$/)?.[1]
+  if (daysUntil) return `경기 ${daysUntil}일 전`
+
+  return tagLabel
+}
+
+function formatHomeTime(time: string) {
+  const matchedTime = time.match(/(\d{1,2}):(\d{2})/)
+  if (!matchedTime) return time
+
+  const hour = Number(matchedTime[1])
+  const minute = matchedTime[2]
+  const period = hour < 12 ? '오전' : '오후'
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12
+
+  return `${period} ${String(displayHour).padStart(2, '0')}:${minute}`
+}
+
+function formatHomeDatetime(match: MyMatchItem) {
+  const dateLabel = match.dateValue?.replaceAll('-', '.') ?? match.time.match(/\d{4}\.\d{2}\.\d{2}/)?.[0]
+  const timeLabel = formatHomeTime(match.time)
+
+  return [dateLabel, timeLabel].filter(Boolean).join(' ')
+}
+
+function toHomeScheduleCard(match: MyMatchItem, index: number): HomeMatchCard {
+  return {
+    id: match.id,
+    dday: formatHomeDday(match.tagLabel),
+    notice: match.title,
+    place: `${match.region} · ${match.fieldName}`,
+    datetime: formatHomeDatetime(match),
+    img: match.imageSrc || homeMatchFallbackImages[index % homeMatchFallbackImages.length],
+  }
+}
 
 const buddyItems = [
   {
@@ -350,7 +350,10 @@ export function Home() {
   const homeProfileGreeting = homeProfileGreetings[
     getProfileGreetingSeed(savedNickname, homeProfileTitle, savedLevel, savedSkillAlias)
   ]
-  const homeScheduleCards = sortedMatchCards
+  const homeScheduleCards = getMyMatches()
+    .filter((match) => match.status !== 'past')
+    .slice(0, 4)
+    .map(toHomeScheduleCard)
   const homeAiRecommendedMatchTitleLines = primaryAiRecommendedMatch.title.split('\n')
 
   useEffect(() => {

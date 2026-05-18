@@ -167,6 +167,18 @@ export function Onboarding() {
         >
           <div className="onboarding_rebuilt__content">
             <div className="onboarding_rebuilt__top">
+              <div className="onboarding_rebuilt__dots" aria-label="온보딩 페이지">
+                {orderedOnboardingSlides.map((slide, index) => (
+                  <button
+                    key={slide.id}
+                    className={`onboarding_rebuilt__dot${activeIndex === index ? ' is-active' : ''}`}
+                    type="button"
+                    aria-label={`${index + 1}번째 온보딩 보기`}
+                    aria-current={activeIndex === index ? 'true' : undefined}
+                    tabIndex={-1}
+                  />
+                ))}
+              </div>
               <img className="onboarding_rebuilt__logo" src={logoIcon} alt="GUNIT" />
               <div
                 className={[
@@ -385,18 +397,6 @@ export function Onboarding() {
               </h1>
             </div>
 
-            <div className="onboarding_rebuilt__dots" aria-label="온보딩 페이지">
-              {orderedOnboardingSlides.map((slide, index) => (
-                <button
-                  key={slide.id}
-                  className={`onboarding_rebuilt__dot${activeIndex === index ? ' is-active' : ''}`}
-                  type="button"
-                  aria-label={`${index + 1}번째 온보딩 보기`}
-                  aria-current={activeIndex === index ? 'true' : undefined}
-                  tabIndex={-1}
-                />
-              ))}
-            </div>
           </div>
 
           <div className="onboarding_rebuilt__actions has-auth">
