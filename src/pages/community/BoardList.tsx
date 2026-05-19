@@ -1,8 +1,7 @@
-﻿import { useEffect, useRef, useState, type MouseEvent } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import './Community.css'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
-import bookmarkOnIcon from '../../asset/icons/com_bookmark_on.svg'
+import pinIcon from '../../asset/icons/com_pin.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import eyeIcon from '../../asset/icons/com_eyes.svg'
 import writeIcon from '../../asset/icons/com_write.svg'
@@ -19,7 +18,6 @@ import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
 import type { BoardPost } from '../../types'
-import { CommunityTopbar } from './CommunityTopbar'
 import {
   hasCommunityBookmarkStore,
   readCommunityBookmarks,
@@ -31,6 +29,8 @@ import { getCommunityRelativeTime, readCommunityPosts } from './communityPostSto
 const freeBoardCategories = ['전체', '자유수다', '팀원모집', '경기후기', '장비', '정보', '이벤트']
 const freeBoardTypes: BoardPost['boardType'][] = ['free', 'tip', 'review']
 const INITIAL_VISIBLE_GENERAL_POST_COUNT = 5
+const POST_TOAST_HIDE_DELAY_MS = 2000
+const POST_TOAST_EXIT_DURATION_MS = 220
 
 interface GeneralPostItem {
   id: string
@@ -41,10 +41,19 @@ interface GeneralPostItem {
   views: number
   commentsCount: number
   saved?: boolean
+  isNew?: boolean
 }
 
 type BoardListLocationState = {
   focusPostId?: string
+  newPostId?: string
+  toastMessage?: string
+  tabSlide?: 'from-left' | 'from-right'
+}
+
+type PostToastState = {
+  message: string
+  phase: 'enter' | 'exit'
 }
 
 const hotPosts = [
@@ -348,14 +357,17 @@ export function BoardList() {
   const { boardType = 'free' } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const focusPostId = (location.state as BoardListLocationState | null)?.focusPostId
-  const switchTimerRef = useRef<number | null>(null)
+  const locationState = location.state as BoardListLocationState | null
+  const focusPostId = locationState?.focusPostId
+  const newPostId = locationState?.newPostId
   const introTimerRef = useRef<number | null>(null)
-  const [activeCommunityTab, setActiveCommunityTab] = useState<'beginner' | 'free'>('free')
-  const [switchingBoard, setSwitchingBoard] = useState(false)
+  const [enterDirection] = useState(() => locationState?.tabSlide ?? null)
   const [introComplete, setIntroComplete] = useState(false)
   const [heroCollapsed, setHeroCollapsed] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
+  const [toast, setToast] = useState<PostToastState | null>(() =>
+    locationState?.toastMessage ? { message: locationState.toastMessage, phase: 'enter' } : null,
+  )
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
@@ -385,6 +397,7 @@ export function BoardList() {
       createdAt: getCommunityRelativeTime(post.createdAtISO),
       views: post.views,
       commentsCount: post.commentsCount,
+      isNew: post.isNew || post.id === newPostId,
     }))
   const posts = boardPosts.filter((post) => {
     const matchesBoard = isFreeBoard ? freeBoardTypes.includes(post.boardType) : post.boardType === typedBoard
@@ -446,26 +459,12 @@ export function BoardList() {
     })
   }
 
-  const switchToBeginnerBoard = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault()
-    if (switchingBoard) return
-
-    setActiveCommunityTab('beginner')
-    setSwitchingBoard(true)
-    switchTimerRef.current = window.setTimeout(() => {
-      navigate('/community')
-    }, 200)
-  }
-
   useEffect(() => {
     introTimerRef.current = window.setTimeout(() => {
       setIntroComplete(true)
     }, 760)
 
     return () => {
-      if (switchTimerRef.current !== null) {
-        window.clearTimeout(switchTimerRef.current)
-      }
       if (introTimerRef.current !== null) {
         window.clearTimeout(introTimerRef.current)
       }
@@ -485,6 +484,37 @@ export function BoardList() {
       window.removeEventListener('storage', syncStoredPosts)
     }
   }, [])
+
+  useEffect(() => {
+    if (!toast) return
+
+    if (toast.phase === 'exit') {
+      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS)
+      return () => window.clearTimeout(timerId)
+    }
+
+    const timerId = window.setTimeout(() => {
+      setToast((currentToast) =>
+        currentToast ? { ...currentToast, phase: 'exit' } : currentToast,
+      )
+    }, POST_TOAST_HIDE_DELAY_MS)
+
+    return () => window.clearTimeout(timerId)
+  }, [toast])
+
+  useEffect(() => {
+    if (!locationState?.toastMessage) return
+
+    const nextState = {
+      ...(focusPostId ? { focusPostId } : {}),
+      ...(newPostId ? { newPostId } : {}),
+    }
+
+    navigate(location.pathname, {
+      replace: true,
+      state: Object.keys(nextState).length ? nextState : null,
+    })
+  }, [focusPostId, location.pathname, locationState?.toastMessage, navigate, newPostId])
 
   useEffect(() => {
     if (!focusPostId) return
@@ -531,10 +561,16 @@ export function BoardList() {
     }
   }, [isFreeBoard])
 
+  const toastElement = toast ? (
+    <div className={`post_toast${toast.phase === 'exit' ? ' is_exiting' : ''}`} role="status" aria-live="polite">
+      {toast.message}
+    </div>
+  ) : null
+
   if (isFreeBoard) {
     return (
-      <div className={`general_board_page${switchingBoard ? ' is_switching_content' : ''}${heroCollapsed ? ' is_hero_collapsed' : ''}`}>
-        <CommunityTopbar activeTab={activeCommunityTab} onBeginnerClick={switchToBeginnerBoard} />
+      <div className={`general_board_page${enterDirection === 'from-right' ? ' is_entering_from_right' : ''}${heroCollapsed ? ' is_hero_collapsed' : ''}`}>
+        {toastElement}
 
         <section className="general_board_hero">
           <div className="general_board_hero_copy">
@@ -637,11 +673,12 @@ export function BoardList() {
               onClick={() => openPost(post.id)}
             >
               <span className="general_post_card_top">
-                <span className="general_post_category">{post.category}</span>
-                <img
-                  className="general_bookmark_icon"
-                  src={bookmarkedIds.has(post.id) ? bookmarkOnIcon : bookmarkIcon}
-                  alt=""
+                <span className="general_post_labels">
+                  <span className="general_post_category">{post.category}</span>
+                  {post.isNew || post.id === newPostId ? <span className="community_new_badge">NEW</span> : null}
+                </span>
+                <span
+                  className={`general_bookmark_icon${bookmarkedIds.has(post.id) ? ' is_active' : ''}`}
                   role="button"
                   tabIndex={0}
                   aria-label={`${post.title} 북마크`}
@@ -656,7 +693,9 @@ export function BoardList() {
                     event.stopPropagation()
                     toggleBookmark(post.id)
                   }}
-                />
+                >
+                  <img src={pinIcon} alt="" />
+                </span>
               </span>
               <span className="general_post_title">{post.title}</span>
               <span className="general_post_meta">
@@ -690,7 +729,7 @@ export function BoardList() {
         ) : null}
 
         <button
-          className="community_write_floating beginner_write_floating general_write_fab"
+          className="general_write_fab"
           type="button"
           aria-label="글쓰기"
           onClick={write}
@@ -704,6 +743,7 @@ export function BoardList() {
 
   return (
     <div className="page">
+      {toastElement}
       <h1 className="page_title">{boardNames[typedBoard] ?? '게시판'}</h1>
       <section className="section">
         <input className="input" placeholder="검색" />

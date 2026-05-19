@@ -1,7 +1,6 @@
-﻿import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import bookmarkIcon from "../../asset/icons/com_bookmark.svg";
-import bookmarkOnIcon from "../../asset/icons/com_bookmark_on.svg";
+import pinIcon from "../../asset/icons/com_pin.svg";
 import chatSmallIcon from "../../asset/icons/com_chat02.svg";
 import eyesIcon from "../../asset/icons/com_eyes.svg";
 import aiIcon from "../../asset/icons/com_ai.svg";
@@ -18,7 +17,6 @@ import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_que
 import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
-import { CommunityTopbar } from "./CommunityTopbar";
 import {
   hasCommunityBookmarkStore,
   readCommunityBookmarks,
@@ -50,10 +48,19 @@ type RecentQuestion = {
   views: string;
   comments: string;
   recommended?: boolean;
+  isNew?: boolean;
 };
 
 type BeginnerBoardLocationState = {
   focusPostId?: string;
+  newPostId?: string;
+  toastMessage?: string;
+  tabSlide?: 'from-left' | 'from-right';
+};
+
+type PostToastState = {
+  message: string;
+  phase: "enter" | "exit";
 };
 
 const quickQuestions = [
@@ -71,6 +78,8 @@ const gaiPromptStates = [
 ];
 
 const INITIAL_VISIBLE_QUESTION_COUNT = 5;
+const POST_TOAST_HIDE_DELAY_MS = 2000;
+const POST_TOAST_EXIT_DURATION_MS = 220;
 
 export const recentQuestions: RecentQuestion[] = [
   {
@@ -354,13 +363,16 @@ function chatQuestionUrl(question: string) {
 export function BeginnerBoard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const focusPostId = (location.state as BeginnerBoardLocationState | null)?.focusPostId;
-  const switchTimerRef = useRef<number | null>(null);
+  const locationState = location.state as BeginnerBoardLocationState | null;
+  const focusPostId = locationState?.focusPostId;
+  const newPostId = locationState?.newPostId;
   const introTimerRef = useRef<number | null>(null);
-  const [activeCommunityTab, setActiveCommunityTab] = useState<"beginner" | "free">("beginner");
-  const [switchingBoard, setSwitchingBoard] = useState(false);
+  const [enterDirection] = useState(() => locationState?.tabSlide ?? null);
   const [introComplete, setIntroComplete] = useState(false);
   const [heroCollapsed, setHeroCollapsed] = useState(false);
+  const [toast, setToast] = useState<PostToastState | null>(() =>
+    locationState?.toastMessage ? { message: locationState.toastMessage, phase: "enter" } : null,
+  );
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
   const questionsSectionRef = useRef<HTMLElement | null>(null);
   const collapseTriggerRef = useRef<HTMLSpanElement | null>(null);
@@ -397,10 +409,11 @@ export function BeginnerBoard() {
         time: getCommunityRelativeTime(post.createdAtISO),
         views: String(post.views),
         comments: String(post.commentsCount),
+        isNew: post.isNew || post.id === newPostId,
       }));
 
     return [...storedQuestions, ...recentQuestions];
-  }, [storedPosts]);
+  }, [newPostId, storedPosts]);
 
   const filteredQuestions = useMemo(() => {
     if (activeCategory === "전체") {
@@ -459,26 +472,12 @@ export function BeginnerBoard() {
     });
   };
 
-  const switchToFreeBoard = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    if (switchingBoard) return;
-
-    setActiveCommunityTab("free");
-    setSwitchingBoard(true);
-    switchTimerRef.current = window.setTimeout(() => {
-      navigate("/community/free");
-    }, 200);
-  };
-
   useEffect(() => {
     introTimerRef.current = window.setTimeout(() => {
       setIntroComplete(true);
     }, 760);
 
     return () => {
-      if (switchTimerRef.current !== null) {
-        window.clearTimeout(switchTimerRef.current);
-      }
       if (introTimerRef.current !== null) {
         window.clearTimeout(introTimerRef.current);
       }
@@ -510,6 +509,37 @@ export function BeginnerBoard() {
       window.removeEventListener("storage", syncStoredPosts);
     };
   }, []);
+
+  useEffect(() => {
+    if (!toast) return;
+
+    if (toast.phase === "exit") {
+      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS);
+      return () => window.clearTimeout(timerId);
+    }
+
+    const timerId = window.setTimeout(() => {
+      setToast((currentToast) =>
+        currentToast ? { ...currentToast, phase: "exit" } : currentToast,
+      );
+    }, POST_TOAST_HIDE_DELAY_MS);
+
+    return () => window.clearTimeout(timerId);
+  }, [toast]);
+
+  useEffect(() => {
+    if (!locationState?.toastMessage) return;
+
+    const nextState = {
+      ...(focusPostId ? { focusPostId } : {}),
+      ...(newPostId ? { newPostId } : {}),
+    };
+
+    navigate(location.pathname, {
+      replace: true,
+      state: Object.keys(nextState).length ? nextState : null,
+    });
+  }, [focusPostId, location.pathname, locationState?.toastMessage, navigate, newPostId]);
 
   useEffect(() => {
     if (!focusPostId) return;
@@ -556,9 +586,13 @@ export function BeginnerBoard() {
 
   return (
     <div
-      className={`beginner_board_page${switchingBoard ? " is_switching_content" : ""}${heroCollapsed ? " is_hero_collapsed" : ""}`}
+      className={`beginner_board_page${enterDirection === 'from-left' ? ' is_entering_from_left' : ''}${heroCollapsed ? ' is_hero_collapsed' : ''}`}
     >
-      <CommunityTopbar activeTab={activeCommunityTab} onFreeClick={switchToFreeBoard} />
+      {toast ? (
+        <div className={`post_toast${toast.phase === "exit" ? " is_exiting" : ""}`} role="status" aria-live="polite">
+          {toast.message}
+        </div>
+      ) : null}
 
       <section className="beginner_hero" aria-label="초보 질문방 소개">
         <div className="beginner_hero_content">
@@ -768,10 +802,13 @@ export function BeginnerBoard() {
                         <span className="beginner_question_card_category">
                           {question.category}
                         </span>
+                        {question.isNew || question.id === newPostId ? (
+                          <span className="community_new_badge">NEW</span>
+                        ) : null}
                       </div>
 
                       <button
-                        className="beginner_question_bookmark"
+                        className={`beginner_question_bookmark${bookmarked ? " is_active" : ""}`}
                         type="button"
                         aria-label={`${question.title} 북마크`}
                         aria-pressed={bookmarked}
@@ -781,7 +818,7 @@ export function BeginnerBoard() {
                         }}
                       >
                         <img
-                          src={bookmarked ? bookmarkOnIcon : bookmarkIcon}
+                          src={pinIcon}
                           alt=""
                         />
                       </button>
@@ -831,13 +868,12 @@ export function BeginnerBoard() {
         *초보자만 글쓰기 가능해요
       </div>
       <button
-        className="community_write_floating beginner_write_floating"
+        className="general_write_fab"
         type="button"
         aria-label="글 작성하기"
         onClick={() => navigate("/community/post/create", { state: { boardContext: "beginner" } })}
       >
         <img src={writeIcon} alt="" />
-        <span>글 작성하기</span>
       </button>
     </div>
   );

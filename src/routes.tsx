@@ -155,6 +155,7 @@ export const router = createBrowserRouter([
             ],
           },
           { path: '/community/post/create', element: <PostCreate /> },
+          { path: '/community/post/:id/edit', element: <PostCreate /> },
           { path: '/community/post/:id', element: <PostDetail /> },
           { path: '/community/:boardType', element: <BoardList /> },
           { path: '/media', element: <MediaHome /> },

@@ -22,6 +22,13 @@ export type CommunityStoredComment = {
   replies: CommunityStoredReply[]
 }
 
+export type CommunityStoredImage = {
+  id: string
+  name: string
+  dataUrl: string
+  type: string
+}
+
 export type CommunityStoredPost = {
   id: string
   boardContext: CommunityBoardContext
@@ -36,6 +43,8 @@ export type CommunityStoredPost = {
   likeCount: number
   liked: boolean
   fileName?: string
+  images?: CommunityStoredImage[]
+  isNew?: boolean
   comments: CommunityStoredComment[]
 }
 
@@ -67,6 +76,8 @@ const normalizePost = (post: CommunityStoredPost): CommunityStoredPost => ({
   commentsCount: countComments(Array.isArray(post.comments) ? post.comments : []),
   likeCount: Number.isFinite(Number(post.likeCount)) ? Number(post.likeCount) : 0,
   liked: Boolean(post.liked),
+  images: Array.isArray(post.images) ? post.images : [],
+  isNew: Boolean(post.isNew),
 })
 
 export const getCommunityCurrentUserName = () => {
@@ -136,12 +147,14 @@ export const createCommunityPost = ({
   body,
   category,
   fileName,
+  images,
   title,
 }: {
   boardContext: CommunityBoardContext
   body: string
   category: string
   fileName?: string
+  images?: CommunityStoredImage[]
   title: string
 }) => {
   const { dateTime } = formatNow()
@@ -159,6 +172,8 @@ export const createCommunityPost = ({
     likeCount: 0,
     liked: false,
     fileName,
+    images: images ?? [],
+    isNew: true,
     comments: [],
   }
 
@@ -200,6 +215,34 @@ export const editStoredPost = (postId: string, title: string, body: string) =>
     ...post,
     title,
     body,
+  }))
+
+export const editStoredPostContent = (
+  postId: string,
+  {
+    boardContext,
+    body,
+    category,
+    fileName,
+    images,
+    title,
+  }: {
+    boardContext: CommunityBoardContext
+    body: string
+    category: string
+    fileName?: string
+    images?: CommunityStoredImage[]
+    title: string
+  },
+) =>
+  updateCommunityPost(postId, (post) => ({
+    ...post,
+    boardContext,
+    body,
+    category,
+    fileName,
+    images: images ?? [],
+    title,
   }))
 
 export const deleteStoredPost = (postId: string) => {

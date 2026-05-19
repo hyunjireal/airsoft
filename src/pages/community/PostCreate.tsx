@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
-import { createCommunityPost } from './communityPostStore'
+import {
+  createCommunityPost,
+  editStoredPostContent,
+  findCommunityPost,
+  type CommunityStoredImage,
+} from './communityPostStore'
 import './Community.css'
 
 const beginnerPostCategories = ['법규/규정', '장비', '안전', '게임/전술', '수리/튜닝'] as const
@@ -20,8 +25,25 @@ type PostCreateLocationState = {
 type AttachedImagePreview = {
   id: string
   name: string
-  url: string
+  dataUrl: string
+  type: string
 }
+
+const readFileAsDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result)
+        return
+      }
+
+      reject(new Error('이미지를 불러오지 못했습니다.'))
+    }
+    reader.onerror = () => reject(new Error('이미지를 불러오지 못했습니다.'))
+    reader.readAsDataURL(file)
+  })
 
 const isVeteranUser = () => {
   if (typeof window === 'undefined') {
@@ -53,30 +75,46 @@ const boardOptions: {
 export function PostCreate() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { id: editingPostId } = useParams()
+  const editingPost = findCommunityPost(editingPostId)
+  const isEditMode = Boolean(editingPostId)
   const beginnerBoardDisabled = isVeteranUser()
   const initialBoardContext: PostBoardContext =
-    !beginnerBoardDisabled &&
-    (location.state as PostCreateLocationState | null)?.boardContext === 'beginner'
-      ? 'beginner'
-      : 'general'
+    editingPost?.boardContext ??
+    (!beginnerBoardDisabled &&
+      (location.state as PostCreateLocationState | null)?.boardContext === 'beginner'
+        ? 'beginner'
+        : 'general')
 
   const [boardContext, setBoardContext] = useState<PostBoardContext>(initialBoardContext)
   const [boardMenuOpen, setBoardMenuOpen] = useState(false)
   const postCategories = boardContext === 'beginner' ? beginnerPostCategories : generalPostCategories
-  const [selectedCategory, setSelectedCategory] = useState<PostCategory>(postCategories[0])
-  const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
+  const initialCategory = postCategories.some((category) => category === editingPost?.category)
+    ? (editingPost?.category as PostCategory)
+    : postCategories[0]
+  const [selectedCategory, setSelectedCategory] = useState<PostCategory>(initialCategory)
+  const [title, setTitle] = useState(editingPost?.title ?? '')
+  const [body, setBody] = useState(editingPost?.body ?? '')
   const [titleError, setTitleError] = useState('')
   const [bodyError, setBodyError] = useState('')
-  const [fileName, setFileName] = useState('선택한 파일 없음')
-  const [attachedImages, setAttachedImages] = useState<AttachedImagePreview[]>([])
+  const [fileName, setFileName] = useState(editingPost?.fileName ?? editingPost?.images?.[0]?.name ?? '선택한 파일 없음')
+  const [attachedImages, setAttachedImages] = useState<AttachedImagePreview[]>(() =>
+    (editingPost?.images ?? []).map((image) => ({ ...image })),
+  )
   const fileRef = useRef<HTMLInputElement>(null)
   const boardDropdownRef = useRef<HTMLDivElement>(null)
-  const attachedImagesRef = useRef<AttachedImagePreview[]>([])
   const currentBoard = boardOptions.find((option) => option.value === boardContext) ?? boardOptions[1]
 
   useEffect(() => {
-    setSelectedCategory(postCategories[0])
+    if (isEditMode && !editingPost) {
+      navigate('/community/free', { replace: true })
+    }
+  }, [editingPost, isEditMode, navigate])
+
+  useEffect(() => {
+    setSelectedCategory((currentCategory) =>
+      postCategories.some((category) => category === currentCategory) ? currentCategory : postCategories[0],
+    )
   }, [postCategories])
 
   useEffect(() => {
@@ -107,28 +145,25 @@ export function PostCreate() {
     }
   }, [boardMenuOpen])
 
-  useEffect(() => {
-    attachedImagesRef.current = attachedImages
-  }, [attachedImages])
-
-  useEffect(() => {
-    return () => {
-      attachedImagesRef.current.forEach((image) => URL.revokeObjectURL(image.url))
-    }
-  }, [])
-
-  const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files ?? []).filter((file) => file.type.startsWith('image/'))
 
-    setAttachedImages((currentImages) => {
-      currentImages.forEach((image) => URL.revokeObjectURL(image.url))
-
-      return files.map((file, index) => ({
+    try {
+      const nextImages = await Promise.all(
+        files.map(async (file, index) => ({
         id: `${file.name}-${file.lastModified}-${file.size}-${index}`,
         name: file.name,
-        url: URL.createObjectURL(file),
-      }))
-    })
+        dataUrl: await readFileAsDataUrl(file),
+        type: file.type,
+      })),
+      )
+
+      setAttachedImages(nextImages)
+    } catch {
+      setAttachedImages([])
+      setFileName('이미지를 불러오지 못했습니다')
+      return
+    }
 
     if (files.length === 0) {
       setFileName('선택한 파일 없음')
@@ -141,11 +176,6 @@ export function PostCreate() {
 
   const clearAttachedImage = (imageId: string) => {
     setAttachedImages((currentImages) => {
-      const targetImage = currentImages.find((image) => image.id === imageId)
-      if (targetImage) {
-        URL.revokeObjectURL(targetImage.url)
-      }
-
       const nextImages = currentImages.filter((image) => image.id !== imageId)
 
       if (nextImages.length === 0) {
@@ -185,19 +215,60 @@ export function PostCreate() {
       return
     }
 
+    if (isEditMode && !editingPost) {
+      return
+    }
+
+    const images: CommunityStoredImage[] = attachedImages.map((image) => ({
+      id: image.id,
+      name: image.name,
+      dataUrl: image.dataUrl,
+      type: image.type,
+    }))
+
+    if (isEditMode && editingPost) {
+      const updatedPost = editStoredPostContent(editingPost.id, {
+        boardContext,
+        category: String(selectedCategory),
+        title: trimmedTitle,
+        body: trimmedBody,
+        fileName: attachedImages[0]?.name,
+        images,
+      })
+      const destination = boardContext === 'beginner' ? '/community' : '/community/free'
+
+      navigate(`/community/post/${updatedPost?.id ?? editingPost.id}`, {
+        replace: true,
+        state: {
+          returnTo: destination,
+          toastMessage: '게시글이 수정되었습니다.',
+          returnState: {
+            focusPostId: updatedPost?.id ?? editingPost.id,
+          },
+        },
+      })
+      return
+    }
+
     const createdPost = createCommunityPost({
       boardContext,
       category: String(selectedCategory),
       title: trimmedTitle,
       body: trimmedBody,
       fileName: attachedImages[0]?.name,
+      images,
     })
     const destination = boardContext === 'beginner' ? '/community' : '/community/free'
 
-    navigate(destination, {
+    navigate(`/community/post/${createdPost.id}`, {
       replace: true,
       state: {
-        focusPostId: createdPost.id,
+        returnTo: destination,
+        showToast: true,
+        returnState: {
+          focusPostId: createdPost.id,
+          newPostId: createdPost.id,
+        },
       },
     })
   }
@@ -207,7 +278,7 @@ export function PostCreate() {
       <PageHeader
         className="post_create_header"
         layout="standard"
-        title="글 작성하기"
+        title={isEditMode ? '글 수정하기' : '글 작성하기'}
         onBack={() => navigate(-1)}
       />
 
@@ -350,7 +421,7 @@ export function PostCreate() {
             <div className="post_create_preview_grid" aria-label="첨부한 사진 미리보기">
               {attachedImages.map((image) => (
                 <figure className="post_create_preview_item" key={image.id}>
-                  <img src={image.url} alt={image.name} />
+                  <img src={image.dataUrl} alt={image.name} />
                   <figcaption>{image.name}</figcaption>
                   <button
                     type="button"
@@ -373,7 +444,7 @@ export function PostCreate() {
           className="post_create_submit"
           onClick={submitPost}
         >
-          작성하기
+          {isEditMode ? '수정하기' : '작성하기'}
         </button>
       </section>
     </div>

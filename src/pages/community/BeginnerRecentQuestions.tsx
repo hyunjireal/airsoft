@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import './Community.css'
-import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
+import pinIcon from '../../asset/icons/com_pin.svg'
 import chatSmallIcon from '../../asset/icons/com_chat02.svg'
 import userIcon from '../../asset/icons/com_user.svg'
 
@@ -116,7 +116,7 @@ export function BeginnerRecentQuestions() {
                 aria-label={`${question.title} 저장`}
                 onClick={(event) => event.stopPropagation()}
               >
-                <img src={bookmarkIcon} alt="" />
+                <img src={pinIcon} alt="" />
               </button>
             </article>
           ))}

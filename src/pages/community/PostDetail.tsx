@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import type { Location, NavigateFunction } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowUpIcon from '../../asset/icons/arrow_up.svg'
 import bellIcon from '../../asset/icons/com_bell.svg'
-import bookmarkIcon from '../../asset/icons/com_bookmark.svg'
-import bookmarkOnIcon from '../../asset/icons/com_bookmark_on.svg'
+import pinIcon from '../../asset/icons/com_pin.svg'
 import commentIcon from '../../asset/icons/com_comment.svg'
 import eyeIcon from '../../asset/icons/com_eyes.svg'
 import heartIcon from '../../asset/icons/com_heart.svg'
@@ -23,13 +23,13 @@ import { generalPosts } from './BoardList'
 import { recentQuestions } from './BeginnerBoard'
 import { readCommunityBookmarks, toggleCommunityBookmark } from './communityBookmarkStore'
 import {
+  type CommunityStoredImage,
   addStoredPostComment,
   addStoredPostReply,
   deleteStoredComment,
   deleteStoredPost,
   deleteStoredReply,
   editStoredComment,
-  editStoredPost,
   editStoredReply,
   findCommunityPost,
   getCommunityRelativeTime,
@@ -41,6 +41,13 @@ import './Community.css'
 
 const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 const NICKNAME_KEY = 'nickname'
+const POST_TOAST_HIDE_DELAY_MS = 2000
+const POST_TOAST_EXIT_DURATION_MS = 240
+const POST_TOAST_MESSAGES = {
+  created: '게시글이 등록되었습니다.',
+  updated: '게시글이 수정되었습니다.',
+  deleted: '게시글이 삭제되었습니다.',
+} as const
 
 const getInitialProfileImage = () => {
   if (typeof window === 'undefined') {
@@ -113,16 +120,30 @@ type LinkedPostDetail = {
   likeCount?: number
   liked?: boolean
   comments?: ThreadCommentData[]
+  images?: CommunityStoredImage[]
 }
 
 type PostDetailLocationState = {
   returnTo?: string
+  showToast?: boolean
+  toastMessage?: string
+  returnState?: {
+    focusPostId?: string
+    newPostId?: string
+  }
+}
+
+type PostToastState = {
+  message: string
+  phase: 'enter' | 'exit'
 }
 
 type ReportSheetTarget =
   | { canManage: boolean; kind: 'post' }
   | { canManage: boolean; kind: 'comment'; commentId: string }
   | { canManage: boolean; kind: 'reply'; commentId: string; replyId: string }
+
+type DeleteConfirmTarget = ReportSheetTarget
 
 const initialComments: ThreadCommentData[] = [
   {
@@ -306,6 +327,7 @@ const getLinkedPostDetail = (postId?: string): LinkedPostDetail => {
       likeCount: storedPost.likeCount,
       liked: storedPost.liked,
       comments: storedPost.comments,
+      images: storedPost.images,
     }
   }
 
@@ -427,7 +449,9 @@ function CommentMeta({
 
 function ReplyItem({
   now,
+  editing,
   onLike,
+  onEdit,
   onOpenReportSheet,
   onReply,
   currentUserName,
@@ -437,7 +461,9 @@ function ReplyItem({
   reply,
 }: {
   now: number
+  editing: boolean
   onLike: () => void
+  onEdit: (body: string) => void
   onOpenReportSheet: (target: ReportSheetTarget) => void
   onReply: (author: string) => void
   currentUserName: string
@@ -446,10 +472,30 @@ function ReplyItem({
   likeBurstKey?: number
   reply: ReplyData
 }) {
+  const editInputRef = useRef<HTMLInputElement | null>(null)
+  const [editInput, setEditInput] = useState(reply.body)
   const mentionMatch = reply.body.match(/^(@\S+)\s*(.*)$/)
   const avatarSrc = getThreadAvatar(reply.id, replyAvatarById, profileImage)
   const avatarClassName = `post_detail_avatar ${isUserThreadItem(reply.id) ? 'is_user_profile' : 'is_default_profile'}`
   const isReplyOwner = isUserThreadItem(reply.id) || reply.author === currentUserName
+
+  useEffect(() => {
+    if (!editing) return
+
+    setEditInput(reply.body)
+    const timerId = window.setTimeout(() => {
+      editInputRef.current?.focus()
+    }, 80)
+
+    return () => window.clearTimeout(timerId)
+  }, [editing, reply.body])
+
+  const submitEdit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const body = editInput.trim()
+    if (!body) return
+    onEdit(body)
+  }
 
   return (
     <div className="post_detail_reply" data-reply-id={reply.id}>
@@ -479,16 +525,29 @@ function ReplyItem({
           <img src={verticalDotIcon} alt="" />
         </button>
       </div>
-      <p>
-        {mentionMatch ? (
-          <>
-            <span className="post_detail_reply_mention">{mentionMatch[1]}</span>
-            {mentionMatch[2] ? ` ${mentionMatch[2]}` : ''}
-          </>
-        ) : (
-          reply.body
-        )}
-      </p>
+      {editing ? (
+        <form className="post_detail_inline_edit_form post_detail_reply_edit_form" onSubmit={submitEdit}>
+          <input
+            ref={editInputRef}
+            value={editInput}
+            onChange={(event) => setEditInput(event.target.value)}
+          />
+          <button type="submit" aria-label="?듦? ?섏젙 ?꾨즺">
+            <img src={sendIcon} alt="" />
+          </button>
+        </form>
+      ) : (
+        <p>
+          {mentionMatch ? (
+            <>
+              <span className="post_detail_reply_mention">{mentionMatch[1]}</span>
+              {mentionMatch[2] ? ` ${mentionMatch[2]}` : ''}
+            </>
+          ) : (
+            reply.body
+          )}
+        </p>
+      )}
       <CommentMeta
         count={reply.likeCount}
         dateTime={reply.dateTime}
@@ -519,6 +578,10 @@ function ThreadComment({
   commentLikeBurstKey,
   replyLikeBurstKeys,
   onReplyTo,
+  editingCommentId,
+  editingReplyId,
+  onEditComment,
+  onEditReply,
 }: {
   comment: ThreadCommentData
   expanded: boolean
@@ -535,13 +598,31 @@ function ThreadComment({
   commentLikeBurstKey?: number
   replyLikeBurstKeys: Record<string, number>
   onReplyTo: (author: string) => void
+  editingCommentId?: string
+  editingReplyId?: string
+  onEditComment: (commentId: string, body: string) => void
+  onEditReply: (commentId: string, replyId: string, body: string) => void
 }) {
+  const commentEditInputRef = useRef<HTMLInputElement | null>(null)
   const [replyInput, setReplyInput] = useState('')
+  const [commentEditInput, setCommentEditInput] = useState(comment.body)
   const visibleReplies = expanded ? comment.replies : comment.replies.slice(0, 1)
   const hiddenReplyCount = Math.max(comment.replies.length - visibleReplies.length, 0)
   const avatarSrc = getThreadAvatar(comment.id, commentAvatarById, profileImage)
   const avatarClassName = `post_detail_avatar ${isUserThreadItem(comment.id) ? 'is_user_profile' : 'is_default_profile'}`
   const isCommentOwner = isUserThreadItem(comment.id) || comment.author === currentUserName
+  const editingComment = editingCommentId === comment.id
+
+  useEffect(() => {
+    if (!editingComment) return
+
+    setCommentEditInput(comment.body)
+    const timerId = window.setTimeout(() => {
+      commentEditInputRef.current?.focus()
+    }, 80)
+
+    return () => window.clearTimeout(timerId)
+  }, [comment.body, editingComment])
 
   const submitReply = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -549,6 +630,13 @@ function ThreadComment({
     if (!body) return
     onAddReply(comment.id, body, mentionTarget)
     setReplyInput('')
+  }
+
+  const submitCommentEdit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const body = commentEditInput.trim()
+    if (!body) return
+    onEditComment(comment.id, body)
   }
 
   return (
@@ -594,7 +682,20 @@ function ThreadComment({
         </div>
 
         <div className="post_detail_comment_bottom">
-          <p>{comment.body}</p>
+          {editingComment ? (
+            <form className="post_detail_inline_edit_form post_detail_comment_edit_form" onSubmit={submitCommentEdit}>
+              <input
+                ref={commentEditInputRef}
+                value={commentEditInput}
+                onChange={(event) => setCommentEditInput(event.target.value)}
+              />
+              <button type="submit" aria-label="?볤? ?섏젙 ?꾨즺">
+                <img src={sendIcon} alt="" />
+              </button>
+            </form>
+          ) : (
+            <p>{comment.body}</p>
+          )}
           <CommentMeta
             count={comment.likeCount}
             dateTime={comment.dateTime}
@@ -652,6 +753,8 @@ function ThreadComment({
               commentId={comment.id}
               likeBurstKey={replyLikeBurstKeys[reply.id]}
               reply={reply}
+              editing={editingReplyId === reply.id}
+              onEdit={(body) => onEditReply(comment.id, reply.id, body)}
               onLike={() => onLikeReply(reply.id)}
               onReply={(author) => onReplyTo(author)}
             />
@@ -669,14 +772,21 @@ function ThreadComment({
   )
 }
 
-export function PostDetail() {
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { id: postId } = useParams()
-  const linkedPost = getLinkedPostDetail(postId)
-  const returnTo = (location.state as PostDetailLocationState | null)?.returnTo
+type PostDetailInnerProps = {
+  linkedPost: LinkedPostDetail
+  locationState: PostDetailLocationState | null
+  navigate: NavigateFunction
+  location: Location
+}
+
+function PostDetailInner({ linkedPost, locationState, navigate, location }: PostDetailInnerProps) {
+  const returnTo = locationState?.returnTo
+  const toastRequestMessage = locationState?.toastMessage ?? (locationState?.showToast ? POST_TOAST_MESSAGES.created : '')
+  const [toast, setToast] = useState<PostToastState | null>(null)
   const [comments, setComments] = useState<ThreadCommentData[]>(() => linkedPost.comments ?? initialComments)
   const [commentInput, setCommentInput] = useState('')
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
+  const [editingReplyTarget, setEditingReplyTarget] = useState<{ commentId: string; replyId: string } | null>(null)
   const [expandedReplyIds, setExpandedReplyIds] = useState<string[]>([])
   const [highlightedCommentId, setHighlightedCommentId] = useState<string | null>(null)
   const [highlightedReplyId, setHighlightedReplyId] = useState<string | null>(null)
@@ -691,6 +801,7 @@ export function PostDetail() {
   const [commentLikeBurstKeys, setCommentLikeBurstKeys] = useState<Record<string, number>>({})
   const [replyLikeBurstKeys, setReplyLikeBurstKeys] = useState<Record<string, number>>({})
   const [reportSheetTarget, setReportSheetTarget] = useState<ReportSheetTarget | null>(null)
+  const [deleteConfirmTarget, setDeleteConfirmTarget] = useState<DeleteConfirmTarget | null>(null)
   const [profileImage, setProfileImage] = useState(getInitialProfileImage)
   const [currentUserName, setCurrentUserName] = useState(getCurrentUserName)
 
@@ -700,18 +811,38 @@ export function PostDetail() {
   }, [])
 
   useEffect(() => {
-    setPostBookmarked(readCommunityBookmarks().has(linkedPost.id))
-  }, [linkedPost.id])
+    if (!toastRequestMessage) return
+
+    const timerId = window.setTimeout(() => {
+      setToast({ message: toastRequestMessage, phase: 'enter' })
+      navigate(location.pathname, {
+        replace: true,
+        state: {
+          ...(returnTo ? { returnTo } : {}),
+          ...(locationState?.returnState ? { returnState: locationState.returnState } : {}),
+        },
+      })
+    }, 120)
+
+    return () => window.clearTimeout(timerId)
+  }, [location.pathname, locationState?.returnState, navigate, returnTo, toastRequestMessage])
 
   useEffect(() => {
-    setComments(linkedPost.comments ?? initialComments)
-    setPostLiked(Boolean(linkedPost.liked))
-    setCommentInput('')
-    setExpandedReplyIds([])
-    setMentionTargets({})
-    setCommentLikeBurstKeys({})
-    setReplyLikeBurstKeys({})
-  }, [linkedPost.id])
+    if (!toast) return
+
+    if (toast.phase === 'exit') {
+      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS)
+      return () => window.clearTimeout(timerId)
+    }
+
+    const timerId = window.setTimeout(() => {
+      setToast((currentToast) =>
+        currentToast ? { ...currentToast, phase: 'exit' } : currentToast,
+      )
+    }, POST_TOAST_HIDE_DELAY_MS)
+
+    return () => window.clearTimeout(timerId)
+  }, [toast])
 
   useEffect(() => {
     const syncUserProfile = (event: StorageEvent) => {
@@ -849,7 +980,8 @@ export function PostDetail() {
   const setReplyTarget = (commentId: string, author?: string) => {
     setMentionTargets((targets) => {
       if (!author) {
-        const { [commentId]: _removedTarget, ...nextTargets } = targets
+        const nextTargets = { ...targets }
+        delete nextTargets[commentId]
         return nextTargets
       }
 
@@ -887,11 +1019,54 @@ export function PostDetail() {
 
   const goBack = () => {
     if (returnTo) {
-      navigate(returnTo, { replace: true })
+      navigate(returnTo, { replace: true, state: (location.state as PostDetailLocationState | null)?.returnState })
       return
     }
 
     navigate(-1)
+  }
+
+  const updateCommentBody = (commentId: string, body: string) => {
+    if (linkedPost.isStored) {
+      const updatedPost = editStoredComment(linkedPost.id, commentId, body)
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+      return
+    }
+
+    setComments((items) =>
+      items.map((comment) =>
+        comment.id === commentId
+          ? { ...comment, body }
+          : comment,
+      ),
+    )
+  }
+
+  const updateReplyBody = (commentId: string, replyId: string, body: string) => {
+    if (linkedPost.isStored) {
+      const updatedPost = editStoredReply(linkedPost.id, commentId, replyId, body)
+      if (updatedPost) {
+        setComments(updatedPost.comments)
+      }
+      return
+    }
+
+    setComments((items) =>
+      items.map((comment) =>
+        comment.id === commentId
+          ? {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply.id === replyId
+                  ? { ...reply, body }
+                  : reply,
+              ),
+            }
+          : comment,
+      ),
+    )
   }
 
   const handleManageEdit = () => {
@@ -903,21 +1078,13 @@ export function PostDetail() {
         return
       }
 
-      const nextTitle = window.prompt('게시글 제목을 수정해 주세요.', linkedPost.title)
-      if (nextTitle === null) return
-
-      const nextBody = window.prompt('게시글 내용을 수정해 주세요.', linkedPost.body)
-      if (nextBody === null) return
-      const trimmedTitle = nextTitle.trim()
-      const trimmedBody = nextBody.trim()
-      if (!trimmedTitle || !trimmedBody) return
-
-      const updatedPost = editStoredPost(linkedPost.id, trimmedTitle, trimmedBody)
-      if (updatedPost) {
-        setComments(updatedPost.comments)
-        setNow(Date.now())
-      }
       setReportSheetTarget(null)
+      navigate(`/community/post/${linkedPost.id}/edit`, {
+        state: {
+          returnTo,
+          returnState: (location.state as PostDetailLocationState | null)?.returnState,
+        },
+      })
       return
     }
 
@@ -925,29 +1092,8 @@ export function PostDetail() {
       const targetComment = comments.find((comment) => comment.id === reportSheetTarget.commentId)
       if (!targetComment) return
 
-      const nextBody = window.prompt('댓글 내용을 수정해 주세요.', targetComment.body)
-      if (nextBody === null) return
-      const trimmedBody = nextBody.trim()
-      if (!trimmedBody) return
-
-      if (linkedPost.isStored) {
-        const updatedPost = editStoredComment(
-          linkedPost.id,
-          reportSheetTarget.commentId,
-          trimmedBody,
-        )
-        if (updatedPost) {
-          setComments(updatedPost.comments)
-        }
-      } else {
-        setComments((items) =>
-          items.map((comment) =>
-            comment.id === reportSheetTarget.commentId
-              ? { ...comment, body: trimmedBody }
-              : comment,
-          ),
-        )
-      }
+      setEditingReplyTarget(null)
+      setEditingCommentId(targetComment.id)
       setReportSheetTarget(null)
       return
     }
@@ -956,73 +1102,66 @@ export function PostDetail() {
     const targetReply = targetComment?.replies.find((reply) => reply.id === reportSheetTarget.replyId)
     if (!targetReply) return
 
-    const nextBody = window.prompt('대댓글 내용을 수정해 주세요.', targetReply.body)
-    if (nextBody === null) return
-    const trimmedBody = nextBody.trim()
-    if (!trimmedBody) return
-
-    if (linkedPost.isStored) {
-      const updatedPost = editStoredReply(
-        linkedPost.id,
-        reportSheetTarget.commentId,
-        reportSheetTarget.replyId,
-        trimmedBody,
-      )
-      if (updatedPost) {
-        setComments(updatedPost.comments)
-      }
-    } else {
-      setComments((items) =>
-        items.map((comment) =>
-          comment.id === reportSheetTarget.commentId
-            ? {
-                ...comment,
-                replies: comment.replies.map((reply) =>
-                  reply.id === reportSheetTarget.replyId
-                    ? { ...reply, body: trimmedBody }
-                    : reply,
-                ),
-              }
-            : comment,
-        ),
-      )
-    }
+    setEditingCommentId(null)
+    setEditingReplyTarget({
+      commentId: reportSheetTarget.commentId,
+      replyId: reportSheetTarget.replyId,
+    })
+    setMentionTargets((targets) => {
+      const nextTargets = { ...targets }
+      delete nextTargets[reportSheetTarget.commentId]
+      return nextTargets
+    })
+    expandReplies(reportSheetTarget.commentId)
+    setFocusedReplyInputId(reportSheetTarget.commentId)
     setReportSheetTarget(null)
   }
 
   const handleManageDelete = () => {
     if (!reportSheetTarget?.canManage) return
 
-    const confirmed = window.confirm('정말 삭제할까요?')
-    if (!confirmed) return
+    setDeleteConfirmTarget(reportSheetTarget)
+    setReportSheetTarget(null)
+  }
 
-    if (reportSheetTarget.kind === 'post') {
+  const cancelDeleteConfirm = () => {
+    setDeleteConfirmTarget(null)
+  }
+
+  const confirmManageDelete = () => {
+    const target = deleteConfirmTarget
+    if (!target?.canManage) return
+
+    if (target.kind === 'post') {
       if (linkedPost.isStored) {
         deleteStoredPost(linkedPost.id)
       }
-      setReportSheetTarget(null)
-      navigate(returnTo || (linkedPost.recommended ? '/community' : '/community/free'), { replace: true })
+      setDeleteConfirmTarget(null)
+      navigate(returnTo || (linkedPost.recommended ? '/community' : '/community/free'), {
+        replace: true,
+        state: { toastMessage: POST_TOAST_MESSAGES.deleted },
+      })
       return
     }
 
-    if (reportSheetTarget.kind === 'comment') {
+    if (target.kind === 'comment') {
       if (linkedPost.isStored) {
-        const updatedPost = deleteStoredComment(linkedPost.id, reportSheetTarget.commentId)
+        const updatedPost = deleteStoredComment(linkedPost.id, target.commentId)
         if (updatedPost) {
           setComments(updatedPost.comments)
         }
       } else {
-        setComments((items) => items.filter((comment) => comment.id !== reportSheetTarget.commentId))
+        setComments((items) => items.filter((comment) => comment.id !== target.commentId))
       }
-      setReportSheetTarget(null)
+      setDeleteConfirmTarget(null)
       return
     }
 
     if (linkedPost.isStored) {
       const updatedPost = deleteStoredReply(
         linkedPost.id,
-        reportSheetTarget.commentId,
-        reportSheetTarget.replyId,
+        target.commentId,
+        target.replyId,
       )
       if (updatedPost) {
         setComments(updatedPost.comments)
@@ -1030,16 +1169,16 @@ export function PostDetail() {
     } else {
       setComments((items) =>
         items.map((comment) =>
-          comment.id === reportSheetTarget.commentId
+          comment.id === target.commentId
             ? {
                 ...comment,
-                replies: comment.replies.filter((reply) => reply.id !== reportSheetTarget.replyId),
+                replies: comment.replies.filter((reply) => reply.id !== target.replyId),
               }
             : comment,
         ),
       )
     }
-    setReportSheetTarget(null)
+    setDeleteConfirmTarget(null)
   }
 
   const toggleCommentLike = (commentId: string) => {
@@ -1200,8 +1339,45 @@ export function PostDetail() {
     setHighlightedReplyId(reply.id)
   }
 
+  const editCommentFromInlineInput = (commentId: string, body: string) => {
+    updateCommentBody(commentId, body)
+    setEditingCommentId((currentId) => (currentId === commentId ? null : currentId))
+    setHighlightedCommentId(commentId)
+  }
+
+  const editReplyFromInput = (commentId: string, replyId: string, body: string) => {
+    updateReplyBody(commentId, replyId, body)
+    setEditingReplyTarget((target) =>
+      target?.commentId === commentId && target.replyId === replyId ? null : target,
+    )
+    setMentionTargets((targets) => {
+      const nextTargets = { ...targets }
+      delete nextTargets[commentId]
+      return nextTargets
+    })
+    setHighlightedReplyId(replyId)
+  }
+
+  const deleteConfirmTitle =
+    deleteConfirmTarget?.kind === 'post'
+      ? '게시글을 삭제할까요?'
+      : deleteConfirmTarget?.kind === 'reply'
+        ? '답글을 삭제할까요?'
+        : '댓글을 삭제할까요?'
+  const deleteConfirmDescription =
+    deleteConfirmTarget?.kind === 'post'
+      ? '삭제한 게시글은 되돌릴 수 없어요.'
+      : deleteConfirmTarget?.kind === 'reply'
+        ? '삭제한 답글은 되돌릴 수 없어요.'
+        : '삭제한 댓글은 되돌릴 수 없어요.'
+
   return (
     <div className="post_detail_page">
+      {toast ? (
+        <div className={`post_toast${toast.phase === 'exit' ? ' is_exiting' : ''}`} role="status" aria-live="polite">
+          {toast.message}
+        </div>
+      ) : null}
       <PageHeader
         className="post_detail_header"
         backButtonClassName="post_detail_header_back"
@@ -1211,7 +1387,12 @@ export function PostDetail() {
         onBack={goBack}
         rightSlot={(
           <div className="post_detail_icon_right">
-            <button className="post_detail_icon_button" type="button" aria-label="알림">
+            <button
+              className="post_detail_icon_button post_detail_icon_button--disabled"
+              type="button"
+              aria-label="알림 설정 비활성화"
+              disabled
+            >
               <img src={bellIcon} alt="" />
             </button>
             <button
@@ -1276,6 +1457,15 @@ export function PostDetail() {
           </div>
 
           <p className="post_detail_body post_detail_body--linked">{linkedPost.body}</p>
+          {linkedPost.images?.length ? (
+            <div className="post_detail_image_grid" aria-label="첨부 이미지">
+              {linkedPost.images.map((image) => (
+                <figure className="post_detail_image_item" key={image.id}>
+                  <img src={image.dataUrl} alt={image.name} />
+                </figure>
+              ))}
+            </div>
+          ) : null}
           <p className="post_detail_body">
             이번 주말에 처음으로 서바이벌 게임에 참여하려고 합니다. 안전장비는 준비했는데,
             현장에서 꼭 지켜야 하는 기본 규칙이나 입문자가 실수하기 쉬운 부분이 궁금해요.
@@ -1315,9 +1505,9 @@ export function PostDetail() {
             onClick={togglePostBookmark}
           >
             <span className="post_detail_bookmark_icon" aria-hidden="true">
-              <img src={postBookmarked ? bookmarkOnIcon : bookmarkIcon} alt="" />
+              <img src={pinIcon} alt="" />
             </span>
-            <span>스크랩</span>
+            <span>고정</span>
           </button>
         </div>
       </article>
@@ -1362,6 +1552,10 @@ export function PostDetail() {
               commentLikeBurstKey={commentLikeBurstKeys[comment.id]}
               replyLikeBurstKeys={replyLikeBurstKeys}
               onReplyTo={(author) => setReplyTarget(comment.id, author)}
+              editingCommentId={editingCommentId ?? undefined}
+              editingReplyId={editingReplyTarget?.commentId === comment.id ? editingReplyTarget.replyId : undefined}
+              onEditComment={editCommentFromInlineInput}
+              onEditReply={editReplyFromInput}
             />
           ))}
         </div>
@@ -1399,14 +1593,15 @@ export function PostDetail() {
                     삭제하기
                   </button>
                 </>
-              ) : null}
-              <button
-                className="post_detail_report_sheet_button"
-                type="button"
-                onClick={() => setReportSheetTarget(null)}
-              >
-                차단하기
-              </button>
+              ) : (
+                <button
+                  className="post_detail_report_sheet_button"
+                  type="button"
+                  onClick={() => setReportSheetTarget(null)}
+                >
+                  차단하기
+                </button>
+              )}
             </div>
             <button
               className="post_detail_report_sheet_button post_detail_report_sheet_cancel"
@@ -1418,6 +1613,55 @@ export function PostDetail() {
           </div>
         </div>
       ) : null}
+
+      {deleteConfirmTarget ? (
+        <div className="post_detail_delete_confirm_layer" role="presentation">
+          <button
+            className="post_detail_delete_confirm_backdrop"
+            type="button"
+            aria-label="삭제 확인창 닫기"
+            onClick={cancelDeleteConfirm}
+          />
+          <div
+            className="post_detail_delete_confirm"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="post-detail-delete-confirm-title"
+            aria-describedby="post-detail-delete-confirm-desc"
+          >
+            <div className="post_detail_delete_confirm_text">
+              <h2 id="post-detail-delete-confirm-title">{deleteConfirmTitle}</h2>
+              <p id="post-detail-delete-confirm-desc">{deleteConfirmDescription}</p>
+            </div>
+            <div className="post_detail_delete_confirm_actions">
+              <button type="button" onClick={cancelDeleteConfirm}>
+                취소
+              </button>
+              <button type="button" onClick={confirmManageDelete}>
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
+  )
+}
+
+export function PostDetail() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { id: postId } = useParams()
+  const linkedPost = getLinkedPostDetail(postId)
+  const locationState = location.state as PostDetailLocationState | null
+
+  return (
+    <PostDetailInner
+      key={linkedPost.id}
+      linkedPost={linkedPost}
+      locationState={locationState}
+      navigate={navigate}
+      location={location}
+    />
   )
 }
