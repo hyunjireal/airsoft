@@ -3314,6 +3314,21 @@
   letter-spacing: var(--letter-spacing-tight);
 }
 
+.post_detail_reply_input:has(.post_detail_reply_mention) {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.post_detail_reply_input:has(.post_detail_reply_mention) input {
+  order: 2;
+  flex: 1 1 calc(100% - 38px);
+}
+
+.post_detail_reply_input:has(.post_detail_reply_mention) button {
+  order: 3;
+  margin-left: 0;
+}
+
 .post_detail_reply_close_button {
   display: inline-flex;
   align-items: center;
@@ -3359,8 +3374,13 @@
 
 .post_detail_reply_mention {
   display: inline-flex;
+  align-items: center;
   flex: 0 0 auto;
   width: max-content;
+  min-height: 24px;
+  font-size: var(--font-size-14);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-130);
   color: var(--color-teal);
   white-space: nowrap;
 }
