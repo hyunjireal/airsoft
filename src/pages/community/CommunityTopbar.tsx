@@ -79,7 +79,7 @@ export function CommunityTopbar({
             <img
               key={themeMode}
               className="community_header_theme_icon"
-              src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
+              src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
               alt=""
               aria-hidden="true"
             />

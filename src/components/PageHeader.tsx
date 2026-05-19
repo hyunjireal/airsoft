@@ -166,7 +166,7 @@ export function PageHeader({
               <img
                 key={themeMode}
                 className="page_header__theme_icon"
-                src={themeMode === 'dark' ? lightModeIcon : darkModeIcon}
+                src={themeMode === 'dark' ? darkModeIcon : lightModeIcon}
                 alt=""
                 aria-hidden="true"
               />

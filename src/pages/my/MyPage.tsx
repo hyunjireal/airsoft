@@ -252,7 +252,7 @@ function MyPageHeader({ onBack }: { onBack: () => void }) {
       titleClassName="my_page_title"
       onBack={onBack}
       hideProfile
-      rightLeadSlot={(
+      rightTrailSlot={(
         <button className="my_header_button my_bell_button is_disabled" type="button" aria-label="알림 비활성화" aria-disabled="true">
           <BellIcon />
         </button>
