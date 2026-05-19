@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import userAvatar from '../asset/images/main_user01.png'
 
 type ThemeMode = 'light' | 'dark'
@@ -11,7 +11,10 @@ function getInitialTheme(): ThemeMode {
 }
 
 export function ThemeToggle() {
+  const location = useLocation()
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
+  const currentPath = `${location.pathname}${location.search}${location.hash}`
+  const profileLinkState = location.pathname.startsWith('/my') ? undefined : { from: currentPath }
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode
@@ -57,7 +60,7 @@ export function ThemeToggle() {
         </span>
       </button>
       <span className="global_theme_toggle_divider" aria-hidden="true" />
-      <Link className="global_theme_profile_link" to="/my" aria-label="마이페이지로 이동">
+      <Link className="global_theme_profile_link" to="/my" state={profileLinkState} aria-label="마이페이지로 이동">
         <img className="global_theme_profile_image" src={userAvatar} alt="프로필" />
       </Link>
     </div>

@@ -562,6 +562,16 @@
   text-align: center;
 }
 
+.my_profile_stat.is_disabled {
+  opacity: 0.45;
+}
+
+.my_profile_stat.is_disabled .my_profile_stat_value {
+  color: var(--color-gray02);
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+}
+
 .my_profile_stat_divider {
   flex-shrink: 0;
   width: 1px;
@@ -678,6 +688,10 @@
 :root[data-theme='dark'] .my_profile_status,
 :root[data-theme='dark'] .my_profile_stat_label {
   color: var(--my-dark-text-muted);
+}
+
+:root[data-theme='dark'] .my_profile_stat.is_disabled .my_profile_stat_value {
+  color: var(--my-dark-disabled);
 }
 
 :root[data-theme='dark'] .my_profile_stat_divider {

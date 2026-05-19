@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import type { ElementType, ReactNode } from 'react'
 import arrowLeftIcon from '../asset/icons/arrow_l.svg'
 import darkModeIcon from '../asset/icons/dark.svg'
@@ -73,9 +73,12 @@ export function PageHeader({
   hideRight = false,
   hideProfile = false,
 }: PageHeaderProps) {
+  const location = useLocation()
   const [themeMode, setThemeMode] = useState<ThemeMode>(getInitialTheme)
   const [profileImage, setProfileImage] = useState<string>(() => localStorage.getItem(PROFILE_IMAGE_KEY) || userAvatar)
   const hasTitleContent = !hideLeft && Boolean(leftSlot || onBack || title)
+  const currentPath = `${location.pathname}${location.search}${location.hash}`
+  const profileLinkState = location.pathname.startsWith('/my') ? undefined : { from: currentPath }
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode
@@ -172,7 +175,7 @@ export function PageHeader({
               />
             </button>
             {rightTrailSlot}
-            <Link className="page_header__circle_button page_header__profile_link" to="/my" aria-label="마이페이지로 이동">
+            <Link className="page_header__circle_button page_header__profile_link" to="/my" state={profileLinkState} aria-label="마이페이지로 이동">
               <img className="page_header__profile_image" src={profileImage} alt="" aria-hidden="true" />
             </Link>
           </div>

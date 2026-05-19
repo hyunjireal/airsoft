@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
-import arrowLIcon from '../../asset/icons/arrow_l.svg'
 import refreshIcon from '../../asset/icons/match_new.svg'
 import { matches } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
@@ -12,6 +11,12 @@ const JOINED_MATCH_IDS_KEY = 'joinedMatchIds'
 const CANCELED_MATCH_IDS_KEY = 'airsoft:canceled-match-ids'
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const DEFAULT_APPLIED_MATCH_IDS = ['match-003', 'match-002']
+
+type MatchDetailLocationState = {
+  hideCancelApplication?: boolean
+  returnTo?: string
+  myBackTo?: string
+}
 
 type CreatedMatchDetail = {
   id: string
@@ -91,6 +96,22 @@ function formatMatchDetailDate(match: { date: string; dateValue?: string }) {
   return `${date.getMonth() + 1}/${date.getDate()}`
 }
 
+function getSafeReturnTo(returnTo?: string) {
+  if (returnTo === '/my' || returnTo === '/my/schedule') {
+    return returnTo
+  }
+
+  return '/my/schedule'
+}
+
+function getSafeMyBackTo(myBackTo?: string) {
+  if (myBackTo && myBackTo.startsWith('/') && !myBackTo.startsWith('//') && !myBackTo.startsWith('/my')) {
+    return myBackTo
+  }
+
+  return '/home'
+}
+
 export function MatchDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -98,9 +119,10 @@ export function MatchDetail() {
   const [modalOpen, setModalOpen] = useState(false)
   const [isApplicantsRefreshing, setIsApplicantsRefreshing] = useState(false)
   const [applicantsExpanded, setApplicantsExpanded] = useState(false)
-  const hideCancelApplication = Boolean(
-    (location.state as { hideCancelApplication?: boolean } | null)?.hideCancelApplication,
-  )
+  const locationState = location.state as MatchDetailLocationState | null
+  const hideCancelApplication = Boolean(locationState?.hideCancelApplication)
+  const returnTo = getSafeReturnTo(locationState?.returnTo)
+  const myBackTo = getSafeMyBackTo(locationState?.myBackTo)
   const createdMatch = readCreatedMatches().find((item) => item.id === id)
   const cachedMatch = readMatchSnapshot(id)
   const defaultMatch = matches.find((item) => item.id === id)
@@ -144,16 +166,25 @@ export function MatchDetail() {
     return !canceledIds.includes(id) && (joinedIds.includes(id) || DEFAULT_APPLIED_MATCH_IDS.includes(id))
   }, [id])
 
+  const goBack = () => {
+    if (returnTo === '/my') {
+      navigate('/my', { replace: true, state: { from: myBackTo } })
+      return
+    }
+
+    navigate(returnTo)
+  }
+
   if (!match) {
     return (
       <div className="match_detail_page">
         <PageHeader
-          className="match_detail_top"
-          groupClassName="match_detail_top_title"
-          backIcon={arrowLIcon}
-          backButtonClassName="match_detail_back"
+          className="match_page_header"
+          backButtonClassName="match_page_back_button"
+          layout="standard"
           title="매치 상세"
-          onBack={() => navigate('/my/schedule')}
+          titleClassName="match_page_title"
+          onBack={goBack}
         />
         <div className="match_detail_empty">경기를 찾을 수 없어요.</div>
       </div>
@@ -177,7 +208,7 @@ export function MatchDetail() {
 
   const cancelApplication = () => {
     markMatchCanceled(match.id)
-    navigate('/my/schedule')
+    goBack()
   }
 
   const refreshApplicants = () => {
@@ -192,12 +223,12 @@ export function MatchDetail() {
   return (
     <div className="match_detail_page">
       <PageHeader
-        className="match_detail_top"
-        groupClassName="match_detail_top_title"
-        backIcon={arrowLIcon}
-        backButtonClassName="match_detail_back"
+        className="match_page_header"
+        backButtonClassName="match_page_back_button"
+        layout="standard"
         title="매치 상세"
-        onBack={() => navigate('/my/schedule')}
+        titleClassName="match_page_title"
+        onBack={goBack}
       />
 
       <section className="match_detail_summary" aria-labelledby="match-detail-title">

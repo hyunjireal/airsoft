@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type ChangeEvent, type ReactNode } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import More from '../../components/More'
 import { PageHeader } from '../../components/PageHeader'
@@ -19,6 +19,9 @@ import './my.css'
 
 type MatchTab = 'waiting' | 'confirmed' | 'past'
 type QuickMenuIconKind = 'team' | 'buddy' | 'posts' | 'saved'
+type MyPageLocationState = {
+  from?: string
+}
 
 const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 
@@ -82,9 +85,9 @@ const settingsItems: MenuItem[] = [
 ]
 
 const profileStats = [
-  { label: '활동배지', value: '12개' },
-  { label: '받은 후기', value: '38개' },
-  { label: '작성한 글', value: '56개' },
+  { label: '활동배지', value: '준비중', disabled: true },
+  { label: '받은 후기', value: '준비중', disabled: true },
+  { label: '작성한 글', value: '준비중', disabled: true },
 ]
 
 const moreActionStyle = {
@@ -188,9 +191,9 @@ function ListSection({ title, items }: { title: string; items: MenuItem[] }) {
   )
 }
 
-function ProfileStat({ label, value }: { label: string; value: string }) {
+function ProfileStat({ label, value, disabled }: { label: string; value: string; disabled?: boolean }) {
   return (
-    <div className="my_profile_stat">
+    <div className={`my_profile_stat${disabled ? ' is_disabled' : ''}`} aria-disabled={disabled || undefined}>
       <p className="my_profile_stat_label">{label}</p>
       <p className="my_profile_stat_value">{value}</p>
     </div>
@@ -209,9 +212,17 @@ function getMatchTagClassName(tagLabel: string) {
   return 'my_match_tag'
 }
 
-function MatchCardLink({ match }: { match: MyMatchItem }) {
+function getSafeMyBackTo(from?: string) {
+  if (from && from.startsWith('/') && !from.startsWith('//') && !from.startsWith('/my')) {
+    return from
+  }
+
+  return '/home'
+}
+
+function MatchCardLink({ match, myBackTo }: { match: MyMatchItem; myBackTo: string }) {
   return (
-    <Link className="my_match_card" to={match.to}>
+    <Link className="my_match_card" to={match.to} state={{ returnTo: '/my', myBackTo }}>
       <div className="my_match_thumb" aria-hidden="true">
         <img className="my_match_thumb_image" src={match.imageSrc} alt="" />
       </div>
@@ -359,7 +370,7 @@ function ProfileInfo({
           {profileStats.map((stat, index) => (
             <Fragment key={stat.label}>
               {index > 0 && <div className="my_profile_stat_divider" aria-hidden="true" />}
-              <ProfileStat label={stat.label} value={stat.value} />
+              <ProfileStat label={stat.label} value={stat.value} disabled={stat.disabled} />
             </Fragment>
           ))}
         </div>
@@ -370,6 +381,7 @@ function ProfileInfo({
 
 export function MyPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const cameraInputRef = useRef<HTMLInputElement>(null)
   const albumInputRef = useRef<HTMLInputElement>(null)
   const cameraVideoRef = useRef<HTMLVideoElement>(null)
@@ -396,6 +408,8 @@ export function MyPage() {
     past: myMatchGroups.past,
   }[matchTab]
   const activeMatchTabIndex = matchTabs.findIndex((tab) => tab.key === matchTab)
+  const locationState = location.state as MyPageLocationState | null
+  const myBackTo = getSafeMyBackTo(locationState?.from)
 
   useEffect(() => {
     const refreshSchedules = () => {
@@ -469,12 +483,7 @@ export function MyPage() {
   }, [logoutModalOpen])
 
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
-    navigate('/home')
+    navigate(myBackTo)
   }
 
   const updateProfileImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -642,7 +651,7 @@ export function MyPage() {
 
         <div className="my_match_cards" key={matchTab}>
           {visibleMatches.map((match) => (
-            <MatchCardLink key={match.id} match={match} />
+            <MatchCardLink key={match.id} match={match} myBackTo={myBackTo} />
           ))}
         </div>
       </section>

@@ -149,7 +149,7 @@ export function MySchedule() {
                 <Link
                   className="my_schedule_match_item"
                   to={`/match/detail/${match.matchId}`}
-                  state={{ hideCancelApplication: selectedTab === 'confirmed' }}
+                  state={{ hideCancelApplication: selectedTab === 'confirmed', returnTo: '/my/schedule' }}
                   aria-label={`${match.title} 상세 보기`}
                   key={match.id}
                 >
