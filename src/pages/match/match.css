@@ -5190,11 +5190,13 @@
   font-size: var(--font-size-16);
 }
 
-@media (max-width: 370px) {
+@media (max-width: 430px) {
   .match_guest_create_page .mgc_selector_panel {
     grid-template-columns: 1fr;
   }
+}
 
+@media (max-width: 370px) {
   .match_detail_applicant {
     grid-template-columns: minmax(112px, 1fr) auto;
     gap: 8px 10px;
