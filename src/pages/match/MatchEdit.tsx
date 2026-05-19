@@ -170,7 +170,10 @@ export function MatchEdit() {
 
     writeCreatedMatches(updatedMatches)
     localStorage.setItem(CREATED_MATCH_FOCUS_DATE_KEY, date)
-    navigate('/match')
+    navigate('/my/schedule', {
+      replace: true,
+      state: { toastMessage: '수정이 완료되었습니다.' },
+    })
   }
 
   if (!match) {

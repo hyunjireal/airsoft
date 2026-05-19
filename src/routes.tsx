@@ -34,7 +34,6 @@ import { MatchGuestJoinCreate } from './pages/match/MatchGuestJoinCreate'
 import { MatchGuestWantedCreate } from './pages/match/MatchGuestWantedCreate'
 import { MatchHome } from './pages/match/MatchHome'
 import { MatchJoinHome } from './pages/match/MatchJoinHome'
-import { MatchManageHome } from './pages/match/MatchManageHome'
 import { MatchPresetEdit } from './pages/match/MatchPresetEdit'
 import { MatchPresetFinish } from './pages/match/MatchPresetFinish'
 import { MatchPresetManage } from './pages/match/MatchPresetManage'
@@ -120,7 +119,6 @@ export const router = createBrowserRouter([
           { path: '/match/create/guest-wanted', element: <MatchGuestWantedCreate /> },
           { path: '/match/create/game', element: <MatchCreateGame /> },
           { path: '/match/edit/:id', element: <MatchEdit /> },
-          { path: '/match/manage', element: <MatchManageHome /> },
           { path: '/match/presets', element: <MatchPresetManage /> },
           { path: '/match/presets/create', element: <MatchPresetEdit mode="create" /> },
           { path: '/match/presets/:presetId/edit', element: <MatchPresetEdit /> },

@@ -317,7 +317,7 @@ function readCreatedMatches(): MyMatchItem[] {
           maxParticipants: Number(match.maxParticipants) || 12,
           imageSrc,
           tagLabel: getTagLabel(rawDate),
-          to: '/match/manage',
+          to: '/my/schedule',
           isMine: true,
         }
       })

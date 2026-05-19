@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { PageHeader } from '../../components/PageHeader'
+import { ToastMessage, useToastMessage } from '../../components/ToastMessage'
 import arrowRIcon from '../../asset/icons/arrow_r.svg'
 import matchPencilIcon from '../../asset/icons/preset_pencil.svg'
 import presetTrashIcon from '../../asset/icons/preset_trash.svg'
@@ -14,6 +16,15 @@ type ScheduleTab = {
   value: ScheduleStatus
 }
 
+type DeleteTarget = {
+  matchId: string
+  title: string
+}
+
+type MyScheduleLocationState = {
+  toastMessage?: string
+}
+
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 
 const tabs: ScheduleTab[] = [
@@ -23,10 +34,14 @@ const tabs: ScheduleTab[] = [
 
 export function MySchedule() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams, setSearchParams] = useSearchParams()
+  const locationState = location.state as MyScheduleLocationState | null
   const initialTab = searchParams.get('tab') === 'confirmed' ? 'confirmed' : 'applied'
   const [selectedTab, setSelectedTab] = useState<ScheduleStatus>(initialTab)
   const [scheduleRevision, setScheduleRevision] = useState(0)
+  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
+  const { toast } = useToastMessage(locationState?.toastMessage)
 
   const schedules = useMemo(() => getMyMatches().filter((match) => match.status !== 'past'), [scheduleRevision])
 
@@ -39,14 +54,27 @@ export function MySchedule() {
     navigate('/match')
   }
 
-  const deleteMyMatch = (matchId: string, title: string) => {
-    const shouldDelete = window.confirm(`"${title}" 모집글을 삭제할까요?`)
-    if (!shouldDelete) return
+  useEffect(() => {
+    if (!locationState?.toastMessage) return
+
+    navigate(location.pathname, { replace: true, state: null })
+  }, [location.pathname, locationState?.toastMessage, navigate])
+
+  const requestDeleteMyMatch = (matchId: string, title: string) => {
+    setDeleteTarget({ matchId, title })
+  }
+
+  const cancelDeleteMyMatch = () => {
+    setDeleteTarget(null)
+  }
+
+  const deleteMyMatch = () => {
+    if (!deleteTarget) return
 
     try {
       const savedMatches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
       const nextMatches = Array.isArray(savedMatches)
-        ? savedMatches.filter((match) => !match || typeof match !== 'object' || match.id !== matchId)
+        ? savedMatches.filter((match) => !match || typeof match !== 'object' || match.id !== deleteTarget.matchId)
         : []
 
       localStorage.setItem(CREATED_MATCHES_KEY, JSON.stringify(nextMatches))
@@ -55,10 +83,13 @@ export function MySchedule() {
       localStorage.setItem(CREATED_MATCHES_KEY, '[]')
       setScheduleRevision((value) => value + 1)
     }
+
+    setDeleteTarget(null)
   }
 
   return (
     <div className="my_schedule_page">
+      <ToastMessage toast={toast} className="my_schedule_toast_message" />
       <PageHeader
         className="my_schedule_top"
         groupClassName="my_schedule_tit"
@@ -135,7 +166,7 @@ export function MySchedule() {
                           className="my_schedule_match_mine_action"
                           type="button"
                           aria-label={`${match.title} 삭제`}
-                          onClick={() => deleteMyMatch(match.matchId, match.title)}
+                          onClick={() => requestDeleteMyMatch(match.matchId, match.title)}
                         >
                           <img src={presetTrashIcon} alt="" aria-hidden="true" />
                         </button>
@@ -194,6 +225,17 @@ export function MySchedule() {
         )}
         </div>
       </section>
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="일정을 삭제할까요?"
+        description={deleteTarget ? `"${deleteTarget.title}" 일정은 삭제 후 되돌릴 수 없어요.` : undefined}
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        closeLabel="삭제 확인창 닫기"
+        tone="danger"
+        onCancel={cancelDeleteMyMatch}
+        onConfirm={deleteMyMatch}
+      />
     </div>
   )
 }

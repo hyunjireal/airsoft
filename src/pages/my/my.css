@@ -1306,6 +1306,9 @@
   height: fit-content;
 }
 
+.my_schedule_toast_message {
+  top: 112px;
+}
 
 .my_schedule_back img {
   filter: var(--my-schedule-icon-filter);
@@ -1452,9 +1455,9 @@
 .my_schedule_match_thumb {
   flex-shrink: 0;
   display: block;
-  width: 80px;
-  height: 80px;
-  border-radius: 7px;
+  width: 93px;
+  height: 93px;
+  border-radius: 8px;
   background: #e5e5e5;
   object-fit: cover;
   object-position: center;
@@ -1546,12 +1549,6 @@
 .my_schedule_match_item_mine .my_schedule_match_media {
   flex: 1 1 auto;
   gap: 20px;
-}
-
-.my_schedule_match_item_mine .my_schedule_match_thumb {
-  width: 93px;
-  height: 93px;
-  border-radius: 8px;
 }
 
 .my_schedule_match_item_mine .my_schedule_match_info {

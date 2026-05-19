@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import type { Location, NavigateFunction } from 'react-router-dom'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { PageHeader } from '../../components/PageHeader'
 import { ToastMessage, useToastMessage } from '../../components/ToastMessage'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
@@ -1587,36 +1588,17 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
         </div>
       ) : null}
 
-      {deleteConfirmTarget ? (
-        <div className="post_detail_delete_confirm_layer" role="presentation">
-          <button
-            className="post_detail_delete_confirm_backdrop"
-            type="button"
-            aria-label="삭제 확인창 닫기"
-            onClick={cancelDeleteConfirm}
-          />
-          <div
-            className="post_detail_delete_confirm"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="post-detail-delete-confirm-title"
-            aria-describedby="post-detail-delete-confirm-desc"
-          >
-            <div className="post_detail_delete_confirm_text">
-              <h2 id="post-detail-delete-confirm-title">{deleteConfirmTitle}</h2>
-              <p id="post-detail-delete-confirm-desc">{deleteConfirmDescription}</p>
-            </div>
-            <div className="post_detail_delete_confirm_actions">
-              <button type="button" onClick={cancelDeleteConfirm}>
-                취소
-              </button>
-              <button type="button" onClick={confirmManageDelete}>
-                삭제
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      <ConfirmDialog
+        open={Boolean(deleteConfirmTarget)}
+        title={deleteConfirmTitle}
+        description={deleteConfirmDescription}
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        closeLabel="삭제 확인창 닫기"
+        tone="danger"
+        onCancel={cancelDeleteConfirm}
+        onConfirm={confirmManageDelete}
+      />
     </div>
   )
 }
