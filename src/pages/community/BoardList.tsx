@@ -14,6 +14,7 @@ import hotFieldSix from '../../asset/images/match_list03.jpg'
 import CategoryTag from '../../components/CategoryTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
+import { ToastMessage, useToastMessage } from '../../components/ToastMessage'
 import { boardNames } from '../../data/copy'
 import { boardPosts } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
@@ -29,8 +30,6 @@ import { getCommunityRelativeTime, readCommunityPosts } from './communityPostSto
 const freeBoardCategories = ['전체', '자유수다', '팀원모집', '경기후기', '장비', '정보', '이벤트']
 const freeBoardTypes: BoardPost['boardType'][] = ['free', 'tip', 'review']
 const INITIAL_VISIBLE_GENERAL_POST_COUNT = 5
-const POST_TOAST_HIDE_DELAY_MS = 2000
-const POST_TOAST_EXIT_DURATION_MS = 220
 
 interface GeneralPostItem {
   id: string
@@ -49,11 +48,6 @@ type BoardListLocationState = {
   newPostId?: string
   toastMessage?: string
   tabSlide?: 'from-left' | 'from-right'
-}
-
-type PostToastState = {
-  message: string
-  phase: 'enter' | 'exit'
 }
 
 const hotPosts = [
@@ -365,9 +359,7 @@ export function BoardList() {
   const [introComplete, setIntroComplete] = useState(false)
   const [heroCollapsed, setHeroCollapsed] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-  const [toast, setToast] = useState<PostToastState | null>(() =>
-    locationState?.toastMessage ? { message: locationState.toastMessage, phase: 'enter' } : null,
-  )
+  const { toast } = useToastMessage(locationState?.toastMessage)
   const [selectedCategory, setSelectedCategory] = useState('전체')
   const [selectedSort, setSelectedSort] = useState<'latest' | 'popular'>('latest')
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(() => new Set())
@@ -486,23 +478,6 @@ export function BoardList() {
   }, [])
 
   useEffect(() => {
-    if (!toast) return
-
-    if (toast.phase === 'exit') {
-      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS)
-      return () => window.clearTimeout(timerId)
-    }
-
-    const timerId = window.setTimeout(() => {
-      setToast((currentToast) =>
-        currentToast ? { ...currentToast, phase: 'exit' } : currentToast,
-      )
-    }, POST_TOAST_HIDE_DELAY_MS)
-
-    return () => window.clearTimeout(timerId)
-  }, [toast])
-
-  useEffect(() => {
     if (!locationState?.toastMessage) return
 
     const nextState = {
@@ -561,11 +536,7 @@ export function BoardList() {
     }
   }, [isFreeBoard])
 
-  const toastElement = toast ? (
-    <div className={`post_toast${toast.phase === 'exit' ? ' is_exiting' : ''}`} role="status" aria-live="polite">
-      {toast.message}
-    </div>
-  ) : null
+  const toastElement = <ToastMessage toast={toast} />
 
   if (isFreeBoard) {
     return (

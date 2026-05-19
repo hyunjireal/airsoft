@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import type { Location, NavigateFunction } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
+import { ToastMessage, useToastMessage } from '../../components/ToastMessage'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowUpIcon from '../../asset/icons/arrow_up.svg'
 import bellIcon from '../../asset/icons/com_bell.svg'
@@ -41,8 +42,6 @@ import './Community.css'
 
 const PROFILE_IMAGE_KEY = 'airsoft:home-profile-image'
 const NICKNAME_KEY = 'nickname'
-const POST_TOAST_HIDE_DELAY_MS = 2000
-const POST_TOAST_EXIT_DURATION_MS = 240
 const POST_TOAST_MESSAGES = {
   created: '게시글이 등록되었습니다.',
   updated: '게시글이 수정되었습니다.',
@@ -131,11 +130,6 @@ type PostDetailLocationState = {
     focusPostId?: string
     newPostId?: string
   }
-}
-
-type PostToastState = {
-  message: string
-  phase: 'enter' | 'exit'
 }
 
 type ReportSheetTarget =
@@ -782,7 +776,7 @@ type PostDetailInnerProps = {
 function PostDetailInner({ linkedPost, locationState, navigate, location }: PostDetailInnerProps) {
   const returnTo = locationState?.returnTo
   const toastRequestMessage = locationState?.toastMessage ?? (locationState?.showToast ? POST_TOAST_MESSAGES.created : '')
-  const [toast, setToast] = useState<PostToastState | null>(null)
+  const { toast, showToast } = useToastMessage(undefined, { exitDurationMs: 240 })
   const [comments, setComments] = useState<ThreadCommentData[]>(() => linkedPost.comments ?? initialComments)
   const [commentInput, setCommentInput] = useState('')
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
@@ -814,7 +808,7 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
     if (!toastRequestMessage) return
 
     const timerId = window.setTimeout(() => {
-      setToast({ message: toastRequestMessage, phase: 'enter' })
+      showToast(toastRequestMessage)
       navigate(location.pathname, {
         replace: true,
         state: {
@@ -825,24 +819,7 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
     }, 120)
 
     return () => window.clearTimeout(timerId)
-  }, [location.pathname, locationState?.returnState, navigate, returnTo, toastRequestMessage])
-
-  useEffect(() => {
-    if (!toast) return
-
-    if (toast.phase === 'exit') {
-      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS)
-      return () => window.clearTimeout(timerId)
-    }
-
-    const timerId = window.setTimeout(() => {
-      setToast((currentToast) =>
-        currentToast ? { ...currentToast, phase: 'exit' } : currentToast,
-      )
-    }, POST_TOAST_HIDE_DELAY_MS)
-
-    return () => window.clearTimeout(timerId)
-  }, [toast])
+  }, [location.pathname, locationState?.returnState, navigate, returnTo, showToast, toastRequestMessage])
 
   useEffect(() => {
     const syncUserProfile = (event: StorageEvent) => {
@@ -1373,11 +1350,7 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
 
   return (
     <div className="post_detail_page">
-      {toast ? (
-        <div className={`post_toast${toast.phase === 'exit' ? ' is_exiting' : ''}`} role="status" aria-live="polite">
-          {toast.message}
-        </div>
-      ) : null}
+      <ToastMessage toast={toast} />
       <PageHeader
         className="post_detail_header"
         backButtonClassName="post_detail_header_back"

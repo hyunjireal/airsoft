@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import matchRegisterToastFigure from '../../asset/images/match_char_resistered.png'
+import { ToastMessage, type ToastMessageState } from '../../components/ToastMessage'
 
 const MATCH_REGISTRATION_TOAST_KEY = 'airsoft:match-registration-toast'
 const MATCH_REGISTRATION_TOAST_AUTO_CLOSE_MS = 2600
 const MATCH_REGISTRATION_TOAST_EXIT_MS = 240
+const MATCH_REGISTRATION_TOAST_MESSAGE = '일정이 등록되었습니다.'
 
 type MatchRegistrationToastProps = {
   open: boolean
   onClose: () => void
 }
-
-type MatchRegistrationToastPhase = 'enter' | 'exit'
 
 export function markMatchRegistrationToastPending() {
   if (typeof window === 'undefined') {
@@ -35,7 +34,7 @@ export function consumeMatchRegistrationToastPending() {
 }
 
 export function MatchRegistrationToast({ open, onClose }: MatchRegistrationToastProps) {
-  const [phase, setPhase] = useState<MatchRegistrationToastPhase>('enter')
+  const [toast, setToast] = useState<ToastMessageState | null>(null)
   const autoCloseTimeoutRef = useRef<number | null>(null)
   const exitTimeoutRef = useRef<number | null>(null)
 
@@ -61,7 +60,9 @@ export function MatchRegistrationToast({ open, onClose }: MatchRegistrationToast
       autoCloseTimeoutRef.current = null
     }
 
-    setPhase('exit')
+    setToast((currentToast) =>
+      currentToast ? { ...currentToast, phase: 'exit' } : currentToast,
+    )
     exitTimeoutRef.current = window.setTimeout(() => {
       exitTimeoutRef.current = null
       onClose()
@@ -73,7 +74,7 @@ export function MatchRegistrationToast({ open, onClose }: MatchRegistrationToast
       return
     }
 
-    setPhase('enter')
+    setToast({ message: MATCH_REGISTRATION_TOAST_MESSAGE, phase: 'enter' })
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -97,31 +98,5 @@ export function MatchRegistrationToast({ open, onClose }: MatchRegistrationToast
     return null
   }
 
-  return (
-    <div
-      className={`match_registration_toast${phase === 'exit' ? ' is_exiting' : ' is_entering'}`}
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-    >
-      <div className="match_registration_toast_content">
-        <img
-          className="match_registration_toast_figure"
-          src={matchRegisterToastFigure}
-          alt=""
-          aria-hidden="true"
-        />
-        <div className="match_registration_toast_text">
-          <p className="match_registration_toast_title">일정이 등록되었어요!</p>
-          <p className="match_registration_toast_description">신청 내역을 통해 관리해 보세요</p>
-        </div>
-      </div>
-      <button
-        className="match_registration_toast_close"
-        type="button"
-        aria-label="등록 알림 닫기"
-        onClick={startClose}
-      />
-    </div>
-  )
+  return <ToastMessage toast={toast} className="match_registration_toast_message" />
 }

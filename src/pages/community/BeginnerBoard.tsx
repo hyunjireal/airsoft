@@ -17,6 +17,7 @@ import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_que
 import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
+import { ToastMessage, useToastMessage } from "../../components/ToastMessage";
 import {
   hasCommunityBookmarkStore,
   readCommunityBookmarks,
@@ -58,11 +59,6 @@ type BeginnerBoardLocationState = {
   tabSlide?: 'from-left' | 'from-right';
 };
 
-type PostToastState = {
-  message: string;
-  phase: "enter" | "exit";
-};
-
 const quickQuestions = [
   "초보가 먼저 알아야 할 것",
   "맞으면 어떻게 해?",
@@ -78,8 +74,6 @@ const gaiPromptStates = [
 ];
 
 const INITIAL_VISIBLE_QUESTION_COUNT = 5;
-const POST_TOAST_HIDE_DELAY_MS = 2000;
-const POST_TOAST_EXIT_DURATION_MS = 220;
 
 export const recentQuestions: RecentQuestion[] = [
   {
@@ -370,9 +364,7 @@ export function BeginnerBoard() {
   const [enterDirection] = useState(() => locationState?.tabSlide ?? null);
   const [introComplete, setIntroComplete] = useState(false);
   const [heroCollapsed, setHeroCollapsed] = useState(false);
-  const [toast, setToast] = useState<PostToastState | null>(() =>
-    locationState?.toastMessage ? { message: locationState.toastMessage, phase: "enter" } : null,
-  );
+  const { toast } = useToastMessage(locationState?.toastMessage);
   const [activeCategory, setActiveCategory] = useState<CategoryTab>("전체");
   const questionsSectionRef = useRef<HTMLElement | null>(null);
   const collapseTriggerRef = useRef<HTMLSpanElement | null>(null);
@@ -511,23 +503,6 @@ export function BeginnerBoard() {
   }, []);
 
   useEffect(() => {
-    if (!toast) return;
-
-    if (toast.phase === "exit") {
-      const timerId = window.setTimeout(() => setToast(null), POST_TOAST_EXIT_DURATION_MS);
-      return () => window.clearTimeout(timerId);
-    }
-
-    const timerId = window.setTimeout(() => {
-      setToast((currentToast) =>
-        currentToast ? { ...currentToast, phase: "exit" } : currentToast,
-      );
-    }, POST_TOAST_HIDE_DELAY_MS);
-
-    return () => window.clearTimeout(timerId);
-  }, [toast]);
-
-  useEffect(() => {
     if (!locationState?.toastMessage) return;
 
     const nextState = {
@@ -588,11 +563,7 @@ export function BeginnerBoard() {
     <div
       className={`beginner_board_page${enterDirection === 'from-left' ? ' is_entering_from_left' : ''}${heroCollapsed ? ' is_hero_collapsed' : ''}`}
     >
-      {toast ? (
-        <div className={`post_toast${toast.phase === "exit" ? " is_exiting" : ""}`} role="status" aria-live="polite">
-          {toast.message}
-        </div>
-      ) : null}
+      <ToastMessage toast={toast} />
 
       <section className="beginner_hero" aria-label="초보 질문방 소개">
         <div className="beginner_hero_content">

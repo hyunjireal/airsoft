@@ -36,6 +36,7 @@ export function MatchGuestWantedCreate() {
   const [headcount, setHeadcount] = useState(5)
   const [title, setTitle] = useState('')
   const [body, setBody] = useState('')
+  const [submitAttempted, setSubmitAttempted] = useState(false)
   const [region, setRegion] = useState('서울')
   const [fieldName, setFieldName] = useState(fieldOptions['서울'][0])
   const [matchDate, setMatchDate] = useState(() => resolveMatchDate(searchParams.get('date')))
@@ -65,6 +66,15 @@ export function MatchGuestWantedCreate() {
   }
 
   const createGuestWantedMatch = () => {
+    setSubmitAttempted(true)
+
+    const trimmedTitle = title.trim()
+    const trimmedBody = body.trim()
+
+    if (!trimmedTitle || !trimmedBody) {
+      return
+    }
+
     const savedMatches = (() => {
       try {
         const matches = JSON.parse(localStorage.getItem(CREATED_MATCHES_KEY) ?? '[]')
@@ -76,7 +86,7 @@ export function MatchGuestWantedCreate() {
     const createdMatch = {
       id: `created-guest-wanted-${Date.now()}`,
       type: 'mercenary',
-      title: title.trim() || '용병 모집글',
+      title: trimmedTitle,
       time: matchTime,
       region,
       fieldName,
@@ -84,7 +94,7 @@ export function MatchGuestWantedCreate() {
       currentParticipants: 1,
       maxParticipants: headcount,
       action: '상세 보기',
-      body,
+      body: trimmedBody,
       date: matchDate,
     }
 
@@ -226,8 +236,11 @@ export function MatchGuestWantedCreate() {
               className="mgc_text_field"
               value={title}
               onChange={(event) => setTitle(event.target.value)}
+              required
+              aria-invalid={submitAttempted && !title.trim()}
               placeholder="제목을 입력하세요."
             />
+            {submitAttempted && !title.trim() ? <span className="mgc_form_error">제목을 입력해주세요.</span> : null}
           </label>
           <label className="mgc_form_card mgc_text_card">
             <span className="mgc_form_label body_m_16">본문</span>
@@ -235,8 +248,11 @@ export function MatchGuestWantedCreate() {
               className="mgc_text_field mgc_text_area"
               value={body}
               onChange={(event) => setBody(event.target.value)}
+              required
+              aria-invalid={submitAttempted && !body.trim()}
               placeholder="본문을 입력하세요."
             />
+            {submitAttempted && !body.trim() ? <span className="mgc_form_error">본문을 입력해주세요.</span> : null}
           </label>
         </section>
       </main>
