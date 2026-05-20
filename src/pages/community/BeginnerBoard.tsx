@@ -656,6 +656,7 @@ export function BeginnerBoard() {
               </div>
               <KeywordTag
                 style={{
+                  marginTop: 'auto',
                   padding: '4px 8px',
                   background: '#a7c068',
                   color: '#5f6a19',
@@ -686,11 +687,12 @@ export function BeginnerBoard() {
               onClick={() => navigate("/chat")}
             >
               <div className="beginner_start_text">
-                <h3>자주 묻는 질문</h3>
-                <p>많이 물어보는 질문들을 모아두었어요.</p>
+                <h3>AI 가이에게<br />자주 묻는 질문</h3>
+                <p>가장 많이 물어본 질문을 모아봤어요.</p>
               </div>
               <KeywordTag
                 style={{
+                  marginTop: 'auto',
                   padding: '4px 8px',
                   background: '#86abff',
                   color: '#212e4b',

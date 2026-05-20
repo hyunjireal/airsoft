@@ -1904,6 +1904,11 @@
   -webkit-text-fill-color: var(--tournament-light-btn-txt) !important;
 }
 
+:root[data-theme='dark'] .tournament_fixed_vote {
+  color: var(--tournament-dark-btn-txt) !important;
+  -webkit-text-fill-color: var(--tournament-dark-btn-txt) !important;
+}
+
 .tournament_page.is_light .tournament_lock_notice {
   color: var(--tournament-light-btn-alert);
 }

@@ -14,7 +14,8 @@ export function BottomNav() {
   const shouldActivateMatchTab =
     pathname === '/my/schedule' ||
     pathname === '/tournament' ||
-    pathname === '/tournament/mvp-vote'
+    pathname === '/tournament/mvp-vote' ||
+    pathname === '/tournament/mvp-complete'
   const activeIndex = Math.max(
     items.findIndex((item) => {
       if (shouldActivateMatchTab && item.to === '/match') {

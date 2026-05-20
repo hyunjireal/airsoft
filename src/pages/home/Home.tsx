@@ -958,10 +958,10 @@ export function Home() {
             </KeywordTag>
             <img src={mainQuizImg} alt="" className="bottom_quiz_img" aria-hidden="true" />
           </Link>
-          <button className="right" type="button" onClick={() => navigate('/chat')} aria-label="자주 묻는 질문 보기">
+          <button className="right" type="button" onClick={() => navigate('/chat')} aria-label="AI 가이에게 자주 묻는 질문 보기">
             <div className="right_faq_text">
-              <p className="right_faq_title">자주 묻는<br />질문</p>
-              <p className="right_faq_desc">많이 물어보는<br />질문들을 모아뒀어요.</p>
+              <p className="right_faq_title">AI 가이에게<br />자주 묻는 질문</p>
+              <p className="right_faq_desc">가장 많이 물어본<br />질문을 모아봤어요.</p>
             </div>
             <span className="right_faq_tag">자세히 보기</span>
             <img src={beginnerGuideQuestionImage} alt="" className="right_faq_img" aria-hidden="true" />
