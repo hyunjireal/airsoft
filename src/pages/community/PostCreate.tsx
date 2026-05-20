@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import {
@@ -101,6 +102,7 @@ export function PostCreate() {
   const [attachedImages, setAttachedImages] = useState<AttachedImagePreview[]>(() =>
     (editingPost?.images ?? []).map((image) => ({ ...image })),
   )
+  const [isBackConfirmOpen, setIsBackConfirmOpen] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const boardDropdownRef = useRef<HTMLDivElement>(null)
   const currentBoard = boardOptions.find((option) => option.value === boardContext) ?? boardOptions[1]
@@ -279,7 +281,18 @@ export function PostCreate() {
         className="post_create_header"
         layout="standard"
         title={isEditMode ? '글 수정하기' : '글 작성하기'}
-        onBack={() => navigate(-1)}
+        onBack={() => setIsBackConfirmOpen(true)}
+      />
+      <ConfirmDialog
+        open={isBackConfirmOpen}
+        title="작성을 그만할까요?"
+        description="지금 나가면 작성 중인 내용이 사라져요."
+        cancelLabel="계속 작성"
+        confirmLabel="나가기"
+        closeLabel="나가기 확인창 닫기"
+        tone="danger"
+        onCancel={() => setIsBackConfirmOpen(false)}
+        onConfirm={() => navigate(-1)}
       />
 
       <div className="post_create_body">
