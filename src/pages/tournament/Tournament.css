@@ -859,8 +859,8 @@
 }
 
 .tournament_match_list_top {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
   gap: 10px;
   width: 100%;
 }
@@ -869,7 +869,9 @@
   display: grid;
   justify-items: center;
   gap: 10px;
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   padding: 15px;
   border: 2px solid transparent;
   border-radius: 8px;
@@ -877,6 +879,13 @@
   color: var(--tournament-dark-card-tit);
   text-align: center;
   cursor: pointer;
+  transform: translateZ(0);
+  transition:
+    flex-grow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease;
 }
 
 .tournament_match_info {
@@ -887,19 +896,40 @@
 
 .tournament_match_info strong {
   color: var(--tournament-dark-card-tit);
+  white-space: nowrap;
 }
 
 .tournament_match_teams {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: clamp(3px, 1.4vw, 6px);
+  width: 100%;
   color: var(--tournament-dark-card-txt);
+  font-size: clamp(11px, 3vw, 16px);
+  line-height: 1.2;
 }
 
 .tournament_match_teams span,
 .tournament_match_teams b {
   color: inherit;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.tournament_match_teams span {
+  flex: 1 1 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tournament_match_card.is_selected .tournament_match_teams span {
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.tournament_match_teams b {
+  flex: 0 0 auto;
 }
 
 .tournament_match_card em {
@@ -998,20 +1028,30 @@
 }
 
 .tournament_team_select_cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  align-items: stretch;
   gap: 10px;
   width: 100%;
 }
 
 .tournament_team_select_cards button {
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   padding: 15px;
   border: 2px solid var(--tournament-dark-card-stroke);
   border-radius: 8px;
   background: var(--tournament-dark-card-bg);
   color: var(--tournament-dark-card-subtxt);
   cursor: pointer;
+  transform: translateZ(0);
+  transition:
+    flex-grow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease,
+    color 260ms ease;
 }
 
 .tournament_team_select_cards button.is_selected {
@@ -1115,13 +1155,22 @@
   flex-direction: column;
   align-items: center;
   gap: clamp(6px, 1vw + 2px, 10px);
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
   padding: clamp(12px, 1.5vw + 6px, 15px) clamp(4px, 0.8vw, 8px);
   border: 2px solid transparent;
   border-radius: 8px;
   background: var(--tournament-dark-card-bg);
   text-align: center;
   cursor: pointer;
+  transform: translateZ(0);
+  transition:
+    flex-grow 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 260ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease,
+    transform 260ms ease;
 }
 
 .tournament_match_card.is_selected,
@@ -1129,6 +1178,17 @@
 .tournament_vote_candidate_card.is_selected {
   border-color: var(--tournament-dark-border);
   background: var(--tournament-dark-card-selected-bg);
+}
+
+.tournament_match_card.is_selected,
+.tournament_team_select_cards button.is_selected {
+  flex-grow: 1.32;
+  box-shadow: 0 8px 18px rgba(226, 253, 52, 0.08);
+}
+
+.tournament_vote_candidate_card.is_selected {
+  flex-grow: 1.46;
+  box-shadow: 0 8px 18px rgba(226, 253, 52, 0.08);
 }
 
 .tournament_match_card:disabled,
@@ -2437,6 +2497,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .tournament_match_card,
+  .tournament_team_select_cards button,
+  .tournament_vote_candidate_card {
+    transition: none;
+  }
+
   .tournament_live_rank_section.has_rank_fill .tournament_player_rank_meter b,
   .mvpc_rank_section.has_rank_fill .tournament_player_rank_meter b,
   .mvp_vote_complete_page .mvpc_hero_inner,

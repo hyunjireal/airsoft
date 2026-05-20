@@ -14,6 +14,7 @@ import sendIcon from "../../asset/icons/com_send.svg";
 import writeIcon from "../../asset/icons/com_write.svg";
 import beginnerGuideBookImage from "../../asset/images/com_beginner_card_book.png";
 import beginnerGuideQuestionImage from "../../asset/images/com_beginner_card_question.png";
+import AnimatedList from "../../components/AnimatedList";
 import CategoryTag from "../../components/CategoryTag";
 import KeywordTag from "../../components/KeywordTag";
 import More from "../../components/More";
@@ -452,6 +453,15 @@ export function BeginnerBoard() {
     navigate(chatQuestionUrl(trimmed));
   };
 
+  const openQuestionDetail = (questionId: string) => {
+    navigate(`/community/post/${questionId}`, {
+      state: {
+        returnTo: "/community",
+        transition: "beginner-question-slide",
+      },
+    });
+  };
+
   const toggleBookmark = (questionId: string) => {
     setBookmarkedIds(toggleCommunityBookmark(questionId));
   };
@@ -753,8 +763,14 @@ export function BeginnerBoard() {
               ))}
             </div>
 
-            <div className="beginner_question_card_list">
-              {visibleQuestions.map((question, questionIndex) => {
+            <AnimatedList
+              items={visibleQuestions}
+              className="beginner_question_card_list community_animated_list"
+              displayScrollbar={false}
+              enableArrowNavigation={false}
+              enableLayoutAnimation
+              getItemKey={(question) => question.id}
+              renderItem={(question, questionIndex) => {
                 const bookmarked = bookmarkedIds.has(question.id);
 
                 return (
@@ -768,7 +784,7 @@ export function BeginnerBoard() {
                           ? `${questionIndex * 0.035}s`
                           : `${0.18 + questionIndex * 0.025}s`,
                       }}
-	                    onClick={() => navigate(`/community/post/${question.id}`)}
+	                    onClick={() => openQuestionDetail(question.id)}
 	                  >
                     <div className="beginner_question_card_header">
                       <div className="beginner_question_labels">
@@ -820,8 +836,9 @@ export function BeginnerBoard() {
                     </div>
                   </article>
                 );
-              })}
-            </div>
+              }}
+              showGradients={false}
+            />
 
             {hasMoreQuestions ? (
               <div className="beginner_question_more_wrap">

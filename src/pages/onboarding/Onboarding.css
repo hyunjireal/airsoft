@@ -545,7 +545,8 @@
 }
 
 .onboarding_rebuilt__actions--intro {
-  height: var(--onboarding-single-actions-height);
+  bottom: var(--onboarding-auth-actions-bottom);
+  height: var(--onboarding-auth-actions-height);
 }
 
 .onboarding_rebuilt__button {

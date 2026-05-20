@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
 import { PageHeader } from '../../components/PageHeader'
@@ -135,9 +135,15 @@ const getFirstAvailableMatchId = (votedMatchIds: string[]) => (
   matches.find((match) => !votedMatchIds.includes(match.id))?.id ?? null
 )
 
-const readInitialSelectedMatch = () => (
-  getFirstAvailableMatchId(readVotedMvpMatchIds())
-)
+const readInitialSelectedMatch = (requestedMatchId: string | null, votedMatchIds: string[]) => {
+  const requestedMatch = matches.find((match) => match.id === requestedMatchId)
+
+  if (requestedMatch && !votedMatchIds.includes(requestedMatch.id)) {
+    return requestedMatch.id
+  }
+
+  return getFirstAvailableMatchId(votedMatchIds)
+}
 
 const getMatchStatusLabel = (matchId: string, votedMatchIds: string[]) => (
   votedMatchIds.includes(matchId) ? '투표 완료' : '투표 진행중'
@@ -159,15 +165,19 @@ const getMatchCardClassName = (matchId: string, selectedMatch: string | null, vo
 
 export function MvpVote() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const themeMode = useThemeMode()
   const matchSectionRef = useRef<HTMLElement | null>(null)
-  const [selectedMatch, setSelectedMatch] = useState<string | null>(readInitialSelectedMatch)
+  const requestedMatchId = searchParams.get('match')
+  const [votedMatchIds, setVotedMatchIds] = useState<string[]>(readVotedMvpMatchIds)
+  const [selectedMatch, setSelectedMatch] = useState<string | null>(() => (
+    readInitialSelectedMatch(requestedMatchId, votedMatchIds)
+  ))
   const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
   const [headerSolid, setHeaderSolid] = useState(false)
-  const [votedMatchIds, setVotedMatchIds] = useState<string[]>(readVotedMvpMatchIds)
   const heroImage = themeMode === 'dark' ? tournamentMainDarkImg : tournamentMainLightImg
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)

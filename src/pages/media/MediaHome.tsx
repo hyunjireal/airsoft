@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import KeywordTag from '../../components/KeywordTag'
 import { PageHeader } from '../../components/PageHeader'
+import { ReactBitsMasonry } from '../../components/ReactBitsMasonry'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import rankingCheckIcon from '../../asset/icons/ranking_check.svg'
 import userIcon from '../../asset/icons/creator_profile.svg'
@@ -288,11 +289,16 @@ export function MediaHome() {
           onBack={() => navigate('/home')}
         />
 
-        <div className="media_podium_row" aria-label="크리에이터 단상">
-          {podiumCreators.map((creator) => (
-            <PodiumProfile creator={creator} key={creator.rank} />
-          ))}
-        </div>
+        <ReactBitsMasonry
+          ariaLabel="크리에이터 단상"
+          baseDelayMs={780}
+          className="media_podium_row"
+          getKey={(creator) => creator.rank}
+          items={podiumCreators}
+          revealOrder={[1, 0, 2]}
+          renderItem={(creator) => <PodiumProfile creator={creator} />}
+          staggerMs={140}
+        />
       </section>
 
       <section className="media_ranking_section" aria-labelledby="media-ranking-title">

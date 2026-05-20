@@ -127,6 +127,7 @@ type PostDetailLocationState = {
   returnTo?: string
   showToast?: boolean
   toastMessage?: string
+  transition?: 'beginner-question-slide'
   returnState?: {
     focusPostId?: string
     newPostId?: string
@@ -776,8 +777,10 @@ type PostDetailInnerProps = {
 
 function PostDetailInner({ linkedPost, locationState, navigate, location }: PostDetailInnerProps) {
   const returnTo = locationState?.returnTo
+  const isBeginnerQuestionSlide = locationState?.transition === 'beginner-question-slide'
   const toastRequestMessage = locationState?.toastMessage ?? (locationState?.showToast ? POST_TOAST_MESSAGES.created : '')
   const { toast, showToast } = useToastMessage(undefined, { exitDurationMs: 240 })
+  const [pageTransitionPhase, setPageTransitionPhase] = useState<'enter' | 'exit'>('enter')
   const [comments, setComments] = useState<ThreadCommentData[]>(() => linkedPost.comments ?? initialComments)
   const [commentInput, setCommentInput] = useState('')
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
@@ -815,12 +818,13 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
         state: {
           ...(returnTo ? { returnTo } : {}),
           ...(locationState?.returnState ? { returnState: locationState.returnState } : {}),
+          ...(locationState?.transition ? { transition: locationState.transition } : {}),
         },
       })
     }, 120)
 
     return () => window.clearTimeout(timerId)
-  }, [location.pathname, locationState?.returnState, navigate, returnTo, showToast, toastRequestMessage])
+  }, [location.pathname, locationState?.returnState, locationState?.transition, navigate, returnTo, showToast, toastRequestMessage])
 
   useEffect(() => {
     const syncUserProfile = (event: StorageEvent) => {
@@ -997,6 +1001,18 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
 
   const goBack = () => {
     if (returnTo) {
+      if (isBeginnerQuestionSlide) {
+        const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+        if (!prefersReducedMotion) {
+          setPageTransitionPhase('exit')
+          window.setTimeout(() => {
+            navigate(returnTo, { replace: true, state: (location.state as PostDetailLocationState | null)?.returnState })
+          }, 420)
+          return
+        }
+      }
+
       navigate(returnTo, { replace: true, state: (location.state as PostDetailLocationState | null)?.returnState })
       return
     }
@@ -1350,7 +1366,11 @@ function PostDetailInner({ linkedPost, locationState, navigate, location }: Post
         : '삭제한 댓글은 되돌릴 수 없어요.'
 
   return (
-    <div className="post_detail_page">
+    <div
+      className={`post_detail_page${
+        isBeginnerQuestionSlide ? ` post_detail_page--beginner_slide post_detail_page--${pageTransitionPhase}` : ''
+      }`}
+    >
       <ToastMessage toast={toast} />
       <PageHeader
         className="post_detail_header"

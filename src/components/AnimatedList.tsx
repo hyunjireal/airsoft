@@ -51,6 +51,7 @@ type AnimatedListProps<T> = {
   enableLayoutAnimation?: boolean
   getItemKey?: (item: T, index: number) => string | number
   initialSelectedIndex?: number
+  ariaLabel?: string
 }
 
 export default function AnimatedList<T>({
@@ -65,6 +66,7 @@ export default function AnimatedList<T>({
   enableLayoutAnimation = false,
   getItemKey,
   initialSelectedIndex = -1,
+  ariaLabel,
 }: AnimatedListProps<T>) {
   const listRef = useRef<HTMLDivElement>(null)
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex)
@@ -148,6 +150,7 @@ export default function AnimatedList<T>({
       <div
         ref={listRef}
         className={`scroll-list ${!displayScrollbar ? 'no-scrollbar' : ''}`}
+        aria-label={ariaLabel}
         onScroll={handleScroll}
       >
         <AnimatePresence initial={false}>

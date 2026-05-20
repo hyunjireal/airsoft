@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+﻿import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
@@ -95,6 +95,8 @@ const choiceLabels = ['A', 'B', 'C', 'D']
 
 type QuizSlideDirection = 'forward' | 'backward'
 
+const ERROR_NOTE_EXIT_DURATION_MS = 520
+
 const quizButtonStyle: CSSProperties = {
   width: '100%',
   height: 50,
@@ -150,11 +152,14 @@ export function GuideQuiz() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedChoice, setSelectedChoice] = useState<string | null>(null)
   const [isErrorNoteVisible, setIsErrorNoteVisible] = useState(false)
+  const [renderedErrorNoteChoice, setRenderedErrorNoteChoice] = useState<string | null>(null)
+  const [isErrorNoteExiting, setIsErrorNoteExiting] = useState(false)
   const [score, setScore] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
   const [animatedFinalScore, setAnimatedFinalScore] = useState(0)
   const [animatedCorrectCount, setAnimatedCorrectCount] = useState(0)
   const [slideDirection, setSlideDirection] = useState<QuizSlideDirection>('forward')
+  const errorNoteExitTimerRef = useRef<number | null>(null)
 
   const currentQuiz = quizzes[currentIndex]
   const progress = useMemo(
@@ -162,13 +167,51 @@ export function GuideQuiz() {
     [currentIndex],
   )
 
+  const clearErrorNoteExitTimer = () => {
+    if (errorNoteExitTimerRef.current === null) return
+
+    window.clearTimeout(errorNoteExitTimerRef.current)
+    errorNoteExitTimerRef.current = null
+  }
+
+  const showErrorNote = (choice: string) => {
+    clearErrorNoteExitTimer()
+    setRenderedErrorNoteChoice(choice)
+    setIsErrorNoteExiting(false)
+    setIsErrorNoteVisible(true)
+  }
+
+  const hideErrorNote = () => {
+    if (!renderedErrorNoteChoice) {
+      setIsErrorNoteVisible(false)
+      setIsErrorNoteExiting(false)
+      return
+    }
+
+    clearErrorNoteExitTimer()
+    setIsErrorNoteVisible(false)
+    setIsErrorNoteExiting(true)
+    errorNoteExitTimerRef.current = window.setTimeout(() => {
+      setRenderedErrorNoteChoice(null)
+      setIsErrorNoteExiting(false)
+      errorNoteExitTimerRef.current = null
+    }, ERROR_NOTE_EXIT_DURATION_MS)
+  }
+
+  const resetErrorNote = () => {
+    clearErrorNoteExitTimer()
+    setIsErrorNoteVisible(false)
+    setIsErrorNoteExiting(false)
+    setRenderedErrorNoteChoice(null)
+  }
+
   const goNext = () => {
     if (!selectedChoice) return
 
     const isCorrectAnswer = selectedChoice === currentQuiz.answer
 
     if (!isCorrectAnswer && !isErrorNoteVisible) {
-      setIsErrorNoteVisible(true)
+      showErrorNote(selectedChoice)
       return
     }
 
@@ -185,7 +228,7 @@ export function GuideQuiz() {
 
     setCurrentIndex((index) => index + 1)
     setSelectedChoice(null)
-    setIsErrorNoteVisible(false)
+    resetErrorNote()
   }
 
   const goPrevious = () => {
@@ -194,7 +237,7 @@ export function GuideQuiz() {
     setSlideDirection('backward')
     setCurrentIndex((index) => index - 1)
     setSelectedChoice(null)
-    setIsErrorNoteVisible(false)
+    resetErrorNote()
   }
 
   const restartQuiz = () => {
@@ -202,7 +245,7 @@ export function GuideQuiz() {
     setSlideDirection('backward')
     setCurrentIndex(0)
     setSelectedChoice(null)
-    setIsErrorNoteVisible(false)
+    resetErrorNote()
     setScore(0)
     setIsComplete(false)
   }
@@ -212,10 +255,18 @@ export function GuideQuiz() {
     setSlideDirection('forward')
     setCurrentIndex(quizzes.length - 1)
     setSelectedChoice(null)
-    setIsErrorNoteVisible(false)
+    resetErrorNote()
     setScore(Math.round(quizzes.length * 0.3))
     setIsComplete(true)
   }
+
+  useEffect(() => {
+    return () => {
+      if (errorNoteExitTimerRef.current !== null) {
+        window.clearTimeout(errorNoteExitTimerRef.current)
+      }
+    }
+  }, [])
 
   const finalScore = Math.round((score / quizzes.length) * 100)
   const animatedCorrectRate = Math.round((animatedCorrectCount / quizzes.length) * 100)
@@ -294,10 +345,9 @@ export function GuideQuiz() {
               onBack={() => navigate('/home')}
               variant="overlay"
             />
-            <p>
-              안전과 기본 룰을 가볍게 익히고,
-              <br />
-              첫 게임을 더 편하게 시작해보세요.
+            <p className="guide_quiz_start_description">
+              <span>안전과 기본 룰을 가볍게 익히고,</span>
+              <span>첫 게임을 더 편하게 시작해보세요.</span>
             </p>
           </section>
         </main>
@@ -476,7 +526,9 @@ export function GuideQuiz() {
           <div className="guide_quiz_answer_list">
             {currentQuiz.choices.map((choice, index) => {
               const isSelected = selectedChoice === choice
-              const isWrong = isSelected && choice !== currentQuiz.answer
+              const isErrorNoteChoice = renderedErrorNoteChoice === choice
+              const shouldRenderErrorNote = isErrorNoteChoice && (isErrorNoteVisible || isErrorNoteExiting)
+              const isWrong = (isSelected && choice !== currentQuiz.answer) || isErrorNoteChoice
               const isCorrect = isSelected && choice === currentQuiz.answer
 
               return (
@@ -486,13 +538,17 @@ export function GuideQuiz() {
                     isSelected ? 'is_selected' : '',
                     isCorrect ? 'is_correct' : '',
                     isWrong ? 'is_wrong' : '',
-                    isWrong && isErrorNoteVisible ? 'has_error_note' : '',
+                    shouldRenderErrorNote ? 'has_error_note' : '',
+                    isErrorNoteChoice && isErrorNoteExiting ? 'is_error_note_exiting' : '',
                   ].filter(Boolean).join(' ')}
                   type="button"
                   key={choice}
                   onClick={() => {
+                    if (isErrorNoteChoice && isErrorNoteVisible) return
+                    if (renderedErrorNoteChoice && choice !== renderedErrorNoteChoice) {
+                      hideErrorNote()
+                    }
                     setSelectedChoice(choice)
-                    setIsErrorNoteVisible(false)
                   }}
                 >
                   <span className="guide_quiz_answer_label">{choiceLabels[index]}</span>
@@ -509,8 +565,10 @@ export function GuideQuiz() {
                       <path d="M8 12.2L10.7 14.9L16.2 9.4" />
                     </svg>
                   ) : null}
-                  {isWrong && isErrorNoteVisible ? (
-                    <span className="guide_quiz_error_note">
+                  {shouldRenderErrorNote ? (
+                    <span
+                      className={`guide_quiz_error_note${isErrorNoteExiting ? ' is_exiting' : ''}`}
+                    >
                       <img src={quizErrorIcon} alt="" aria-hidden="true" />
                       <span>
                         정답은 ‘{currentQuiz.answer}’이에요.
@@ -548,3 +606,5 @@ export function GuideQuiz() {
     </div>
   )
 }
+
+

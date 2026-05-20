@@ -50,6 +50,15 @@ const recentQuestions = [
 export function BeginnerRecentQuestions() {
   const navigate = useNavigate()
 
+  const openQuestionDetail = (questionId: string) => {
+    navigate(`/community/post/${questionId}`, {
+      state: {
+        returnTo: '/community',
+        transition: 'beginner-question-slide',
+      },
+    })
+  }
+
   return (
     <div className="beginner_recent_page">
       <div className="beginner_status_bar" aria-hidden="true">
@@ -86,7 +95,7 @@ export function BeginnerRecentQuestions() {
 	            <article
 	              className="beginner_question_card beginner_recent_question_card"
 	              key={question.title}
-	              onClick={() => navigate(`/community/post/${question.id}`)}
+	              onClick={() => openQuestionDetail(question.id)}
 	            >
               <div className="beginner_question_body">
                 <div className="beginner_question_labels">

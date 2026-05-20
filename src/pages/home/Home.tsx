@@ -76,12 +76,14 @@ const visibleTeamCards = teamCards
 const mvpMatches = [
   {
     id: 1,
+    voteMatchId: 'quarter-3',
     round: '8강 3경기',
     team1: { name: '바주카', icon: mainTournament01 },
     team2: { name: '블랙워터', icon: mainTournament02 },
   },
   {
     id: 2,
+    voteMatchId: 'quarter-4',
     round: '8강 4경기',
     team1: { name: '스모크', icon: mainTournament03 },
     team2: { name: '델타포스', icon: mainTournament04 },
@@ -347,6 +349,7 @@ export function Home() {
   const [isTournamentVisible, setIsTournamentVisible] = useState(false)
   const [mvpActiveIndex, setMvpActiveIndex] = useState(0)
   const mvpDragStartXRef = useRef(0)
+  const mvpDragDistanceRef = useRef(0)
   const isMvpDraggingRef = useRef(false)
   const [homeProfileGreeting] = useState(() => {
     const randomIndex = Math.floor(Math.random() * homeProfileGreetings.length)
@@ -901,9 +904,7 @@ export function Home() {
                   <span className="buddy_lime_text">함께할 버디</span>를 연결해드려요
                 </p>
                 <p className="buddy_info_desc">
-                  어색해도 겁내지 마세요!{' '}
-                  <br className="buddy_desktop_hidden_break" />
-                  경험자가 준비와 진행을 도와줘요
+                  초보 케어 · 멘토링 매칭 · 함께 플레이
                 </p>
               </div>
             </div>
@@ -1056,8 +1057,16 @@ export function Home() {
             style={{ '--mvp-idx': mvpActiveIndex } as CSSProperties}
             onPointerDown={(e) => {
               mvpDragStartXRef.current = e.clientX
+              mvpDragDistanceRef.current = 0
               isMvpDraggingRef.current = true
               e.currentTarget.setPointerCapture(e.pointerId)
+            }}
+            onPointerMove={(e) => {
+              if (!isMvpDraggingRef.current) return
+              mvpDragDistanceRef.current = Math.max(
+                mvpDragDistanceRef.current,
+                Math.abs(e.clientX - mvpDragStartXRef.current),
+              )
             }}
             onPointerUp={(e) => {
               if (!isMvpDraggingRef.current) return
@@ -1090,6 +1099,17 @@ export function Home() {
                     autoPlayInterval={7200}
                     autoPlayDelay={isActive ? 400 : index * 900}
                     aria-hidden={!isActive}
+                    role="button"
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => {
+                      if (mvpDragDistanceRef.current > 8) return
+                      navigate(`/tournament/mvp-vote?match=${match.voteMatchId}`)
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key !== 'Enter' && e.key !== ' ') return
+                      e.preventDefault()
+                      navigate(`/tournament/mvp-vote?match=${match.voteMatchId}`)
+                    }}
                   >
                     <span className="home_mvp_card_round">{match.round}</span>
                     <div className="home_mvp_card_teams">
@@ -1150,8 +1170,9 @@ export function Home() {
                       <LoginButton
                         variant="apply"
                         className="home_mvp_vote_button"
-                        onClick={() => {
-                          navigate('/tournament/mvp-vote')
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/tournament/mvp-vote?match=${match.voteMatchId}`)
                         }}
                       >
                         <span>투표하기</span>

@@ -11,6 +11,7 @@ import hotFieldThree from '../../asset/images/com_field03.png'
 import hotFieldFour from '../../asset/images/match_list01.jpg'
 import hotFieldFive from '../../asset/images/match_list02.jpg'
 import hotFieldSix from '../../asset/images/match_list03.jpg'
+import AnimatedList from '../../components/AnimatedList'
 import CategoryTag from '../../components/CategoryTag'
 import MainTag from '../../components/MainTag'
 import More from '../../components/More'
@@ -625,12 +626,14 @@ export function BoardList() {
           </div>
         </section>
 
-        <section
+        <AnimatedList
+          items={visiblePosts}
           className="general_post_list"
-          key={`${selectedCategory}-${selectedSort}-${isExpanded ? 'expanded' : 'collapsed'}`}
-          aria-label="일반 게시글 목록"
-        >
-          {visiblePosts.map((post, postIndex) => (
+          displayScrollbar={false}
+          enableArrowNavigation={false}
+          enableLayoutAnimation
+          getItemKey={(post) => post.id}
+          renderItem={(post, postIndex) => (
             <button
               className="general_post_card"
               key={post.id}
@@ -685,8 +688,10 @@ export function BoardList() {
                 </span>
               </span>
             </button>
-          ))}
-        </section>
+          )}
+          showGradients={false}
+          ariaLabel="일반 게시글 목록"
+        />
 
         {hasMorePosts ? (
           <div className="general_post_more_wrap">
