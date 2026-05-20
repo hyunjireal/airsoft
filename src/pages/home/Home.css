@@ -2124,17 +2124,18 @@
    ⑦ MVP 투표 섹션
    ============================================================ */
 .home_mvp_vote {
-  --home-mvp-text: var(--buddy-light-text, #171914);
-  --home-mvp-muted: var(--buddy-light-muted, #6f7466);
-  --home-mvp-line: var(--buddy-light-line, #d8d9d1);
-  --home-mvp-card-bg: var(--buddy-light-white, #ffffff);
-  --home-mvp-card-border: var(--buddy-light-line, #d8d9d1);
-  --home-mvp-card-shadow: 0 8px 24px rgba(23, 25, 20, 0.08);
-  --home-mvp-accent: var(--buddy-light-olive, #676b5d);
-  --home-mvp-accent-soft: rgba(103, 107, 93, 0.1);
-  --home-mvp-button-bg: var(--buddy-light-olive, #676b5d);
-  --home-mvp-button-text: var(--buddy-light-white, #ffffff);
-  --home-mvp-vs-clash-opacity: 0.44;
+  --home-mvp-text: var(--color-black);
+  --home-mvp-muted: #9a9d95;
+  --home-mvp-line: rgba(226, 253, 52, 0.34);
+  --home-mvp-card-bg: #101318;
+  --home-mvp-card-border: rgba(255, 255, 255, 0.1);
+  --home-mvp-card-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), 0 0 22px rgba(226, 253, 52, 0.1);
+  --home-mvp-card-text: var(--color-white);
+  --home-mvp-accent: var(--color-lime);
+  --home-mvp-accent-soft: rgba(226, 253, 52, 0.12);
+  --home-mvp-button-bg: rgba(6, 9, 12, 0.58);
+  --home-mvp-button-text: var(--color-lime);
+  --home-mvp-vs-clash-opacity: 0.88;
   width: 100%;
   padding: 34px 0 56px;
   background: transparent;
@@ -2149,7 +2150,7 @@
 
 .home_mvp_vote_header {
   padding: 0 20px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 @media (min-width: 1024px) {
@@ -2159,7 +2160,7 @@
 }
 
 .home_mvp_vote_title {
-  margin: 0;
+  margin: 0 0 10px;
   display: flex;
   justify-content: center;
   text-align: center;
@@ -2169,6 +2170,12 @@
   color: var(--home-mvp-text);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-0);
+}
+
+.home_mvp_vote_subtitle {
+  margin: 0;
+  color: var(--home-mvp-muted);
+  text-align: center;
 }
 
 .home_mvp_vote_desc {
@@ -2240,7 +2247,7 @@
   border-radius: 15px;
   background: var(--home-mvp-card-bg);
   border: 1px solid var(--home-mvp-card-border);
-  padding: 22px 18px 20px;
+  padding: 22px 18px 18px;
   box-shadow: var(--home-mvp-card-shadow);
   position: relative;
   z-index: 1;
@@ -2252,6 +2259,18 @@
     transform 0.46s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.46s ease,
     filter 0.46s ease;
+}
+
+.home_mvp_card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(226, 253, 52, 0.08), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0));
+  pointer-events: none;
 }
 
 .home_mvp_card.glare-hover {
@@ -2273,16 +2292,47 @@
   transform: translateZ(0) scale(1) translateY(0);
   opacity: 1;
   filter: none;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.38);
+}
+
+.home_mvp_card_edge_glow {
+  position: absolute;
+  left: -1px;
+  top: 11%;
+  z-index: 2;
+  width: 2px;
+  height: 19%;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(226, 253, 52, 0),
+    rgba(226, 253, 52, 0.62) 42%,
+    rgba(246, 255, 191, 0.82) 50%,
+    rgba(226, 253, 52, 0.62) 58%,
+    rgba(226, 253, 52, 0)
+  );
+  box-shadow:
+    0 0 10px rgba(226, 253, 52, 0.38),
+    0 0 22px rgba(226, 253, 52, 0.2);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.home_mvp_card.is_active .home_mvp_card_edge_glow {
+  opacity: 1;
 }
 
 .home_mvp_card_round {
+  position: relative;
+  z-index: 1;
   display: inline-block;
   font-size: 12px;
   font-weight: 700;
   color: var(--home-mvp-accent);
   background: var(--home-mvp-accent-soft);
-  border: 1px solid var(--home-mvp-line);
-  border-radius: 7px;
+  border: 1px solid rgba(226, 253, 52, 0.42);
+  border-radius: 9px;
   padding: 4px 10px;
   margin-bottom: 6px;
   margin-left: 8px;
@@ -2291,11 +2341,12 @@
 
 .home_mvp_card_teams {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   isolation: isolate;
 }
 
@@ -2321,7 +2372,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 800;
-  color: var(--home-mvp-text);
+  color: var(--home-mvp-card-text);
   text-align: center;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -2349,8 +2400,8 @@
   left: 50%;
   top: 50%;
   z-index: 0;
-  width: 72px;
-  height: 84px;
+  width: 82px;
+  height: 132px;
   opacity: var(--home-mvp-vs-clash-opacity);
   mix-blend-mode: screen;
   transform: translate(-50%, -50%);
@@ -2367,6 +2418,8 @@
 }
 
 .home_mvp_card_bottom {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2376,10 +2429,11 @@
 .home_mvp_vote_button {
   width: 100%;
   background: var(--home-mvp-button-bg) !important;
-  border-color: var(--home-mvp-button-bg) !important;
+  border: 1px solid var(--color-lime) !important;
   color: var(--home-mvp-button-text) !important;
   -webkit-text-fill-color: var(--home-mvp-button-text) !important;
   font-weight: 700 !important;
+  box-shadow: 0 0 12px rgba(226, 253, 52, 0.12);
 }
 
 .home_mvp_vote_button .app_action_button__label {
@@ -3024,13 +3078,14 @@
 :root[data-theme='dark'] .home_mvp_vote {
   --home-mvp-text: var(--color-white);
   --home-mvp-muted: var(--color-gray03);
-  --home-mvp-line: rgba(255, 255, 255, 0.1);
-  --home-mvp-card-bg: #383838;
+  --home-mvp-line: rgba(226, 253, 52, 0.34);
+  --home-mvp-card-bg: #101318;
   --home-mvp-card-border: rgba(255, 255, 255, 0.1);
-  --home-mvp-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  --home-mvp-card-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), 0 0 22px rgba(226, 253, 52, 0.1);
+  --home-mvp-card-text: var(--color-white);
   --home-mvp-accent: var(--color-lime);
   --home-mvp-accent-soft: rgba(226, 253, 52, 0.14);
-  --home-mvp-button-bg: var(--color-lime);
-  --home-mvp-button-text: var(--color-black);
-  --home-mvp-vs-clash-opacity: 0.78;
+  --home-mvp-button-bg: rgba(6, 9, 12, 0.58);
+  --home-mvp-button-text: var(--color-lime);
+  --home-mvp-vs-clash-opacity: 0.88;
 }
