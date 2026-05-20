@@ -1050,7 +1050,6 @@ export function Home() {
               <br />
               TOURNAMENT
             </h2>
-            <p className="home_mvp_vote_subtitle body_m_18">MVP를 선택하고 포인트를 받아보세요</p>
           </div>
           <div
             className="home_mvp_carousel_area"
@@ -1092,7 +1091,6 @@ export function Home() {
                     autoPlayDelay={isActive ? 400 : index * 900}
                     aria-hidden={!isActive}
                   >
-                    <span className="home_mvp_card_edge_glow" aria-hidden="true" />
                     <span className="home_mvp_card_round">{match.round}</span>
                     <div className="home_mvp_card_teams">
                       <div className="home_mvp_card_team">
@@ -1100,49 +1098,47 @@ export function Home() {
                         <p className="home_mvp_team_name">{match.team1.name}</p>
                       </div>
                       <span className="home_mvp_vs_wrap" aria-hidden="true">
-                        {index === 0 ? (
-                          <svg className="home_mvp_vs_clash" viewBox="0 0 92 132" preserveAspectRatio="none" focusable="false">
-                            <defs>
-                              <linearGradient id={`homeMvpClashAmbient-${match.id}`} gradientUnits="userSpaceOnUse" x1="29" y1="132" x2="64" y2="0">
-                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
-                                <stop offset="34%" stopColor="#e2fd34" stopOpacity="0.08" />
-                                <stop offset="50%" stopColor="#f6ffbf" stopOpacity="0.24" />
-                                <stop offset="66%" stopColor="#e2fd34" stopOpacity="0.1" />
-                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
-                              </linearGradient>
-                              <linearGradient id={`homeMvpClashGlow-${match.id}`} gradientUnits="userSpaceOnUse" x1="29" y1="132" x2="64" y2="0">
-                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
-                                <stop offset="38%" stopColor="#dfff1b" stopOpacity="0.26" />
-                                <stop offset="50%" stopColor="#fbffd9" stopOpacity="0.68" />
-                                <stop offset="62%" stopColor="#dfff1b" stopOpacity="0.3" />
-                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
-                              </linearGradient>
-                              <linearGradient id={`homeMvpClashMain-${match.id}`} gradientUnits="userSpaceOnUse" x1="29" y1="132" x2="64" y2="0">
-                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
-                                <stop offset="42%" stopColor="#e2fd34" stopOpacity="0.62" />
-                                <stop offset="50%" stopColor="#fbffd9" stopOpacity="0.95" />
-                                <stop offset="58%" stopColor="#e2fd34" stopOpacity="0.68" />
-                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
-                              </linearGradient>
-                              <filter id={`homeMvpBlurAmbient-${match.id}`} x="-100%" y="-100%" width="300%" height="300%">
-                                <feGaussianBlur stdDeviation="8" />
-                              </filter>
-                              <filter id={`homeMvpBlurMid-${match.id}`} x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="2.4" />
-                              </filter>
-                              <filter id={`homeMvpBlurCore-${match.id}`} x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="0.7" />
-                              </filter>
-                            </defs>
-                            <line x1="29" y1="132" x2="64" y2="0" stroke={`url(#homeMvpClashAmbient-${match.id})`} strokeWidth="34" filter={`url(#homeMvpBlurAmbient-${match.id})`} />
-                            <line x1="29" y1="132" x2="64" y2="0" stroke={`url(#homeMvpClashGlow-${match.id})`} strokeWidth="6" filter={`url(#homeMvpBlurMid-${match.id})`} />
-                            <line x1="29" y1="132" x2="64" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="2" filter={`url(#homeMvpBlurCore-${match.id})`} opacity="0.84" />
-                            <line x1="29" y1="132" x2="64" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.75" />
-                            <line x1="31" y1="132" x2="66" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.3" opacity="0.24" />
-                            <circle cx="43" cy="78" r="1.1" fill="#f6ffbf" opacity="0.22" />
-                            <circle cx="54" cy="48" r="0.9" fill="#e2fd34" opacity="0.22" />
-                          </svg>
-                        ) : null}
+                        <svg className="home_mvp_vs_clash" viewBox="0 0 92 132" preserveAspectRatio="none" focusable="false">
+                          <defs>
+                            <linearGradient id={`homeMvpClashAmbient-${match.id}`} gradientUnits="userSpaceOnUse" x1="17" y1="132" x2="82" y2="0">
+                              <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                              <stop offset="34%" stopColor="#e2fd34" stopOpacity="0.08" />
+                              <stop offset="50%" stopColor="#f6ffbf" stopOpacity="0.24" />
+                              <stop offset="66%" stopColor="#e2fd34" stopOpacity="0.1" />
+                              <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                            </linearGradient>
+                            <linearGradient id={`homeMvpClashGlow-${match.id}`} gradientUnits="userSpaceOnUse" x1="17" y1="132" x2="82" y2="0">
+                              <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                              <stop offset="38%" stopColor="#dfff1b" stopOpacity="0.26" />
+                              <stop offset="50%" stopColor="#fbffd9" stopOpacity="0.68" />
+                              <stop offset="62%" stopColor="#dfff1b" stopOpacity="0.3" />
+                              <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                            </linearGradient>
+                            <linearGradient id={`homeMvpClashMain-${match.id}`} gradientUnits="userSpaceOnUse" x1="17" y1="132" x2="82" y2="0">
+                              <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                              <stop offset="42%" stopColor="#e2fd34" stopOpacity="0.62" />
+                              <stop offset="50%" stopColor="#fbffd9" stopOpacity="0.95" />
+                              <stop offset="58%" stopColor="#e2fd34" stopOpacity="0.68" />
+                              <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                            </linearGradient>
+                            <filter id={`homeMvpBlurAmbient-${match.id}`} x="-100%" y="-100%" width="300%" height="300%">
+                              <feGaussianBlur stdDeviation="8" />
+                            </filter>
+                            <filter id={`homeMvpBlurMid-${match.id}`} x="-50%" y="-50%" width="200%" height="200%">
+                              <feGaussianBlur stdDeviation="2.4" />
+                            </filter>
+                            <filter id={`homeMvpBlurCore-${match.id}`} x="-30%" y="-30%" width="160%" height="160%">
+                              <feGaussianBlur stdDeviation="0.7" />
+                            </filter>
+                          </defs>
+                          <line x1="17" y1="132" x2="82" y2="0" stroke={`url(#homeMvpClashAmbient-${match.id})`} strokeWidth="24" filter={`url(#homeMvpBlurAmbient-${match.id})`} />
+                          <line x1="17" y1="132" x2="82" y2="0" stroke={`url(#homeMvpClashGlow-${match.id})`} strokeWidth="4.2" filter={`url(#homeMvpBlurMid-${match.id})`} />
+                          <line x1="17" y1="132" x2="82" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="1.55" filter={`url(#homeMvpBlurCore-${match.id})`} opacity="0.78" />
+                          <line x1="17" y1="132" x2="82" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.58" />
+                          <line x1="19" y1="132" x2="84" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.24" opacity="0.2" />
+                          <circle cx="43" cy="78" r="1.1" fill="#f6ffbf" opacity="0.22" />
+                          <circle cx="54" cy="48" r="0.9" fill="#e2fd34" opacity="0.22" />
+                        </svg>
                         <img src={mainTournament05} alt="VS" className="home_mvp_vs_img" />
                       </span>
                       <div className="home_mvp_card_team">

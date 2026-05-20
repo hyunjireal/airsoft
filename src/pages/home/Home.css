@@ -2125,17 +2125,23 @@
    ============================================================ */
 .home_mvp_vote {
   --home-mvp-text: var(--color-black);
-  --home-mvp-muted: #9a9d95;
-  --home-mvp-line: rgba(226, 253, 52, 0.34);
-  --home-mvp-card-bg: #101318;
+  --home-mvp-muted: rgba(236, 238, 230, 0.62);
+  --home-mvp-line: rgba(226, 253, 52, 0.22);
+  --home-mvp-card-bg:
+    radial-gradient(circle at 50% 42%, rgba(226, 253, 52, 0.075), transparent 36%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 24%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, rgba(20, 21, 20, 0.95), rgba(10, 11, 10, 0.97));
   --home-mvp-card-border: rgba(255, 255, 255, 0.1);
-  --home-mvp-card-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), 0 0 22px rgba(226, 253, 52, 0.1);
+  --home-mvp-card-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    0 6px 18px rgba(0, 0, 0, 0.22),
+    0 0 22px rgba(226, 253, 52, 0.055);
   --home-mvp-card-text: var(--color-white);
   --home-mvp-accent: var(--color-lime);
   --home-mvp-accent-soft: rgba(226, 253, 52, 0.12);
-  --home-mvp-button-bg: rgba(6, 9, 12, 0.58);
+  --home-mvp-button-bg: rgba(8, 9, 8, 0.5);
   --home-mvp-button-text: var(--color-lime);
-  --home-mvp-vs-clash-opacity: 0.88;
+  --home-mvp-vs-clash-opacity: 0.72;
   width: 100%;
   padding: 34px 0 56px;
   background: transparent;
@@ -2160,12 +2166,11 @@
 }
 
 .home_mvp_vote_title {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   display: flex;
   justify-content: center;
   text-align: center;
   font-family: var(--font-kbl-jump-extended);
-  font-size: var(--font-size-22);
   font-weight: var(--font-weight-extrabold);
   color: var(--home-mvp-text);
   line-height: var(--line-height-130);
@@ -2174,6 +2179,7 @@
 
 .home_mvp_vote_subtitle {
   margin: 0;
+  font-size: var(--font-size-14);
   color: var(--home-mvp-muted);
   text-align: center;
 }
@@ -2221,7 +2227,7 @@
 }
 
 .home_mvp_track {
-  --mvp-card-w: min(268px, calc(100vw - 112px));
+  --mvp-card-w: min(268px, calc(100vw - 120px));
   --mvp-gap: 12px;
   position: relative;
   left: 50%;
@@ -2237,24 +2243,25 @@
 
 @media (min-width: 1024px) {
   .home_mvp_track {
-    --mvp-card-w: min(390px, calc(100vw - 240px));
+    --mvp-card-w: min(414px, calc(100vw - 216px));
   }
 }
 
 .home_mvp_card {
-  flex: 0 0 var(--mvp-card-w);
-  min-width: 0;
   border-radius: 15px;
   background: var(--home-mvp-card-bg);
   border: 1px solid var(--home-mvp-card-border);
-  padding: 22px 18px 18px;
+  padding: 32px 20px 26px;
   box-shadow: var(--home-mvp-card-shadow);
   position: relative;
   z-index: 1;
+  overflow: hidden;
+  backdrop-filter: blur(14px) saturate(116%);
+  -webkit-backdrop-filter: blur(14px) saturate(116%);
   transform-origin: top center;
-  transform: translateZ(-12px) scale(0.94) translateY(6px);
+  transform: translateZ(-16px) scale(0.95) translateY(8px);
   opacity: 0.72;
-  filter: brightness(0.88);
+  filter: brightness(0.72) saturate(0.88);
   transition:
     transform 0.46s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.46s ease,
@@ -2268,8 +2275,14 @@
   z-index: 0;
   border-radius: inherit;
   background:
-    radial-gradient(circle at 50% 45%, rgba(226, 253, 52, 0.08), transparent 32%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0));
+    radial-gradient(circle at 50% 43%, rgba(226, 253, 52, 0.09), transparent 31%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 42%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset -1px 0 0 rgba(255, 255, 255, 0.045),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.045),
+    inset 0 0 30px rgba(226, 253, 52, 0.035);
+  opacity: 0.9;
   pointer-events: none;
 }
 
@@ -2293,34 +2306,12 @@
   opacity: 1;
   filter: none;
   box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.38);
-}
-
-.home_mvp_card_edge_glow {
-  position: absolute;
-  left: -1px;
-  top: 11%;
-  z-index: 2;
-  width: 2px;
-  height: 19%;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    rgba(226, 253, 52, 0),
-    rgba(226, 253, 52, 0.62) 42%,
-    rgba(246, 255, 191, 0.82) 50%,
-    rgba(226, 253, 52, 0.62) 58%,
-    rgba(226, 253, 52, 0)
-  );
-  box-shadow:
-    0 0 10px rgba(226, 253, 52, 0.38),
-    0 0 22px rgba(226, 253, 52, 0.2);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.home_mvp_card.is_active .home_mvp_card_edge_glow {
-  opacity: 1;
+    0 20px 46px rgba(0, 0, 0, 0.48),
+    0 8px 18px rgba(0, 0, 0, 0.28),
+    0 0 24px rgba(226, 253, 52, 0.08),
+    8px 0 18px rgba(255, 255, 255, 0.025),
+    0 -5px 16px rgba(255, 255, 255, 0.02),
+    0 8px 16px rgba(255, 255, 255, 0.016);
 }
 
 .home_mvp_card_round {
@@ -2331,8 +2322,9 @@
   font-weight: 700;
   color: var(--home-mvp-accent);
   background: var(--home-mvp-accent-soft);
-  border: 1px solid rgba(226, 253, 52, 0.42);
+  border: 1px solid rgba(226, 253, 52, 0.34);
   border-radius: 9px;
+  box-shadow: 0 0 10px rgba(226, 253, 52, 0.08);
   padding: 4px 10px;
   margin-bottom: 6px;
   margin-left: 8px;
@@ -2373,6 +2365,7 @@
   font-size: 16px;
   font-weight: 800;
   color: var(--home-mvp-card-text);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.34);
   text-align: center;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -2429,11 +2422,27 @@
 .home_mvp_vote_button {
   width: 100%;
   background: var(--home-mvp-button-bg) !important;
-  border: 1px solid var(--color-lime) !important;
+  border: 1px solid rgba(226, 253, 52, 0.92) !important;
   color: var(--home-mvp-button-text) !important;
   -webkit-text-fill-color: var(--home-mvp-button-text) !important;
   font-weight: 700 !important;
-  box-shadow: 0 0 12px rgba(226, 253, 52, 0.12);
+  box-shadow:
+    inset 0 0 18px rgba(226, 253, 52, 0.035),
+    0 0 10px rgba(226, 253, 52, 0.08);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.home_mvp_vote_button:hover,
+.home_mvp_vote_button:active {
+  background: rgba(226, 253, 52, 0.12) !important;
+  color: var(--color-lime) !important;
+  -webkit-text-fill-color: var(--color-lime) !important;
+  box-shadow:
+    inset 0 0 20px rgba(226, 253, 52, 0.08),
+    0 0 16px rgba(226, 253, 52, 0.12);
 }
 
 .home_mvp_vote_button .app_action_button__label {
@@ -3077,15 +3086,21 @@
 
 :root[data-theme='dark'] .home_mvp_vote {
   --home-mvp-text: var(--color-white);
-  --home-mvp-muted: var(--color-gray03);
-  --home-mvp-line: rgba(226, 253, 52, 0.34);
-  --home-mvp-card-bg: #101318;
+  --home-mvp-muted: rgba(236, 238, 230, 0.62);
+  --home-mvp-line: rgba(226, 253, 52, 0.22);
+  --home-mvp-card-bg:
+    radial-gradient(circle at 50% 42%, rgba(226, 253, 52, 0.075), transparent 36%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 24%, rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, rgba(20, 21, 20, 0.95), rgba(10, 11, 10, 0.97));
   --home-mvp-card-border: rgba(255, 255, 255, 0.1);
-  --home-mvp-card-shadow: 0 14px 34px rgba(0, 0, 0, 0.32), 0 0 22px rgba(226, 253, 52, 0.1);
+  --home-mvp-card-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.42),
+    0 6px 18px rgba(0, 0, 0, 0.22),
+    0 0 22px rgba(226, 253, 52, 0.055);
   --home-mvp-card-text: var(--color-white);
   --home-mvp-accent: var(--color-lime);
-  --home-mvp-accent-soft: rgba(226, 253, 52, 0.14);
-  --home-mvp-button-bg: rgba(6, 9, 12, 0.58);
+  --home-mvp-accent-soft: rgba(226, 253, 52, 0.12);
+  --home-mvp-button-bg: rgba(8, 9, 8, 0.5);
   --home-mvp-button-text: var(--color-lime);
-  --home-mvp-vs-clash-opacity: 0.88;
+  --home-mvp-vs-clash-opacity: 0.72;
 }
