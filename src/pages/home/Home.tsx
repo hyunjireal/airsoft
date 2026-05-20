@@ -35,8 +35,11 @@ import mainQuizImg from '../../asset/images/main_quizImg01.png'
 import beginnerGuideQuestionImage from '../../asset/images/com_beginner_card_question.png'
 import badge03 from '../../asset/images/badge03.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
-import mainTeam01 from '../../asset/images/main_team01.png'
-import mainTeam02 from '../../asset/images/main_team02.png'
+import mainTournament01 from '../../asset/images/main_tournament01.png'
+import mainTournament02 from '../../asset/images/main_tournament02.png'
+import mainTournament03 from '../../asset/images/main_tournament03.png'
+import mainTournament04 from '../../asset/images/main_tournament04.png'
+import mainTournament05 from '../../asset/images/main_tournament05.png'
 import mainTeamImg01 from '../../asset/images/main_teamImg01.png'
 import mainTeamImg02 from '../../asset/images/main_teamImg02.png'
 import mainTeamImg03 from '../../asset/images/main_teamImg03.png'
@@ -68,9 +71,19 @@ const teamCards = [
 ]
 const visibleTeamCards = teamCards
 
-const tournamentCards = [
-  { id: 1, name: '팀 바주카', region: '서울 · 수도권', logo: mainTeam01, stats: { atk: 8, def: 7, tac: 8 } },
-  { id: 2, name: '팀 블랙워터', region: '부산 · 경남권', logo: mainTeam02, stats: { atk: 7, def: 9, tac: 9 } },
+const mvpMatches = [
+  {
+    id: 1,
+    round: '1경기',
+    team1: { name: '팀 바주카', region: '서울 · 수도권', icon: mainTournament01 },
+    team2: { name: '팀 블랙워터', region: '부산 · 경남권', icon: mainTournament02 },
+  },
+  {
+    id: 2,
+    round: '2경기',
+    team1: { name: '팀 이클립스', region: '대전 · 충청권', icon: mainTournament03 },
+    team2: { name: '팀 오메가', region: '광주 · 호남권', icon: mainTournament04 },
+  },
 ]
 
 const homeMatchFallbackImages = [matchImg01, matchImg02, matchImg03, matchImg04]
@@ -330,6 +343,9 @@ export function Home() {
     banner: false,
   })
   const [isTournamentVisible, setIsTournamentVisible] = useState(false)
+  const [mvpActiveIndex, setMvpActiveIndex] = useState(0)
+  const mvpDragStartXRef = useRef(0)
+  const isMvpDraggingRef = useRef(false)
   const [homeProfileGreeting] = useState(() => {
     const randomIndex = Math.floor(Math.random() * homeProfileGreetings.length)
 
@@ -1021,48 +1037,90 @@ export function Home() {
           </Link>
         </section>
 
-        {/* ⑦ 토너먼트 섹션 */}
+        {/* ⑦ MVP 투표 섹션 */}
         <section
-          className={`home_tournament ${isTournamentVisible ? 'is_visible' : ''}`}
+          className={`home_mvp_vote ${isTournamentVisible ? 'is_visible' : ''}`}
           ref={tournamentSectionRef}
         >
-          <h2 className="home_tournament_title">NEXT<br />TOURNAMENT</h2>
-          <div className="home_tournament_team_info">
-            {tournamentCards.map((tc) => (
-              <Link key={tc.id} to="/tournament" className="home_tournament_team">
-                <div className="home_tournament_left">
-                  <div className="home_tournament_team_logo">
-                    <img src={tc.logo} alt="" className="home_tournament_team_logo_img" />
-                  </div>
-                  <div className="home_tournament_team_text">
-                    <p className="home_tournament_team_name">{tc.name}</p>
-                    <p className="home_tournament_team_region">{tc.region}</p>
-                  </div>
-                </div>
-                <div className="home_tournament_state">
-                  <div className="home_tournament_stat">
-                    <span className="home_tournament_stat_label">ATK</span>
-                    <span className="home_tournament_stat_value">{tc.stats.atk}</span>
-                  </div>
-                  <div className="home_tournament_stat">
-                    <span className="home_tournament_stat_label">DEF</span>
-                    <span className="home_tournament_stat_value">{tc.stats.def}</span>
-                  </div>
-                  <div className="home_tournament_stat">
-                    <span className="home_tournament_stat_label">TAC</span>
-                    <span className="home_tournament_stat_value">{tc.stats.tac}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+          <div className="home_mvp_vote_header">
+            <h2 className="home_mvp_vote_title">오늘의 MVP 투표</h2>
+            <p className="home_mvp_vote_desc">가장 빛난 팀을 선택하고 포인트를 받아보세요.</p>
+            <div className="home_mvp_vote_status" aria-label="4강 투표 진행 중">
+              <span className="home_mvp_vote_status_dot" aria-hidden="true" />
+              <span>4강 투표 진행 중</span>
+            </div>
           </div>
-          <div className="home_tournament_join_button_wrap">
-            <LoginButton
-              className="home_tournament_join_button"
-              onClick={() => navigate('/tournament')}
-            >
-              <span className="body_m_16">토너먼트 입장</span>
-            </LoginButton>
+          <div
+            className="home_mvp_carousel_area"
+            style={{ '--mvp-idx': mvpActiveIndex } as CSSProperties}
+            onPointerDown={(e) => {
+              mvpDragStartXRef.current = e.clientX
+              isMvpDraggingRef.current = true
+              e.currentTarget.setPointerCapture(e.pointerId)
+            }}
+            onPointerUp={(e) => {
+              if (!isMvpDraggingRef.current) return
+              isMvpDraggingRef.current = false
+              const delta = e.clientX - mvpDragStartXRef.current
+              if (Math.abs(delta) < 8) return
+              if (delta < -40) setMvpActiveIndex((i) => Math.min(i + 1, mvpMatches.length - 1))
+              else if (delta > 40) setMvpActiveIndex((i) => Math.max(i - 1, 0))
+            }}
+            onPointerCancel={() => { isMvpDraggingRef.current = false }}
+          >
+            <div className="home_mvp_track">
+              {mvpMatches.map((match, index) => {
+                const isActive = index === mvpActiveIndex
+                return (
+                  <div
+                    key={match.id}
+                    className={`home_mvp_card${isActive ? ' is_active' : ''}`}
+                    aria-hidden={!isActive}
+                  >
+                    <span className="home_mvp_card_round">{match.round}</span>
+                    <div className="home_mvp_card_teams">
+                      <div className="home_mvp_card_team">
+                        <img src={match.team1.icon} alt="" className="home_mvp_team_icon" />
+                        <p className="home_mvp_team_name">{match.team1.name}</p>
+                        <p className="home_mvp_team_region">{match.team1.region}</p>
+                      </div>
+                      <img src={mainTournament05} alt="VS" className="home_mvp_vs_img" />
+                      <div className="home_mvp_card_team">
+                        <img src={match.team2.icon} alt="" className="home_mvp_team_icon" />
+                        <p className="home_mvp_team_name">{match.team2.name}</p>
+                        <p className="home_mvp_team_region">{match.team2.region}</p>
+                      </div>
+                    </div>
+                    <div className="home_mvp_card_bottom">
+                      <LoginButton
+                        className="home_mvp_vote_button"
+                        onClick={() => {
+                          // TODO: navigate to MVP vote page for match.id
+                        }}
+                      >
+                        투표하기
+                        <span className="home_mvp_vote_btn_arr" aria-hidden="true">›</span>
+                      </LoginButton>
+                      <p className="home_mvp_point_notice" aria-label="투표 시 30포인트 지급">
+                        <span className="home_mvp_point_dot" aria-hidden="true" />
+                        <span>투표 시 </span>
+                        <span className="home_mvp_point_highlight">30P</span>
+                        <span> 지급</span>
+                      </p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <div className="home_mvp_pagination" aria-hidden="true">
+              {mvpMatches.map((_, i) => (
+                <span
+                  key={i}
+                  className={`home_mvp_pg_dot${i === mvpActiveIndex ? ' is_active' : ''}`}
+                />
+              ))}
+              <span className="home_mvp_pg_count">{mvpActiveIndex + 1} / {mvpMatches.length}</span>
+            </div>
           </div>
         </section>
       </div>
