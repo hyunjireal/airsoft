@@ -11,9 +11,13 @@ const items = [
 export function BottomNav() {
   const location = useLocation()
   const pathname = location.pathname
+  const shouldActivateMatchTab =
+    pathname === '/my/schedule' ||
+    pathname === '/tournament' ||
+    pathname === '/tournament/mvp-vote'
   const activeIndex = Math.max(
     items.findIndex((item) => {
-      if (pathname === '/my/schedule' && item.to === '/match') {
+      if (shouldActivateMatchTab && item.to === '/match') {
         return true
       }
 

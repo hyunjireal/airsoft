@@ -2124,20 +2124,32 @@
    ⑦ MVP 투표 섹션
    ============================================================ */
 .home_mvp_vote {
+  --home-mvp-text: var(--buddy-light-text, #171914);
+  --home-mvp-muted: var(--buddy-light-muted, #6f7466);
+  --home-mvp-line: var(--buddy-light-line, #d8d9d1);
+  --home-mvp-card-bg: var(--buddy-light-white, #ffffff);
+  --home-mvp-card-border: var(--buddy-light-line, #d8d9d1);
+  --home-mvp-card-shadow: 0 8px 24px rgba(23, 25, 20, 0.08);
+  --home-mvp-accent: var(--buddy-light-olive, #676b5d);
+  --home-mvp-accent-soft: rgba(103, 107, 93, 0.1);
+  --home-mvp-button-bg: var(--buddy-light-olive, #676b5d);
+  --home-mvp-button-text: var(--buddy-light-white, #ffffff);
+  --home-mvp-vs-clash-opacity: 0.44;
   width: 100%;
-  padding: 48px 0 64px;
-  background: linear-gradient(180deg, #080a0d 0%, #0c0d12 100%);
+  padding: 34px 0 56px;
+  background: transparent;
   opacity: 0;
   transform: translate3d(0, 22px, 0);
 }
 
 .home_mvp_vote.is_visible {
+  padding-bottom: 0;
   animation: home_mvp_rise 860ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .home_mvp_vote_header {
   padding: 0 20px;
-  margin-bottom: 40px;
+  margin-bottom: 28px;
 }
 
 @media (min-width: 1024px) {
@@ -2147,21 +2159,24 @@
 }
 
 .home_mvp_vote_title {
-  margin: 0 0 12px;
-  font-family: var(--font-kbl-jump);
-  font-size: 32px;
-  font-weight: var(--font-weight-bold);
-  color: #fff;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-family: var(--font-kbl-jump-extended);
+  font-size: var(--font-size-22);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--home-mvp-text);
+  line-height: var(--line-height-130);
+  letter-spacing: var(--letter-spacing-0);
 }
 
 .home_mvp_vote_desc {
-  margin: 0 0 20px;
+  margin: 0 0 16px;
   font-family: var(--font-pretendard);
   font-size: var(--font-size-14);
   font-weight: var(--font-weight-medium);
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--home-mvp-muted);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
 }
@@ -2172,11 +2187,11 @@
   gap: 7px;
   padding: 6px 12px 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(216, 243, 52, 0.3);
-  background: rgba(216, 243, 52, 0.08);
+  border: 1px solid var(--home-mvp-line);
+  background: var(--home-mvp-accent-soft);
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-lime, #d8f334);
+  color: var(--home-mvp-accent);
   letter-spacing: -0.01em;
 }
 
@@ -2184,7 +2199,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-lime, #d8f334);
+  background: var(--home-mvp-accent);
   flex-shrink: 0;
   animation: home_mvp_dot_pulse 2s ease-in-out infinite;
 }
@@ -2195,52 +2210,67 @@
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
+  perspective: 900px;
 }
 
 .home_mvp_track {
-  --mvp-card-w: min(295px, calc(100vw - 83px));
+  --mvp-card-w: min(268px, calc(100vw - 112px));
   --mvp-gap: 12px;
-  width: 100%;
+  position: relative;
+  left: 50%;
+  width: max-content;
   display: flex;
   gap: var(--mvp-gap);
-  padding-left: 24px;
-  padding-right: 16px;
-  transform: translateX(calc(-1 * var(--mvp-idx, 0) * (var(--mvp-card-w) + var(--mvp-gap))));
+  padding: 0;
+  transform: translateX(calc((var(--mvp-card-w) / -2) - (var(--mvp-idx, 0) * (var(--mvp-card-w) + var(--mvp-gap)))));
   transition: transform 0.46s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
   will-change: transform;
 }
 
 @media (min-width: 1024px) {
   .home_mvp_track {
-    --mvp-card-w: min(480px, calc(100vw - 180px));
-    padding-left: 48px;
-    padding-right: 36px;
+    --mvp-card-w: min(390px, calc(100vw - 240px));
   }
 }
 
 .home_mvp_card {
   flex: 0 0 var(--mvp-card-w);
   min-width: 0;
-  border-radius: 22px;
-  background: linear-gradient(150deg, #151618 0%, #101214 100%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  padding: 28px 22px 26px;
-  box-shadow:
-    0 10px 40px rgba(0, 0, 0, 0.65),
-    0 2px 10px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  background: var(--home-mvp-card-bg);
+  border: 1px solid var(--home-mvp-card-border);
+  padding: 22px 18px 20px;
+  box-shadow: var(--home-mvp-card-shadow);
+  position: relative;
+  z-index: 1;
   transform-origin: top center;
-  transform: scale(0.88) translateY(12px);
-  opacity: 0.45;
-  filter: brightness(0.55);
+  transform: translateZ(-12px) scale(0.94) translateY(6px);
+  opacity: 0.72;
+  filter: brightness(0.88);
   transition:
     transform 0.46s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.46s ease,
     filter 0.46s ease;
 }
 
+.home_mvp_card.glare-hover {
+  display: block;
+  place-items: initial;
+  cursor: default;
+}
+
+.home_mvp_card.glare-hover::before {
+  z-index: 3;
+}
+
+.home_mvp_card.glare-hover:hover {
+  cursor: default;
+}
+
 .home_mvp_card.is_active {
-  transform: scale(1) translateY(0);
+  z-index: 2;
+  transform: translateZ(0) scale(1) translateY(0);
   opacity: 1;
   filter: none;
 }
@@ -2249,43 +2279,49 @@
   display: inline-block;
   font-size: 12px;
   font-weight: 700;
-  color: var(--color-lime, #d8f334);
-  background: rgba(216, 243, 52, 0.12);
-  border: 1px solid rgba(216, 243, 52, 0.28);
+  color: var(--home-mvp-accent);
+  background: var(--home-mvp-accent-soft);
+  border: 1px solid var(--home-mvp-line);
   border-radius: 7px;
-  padding: 4px 11px;
-  margin-bottom: 24px;
+  padding: 4px 10px;
+  margin-bottom: 6px;
+  margin-left: 8px;
   letter-spacing: 0.02em;
 }
 
 .home_mvp_card_teams {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
+  isolation: isolate;
 }
 
 .home_mvp_card_team {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   flex: 1;
   min-width: 0;
+  margin-bottom: 8px;
 }
 
 .home_mvp_team_icon {
-  width: 92px;
-  height: 92px;
+  width: 68px;
+  height: 68px;
   object-fit: contain;
 }
 
 .home_mvp_team_name {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
-  color: #fff;
+  color: var(--home-mvp-text);
   text-align: center;
   letter-spacing: -0.02em;
   line-height: 1.25;
@@ -2295,58 +2331,67 @@
   width: 100%;
 }
 
-.home_mvp_team_region {
-  margin: 0;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.42);
-  text-align: center;
-  line-height: 1.3;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
+.home_mvp_vs_wrap {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 68px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.home_mvp_vs_clash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 0;
+  width: 72px;
+  height: 84px;
+  opacity: var(--home-mvp-vs-clash-opacity);
+  mix-blend-mode: screen;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .home_mvp_vs_img {
-  width: 58px;
+  position: relative;
+  z-index: 1;
+  width: 44px;
   height: auto;
-  flex-shrink: 0;
   object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(226, 253, 52, 0.16));
 }
 
 .home_mvp_card_bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .home_mvp_vote_button {
-  position: relative;
   width: 100%;
-  min-height: 54px !important;
-  font-size: 17px !important;
+  background: var(--home-mvp-button-bg) !important;
+  border-color: var(--home-mvp-button-bg) !important;
+  color: var(--home-mvp-button-text) !important;
+  -webkit-text-fill-color: var(--home-mvp-button-text) !important;
   font-weight: 700 !important;
-  border-radius: 12px !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  border: 1.5px solid var(--color-lime, #d8f334) !important;
-  color: var(--color-lime, #d8f334) !important;
-  -webkit-text-fill-color: var(--color-lime, #d8f334) !important;
-  letter-spacing: -0.01em !important;
+}
+
+.home_mvp_vote_button .app_action_button__label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
 }
 
 .home_mvp_vote_btn_arr {
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  line-height: 1;
-  color: var(--color-lime, #d8f334);
-  -webkit-text-fill-color: var(--color-lime, #d8f334);
-  pointer-events: none;
+  display: none;
 }
 
 .home_mvp_point_notice {
@@ -2355,20 +2400,19 @@
   gap: 6px;
   margin: 0;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--home-mvp-muted);
   line-height: 1;
 }
 
 .home_mvp_point_dot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  object-fit: contain;
   flex-shrink: 0;
 }
 
 .home_mvp_point_highlight {
-  color: var(--color-lime, #d8f334);
+  color: var(--home-mvp-accent);
 }
 
 .home_mvp_pagination {
@@ -2383,7 +2427,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--home-mvp-line);
   transition: width 0.3s ease, border-radius 0.3s ease, background 0.3s ease;
 }
 
@@ -2391,13 +2435,13 @@
   width: 24px;
   height: 8px;
   border-radius: 4px;
-  background: var(--color-lime, #d8f334);
+  background: var(--home-mvp-accent);
 }
 
 .home_mvp_pg_count {
   margin-left: 10px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--home-mvp-muted);
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -2975,4 +3019,18 @@
   background-color: var(--color-black) !important;
   color: #d9e5ff !important;
   -webkit-text-fill-color: #d9e5ff !important;
+}
+
+:root[data-theme='dark'] .home_mvp_vote {
+  --home-mvp-text: var(--color-white);
+  --home-mvp-muted: var(--color-gray03);
+  --home-mvp-line: rgba(255, 255, 255, 0.1);
+  --home-mvp-card-bg: #383838;
+  --home-mvp-card-border: rgba(255, 255, 255, 0.1);
+  --home-mvp-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+  --home-mvp-accent: var(--color-lime);
+  --home-mvp-accent-soft: rgba(226, 253, 52, 0.14);
+  --home-mvp-button-bg: var(--color-lime);
+  --home-mvp-button-text: var(--color-black);
+  --home-mvp-vs-clash-opacity: 0.78;
 }

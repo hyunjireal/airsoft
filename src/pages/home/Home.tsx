@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import CategoryTag from '../../components/CategoryTag'
+import GlareHover from '../../components/GlareHover'
 import KeywordTag from '../../components/KeywordTag'
 import { LoginButton } from '../../components/LoginButton'
 import MainTag from '../../components/MainTag'
@@ -17,6 +18,7 @@ import buddyInfoIcon from '../../asset/icons/buddy_info.svg'
 import buddyPinIcon from '../../asset/icons/match_pin.svg'
 import buddyUsersIcon from '../../asset/icons/com_user.svg'
 import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
+import myPointIcon from '../../asset/icons/my_point.svg'
 import mainProfileIcon from '../../asset/icons/main_profile01.svg'
 import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
 import mainStarIcon from '../../asset/icons/main_star.svg'
@@ -74,15 +76,15 @@ const visibleTeamCards = teamCards
 const mvpMatches = [
   {
     id: 1,
-    round: '1경기',
-    team1: { name: '팀 바주카', region: '서울 · 수도권', icon: mainTournament01 },
-    team2: { name: '팀 블랙워터', region: '부산 · 경남권', icon: mainTournament02 },
+    round: '8강 3경기',
+    team1: { name: '바주카', icon: mainTournament01 },
+    team2: { name: '블랙워터', icon: mainTournament02 },
   },
   {
     id: 2,
-    round: '2경기',
-    team1: { name: '팀 이클립스', region: '대전 · 충청권', icon: mainTournament03 },
-    team2: { name: '팀 오메가', region: '광주 · 호남권', icon: mainTournament04 },
+    round: '8강 4경기',
+    team1: { name: '스모크', icon: mainTournament03 },
+    team2: { name: '델타포스', icon: mainTournament04 },
   },
 ]
 
@@ -1043,12 +1045,11 @@ export function Home() {
           ref={tournamentSectionRef}
         >
           <div className="home_mvp_vote_header">
-            <h2 className="home_mvp_vote_title">오늘의 MVP 투표</h2>
-            <p className="home_mvp_vote_desc">가장 빛난 팀을 선택하고 포인트를 받아보세요.</p>
-            <div className="home_mvp_vote_status" aria-label="4강 투표 진행 중">
-              <span className="home_mvp_vote_status_dot" aria-hidden="true" />
-              <span>4강 투표 진행 중</span>
-            </div>
+            <h2 className="home_mvp_vote_title sub_en">
+              MVP
+              <br />
+              TOURNAMENT
+            </h2>
           </div>
           <div
             className="home_mvp_carousel_area"
@@ -1072,9 +1073,22 @@ export function Home() {
               {mvpMatches.map((match, index) => {
                 const isActive = index === mvpActiveIndex
                 return (
-                  <div
+                  <GlareHover
                     key={match.id}
                     className={`home_mvp_card${isActive ? ' is_active' : ''}`}
+                    width="var(--mvp-card-w)"
+                    height="auto"
+                    background="var(--home-mvp-card-bg)"
+                    borderRadius="15px"
+                    borderColor="var(--home-mvp-card-border)"
+                    glareColor="#ffffff"
+                    glareOpacity={0.1}
+                    glareAngle={-55}
+                    glareSize={260}
+                    transitionDuration={1900}
+                    autoPlay={isActive}
+                    autoPlayInterval={7200}
+                    autoPlayDelay={isActive ? 400 : index * 900}
                     aria-hidden={!isActive}
                   >
                     <span className="home_mvp_card_round">{match.round}</span>
@@ -1082,33 +1096,77 @@ export function Home() {
                       <div className="home_mvp_card_team">
                         <img src={match.team1.icon} alt="" className="home_mvp_team_icon" />
                         <p className="home_mvp_team_name">{match.team1.name}</p>
-                        <p className="home_mvp_team_region">{match.team1.region}</p>
                       </div>
-                      <img src={mainTournament05} alt="VS" className="home_mvp_vs_img" />
+                      <span className="home_mvp_vs_wrap" aria-hidden="true">
+                        {index === 0 ? (
+                          <svg className="home_mvp_vs_clash" viewBox="0 0 72 84" preserveAspectRatio="none" focusable="false">
+                            <defs>
+                              <linearGradient id={`homeMvpClashAmbient-${match.id}`} gradientUnits="userSpaceOnUse" x1="22" y1="84" x2="50" y2="0">
+                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                                <stop offset="34%" stopColor="#e2fd34" stopOpacity="0.1" />
+                                <stop offset="50%" stopColor="#f6ffbf" stopOpacity="0.2" />
+                                <stop offset="66%" stopColor="#e2fd34" stopOpacity="0.1" />
+                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                              </linearGradient>
+                              <linearGradient id={`homeMvpClashGlow-${match.id}`} gradientUnits="userSpaceOnUse" x1="22" y1="84" x2="50" y2="0">
+                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                                <stop offset="36%" stopColor="#e2fd34" stopOpacity="0.22" />
+                                <stop offset="50%" stopColor="#f6ffbf" stopOpacity="0.5" />
+                                <stop offset="64%" stopColor="#e2fd34" stopOpacity="0.24" />
+                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                              </linearGradient>
+                              <linearGradient id={`homeMvpClashMain-${match.id}`} gradientUnits="userSpaceOnUse" x1="22" y1="84" x2="50" y2="0">
+                                <stop offset="0%" stopColor="#e2fd34" stopOpacity="0" />
+                                <stop offset="40%" stopColor="#e2fd34" stopOpacity="0.5" />
+                                <stop offset="50%" stopColor="#fbffd9" stopOpacity="0.95" />
+                                <stop offset="60%" stopColor="#e2fd34" stopOpacity="0.56" />
+                                <stop offset="100%" stopColor="#e2fd34" stopOpacity="0" />
+                              </linearGradient>
+                              <filter id={`homeMvpBlurAmbient-${match.id}`} x="-100%" y="-100%" width="300%" height="300%">
+                                <feGaussianBlur stdDeviation="8" />
+                              </filter>
+                              <filter id={`homeMvpBlurMid-${match.id}`} x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="2.4" />
+                              </filter>
+                              <filter id={`homeMvpBlurCore-${match.id}`} x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="0.7" />
+                              </filter>
+                            </defs>
+                            <line x1="22" y1="84" x2="50" y2="0" stroke={`url(#homeMvpClashAmbient-${match.id})`} strokeWidth="38" filter={`url(#homeMvpBlurAmbient-${match.id})`} />
+                            <line x1="22" y1="84" x2="50" y2="0" stroke={`url(#homeMvpClashGlow-${match.id})`} strokeWidth="7" filter={`url(#homeMvpBlurMid-${match.id})`} />
+                            <line x1="22" y1="84" x2="50" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="2.4" filter={`url(#homeMvpBlurCore-${match.id})`} opacity="0.78" />
+                            <line x1="22" y1="84" x2="50" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.85" />
+                            <line x1="23.5" y1="84" x2="51.5" y2="0" stroke={`url(#homeMvpClashMain-${match.id})`} strokeWidth="0.34" opacity="0.28" />
+                            <circle cx="32" cy="54" r="1.1" fill="#f6ffbf" opacity="0.28" />
+                            <circle cx="40" cy="31" r="1" fill="#e2fd34" opacity="0.24" />
+                          </svg>
+                        ) : null}
+                        <img src={mainTournament05} alt="VS" className="home_mvp_vs_img" />
+                      </span>
                       <div className="home_mvp_card_team">
                         <img src={match.team2.icon} alt="" className="home_mvp_team_icon" />
                         <p className="home_mvp_team_name">{match.team2.name}</p>
-                        <p className="home_mvp_team_region">{match.team2.region}</p>
                       </div>
                     </div>
                     <div className="home_mvp_card_bottom">
                       <LoginButton
+                        variant="apply"
                         className="home_mvp_vote_button"
                         onClick={() => {
-                          // TODO: navigate to MVP vote page for match.id
+                          navigate('/tournament/mvp-vote')
                         }}
                       >
-                        투표하기
+                        <span>투표하기</span>
                         <span className="home_mvp_vote_btn_arr" aria-hidden="true">›</span>
                       </LoginButton>
                       <p className="home_mvp_point_notice" aria-label="투표 시 30포인트 지급">
-                        <span className="home_mvp_point_dot" aria-hidden="true" />
+                        <img className="home_mvp_point_dot" src={myPointIcon} alt="" aria-hidden="true" />
                         <span>투표 시 </span>
-                        <span className="home_mvp_point_highlight">30P</span>
-                        <span> 지급</span>
+                        <span className="home_mvp_point_highlight">+300P</span>
+                        <span>지급</span>
                       </p>
                     </div>
-                  </div>
+                  </GlareHover>
                 )
               })}
             </div>
