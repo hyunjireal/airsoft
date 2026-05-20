@@ -707,3 +707,25 @@
     --onboarding-edge-padding: 18px;
   }
 }
+
+.onboarding_intro__skip {
+  display: block;
+  margin: 12px auto 0;
+  padding: 6px 16px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-pretendard);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.onboarding_intro__skip:hover,
+.onboarding_intro__skip:focus-visible {
+  color: rgba(255, 255, 255, 0.65);
+}

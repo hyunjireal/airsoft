@@ -135,7 +135,7 @@ body.auth_body {
   padding: 0;
   border: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--color-lime);
   font-family: var(--font-pretendard);
   font-size: calc(13px + 2 * (var(--auth-fluid-range) / 631));
   font-weight: 600;
@@ -512,7 +512,7 @@ body.auth_body {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--color-lime);
+  color: var(--color-gray02);
   font-family: var(--font-pretendard);
   font-size: calc(14px + 4 * (var(--auth-fluid-range) / 631));
   font-weight: 600;

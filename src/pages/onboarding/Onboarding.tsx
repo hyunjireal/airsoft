@@ -401,10 +401,7 @@ export function Onboarding() {
 
           <div className="onboarding_rebuilt__actions has-auth">
             {isLastSlide ? (
-              <>
-                <OnboardingButton label="로그인" onClick={() => navigate('/login')} />
-                <OnboardingButton label="회원가입" variant="nocolor" onClick={() => navigate('/signup')} />
-              </>
+              <OnboardingButton label="다음" onClick={() => navigate('/login')} />
             ) : (
               <>
                 <OnboardingButton label="다음" onClick={goNext} />
@@ -449,6 +446,13 @@ export function Onboarding() {
 
           <div className="onboarding_rebuilt__actions onboarding_rebuilt__actions--intro">
             <OnboardingButton label="시작하기" onClick={() => setHasStarted(true)} />
+            <button
+              className="onboarding_intro__skip"
+              type="button"
+              onClick={() => navigate('/home')}
+            >
+              Skip
+            </button>
           </div>
         </section>
       )}

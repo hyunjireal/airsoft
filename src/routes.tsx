@@ -1,4 +1,9 @@
 import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom'
+
+function GuestOnlyRoute() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+  return isLoggedIn ? <Navigate to="/home" replace /> : <Outlet />
+}
 import { AppShell } from './layout/AppShell'
 import { GlobalBottomSheetEffects } from './layout/GlobalBottomSheetEffects'
 import { ScrollToTop } from './layout/ScrollToTop'
@@ -79,6 +84,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        element: <GuestOnlyRoute />,
         children: [
           { path: '/', element: <Onboarding /> },
           { path: '/onboarding', element: <Onboarding /> },

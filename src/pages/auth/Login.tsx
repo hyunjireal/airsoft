@@ -39,8 +39,8 @@ function AppleIcon() {
 
 export function Login() {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState(() => localStorage.getItem('savedEmail') ?? localStorage.getItem('email') ?? '')
+  const [password, setPassword] = useState(() => localStorage.getItem('savedPassword') ?? '')
   const [rememberLogin, setRememberLogin] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [submitted, setSubmitted] = useState(false)

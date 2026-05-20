@@ -188,6 +188,8 @@ export function Signup() {
     localStorage.setItem('isLoggedIn', 'true')
     localStorage.setItem('nickname', trimmedNickname)
     localStorage.setItem('email', trimmedEmail)
+    localStorage.setItem('savedEmail', trimmedEmail)
+    localStorage.setItem('savedPassword', password)
     localStorage.setItem('region', region || '서울')
     localStorage.setItem('level', isVeteran ? '숙련자' : '입문자')
     localStorage.setItem('skillAlias', isVeteran ? '베테랑' : '뉴비')
