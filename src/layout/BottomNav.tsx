@@ -11,6 +11,7 @@ const items = [
 export function BottomNav() {
   const location = useLocation()
   const pathname = location.pathname
+  const returnTo = `${location.pathname}${location.search}`
   const shouldActivateMatchTab =
     pathname === '/my/schedule' ||
     pathname === '/tournament' ||
@@ -48,7 +49,7 @@ export function BottomNav() {
       </nav>
 
       <nav className="app_header_right" aria-label="AI 챗봇">
-        <NavLink to="/chat" className="app_header_ai" aria-label="AI 챗봇">
+        <NavLink to="/chat" state={{ returnTo }} className="app_header_ai" aria-label="AI 챗봇">
           <img className="app_header_gai" src={gaiImage} alt="" aria-hidden="true" />
         </NavLink>
       </nav>

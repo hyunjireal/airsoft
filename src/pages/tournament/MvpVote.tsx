@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LoginButton } from '../../components/LoginButton'
@@ -178,6 +178,8 @@ export function MvpVote() {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
   const [headerSolid, setHeaderSolid] = useState(false)
+  const [showMatchHint, setShowMatchHint] = useState(true)
+  const [matchHintDone, setMatchHintDone] = useState(false)
   const heroImage = themeMode === 'dark' ? tournamentMainDarkImg : tournamentMainLightImg
   const selectedMatchData = matches.find((match) => match.id === selectedMatch)
   const selectedTeamData = selectedMatchData?.teams.find((team) => team.id === selectedTeam)
@@ -219,6 +221,8 @@ export function MvpVote() {
 
   const selectMatch = (matchId: string) => {
     if (votedMatchIds.includes(matchId)) return
+    setShowMatchHint(false)
+    setMatchHintDone(true)
     setSelectedMatch(matchId)
     setSelectedTeam(null)
     setSelectedCandidate(null)
@@ -260,8 +264,19 @@ export function MvpVote() {
     }
   }, [])
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowMatchHint(false)
+      setMatchHintDone(true)
+    }, 1900)
+
+    return () => {
+      window.clearTimeout(timer)
+    }
+  }, [])
+
   return (
-    <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}${headerSolid ? ' has_solid_header' : ''}`}>
+    <div className={`tournament_page tournament_mvp_vote_page is_${themeMode}${headerSolid ? ' has_solid_header' : ''}${showMatchHint ? ' is_match_hinting' : ''}${matchHintDone ? ' is_match_hint_done' : ''}`}>
       <PageHeader
         title="MVP 투표"
         variant="default"

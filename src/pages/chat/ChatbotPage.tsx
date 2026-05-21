@@ -47,6 +47,21 @@ type TimedChatMessage = ChatMessage & {
   analysis?: AnalysisResult;
 };
 
+type ChatLocationState = {
+  returnTo?: string;
+  from?: string;
+  resumePrompt?: boolean;
+  returnState?: Record<string, unknown> | null;
+};
+
+function getSafeReturnPath(path?: string) {
+  if (!path || !path.startsWith("/") || path.startsWith("//") || path.startsWith("/chat")) {
+    return "/home";
+  }
+
+  return path;
+}
+
 const analysisThinkingSteps = [
   "사진 속 장비 구성을 분리하고 있어요",
   "보호장비와 안전 기준을 대조하고 있어요",
@@ -499,6 +514,8 @@ export function ChatbotPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const locationState = location.state as ChatLocationState | null;
+  const returnTo = getSafeReturnPath(locationState?.returnTo ?? locationState?.from);
   const initialQuestionSent = useRef(false);
   const chatScrollRef = useRef<HTMLElement | null>(null);
   const pageRef = useRef<HTMLDivElement | null>(null);
@@ -528,11 +545,36 @@ export function ChatbotPage() {
       restored: Boolean(storedMessages?.length),
     };
   }, []);
+  const restoredReplayMessage = useMemo(() => {
+    if (
+      !initialMessages.restored ||
+      locationState?.resumePrompt ||
+      searchParams.get("question")
+    ) {
+      return null;
+    }
+
+    const targetMessage = [...initialMessages.messages]
+      .reverse()
+      .find((message) => message.role === "assistant" && message.text.trim() && !message.analysis);
+
+    return targetMessage
+      ? {
+          id: targetMessage.id,
+          text: targetMessage.text,
+        }
+      : null;
+  }, [initialMessages.messages, initialMessages.restored, locationState?.resumePrompt, searchParams]);
   const restoredMessagesRef = useRef(initialMessages.restored);
   const resumePromptSentRef = useRef(false);
+  const skipNextStorageWriteRef = useRef(Boolean(restoredReplayMessage));
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<TimedChatMessage[]>(
-    initialMessages.messages,
+  const [messages, setMessages] = useState<TimedChatMessage[]>(() =>
+    restoredReplayMessage
+      ? initialMessages.messages.map((message) =>
+          message.id === restoredReplayMessage.id ? { ...message, text: "" } : message,
+        )
+      : initialMessages.messages,
   );
   const [isIntroComplete, setIsIntroComplete] = useState(
     initialMessages.restored,
@@ -931,7 +973,11 @@ export function ChatbotPage() {
   };
 
   const goBack = () => {
-    navigate("/home");
+    const shouldReplaceReturn = returnTo === "/guide" || returnTo.startsWith("/guide/");
+    navigate(returnTo, {
+      replace: shouldReplaceReturn,
+      state: locationState?.returnState ?? null,
+    });
   };
 
   useEffect(() => {
@@ -945,7 +991,6 @@ export function ChatbotPage() {
   }, [searchParams, isIntroComplete]);
 
   useEffect(() => {
-    const locationState = location.state as { resumePrompt?: boolean } | null;
     if (
       !locationState?.resumePrompt ||
       !restoredMessagesRef.current ||
@@ -955,7 +1000,7 @@ export function ChatbotPage() {
     }
 
     resumePromptSentRef.current = true;
-    navigate(location.pathname, { replace: true, state: null });
+    navigate(location.pathname, { replace: true, state: { returnTo } });
 
     const showResumePrompt = async () => {
       const lastMessage = messages[messages.length - 1];
@@ -972,9 +1017,14 @@ export function ChatbotPage() {
     };
 
     void showResumePrompt();
-  }, [location.pathname, location.state, navigate]);
+  }, [location.pathname, locationState?.resumePrompt, navigate, returnTo]);
 
   useEffect(() => {
+    if (skipNextStorageWriteRef.current) {
+      skipNextStorageWriteRef.current = false;
+      return;
+    }
+
     try {
       sessionStorage.setItem(CHAT_SESSION_STORAGE_KEY, JSON.stringify(messages));
     } catch {
@@ -983,6 +1033,26 @@ export function ChatbotPage() {
   }, [messages]);
 
   useEffect(() => {
+    if (restoredReplayMessage) {
+      let isCancelled = false;
+
+      const timer = window.setTimeout(() => {
+        void typeExistingAssistantMessage(
+          restoredReplayMessage.id,
+          restoredReplayMessage.text,
+        ).then(() => {
+          if (!isCancelled) {
+            setIsIntroComplete(true);
+          }
+        });
+      }, 420);
+
+      return () => {
+        isCancelled = true;
+        window.clearTimeout(timer);
+      };
+    }
+
     if (restoredMessagesRef.current) {
       return;
     }
@@ -1004,7 +1074,7 @@ export function ChatbotPage() {
       isCancelled = true;
       window.clearTimeout(timer);
     };
-  }, []);
+  }, [restoredReplayMessage]);
 
   useEffect(() => {
     if (!isSending) {
@@ -1126,7 +1196,7 @@ export function ChatbotPage() {
                           </span>
                         ) : null}
                         {message.analysis
-                          ? renderAnalysisCard(message.analysis, () => navigate('/chat/analysis'))
+                          ? renderAnalysisCard(message.analysis, () => navigate('/chat/analysis', { state: { returnTo, returnState: locationState?.returnState ?? null } }))
                           : null}
                       </div>
                       <time>{message.time}</time>

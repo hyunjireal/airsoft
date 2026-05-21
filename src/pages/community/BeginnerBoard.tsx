@@ -450,7 +450,7 @@ export function BeginnerBoard() {
     const trimmed = question.trim();
     if (!trimmed) return;
 
-    navigate(chatQuestionUrl(trimmed));
+    navigate(chatQuestionUrl(trimmed), { state: { returnTo: '/community' } });
   };
 
   const openQuestionDetail = (questionId: string) => {
@@ -658,7 +658,7 @@ export function BeginnerBoard() {
             <button
               className="beginner_start_card beginner_start_card_light beginner_start_card_book"
               type="button"
-              onClick={() => navigate("/guide")}
+              onClick={() => navigate("/guide", { state: { returnTo: '/community' } })}
             >
               <div className="beginner_start_text">
                 <h3>초보자 가이드</h3>
@@ -694,7 +694,7 @@ export function BeginnerBoard() {
             <button
               className="beginner_start_card beginner_start_card_blue beginner_start_card_question"
               type="button"
-              onClick={() => navigate("/chat")}
+              onClick={() => navigate("/chat", { state: { returnTo: '/community' } })}
             >
               <div className="beginner_start_text">
                 <h3>AI 가이에게<br />자주 묻는 질문</h3>

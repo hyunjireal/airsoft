@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import More from '../../components/More'
 import { PageHeader } from '../../components/PageHeader'
@@ -132,6 +133,8 @@ const moreActionStyle = {
   letterSpacing: '-0.02em',
 } as const
 
+const MY_POINT_TOTAL = 2450
+
 function PointBadgeIcon() {
   return (
     <span aria-hidden="true" className="point_shop_point_icon">
@@ -261,6 +264,40 @@ function ListSection({ title, items }: { title: string; items: ShopListItem[] })
 
 export function PointShop() {
   const navigate = useNavigate()
+  const [displayedPoints, setDisplayedPoints] = useState(0)
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplayedPoints(MY_POINT_TOTAL)
+      return undefined
+    }
+
+    let frameId = 0
+    let startTime = 0
+    const startDelay = window.setTimeout(() => {
+      const animatePoints = (timestamp: number) => {
+        if (!startTime) {
+          startTime = timestamp
+        }
+
+        const progress = Math.min((timestamp - startTime) / 850, 1)
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+        setDisplayedPoints(Math.round(MY_POINT_TOTAL * easedProgress))
+
+        if (progress < 1) {
+          frameId = window.requestAnimationFrame(animatePoints)
+        }
+      }
+
+      frameId = window.requestAnimationFrame(animatePoints)
+    }, 1500)
+
+    return () => {
+      window.clearTimeout(startDelay)
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [])
 
   const goBack = () => {
     if (window.history.length > 1) {
@@ -312,7 +349,7 @@ export function PointShop() {
                 <p className="point_shop_hero_label">내 포인트</p>
                 <div className="point_shop_hero_value">
                   <PointBadgeIcon />
-                  <span>2,450P</span>
+                  <span>{displayedPoints.toLocaleString()}P</span>
                   <span className="point_shop_hero_arrow_button" aria-hidden="true">
                     <HeroArrowIcon />
                   </span>

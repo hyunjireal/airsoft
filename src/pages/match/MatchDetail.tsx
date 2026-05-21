@@ -4,6 +4,7 @@ import { PageHeader } from '../../components/PageHeader'
 import refreshIcon from '../../asset/icons/match_new.svg'
 import { matches } from '../../data/mockData'
 import { RequireLoginModal } from '../../layout/RequireLoginModal'
+import { findGeneratedMatchSchedule } from './generatedMatchSchedules'
 import { markMatchCanceled, readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
@@ -125,7 +126,7 @@ export function MatchDetail() {
   const myBackTo = getSafeMyBackTo(locationState?.myBackTo)
   const createdMatch = readCreatedMatches().find((item) => item.id === id)
   const cachedMatch = readMatchSnapshot(id)
-  const defaultMatch = matches.find((item) => item.id === id)
+  const defaultMatch = matches.find((item) => item.id === id) ?? findGeneratedMatchSchedule(id)
   const match = createdMatch
     ? {
         id: createdMatch.id,
@@ -193,7 +194,6 @@ export function MatchDetail() {
 
   const applicantCount = getVisibleParticipantCount(match.currentParticipants, match.maxParticipants)
   const applicants = createDetailApplicants(applicantCount)
-  const visibleApplicants = applicantsExpanded ? applicants : applicants.slice(0, APPLICANT_PREVIEW_COUNT)
   const hasMoreApplicants = applicants.length > APPLICANT_PREVIEW_COUNT
   const remainingSeats = Math.max(match.maxParticipants - applicantCount, 0)
   const isFull = remainingSeats === 0
@@ -277,9 +277,19 @@ export function MatchDetail() {
               <img src={refreshIcon} alt="" aria-hidden="true" />
             </button>
           </div>
-          <div className={`match_detail_applicant_list${isApplicantsRefreshing ? ' is_refreshing' : ''}`}>
-            {visibleApplicants.map((applicant, index) => (
-              <article className="match_detail_applicant" key={`${applicant.name}-${index}`}>
+          <div
+            className={[
+              'match_detail_applicant_list',
+              isApplicantsRefreshing ? ' is_refreshing' : '',
+              applicantsExpanded ? ' is_expanded' : '',
+            ].join('')}
+          >
+            {applicants.map((applicant, index) => (
+              <article
+                className="match_detail_applicant"
+                key={`${applicant.name}-${index}`}
+                aria-hidden={!applicantsExpanded && index >= APPLICANT_PREVIEW_COUNT}
+              >
                 <div className="match_detail_applicant_name">
                   <span className="match_detail_applicant_avatar" aria-hidden="true" />
                   <strong>{applicant.name}</strong>

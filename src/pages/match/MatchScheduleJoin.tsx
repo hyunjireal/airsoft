@@ -12,6 +12,7 @@ import matchLevelIcon from '../../asset/icons/match_level.svg'
 import matchNoticeIcon from '../../asset/icons/match_notice.svg'
 import matchTargetIcon from '../../asset/icons/match_target.svg'
 import { matches } from '../../data/mockData'
+import { findGeneratedMatchSchedule } from './generatedMatchSchedules'
 import { cacheMatchSnapshot, readMatchSnapshot, type MatchApplicationSnapshot } from './matchApplicationStorage'
 import './match.css'
 
@@ -42,6 +43,11 @@ function getTypeLabel(type?: MatchApplicationSnapshot['type']) {
 }
 
 function createFallbackSnapshot(matchId: string): MatchApplicationSnapshot {
+  const generatedMatch = findGeneratedMatchSchedule(matchId)
+  if (generatedMatch) {
+    return generatedMatch
+  }
+
   const match = matches.find((item) => item.id === matchId)
 
   return {

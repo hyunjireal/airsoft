@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
@@ -32,17 +32,28 @@ const guideTips = [
   },
 ] as const
 
+type BeginnerGuideLocationState = {
+  returnTo?: string
+  fromChatReturn?: boolean
+}
+
+function getSafeGuideReturnPath(path?: string) {
+  if (!path || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/chat') || path.startsWith('/guide')) {
+    return '/community'
+  }
+
+  return path
+}
+
 export function BeginnerHub() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const locationState = location.state as BeginnerGuideLocationState | null
+  const returnTo = getSafeGuideReturnPath(locationState?.returnTo)
   const [openSectionId, setOpenSectionId] = useState<string | null>(null)
 
   const goBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1)
-      return
-    }
-
-    navigate('/community')
+    navigate(returnTo, { replace: Boolean(locationState?.fromChatReturn) })
   }
 
   const toggleSection = (sectionId: string) => {
@@ -123,14 +134,24 @@ export function BeginnerHub() {
         })}
       </section>
 
-      <Link className="beginner_guide_help_card" to="/community">
+      <Link
+        className="beginner_guide_help_card"
+        to="/chat"
+        state={{
+          returnTo: '/guide',
+          returnState: {
+            returnTo,
+            fromChatReturn: true,
+          },
+        }}
+      >
         <div className="beginner_guide_help_card_left">
           <img className="beginner_guide_help_icon" src={bookIcon} alt="" aria-hidden="true" />
           <div className="beginner_guide_help_copy">
             <strong>더 도움이 필요하신가요?</strong>
             <p>
               <span>궁금한 내용은</span>
-              <span>초보 질문방을 이용해보세요.</span>
+              <span>AI 챗봇 가이에게 물어보세요.</span>
             </p>
           </div>
         </div>

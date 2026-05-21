@@ -356,7 +356,7 @@ export function BuddyFind() {
           <m.button
             className="buddy_find_more__button buddy_find_motion_button"
             type="button"
-            onClick={() => navigate('/match')}
+            onClick={() => navigate('/match', { state: { scrollTo: 'schedule', returnTo: '/buddy' } })}
             whileHover={buddyButtonHover}
             whileTap={buddyButtonTap}
           >
@@ -639,7 +639,8 @@ export function BuddyRecommend() {
   const isLightMode = themeMode === 'light'
 
   return (
-    <article className={`buddy_recommend_page${isLightMode ? ' buddy_recommend_page--light' : ''}`}>
+    <LazyMotion features={domAnimation}>
+      <article className={`buddy_recommend_page${isLightMode ? ' buddy_recommend_page--light' : ''}`}>
       <PageHeader
         variant={isLightMode ? 'default' : 'dark'}
         className="buddy_recommend_header"
@@ -653,13 +654,20 @@ export function BuddyRecommend() {
       </section>
 
       <section className="buddy_recommend_list_section" aria-label="추천 버디 목록">
-        <div className="buddy_recommend_list">
+        <m.div
+          className="buddy_recommend_list"
+          initial="hidden"
+          animate="visible"
+          variants={buddyStaggerContainerVariants}
+        >
           {BUDDY_RECOMMENDATIONS.map((buddy) => (
-            <button
+            <m.button
               className="buddy_recommend_card"
               type="button"
               key={buddy.id}
               onClick={() => navigate(`/buddy/recommend/${buddy.id}`)}
+              variants={buddyCardVariants}
+              whileTap={buddyButtonTap}
             >
               <span className="buddy_recommend_card__main">
                 <img className="buddy_recommend_card__avatar" src={buddy.image} alt="" />
@@ -686,11 +694,12 @@ export function BuddyRecommend() {
                 </span>
               </span>
               <span className="buddy_recommend_card__arrow" aria-hidden="true" />
-            </button>
+            </m.button>
           ))}
-        </div>
+        </m.div>
       </section>
-    </article>
+      </article>
+    </LazyMotion>
   )
 }
 
@@ -809,7 +818,8 @@ export function BuddyDetail() {
     BUDDY_RECOMMENDATIONS[0]
 
   return (
-    <article className={`buddy_detail_page${isLightMode ? ' buddy_detail_page--light' : ''}`}>
+    <LazyMotion features={domAnimation}>
+      <article className={`buddy_detail_page${isLightMode ? ' buddy_detail_page--light' : ''}`}>
       <PageHeader
         variant={isLightMode ? 'default' : 'dark'}
         className="buddy_detail_header"
@@ -818,8 +828,17 @@ export function BuddyDetail() {
         title="버디 상세"
       />
 
-      <main className="buddy_detail_content">
-        <section className="buddy_detail_profile" aria-label={`${buddy.name} 프로필`}>
+      <m.main
+        className="buddy_detail_content"
+        initial="hidden"
+        animate="visible"
+        variants={buddyStaggerContainerVariants}
+      >
+        <m.section
+          className="buddy_detail_profile"
+          aria-label={`${buddy.name} 프로필`}
+          variants={buddyCardVariants}
+        >
           <div className="buddy_detail_avatar_wrap">
             <img className="buddy_detail_avatar" src={buddy.image} alt="" />
           </div>
@@ -831,18 +850,22 @@ export function BuddyDetail() {
               {buddy.rating}
             </p>
           </div>
-        </section>
+        </m.section>
 
-        <section className="buddy_detail_styles" aria-labelledby="buddy_detail_styles_title">
+        <m.section
+          className="buddy_detail_styles"
+          aria-labelledby="buddy_detail_styles_title"
+          variants={buddySurfaceVariants}
+        >
           <h2 id="buddy_detail_styles_title">버디의 플레이 스타일</h2>
-          <div className="buddy_detail_tag_list">
+          <m.div className="buddy_detail_tag_list" variants={buddyStaggerContainerVariants}>
             {BUDDY_DETAIL_TAGS.map((tag) => (
-              <span key={tag}>{tag}</span>
+              <m.span key={tag} variants={buddyChipVariants}>{tag}</m.span>
             ))}
-          </div>
-        </section>
+          </m.div>
+        </m.section>
 
-        <section className="buddy_detail_quote">
+        <m.section className="buddy_detail_quote" variants={buddySurfaceVariants}>
           <span aria-hidden="true">“</span>
           <p>
             저와 함께 다니면
@@ -850,9 +873,9 @@ export function BuddyDetail() {
             모든 분들이 행복하고 즐거워합니다.
           </p>
           <span aria-hidden="true">”</span>
-        </section>
+        </m.section>
 
-        <section className="buddy_detail_stats" aria-label="버디 활동 정보">
+        <m.section className="buddy_detail_stats" aria-label="버디 활동 정보" variants={buddySurfaceVariants}>
           <div>
             <p>안내 완료</p>
             <strong>9회</strong>
@@ -869,15 +892,19 @@ export function BuddyDetail() {
             <p>응답 속도</p>
             <strong>빠름</strong>
           </div>
-        </section>
+        </m.section>
 
-        <section className="buddy_detail_reviews" aria-labelledby="buddy_detail_reviews_title">
+        <m.section
+          className="buddy_detail_reviews"
+          aria-labelledby="buddy_detail_reviews_title"
+          variants={buddySurfaceVariants}
+        >
           <div className="buddy_detail_section_header">
             <h2 id="buddy_detail_reviews_title">최근 플레이 후기</h2>
           </div>
-          <div className="buddy_detail_review_list">
+          <m.div className="buddy_detail_review_list" variants={buddyStaggerContainerVariants}>
             {BUDDY_DETAIL_REVIEWS.map((review) => (
-              <article className="buddy_detail_review_card" key={review.id}>
+              <m.article className="buddy_detail_review_card" key={review.id} variants={buddyCardVariants}>
                 <div className="buddy_detail_review_top">
                   <div className="buddy_detail_reviewer">
                     <span aria-hidden="true" />
@@ -897,19 +924,27 @@ export function BuddyDetail() {
                   ))}
                 </p>
                 <time>{review.date}</time>
-              </article>
+              </m.article>
             ))}
-          </div>
-        </section>
+          </m.div>
+        </m.section>
 
-        <button className="buddy_detail_request" type="button" onClick={() => setIsModalOpen(true)}>
+        <m.button
+          className="buddy_detail_request"
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          variants={buddyCardVariants}
+          whileHover={buddyButtonHover}
+          whileTap={buddyButtonTap}
+        >
           버디 요청하기
-        </button>
-      </main>
+        </m.button>
+      </m.main>
 
       {isModalOpen && (
         <BuddyRequestModal buddy={buddy} onClose={() => setIsModalOpen(false)} />
       )}
-    </article>
+      </article>
+    </LazyMotion>
   )
 }

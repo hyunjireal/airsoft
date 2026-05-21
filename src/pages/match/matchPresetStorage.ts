@@ -17,6 +17,8 @@ export type MatchPresetItem = {
 
 const MATCH_PRESETS_KEY = 'airsoft:match-presets'
 const MATCH_APPLIED_PRESET_KEY = 'airsoft:match-applied-preset'
+export const BEGINNER_MATCH_PRESET_ID = 'beginner'
+export const VETERAN_MATCH_PRESET_ID = 'weekend'
 
 export const defaultMatchPresets: MatchPresetItem[] = [
   {
@@ -174,8 +176,31 @@ export function deleteMatchPreset(presetId: string) {
   writeMatchPresets(readMatchPresets().filter((preset) => preset.id !== presetId))
 }
 
+function readDefaultAppliedMatchPresetId() {
+  const profileBadge = localStorage.getItem('homeProfileBadge')
+  const level = localStorage.getItem('level') ?? ''
+  const skillAlias = localStorage.getItem('skillAlias') ?? ''
+
+  const isVeteran =
+    profileBadge === 'badge03' ||
+    level.includes('숙련') ||
+    skillAlias.includes('베테랑')
+
+  if (isVeteran) {
+    return VETERAN_MATCH_PRESET_ID
+  }
+
+  const isBeginner =
+    profileBadge === 'symbol_beginner' ||
+    level.includes('입문') ||
+    level.includes('초보') ||
+    skillAlias.includes('뉴비')
+
+  return isBeginner ? BEGINNER_MATCH_PRESET_ID : VETERAN_MATCH_PRESET_ID
+}
+
 export function readAppliedMatchPresetId() {
-  return localStorage.getItem(MATCH_APPLIED_PRESET_KEY) || 'weekend'
+  return localStorage.getItem(MATCH_APPLIED_PRESET_KEY) || readDefaultAppliedMatchPresetId()
 }
 
 export function writeAppliedMatchPresetId(presetId: string) {

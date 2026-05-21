@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { useMemo } from 'react'
 import { useEffect } from 'react'
 import { useRef } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
@@ -19,12 +20,11 @@ import matchNolistImage from '../../asset/images/match_nolist01.png'
 import mainUserImage from '../../asset/images/main_user01.png'
 import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
-import matchList03 from '../../asset/images/match_list03.jpg'
 import matchList04 from '../../asset/images/match_list04.jpg'
-import matchList05 from '../../asset/images/match_list05.jpg'
 import { LoginButton } from '../../components/LoginButton'
 import { aiRecommendedMatches, type AiRecommendedMatch } from '../../data/aiRecommendedMatches'
 import { getMyMatchGroups } from '../my/myMatchData'
+import { createGeneratedMatchSchedules } from './generatedMatchSchedules'
 import { cacheMatchSnapshot } from './matchApplicationStorage'
 import {
   readAppliedMatchPresetId,
@@ -55,6 +55,11 @@ type MatchSchedule = {
 type MatchTypeFilter = 'all' | MatchType
 type MatchPresetId = string
 type WeekSlideDirection = 'prev' | 'next' | null
+
+type MatchHomeLocationState = {
+  scrollTo?: 'ai-recommend' | 'schedule'
+  returnTo?: string
+}
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
@@ -105,232 +110,6 @@ const homeMatchMoreStyle = {
   lineHeight: '130%',
   letterSpacing: '-0.02em',
 } as const
-
-const calendarDays: Array<{ label: string; muted?: boolean; types?: MatchType[] }> = [
-  { label: '27', muted: true },
-  { label: '28', muted: true },
-  { label: '29', muted: true },
-  { label: '30', muted: true },
-  { label: '1' },
-  { label: '2', types: ['personal', 'team'] },
-  { label: '3', types: ['mercenary'] },
-  { label: '4' },
-  { label: '5' },
-  { label: '6' },
-  { label: '7' },
-  { label: '8' },
-  { label: '9', types: ['personal'] },
-  { label: '10', types: ['team'] },
-  { label: '11' },
-  { label: '12', types: ['personal'] },
-  { label: '13' },
-  { label: '14' },
-  { label: '15', types: ['mercenary'] },
-  { label: '16', types: ['team'] },
-  { label: '17', types: ['personal'] },
-  { label: '18', types: ['personal', 'team', 'mercenary'] },
-  { label: '19' },
-  { label: '20' },
-  { label: '21', types: ['team'] },
-  { label: '22' },
-  { label: '23', types: ['personal', 'team'] },
-  { label: '24', types: ['mercenary'] },
-  { label: '25' },
-  { label: '26', types: ['team'] },
-  { label: '27' },
-  { label: '28' },
-  { label: '29' },
-  { label: '30', types: ['personal', 'team', 'mercenary'] },
-  { label: '31', types: ['team'] },
-]
-
-const defaultMatchByType: Record<MatchType, Omit<MatchSchedule, 'id' | 'type'>> = {
-  personal: {
-    title: '초보 환영 야외전',
-    time: '14:00',
-    region: '경기 남부',
-    fieldName: '택티쿨 필드',
-    difficulty: '입문자',
-    currentParticipants: 18,
-    maxParticipants: 24,
-    action: '상세 보기',
-    imageSrc: matchList01,
-  },
-  team: {
-    title: '팀 단위 전술 스크림',
-    time: '15:30',
-    region: '경기 북부',
-    fieldName: '포레스트 아레나',
-    difficulty: '팀',
-    currentParticipants: 12,
-    maxParticipants: 16,
-    action: '상세 보기',
-    imageSrc: matchList02,
-  },
-  mercenary: {
-    title: '용병 조인 야외전',
-    time: '17:00',
-    region: '경기 남부',
-    fieldName: '택티쿨 필드',
-    difficulty: '용병',
-    currentParticipants: 8,
-    maxParticipants: 10,
-    action: '참가 신청',
-    imageSrc: matchList04,
-  },
-}
-
-const matchesByDay: Record<string, MatchSchedule[]> = {
-  '2': [
-    {
-      id: 'match-002',
-      type: 'personal',
-      title: '주말 포레스트 매치',
-      time: '10:30',
-      region: '경기 북부',
-      fieldName: '포레스트 아레나',
-      difficulty: '초보',
-      currentParticipants: 22,
-      maxParticipants: 30,
-      action: '상세 보기',
-      imageSrc: matchList03,
-    },
-    {
-      id: 'match-002-team',
-      type: 'team',
-      title: '포레스트 팀전',
-      time: '15:30',
-      region: '경기 북부',
-      fieldName: '포레스트 아레나',
-      difficulty: '팀',
-      currentParticipants: 10,
-      maxParticipants: 14,
-      action: '상세 보기',
-      imageSrc: matchList02,
-    },
-  ],
-  '18': [
-    {
-      id: 'match-003',
-      type: 'personal',
-      title: '서울 CQB 입문 스크림',
-      time: '12:00',
-      region: '서울',
-      fieldName: '어반 CQB',
-      difficulty: '초보',
-      currentParticipants: 14,
-      maxParticipants: 16,
-      action: '상세 보기',
-      imageSrc: matchList05,
-    },
-    {
-      id: 'match-002',
-      type: 'team',
-      title: '주말 포레스트 매치',
-      time: '15:30',
-      region: '경기 북부',
-      fieldName: '포레스트 아레나',
-      difficulty: '팀',
-      currentParticipants: 22,
-      maxParticipants: 30,
-      action: '상세 보기',
-      imageSrc: matchList03,
-    },
-    {
-      id: 'match-001',
-      type: 'mercenary',
-      title: '용병 조인 야외전',
-      time: '17:00',
-      region: '경기 남부',
-      fieldName: '택티쿨 필드',
-      difficulty: '용병',
-      currentParticipants: 8,
-      maxParticipants: 10,
-      action: '참가 신청',
-      imageSrc: matchList04,
-    },
-  ],
-  '23': [
-    {
-      id: 'match-001',
-      type: 'personal',
-      title: '초보 환영 야외전',
-      time: '14:00',
-      region: '경기 남부',
-      fieldName: '택티쿨 필드',
-      difficulty: '입문자',
-      currentParticipants: 18,
-      maxParticipants: 24,
-      action: '상세 보기',
-      imageSrc: matchList01,
-    },
-    {
-      id: 'match-023-team',
-      type: 'team',
-      title: '남부 팀 매치',
-      time: '16:00',
-      region: '경기 남부',
-      fieldName: '택티쿨 필드',
-      difficulty: '팀',
-      currentParticipants: 12,
-      maxParticipants: 18,
-      action: '상세 보기',
-      imageSrc: matchList02,
-    },
-  ],
-  '30': [
-    {
-      id: 'match-004',
-      type: 'team',
-      title: '월말 팀 스크림',
-      time: '18:00',
-      region: '서울',
-      fieldName: '어반 CQB',
-      difficulty: '팀',
-      currentParticipants: 12,
-      maxParticipants: 16,
-      action: '상세 보기',
-      imageSrc: matchList05,
-    },
-    {
-      id: 'match-030-personal',
-      type: 'personal',
-      title: '월말 개인 CQB',
-      time: '12:00',
-      region: '서울',
-      fieldName: '어반 CQB',
-      difficulty: '초보',
-      currentParticipants: 9,
-      maxParticipants: 16,
-      action: '상세 보기',
-      imageSrc: matchList03,
-    },
-    {
-      id: 'match-030-mercenary',
-      type: 'mercenary',
-      title: '월말 용병 조인',
-      time: '19:00',
-      region: '서울',
-      fieldName: '어반 CQB',
-      difficulty: '용병',
-      currentParticipants: 6,
-      maxParticipants: 10,
-      action: '참가 신청',
-      imageSrc: matchList04,
-    },
-  ],
-}
-
-function createMatchesForDay(dayLabel: string) {
-  const day = calendarDays.find((item) => item.label === dayLabel && !item.muted)
-
-  return (day?.types ?? []).map((type, index) => ({
-    id: `match-${dayLabel}-${type}`,
-    type,
-    ...defaultMatchByType[type],
-    time: index === 0 ? defaultMatchByType[type].time : `${15 + index}:30`,
-  }))
-}
 
 function filterMatches(matches: MatchSchedule[], filter: MatchTypeFilter) {
   if (filter === 'all') {
@@ -498,9 +277,19 @@ function readFocusedMatchDate() {
   return Number.isNaN(date.getTime()) ? defaultDate : date
 }
 
+function getSafeMatchReturnPath(path?: string) {
+  if (!path || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/match')) {
+    return '/home'
+  }
+
+  return path
+}
+
 export function MatchHome() {
   const navigate = useNavigate()
   const location = useLocation()
+  const locationState = location.state as MatchHomeLocationState | null
+  const returnTo = getSafeMatchReturnPath(locationState?.returnTo)
   const scheduleSectionRef = useRef<HTMLElement | null>(null)
   const aiSectionRef = useRef<HTMLElement | null>(null)
   const weekDragRef = useRef<{ pointerId: number; startX: number; startY: number } | null>(null)
@@ -521,6 +310,7 @@ export function MatchHome() {
   const [isWeekDragging, setIsWeekDragging] = useState(false)
   const [aiMatchIndex, setAiMatchIndex] = useState(0)
   const [isAiMatchRefreshing, setIsAiMatchRefreshing] = useState(false)
+  const generatedMatches = useMemo(() => createGeneratedMatchSchedules(), [])
   const myMatchGroups = getMyMatchGroups()
   const presetSelectionOptions = matchPresetOptions.filter((preset) => !preset.isCreateAction)
   const appliedPreset = presetSelectionOptions.find((preset) => preset.id === appliedPresetId) ?? presetSelectionOptions[0]
@@ -533,7 +323,6 @@ export function MatchHome() {
   const hiddenAiMemberCount = Math.max(aiRecommendedMatch.currentMembers - 3, 0)
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
-  const isSelectedMatchMonth = selectedDate.getFullYear() === 2026 && selectedDate.getMonth() === 4
   const selectedDateKey = [
     selectedDate.getFullYear(),
     String(selectedDate.getMonth() + 1).padStart(2, '0'),
@@ -541,23 +330,18 @@ export function MatchHome() {
   ].join('-')
   const isSelectedDatePast = isPastDate(selectedDate)
   const selectedDayCreatedMatches = createdMatches.filter((match) => match.date === selectedDateKey)
-  const selectedDayMatches = isSelectedMatchMonth
-    ? [...(matchesByDay[selectedDay] ?? createMatchesForDay(selectedDay)), ...selectedDayCreatedMatches]
-    : selectedDayCreatedMatches
+  const selectedDayGeneratedMatches = generatedMatches.filter((match) => match.dateValue === selectedDateKey)
+  const selectedDayMatches = [...selectedDayGeneratedMatches, ...selectedDayCreatedMatches]
   const selectedMatches = filterMatches(selectedDayMatches, matchTypeFilter)
-  const filteredDefaultMatchDates = calendarDays
-    .filter((day) => {
-      if (day.muted) return false
-
-      const dayMatches = matchesByDay[day.label] ?? createMatchesForDay(day.label)
-      return filterMatches(dayMatches, matchTypeFilter).length > 0
-    })
-    .map((day) => new Date(2026, 4, Number(day.label)))
   const filteredCreatedMatchDates = createdMatches
     .filter((match) => filterMatches([match], matchTypeFilter).length > 0 && match.date)
     .map((match) => new Date(`${match.date}T00:00:00`))
     .filter((date) => !Number.isNaN(date.getTime()))
-  const filteredMatchDates = [...filteredDefaultMatchDates, ...filteredCreatedMatchDates]
+  const filteredGeneratedMatchDates = generatedMatches
+    .filter((match) => filterMatches([match], matchTypeFilter).length > 0)
+    .map((match) => new Date(`${match.dateValue}T00:00:00`))
+    .filter((date) => !Number.isNaN(date.getTime()))
+  const filteredMatchDates = [...filteredCreatedMatchDates, ...filteredGeneratedMatchDates]
   const weekDates = getWeekDates(selectedDate)
   const selectedWeekDayIndex = Math.max(weekDates.findIndex((date) => isSameDay(date, selectedDate)), 0)
 
@@ -635,7 +419,7 @@ export function MatchHome() {
     }
   }
   const goBack = () => {
-    navigate('/home')
+    navigate(returnTo)
   }
 
   const [showTypeSheet, setShowTypeSheet] = useState(false)
@@ -671,12 +455,17 @@ export function MatchHome() {
   }, [])
 
   useEffect(() => {
-    if ((location.state as { scrollTo?: string } | null)?.scrollTo === 'ai-recommend') {
+    if (locationState?.scrollTo === 'ai-recommend') {
       window.setTimeout(() => {
         aiSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }, 200)
     }
-  }, [location.state])
+    if (locationState?.scrollTo === 'schedule') {
+      window.setTimeout(() => {
+        scheduleSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 200)
+    }
+  }, [locationState?.scrollTo])
 
   const handleTypeSelect = (kind: 'personal' | 'team' | 'guest', guestFlow?: 'wanted' | 'join') => {
     if (kind !== 'guest') {
@@ -729,12 +518,14 @@ export function MatchHome() {
   }
 
   const cacheScheduleMatch = (match: MatchSchedule) => {
+    const dateValue = match.date ?? selectedDateKey
+
     cacheMatchSnapshot({
       id: match.id,
       type: match.type,
       title: match.title,
-      date: selectedDateKey,
-      dateValue: selectedDateKey,
+      date: dateValue,
+      dateValue,
       time: match.time,
       region: match.region,
       fieldName: match.fieldName,

@@ -10,6 +10,11 @@
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-pretendard);
+  animation: guidePageFadeIn 360ms ease both;
+}
+
+.beginner_guide_page > .page_header {
+  animation: guideRiseIn 420ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
 }
 
 .beginner_guide_content {
@@ -20,6 +25,7 @@
   display: grid;
   gap: clamp(20px, 2.2vw, 24px);
   margin-top: clamp(24px, 4vw, 44px);
+  animation: guideRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
 }
 
 .beginner_guide_tips_label {
@@ -51,6 +57,19 @@
   justify-items: center;
   gap: clamp(12px, 1.8vw, 15px);
   text-align: center;
+  animation: guideRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.beginner_guide_tip_card:nth-child(1) {
+  animation-delay: 190ms;
+}
+
+.beginner_guide_tip_card:nth-child(2) {
+  animation-delay: 250ms;
+}
+
+.beginner_guide_tip_card:nth-child(3) {
+  animation-delay: 310ms;
 }
 
 .beginner_guide_tip_image {
@@ -93,6 +112,35 @@
   padding: clamp(15px, 2vw, 22px);
   border-radius: clamp(10px, 1.6vw, 18px);
   background: #e8edd8;
+  animation: guideRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.beginner_guide_section_card:nth-child(1) {
+  animation-delay: 300ms;
+}
+
+.beginner_guide_section_card:nth-child(2) {
+  animation-delay: 360ms;
+}
+
+.beginner_guide_section_card:nth-child(3) {
+  animation-delay: 420ms;
+}
+
+.beginner_guide_section_card:nth-child(4) {
+  animation-delay: 480ms;
+}
+
+.beginner_guide_section_card:nth-child(5) {
+  animation-delay: 540ms;
+}
+
+.beginner_guide_section_card:nth-child(6) {
+  animation-delay: 600ms;
+}
+
+.beginner_guide_section_card:nth-child(7) {
+  animation-delay: 660ms;
 }
 
 .beginner_guide_section_button {
@@ -218,6 +266,7 @@
   padding: clamp(15px, 2.4vw, 22px);
   border-radius: clamp(8px, 1.4vw, 14px);
   background: var(--color-gray05);
+  animation: guideRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) 700ms both;
 }
 
 .beginner_guide_help_card_left {
@@ -420,12 +469,14 @@
   padding: 28px 24px 128px;
   background: var(--color-white);
   color: var(--color-navy);
+  animation: guidePageFadeIn 360ms ease both;
 }
 
 .guide_tutorial_header {
   display: grid;
   gap: 10px;
   margin-bottom: 48px;
+  animation: guideRiseIn 460ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both;
 }
 
 .guide_tutorial_header p {
@@ -457,6 +508,35 @@
   font-size: 14px;
   font-weight: 900;
   line-height: 1;
+  animation: guideStepDotIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.guide_tutorial_steps span:nth-child(1) {
+  animation-delay: 180ms;
+}
+
+.guide_tutorial_steps span:nth-child(2) {
+  animation-delay: 230ms;
+}
+
+.guide_tutorial_steps span:nth-child(3) {
+  animation-delay: 280ms;
+}
+
+.guide_tutorial_steps span:nth-child(4) {
+  animation-delay: 330ms;
+}
+
+.guide_tutorial_steps span:nth-child(5) {
+  animation-delay: 380ms;
+}
+
+.guide_tutorial_steps span:nth-child(6) {
+  animation-delay: 430ms;
+}
+
+.guide_tutorial_steps span:nth-child(7) {
+  animation-delay: 480ms;
 }
 
 .guide_tutorial_steps span:not(:last-child)::after {
@@ -483,6 +563,7 @@
   border-top: 1px solid var(--color-navy);
   border-bottom: 1px solid var(--color-navy);
   border-radius: 8px;
+  animation: guideRiseIn 540ms cubic-bezier(0.22, 1, 0.36, 1) 210ms both;
 }
 
 .guide_tutorial_badges {
@@ -544,6 +625,7 @@
   border-radius: 12px;
   background: var(--color-navy);
   color: var(--color-white);
+  animation: guideRiseIn 520ms cubic-bezier(0.22, 1, 0.36, 1) 380ms both;
 }
 
 .guide_tutorial_shield {
@@ -572,6 +654,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
   margin-top: 24px;
+  animation: guideRiseIn 500ms cubic-bezier(0.22, 1, 0.36, 1) 500ms both;
 }
 
 .guide_tutorial_actions a {
@@ -584,6 +667,40 @@
   color: var(--color-white);
   font-size: 16px;
   font-weight: 900;
+}
+
+@keyframes guidePageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes guideRiseIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes guideStepDotIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 .guide_complete_hero {

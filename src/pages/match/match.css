@@ -13,45 +13,52 @@
 .match_page .match_ai_recommend_section,
 .match_page .match_schedule_section,
 .match_page .match_tournament_section {
-  animation: match_page_enter 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: match_page_enter 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .match_page .match_page_header {
-  animation-duration: 360ms;
+  animation-duration: 560ms;
 }
 
 .match_page .match_home_my_matches {
-  animation-delay: 40ms;
+  animation-delay: 80ms;
 }
 
 .match_page .match_ai_recommend_section {
-  animation-delay: 90ms;
+  animation-delay: 150ms;
 }
 
 .match_page .match_schedule_section {
-  animation-delay: 140ms;
+  animation-delay: 220ms;
 }
 
 .match_page .match_tournament_section {
-  animation-delay: 190ms;
+  animation-delay: 290ms;
 }
 
 .match_page .match_status_summary_card,
 .match_page .match_ai_preset_card,
+.match_page .match_ai_join_button,
 .match_page .match_month_card,
-.match_page .match_selected_schedule {
-  animation: match_page_soft_enter 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.match_page .match_selected_schedule,
+.match_page .match_tournament_card {
+  animation: match_page_soft_enter 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .match_page .match_status_summary_card:nth-child(1),
 .match_page .match_ai_preset_card,
 .match_page .match_month_card {
-  animation-delay: 130ms;
+  animation-delay: 260ms;
 }
 
 .match_page .match_status_summary_card:nth-child(2),
 .match_page .match_selected_schedule {
-  animation-delay: 180ms;
+  animation-delay: 360ms;
+}
+
+.match_page .match_ai_join_button,
+.match_page .match_tournament_card {
+  animation-delay: 460ms;
 }
 
 .match_page_title {
@@ -61,7 +68,7 @@
 @keyframes match_page_enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 8px, 0);
+    transform: translate3d(0, 22px, 0);
   }
 
   to {
@@ -73,7 +80,7 @@
 @keyframes match_page_soft_enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 6px, 0);
+    transform: translate3d(0, 18px, 0);
   }
 
   to {
@@ -160,9 +167,13 @@
   .match_page .match_tournament_section,
   .match_page .match_status_summary_card,
   .match_page .match_ai_preset_card,
+  .match_page .match_ai_join_button,
   .match_page .match_month_card,
-  .match_page .match_selected_schedule {
-    animation-duration: 1ms;
+  .match_page .match_selected_schedule,
+  .match_page .match_tournament_card {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -4496,6 +4507,183 @@
   font-family: var(--font-pretendard);
 }
 
+.match_detail_page .match_page_header,
+.match_detail_summary,
+.match_detail_section,
+.match_detail_action_button {
+  animation: match_detail_page_enter 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.match_detail_page .match_page_header {
+  animation-duration: 560ms;
+}
+
+.match_detail_summary {
+  animation-delay: 80ms;
+}
+
+.match_detail_section:nth-child(1) {
+  animation-delay: 180ms;
+}
+
+.match_detail_section:nth-child(2) {
+  animation-delay: 280ms;
+}
+
+.match_detail_action_button {
+  animation-delay: 380ms;
+}
+
+.match_detail_title_row,
+.match_detail_info_row,
+.match_detail_section_title_row,
+.match_detail_memo_box,
+.match_detail_applicant_more {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+.match_detail_title_row,
+.match_detail_section_title_row {
+  animation-delay: 220ms;
+}
+
+.match_detail_info_row:nth-child(1),
+.match_detail_memo_box {
+  animation-delay: 320ms;
+}
+
+.match_detail_info_row:nth-child(2) {
+  animation-delay: 390ms;
+}
+
+.match_detail_info_row:nth-child(3) {
+  animation-delay: 460ms;
+}
+
+.match_detail_info_row:nth-child(4) {
+  animation-delay: 530ms;
+}
+
+.match_detail_info_row:nth-child(5),
+.match_detail_applicant_more {
+  animation-delay: 600ms;
+}
+
+.match_detail_applicant_list > .match_detail_applicant {
+  --match-detail-applicant-max-height: 96px;
+  opacity: 1;
+  max-height: var(--match-detail-applicant-max-height);
+  margin-top: 10px;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  transition:
+    max-height 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms ease,
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: max-height, margin-top, opacity, transform;
+}
+
+.match_detail_applicant_list > .match_detail_applicant:first-child {
+  margin-top: 0;
+}
+
+.match_detail_applicant_list:not(.is_expanded) > .match_detail_applicant:nth-child(n + 6) {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+  pointer-events: none;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(n + 6) {
+  opacity: 1;
+  max-height: var(--match-detail-applicant-max-height);
+  margin-top: 10px;
+  transform: translate3d(0, 0, 0);
+}
+
+.match_detail_applicant_list > .match_detail_applicant:nth-child(1) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) 320ms both;
+}
+
+.match_detail_applicant_list > .match_detail_applicant:nth-child(2) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+}
+
+.match_detail_applicant_list > .match_detail_applicant:nth-child(3) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) 480ms both;
+}
+
+.match_detail_applicant_list > .match_detail_applicant:nth-child(4) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) 560ms both;
+}
+
+.match_detail_applicant_list > .match_detail_applicant:nth-child(5) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  animation: match_detail_piece_reveal 680ms cubic-bezier(0.22, 1, 0.36, 1) 640ms both;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(6) {
+  transition-delay: 0ms;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(7) {
+  transition-delay: 45ms;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(8) {
+  transition-delay: 90ms;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(9) {
+  transition-delay: 135ms;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(10) {
+  transition-delay: 180ms;
+}
+
+.match_detail_applicant_list.is_expanded > .match_detail_applicant:nth-child(n + 11) {
+  transition-delay: 225ms;
+}
+
+@keyframes match_detail_page_enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes match_detail_piece_reveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 .mobile_frame:has(.match_detail_page),
 .mobile_frame:has(.match_detail_page) > main {
   background: var(--color-white);
@@ -4676,7 +4864,7 @@
 .match_detail_applicant_list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   width: 100%;
 }
 
@@ -4708,24 +4896,40 @@
   transform: translateY(-1px);
 }
 
-.match_detail_applicant_list.is_refreshing .match_detail_applicant {
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:not([aria-hidden='true']) > * {
   animation: matchDetailApplicantPulse 0.8s ease;
 }
 
-.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(2) {
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(2) > * {
   animation-delay: 40ms;
 }
 
-.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(3) {
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(3) > * {
   animation-delay: 80ms;
 }
 
-.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(4) {
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(4) > * {
   animation-delay: 120ms;
 }
 
-.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(5) {
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(5) > * {
   animation-delay: 160ms;
+}
+
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(6) > * {
+  animation-delay: 200ms;
+}
+
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(7) > * {
+  animation-delay: 240ms;
+}
+
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(8) > * {
+  animation-delay: 280ms;
+}
+
+.match_detail_applicant_list.is_refreshing .match_detail_applicant:nth-child(n + 9) > * {
+  animation-delay: 320ms;
 }
 
 .match_detail_applicant {
@@ -4746,12 +4950,12 @@
   0%,
   100% {
     opacity: 1;
-    transform: translateY(0);
+    filter: none;
   }
 
   40% {
     opacity: 0.58;
-    transform: translateY(2px);
+    filter: saturate(0.8);
   }
 }
 
@@ -4881,6 +5085,24 @@
 
   .match_detail_applicant_state {
     grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .match_detail_page .match_page_header,
+  .match_detail_summary,
+  .match_detail_section,
+  .match_detail_action_button,
+  .match_detail_title_row,
+  .match_detail_info_row,
+  .match_detail_section_title_row,
+  .match_detail_memo_box,
+  .match_detail_applicant_more,
+  .match_detail_applicant_list > .match_detail_applicant {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1;
+    transform: none;
   }
 }
 

@@ -8,6 +8,70 @@
   padding-bottom: 100px;
 }
 
+.tournament_mvp_vote_page .tournament_intro_card,
+.tournament_mvp_vote_page .tournament_match_section,
+.tournament_mvp_vote_page .tournament_team_select_section,
+.tournament_mvp_vote_page .tournament_candidate_section,
+.tournament_mvp_vote_page .tournament_live_rank_section,
+.tournament_mvp_vote_page .tournament_cta_section {
+  animation: tournament_vote_section_enter 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tournament_mvp_vote_page .tournament_intro_card {
+  animation-delay: 40ms;
+}
+
+.tournament_mvp_vote_page .tournament_match_section {
+  animation-delay: 150ms;
+}
+
+.tournament_mvp_vote_page .tournament_team_select_section {
+  animation-delay: 260ms;
+}
+
+.tournament_mvp_vote_page .tournament_candidate_section {
+  animation-delay: 340ms;
+}
+
+.tournament_mvp_vote_page .tournament_live_rank_section {
+  animation-delay: 420ms;
+}
+
+.tournament_mvp_vote_page .tournament_cta_section {
+  animation-delay: 500ms;
+}
+
+.tournament_mvp_vote_page .tournament_match_card,
+.tournament_mvp_vote_page .tournament_match_lock_card {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.97);
+  animation: tournament_vote_card_enter 680ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tournament_mvp_vote_page .tournament_match_card:nth-child(1) {
+  animation-delay: 320ms;
+}
+
+.tournament_mvp_vote_page .tournament_match_card:nth-child(2) {
+  animation-delay: 420ms;
+}
+
+.tournament_mvp_vote_page .tournament_match_lock_card {
+  animation-delay: 520ms;
+}
+
+.tournament_mvp_vote_page.is_match_hinting .tournament_match_card.is_selected {
+  opacity: 1;
+  transform: translateZ(0);
+  animation: tournament_vote_selected_width_hint 1200ms cubic-bezier(0.16, 1, 0.3, 1) 360ms both;
+}
+
+.tournament_mvp_vote_page.is_match_hint_done .tournament_match_card {
+  opacity: 1;
+  transform: translateZ(0);
+  animation: none;
+}
+
 .tournament_mvp_vote_page .page_header,
 .mvp_vote_complete_page .page_header {
   position: fixed;
@@ -1020,7 +1084,7 @@
   align-items: center;
   gap: 15px;
   overflow: hidden;
-  animation: tournament_accordion_open 240ms ease-out both;
+  animation: tournament_accordion_open 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .tournament_team_select_box > strong {
@@ -1065,7 +1129,7 @@
   padding: clamp(20px, 3vw + 8px, 32px) 24px;
   background: var(--tournament-dark-bg);
   overflow: hidden;
-  animation: tournament_accordion_open 240ms ease-out both;
+  animation: tournament_accordion_open 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .tournament_team_media_section h2 {
@@ -1147,7 +1211,23 @@
   gap: 7px;
   width: 100%;
   overflow: hidden;
-  animation: tournament_accordion_open 240ms ease-out both;
+  animation: tournament_accordion_open 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tournament_candidate_card_list .tournament_vote_candidate_card {
+  animation: tournament_vote_candidate_enter 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.tournament_candidate_card_list .tournament_vote_candidate_card:nth-child(1) {
+  animation-delay: 80ms;
+}
+
+.tournament_candidate_card_list .tournament_vote_candidate_card:nth-child(2) {
+  animation-delay: 160ms;
+}
+
+.tournament_candidate_card_list .tournament_vote_candidate_card:nth-child(3) {
+  animation-delay: 240ms;
 }
 
 .tournament_vote_candidate_card {
@@ -1396,17 +1476,77 @@
   }
 }
 
+@keyframes tournament_vote_section_enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tournament_vote_card_enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.96);
+  }
+
+  68% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.015);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes tournament_vote_selected_width_hint {
+  0% {
+    flex-grow: 1;
+  }
+
+  42% {
+    flex-grow: 1;
+  }
+
+  100% {
+    flex-grow: 1.32;
+  }
+}
+
+@keyframes tournament_vote_candidate_enter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.94);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 @keyframes tournament_accordion_open {
   from {
     max-height: 0;
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(20px) scale(0.98);
   }
 
   to {
     max-height: 520px;
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -2079,12 +2219,15 @@
 }
 
 .mvpc_point_amount {
+  display: inline-block;
+  min-width: 132px;
   color: var(--tournament-light-border);
   font-family: var(--font-pretendard);
   font-size: 40px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .mvp_vote_complete_page .mvpc_point_amount {
@@ -2260,16 +2403,22 @@
   color: var(--tournament-light-txt-sub);
 }
 
+.mvpc_rank_section .tournament_player_rank_meter b {
+  transform: none;
+  transition: width 720ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .mvpc_rank_section.has_rank_fill .tournament_player_rank_meter b {
-  animation: tournament_live_rank_fill 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: none;
+  transition-delay: 180ms;
 }
 
 .mvpc_rank_section.has_rank_fill .tournament_player_rank_item:nth-child(2) .tournament_player_rank_meter b {
-  animation-delay: 80ms;
+  transition-delay: 260ms;
 }
 
 .mvpc_rank_section.has_rank_fill .tournament_player_rank_item:nth-child(3) .tournament_player_rank_meter b {
-  animation-delay: 160ms;
+  transition-delay: 340ms;
 }
 
 /* CTA */
@@ -2499,11 +2648,25 @@
 @media (prefers-reduced-motion: reduce) {
   .tournament_match_card,
   .tournament_team_select_cards button,
-  .tournament_vote_candidate_card {
+  .tournament_vote_candidate_card,
+  .mvpc_rank_section .tournament_player_rank_meter b {
     transition: none;
   }
 
   .tournament_live_rank_section.has_rank_fill .tournament_player_rank_meter b,
+  .tournament_mvp_vote_page .tournament_intro_card,
+  .tournament_mvp_vote_page .tournament_match_section,
+  .tournament_mvp_vote_page .tournament_team_select_section,
+  .tournament_mvp_vote_page .tournament_candidate_section,
+  .tournament_mvp_vote_page .tournament_live_rank_section,
+  .tournament_mvp_vote_page .tournament_cta_section,
+  .tournament_mvp_vote_page .tournament_match_card,
+  .tournament_mvp_vote_page.is_match_hinting .tournament_match_card.is_selected,
+  .tournament_mvp_vote_page .tournament_match_lock_card,
+  .tournament_team_select_box,
+  .tournament_team_media_section,
+  .tournament_candidate_card_list,
+  .tournament_candidate_card_list .tournament_vote_candidate_card,
   .mvpc_rank_section.has_rank_fill .tournament_player_rank_meter b,
   .mvp_vote_complete_page .mvpc_hero_inner,
   .mvp_vote_complete_page .mvpc_check_medal img,
@@ -2512,7 +2675,9 @@
   .mvp_vote_complete_page .mvpc_player_section,
   .mvp_vote_complete_page .mvpc_rank_section,
   .mvp_vote_complete_page .mvpc_cta_section {
-    animation: none;
+    animation: none !important;
+    opacity: 1;
+    transform: none;
   }
 
   .tournament_live_rank_section.has_rank_fill .tournament_player_rank_meter b {
@@ -2520,7 +2685,7 @@
   }
 
   .mvpc_rank_section.has_rank_fill .tournament_player_rank_meter b {
-    transform: scaleX(1);
+    transform: none;
   }
 }
 

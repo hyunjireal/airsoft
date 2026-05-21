@@ -23,6 +23,7 @@ type DeleteTarget = {
 
 type MyScheduleLocationState = {
   toastMessage?: string
+  from?: string
 }
 
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
@@ -31,6 +32,14 @@ const tabs: ScheduleTab[] = [
   { label: '신청 중', value: 'applied' },
   { label: '확정', value: 'confirmed' },
 ]
+
+function getSafeScheduleReturnPath(path?: string) {
+  if (path === '/my' || path === '/match') {
+    return path
+  }
+
+  return '/match'
+}
 
 export function MySchedule() {
   const navigate = useNavigate()
@@ -42,6 +51,7 @@ export function MySchedule() {
   const [scheduleRevision, setScheduleRevision] = useState(0)
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
   const { toast } = useToastMessage(locationState?.toastMessage)
+  const returnTo = getSafeScheduleReturnPath(locationState?.from)
 
   const schedules = useMemo(() => getMyMatches().filter((match) => match.status !== 'past'), [scheduleRevision])
 
@@ -51,14 +61,17 @@ export function MySchedule() {
   )
 
   const goBack = () => {
-    navigate('/match')
+    navigate(returnTo)
   }
 
   useEffect(() => {
     if (!locationState?.toastMessage) return
 
-    navigate(location.pathname, { replace: true, state: null })
-  }, [location.pathname, locationState?.toastMessage, navigate])
+    navigate(location.pathname, {
+      replace: true,
+      state: locationState.from ? { from: locationState.from } : null,
+    })
+  }, [location.pathname, locationState?.from, locationState?.toastMessage, navigate])
 
   const requestDeleteMyMatch = (matchId: string, title: string) => {
     setDeleteTarget({ matchId, title })

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { PageHeader } from '../../components/PageHeader'
 import resultAlertIcon from '../../asset/icons/chatbot_result_alert.svg'
 import resultBatteryIcon from '../../asset/icons/chatbot_result_battery.svg'
@@ -13,6 +13,19 @@ import gaiImage from '../../asset/images/gai.png'
 import './ChatAnalysis.css'
 
 const getAnalysisImage = () => sessionStorage.getItem('gai_analysis_image') ?? gaiImage
+
+type ChatAnalysisLocationState = {
+  returnTo?: string
+  returnState?: Record<string, unknown> | null
+}
+
+function getSafeReturnPath(path?: string) {
+  if (!path || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/chat')) {
+    return '/home'
+  }
+
+  return path
+}
 
 const regulationItems = [
   { label: '실내 필드 탄속', value: '0.98J 이하 (약 90m/s)' },
@@ -57,6 +70,10 @@ const upgradeItems = [
 
 export function ChatAnalysisPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const locationState = location.state as ChatAnalysisLocationState | null
+  const returnTo = getSafeReturnPath(locationState?.returnTo)
+  const shouldReplaceReturn = returnTo === '/guide' || returnTo.startsWith('/guide/')
   const [uploadedImage, setUploadedImage] = useState(getAnalysisImage)
   const [sectionsVisible, setSectionsVisible] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -103,7 +120,7 @@ export function ChatAnalysisPage() {
 
   return (
     <div className="gai_report_page">
-      <PageHeader title="분석 리포트" onBack={() => navigate('/chat', { replace: true })} />
+      <PageHeader title="분석 리포트" onBack={() => navigate('/chat', { replace: true, state: { returnTo, returnState: locationState?.returnState ?? null } })} />
 
       <div className="gai_report_scroll">
         {/* Hero */}
@@ -224,14 +241,14 @@ export function ChatAnalysisPage() {
         <button
           className="gai_report_cta_btn is_secondary"
           type="button"
-          onClick={() => navigate('/home')}
+          onClick={() => navigate(returnTo, { replace: shouldReplaceReturn, state: locationState?.returnState ?? null })}
         >
           홈으로 돌아가기
         </button>
         <button
           className="gai_report_cta_btn is_primary"
           type="button"
-          onClick={() => navigate('/chat', { state: { resumePrompt: true } })}
+          onClick={() => navigate('/chat', { state: { resumePrompt: true, returnTo, returnState: locationState?.returnState ?? null } })}
         >
           AI에게 추가 질문
         </button>

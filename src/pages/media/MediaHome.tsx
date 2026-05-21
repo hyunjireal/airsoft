@@ -324,8 +324,7 @@ export function MediaHome() {
             <img src={arrowDownIcon} alt="" aria-hidden="true" />
           </button>
 
-          {rankingOpen ? (
-            <ol className="media_ranking_list" aria-label="실시간 크리에이터 랭킹 1위부터 10위">
+          <ol className="media_ranking_list" aria-label="Creator ranking top 10" aria-hidden={!rankingOpen}>
               {rankingItems.map((item) => {
                 const profileId = rankingProfileByRank[item.rank]
                 const itemContent = (
@@ -344,6 +343,7 @@ export function MediaHome() {
                       <Link
                         className="media_ranking_item_link"
                         to={`/media/${profileId}`}
+                        tabIndex={rankingOpen ? undefined : -1}
                         aria-label={`${item.name} ?꾨줈??蹂닿린`}
                       >
                         {itemContent}
@@ -356,8 +356,7 @@ export function MediaHome() {
                   </li>
                 )
               })}
-            </ol>
-          ) : null}
+          </ol>
         </div>
       </section>
 

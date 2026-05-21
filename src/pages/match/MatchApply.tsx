@@ -4,6 +4,7 @@ import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import arrowDownIcon from '../../asset/icons/arrow_down.svg'
 import { matches } from '../../data/mockData'
+import { findGeneratedMatchSchedule } from './generatedMatchSchedules'
 import { cacheMatchSnapshot, markMatchJoined, readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
@@ -17,7 +18,7 @@ export function MatchApply() {
   const { id } = useParams()
   const navigate = useNavigate()
   const cachedMatch = readMatchSnapshot(id)
-  const defaultMatch = matches.find((item) => item.id === id)
+  const defaultMatch = matches.find((item) => item.id === id) ?? findGeneratedMatchSchedule(id)
   const match = cachedMatch ?? defaultMatch
   const [nickname, setNickname] = useState('')
   const [phone, setPhone] = useState('')
@@ -53,7 +54,7 @@ export function MatchApply() {
           difficulty: match.difficulty,
           currentParticipants: match.currentParticipants,
           maxParticipants: match.maxParticipants,
-          imageSrc: cachedMatch?.imageSrc,
+          imageSrc: cachedMatch?.imageSrc ?? ('imageSrc' in match ? match.imageSrc : undefined),
         })
       }
       markMatchJoined(id)

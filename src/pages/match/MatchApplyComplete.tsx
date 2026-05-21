@@ -3,6 +3,7 @@ import { LoginButton } from '../../components/LoginButton'
 import { PageHeader } from '../../components/PageHeader'
 import matchCheckIcon from '../../asset/icons/match_check.svg'
 import { matches } from '../../data/mockData'
+import { findGeneratedMatchSchedule } from './generatedMatchSchedules'
 import { readMatchSnapshot } from './matchApplicationStorage'
 import './match.css'
 
@@ -16,7 +17,7 @@ export function MatchApplyComplete() {
   const { id } = useParams()
   const navigate = useNavigate()
   const cachedMatch = readMatchSnapshot(id)
-  const defaultMatch = matches.find((match) => match.id === id)
+  const defaultMatch = matches.find((match) => match.id === id) ?? findGeneratedMatchSchedule(id)
   const match = cachedMatch ?? defaultMatch
   const matchTitle = match?.title ?? '서울 CQB 입문 경기'
   const matchRegion = match?.region ?? '서울'

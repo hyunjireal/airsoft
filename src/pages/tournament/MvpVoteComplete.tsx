@@ -146,6 +146,9 @@ const candidateMap: Record<string, CandidateInfo> = {
 }
 
 const defaultCandidate = candidateMap['bazooka-01']
+const VOTE_POINT_REWARD = 300
+const POINT_COUNT_DURATION = 900
+const POINT_COUNT_DELAY = 520
 
 const applyVoteToRanking = (candidate: CandidateInfo): CandidateInfo => {
   const updatedRanking = candidate.ranking
@@ -173,11 +176,45 @@ export function MvpVoteComplete() {
   const rankSectionRef = useRef<HTMLElement | null>(null)
   const [rankInView, setRankInView] = useState(false)
   const [headerSolid, setHeaderSolid] = useState(false)
+  const [displayPointReward, setDisplayPointReward] = useState(0)
   const voted = useMemo<CandidateInfo>(() => {
     const id = localStorage.getItem('votedMvpId') ?? ''
     return applyVoteToRanking(candidateMap[id] ?? defaultCandidate)
   }, [])
   const heroImage = tournamentMainCompleteDarkImg
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+
+    if (prefersReducedMotion) {
+      setDisplayPointReward(VOTE_POINT_REWARD)
+      return undefined
+    }
+
+    let frameId = 0
+    let startTime = 0
+    const startTimer = window.setTimeout(() => {
+      const tick = (timestamp: number) => {
+        if (!startTime) startTime = timestamp
+
+        const progress = Math.min((timestamp - startTime) / POINT_COUNT_DURATION, 1)
+        const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+        setDisplayPointReward(Math.round(VOTE_POINT_REWARD * easedProgress))
+
+        if (progress < 1) {
+          frameId = window.requestAnimationFrame(tick)
+        }
+      }
+
+      frameId = window.requestAnimationFrame(tick)
+    }, POINT_COUNT_DELAY)
+
+    return () => {
+      window.clearTimeout(startTimer)
+      if (frameId) window.cancelAnimationFrame(frameId)
+    }
+  }, [])
 
   useEffect(() => {
     const updateHeaderSolid = () => {
@@ -205,7 +242,7 @@ export function MvpVoteComplete() {
           observer.disconnect()
         }
       },
-      { threshold: 0.35 },
+      { threshold: 0.25 },
     )
 
     observer.observe(rankSection)
@@ -238,7 +275,9 @@ export function MvpVoteComplete() {
       <section className="mvpc_point_section">
         <div className="mvpc_point_card">
           <p className="mvpc_point_label">포인트 적립 완료</p>
-          <strong className="mvpc_point_amount">+300p</strong>
+          <strong className="mvpc_point_amount" aria-label={`+${VOTE_POINT_REWARD} 포인트`}>
+            +{displayPointReward}p
+          </strong>
           <span className="mvpc_point_prev">1,240P → 1,540P</span>
           <Link className="mvpc_point_link" to="/my/point-shop">
             <span className="mvpc_point_icon" aria-hidden="true" />
@@ -285,7 +324,7 @@ export function MvpVoteComplete() {
               </div>
               <div className="tournament_player_rank_meter">
                 <i aria-hidden="true">
-                  <b style={{ width: `${player.percent}%` }} />
+                  <b style={{ width: rankInView ? `${player.percent}%` : '0%' }} />
                 </i>
                 <em className="body_m_14">{player.votes}표</em>
               </div>

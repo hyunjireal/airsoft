@@ -2,6 +2,7 @@ import matchList01 from '../../asset/images/match_list01.jpg'
 import matchList02 from '../../asset/images/match_list02.jpg'
 import matchList03 from '../../asset/images/match_list03.jpg'
 import { matches } from '../../data/mockData'
+import { findGeneratedMatchSchedule } from '../match/generatedMatchSchedules'
 import { readMatchSnapshots } from '../match/matchApplicationStorage'
 
 export type MyMatchStatus = 'applied' | 'confirmed' | 'past'
@@ -329,7 +330,7 @@ function readCreatedMatches(): MyMatchItem[] {
 function createJoinedMatches(canceledIds: string[], existingMatchIds: string[]) {
   return readStringList(JOINED_MATCH_IDS_KEY)
     .filter((id) => !canceledIds.includes(id) && !existingMatchIds.includes(id))
-    .map((matchId) => matches.find((match) => match.id === matchId))
+    .map((matchId) => matches.find((match) => match.id === matchId) ?? findGeneratedMatchSchedule(matchId))
     .filter((match): match is NonNullable<typeof match> => Boolean(match))
     .map((match): MyMatchItem => {
       const dateValue = normalizeDateValue(match.dateValue ?? match.date) ?? formatDateValue(addDays(getTodayStart(), 2))
@@ -339,7 +340,7 @@ function createJoinedMatches(canceledIds: string[], existingMatchIds: string[]) 
         id: `joined-${match.id}`,
         matchId: match.id,
         status: getStatusByDate(dateValue, 'applied'),
-        type: 'personal',
+        type: 'type' in match && (match.type === 'team' || match.type === 'mercenary') ? match.type : 'personal',
         title: match.title,
         dateValue,
         time: `${formatDateLabel(dateValue)} · ${time}`,
@@ -348,7 +349,7 @@ function createJoinedMatches(canceledIds: string[], existingMatchIds: string[]) 
         fieldName: match.fieldName,
         currentParticipants: match.currentParticipants,
         maxParticipants: match.maxParticipants,
-        imageSrc: matchList01,
+        imageSrc: 'imageSrc' in match && match.imageSrc ? match.imageSrc : matchList01,
         tagLabel: getTagLabel(dateValue),
         to: `/match/detail/${match.id}`,
       }

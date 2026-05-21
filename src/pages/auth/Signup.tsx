@@ -5,6 +5,7 @@ import phoneNumberImage from '../../asset/images/login_number_img.png'
 import arrowRightIcon from '../../asset/icons/arrow_r.svg'
 import iconEyeOff from '../../asset/icons/login_eye_off.svg'
 import iconLocation from '../../asset/icons/login_location.svg'
+import { BEGINNER_MATCH_PRESET_ID, VETERAN_MATCH_PRESET_ID, writeAppliedMatchPresetId } from '../match/matchPresetStorage'
 import { AuthShell } from './AuthShell'
 
 type SignupModeId = 'beginner' | 'veteran'
@@ -196,6 +197,7 @@ export function Signup() {
     localStorage.setItem('homePreset', selectedMode.homePreset)
     localStorage.setItem('homeProfileBadge', isVeteran ? 'badge03' : 'symbol_beginner')
     localStorage.setItem('homeProfileTitle', isVeteran ? '베테랑 숙련자' : '안전제일 뉴비')
+    writeAppliedMatchPresetId(isVeteran ? VETERAN_MATCH_PRESET_ID : BEGINNER_MATCH_PRESET_ID)
 
     navigate('/home')
   }
