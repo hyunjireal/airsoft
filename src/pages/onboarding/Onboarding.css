@@ -730,3 +730,11 @@
 .onboarding_intro__skip:focus-visible {
   color: rgba(255, 255, 255, 0.65);
 }
+
+.onboarding_rebuilt__skip {
+  position: fixed;
+  top: calc(54px + env(safe-area-inset-top, 0px));
+  right: var(--onboarding-edge-padding);
+  z-index: 30;
+  margin: 0;
+}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import iconEyeOff from '../../asset/icons/login_eye_off.svg'
 import { AuthShell } from './AuthShell'
 
@@ -131,6 +131,7 @@ export function Login() {
             <button
               className={`auth_checkbox_button ${rememberLogin ? 'is_checked' : ''}`}
               type="button"
+              disabled
               onClick={() => setRememberLogin((current) => !current)}
             >
               <span className="auth_checkbox_button__box" aria-hidden="true" />
@@ -144,18 +145,17 @@ export function Login() {
         </div>
 
         <div className="auth_login_actions">
-          <button className="auth_primary_button" type="button" onClick={login}>
+          <button className="auth_primary_button" type="button" onClick={login} disabled>
             로그인
+          </button>
+          <button className="auth_primary_button" type="button" onClick={() => navigate('/signup')}>
+            회원가입
           </button>
 
           <div className="auth_bottom_links">
             <button className="auth_bottom_links__default auth_bottom_links__disabled" type="button" disabled>
               비회원으로 둘러보기
             </button>
-            <span className="auth_bottom_links__divider" aria-hidden="true" />
-            <Link className="auth_bottom_links__accent" to="/signup">
-              아직 회원이 아니신가요? 회원가입
-            </Link>
           </div>
         </div>
 

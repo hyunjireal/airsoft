@@ -15,6 +15,8 @@ import './Onboarding.css'
 const CREATED_MATCHES_KEY = 'airsoft:created-matches'
 const CREATED_MATCH_FOCUS_DATE_KEY = 'airsoft:created-match-focus-date'
 const ONBOARDING_THEME_COLOR = '#1a1a1a'
+const SIGNUP_COMPLETED_KEY = 'airsoft:signup-completed'
+const SIGNUP_MODE_KEY = 'airsoft:signup-mode'
 
 type OnboardingSlide = {
   id: string
@@ -71,6 +73,27 @@ const onboardingSlides: OnboardingSlide[] = [
 ]
 
 const orderedOnboardingSlides = [onboardingSlides[0], onboardingSlides[2], onboardingSlides[1]]
+
+function hasCompletedSignup() {
+  return (
+    localStorage.getItem(SIGNUP_COMPLETED_KEY) === 'true' ||
+    localStorage.getItem('isLoggedIn') === 'true'
+  )
+}
+
+function restoreSignupHomeProfile() {
+  const signupMode = localStorage.getItem(SIGNUP_MODE_KEY)
+  const isVeteran =
+    signupMode === 'veteran' ||
+    localStorage.getItem('level') === '숙련자' ||
+    localStorage.getItem('skillAlias') === '베테랑'
+
+  localStorage.setItem('level', isVeteran ? '숙련자' : '입문자')
+  localStorage.setItem('skillAlias', isVeteran ? '베테랑' : '뉴비')
+  localStorage.setItem('homePreset', isVeteran ? '전술 지도, 경기 매칭 위주' : 'AI 질문 가이드, 기초 퀴즈 위주')
+  localStorage.setItem('homeProfileBadge', isVeteran ? 'badge03' : 'symbol_beginner')
+  localStorage.setItem('homeProfileTitle', isVeteran ? '베테랑 숙련자' : '안전제일 뉴비')
+}
 
 const MVP_VOTE_STORAGE_KEYS = [
   'votedMvpId',
@@ -158,6 +181,23 @@ export function Onboarding() {
     goPrevious()
   }
 
+  const goHomeWithSignupProfile = () => {
+    if (hasCompletedSignup()) {
+      restoreSignupHomeProfile()
+    }
+
+    navigate('/home')
+  }
+
+  const handleStart = () => {
+    if (hasCompletedSignup()) {
+      goHomeWithSignupProfile()
+      return
+    }
+
+    setHasStarted(true)
+  }
+
   return (
     <main className="mobile_frame onboarding_flow">
       {hasStarted ? (
@@ -165,6 +205,14 @@ export function Onboarding() {
           className="onboarding_rebuilt"
           aria-labelledby={`onboarding-title-${activeSlide.id}`}
         >
+          <button
+            className="onboarding_intro__skip onboarding_rebuilt__skip"
+            type="button"
+            onClick={goHomeWithSignupProfile}
+          >
+            Skip
+          </button>
+
           <div className="onboarding_rebuilt__content">
             <div className="onboarding_rebuilt__top">
               <div className="onboarding_rebuilt__dots" aria-label="온보딩 페이지">
@@ -445,14 +493,7 @@ export function Onboarding() {
           </div>
 
           <div className="onboarding_rebuilt__actions onboarding_rebuilt__actions--intro">
-            <OnboardingButton label="시작하기" onClick={() => setHasStarted(true)} />
-            <button
-              className="onboarding_intro__skip"
-              type="button"
-              onClick={() => navigate('/home')}
-            >
-              Skip
-            </button>
+            <OnboardingButton label="시작하기" onClick={handleStart} />
           </div>
         </section>
       )}
