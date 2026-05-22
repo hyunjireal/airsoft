@@ -1222,17 +1222,18 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 15px;
   width: 100%;
   min-width: 0;
-  padding: 5px 0 5px clamp(112px, 33vw, 120px);
+  padding: 5px 0 5px clamp(98px, 32vw, 98px);
+  /* background: #ccc; */
 }
 
 .buddy_tit {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  /* gap: 12px; */
   width: 100%;
   flex-wrap: wrap;
 }
@@ -1240,6 +1241,7 @@
 .buddy_title {
   margin: 0;
   color: var(--color-khaki);
+  display:none;
 }
 
 .buddy_status_tag {
@@ -1268,7 +1270,7 @@
 .buddy_info {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
   align-items: flex-start;
 }
 
@@ -1276,7 +1278,7 @@
   margin: 0;
   color: #2B2F21;
   font-family: var(--font-pretendard);
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-20);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
@@ -1288,7 +1290,7 @@
   margin: 0;
   color: #66695E;
   font-family: var(--font-pretendard);
-  font-size: clamp(12px, 2.85vw, 18px);
+  font-size: clamp(14px, 2.85vw, 18px);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-130);
   letter-spacing: var(--letter-spacing-tight);
@@ -1733,7 +1735,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 5px;
+  /* gap: 5px; */
 }
 
 .bottom_label {
@@ -1746,7 +1748,7 @@
 
 .bottom_title {
   font-family: var(--font-pretendard);
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-18);
   font-weight: var(--font-weight-extrabold);
   line-height: normal;
   color: var(--color-khaki);
@@ -1820,16 +1822,23 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 4px;
+  color: #99b4ff;
 }
-
-.right_faq_title {
+.right_faq_text .bottom_label
+{
+  color: inherit;
+}
+.right_faq_text .bottom_title {
+  color:#afc7ff ;
+}
+/* .right_faq_title {
   margin: 0;
   font-family: var(--font-pretendard);
   font-size: var(--font-size-16);
   font-weight: var(--font-weight-bold);
   line-height: 1.2;
   letter-spacing: var(--letter-spacing-tight);
-  color: #212e4b;
+
 }
 
 .right_faq_desc {
@@ -1840,7 +1849,7 @@
   line-height: 1.3;
   letter-spacing: var(--letter-spacing-tight);
   color: #4a6bc6;
-}
+} */
 
 .right_faq_tag {
   position: relative;
@@ -1849,8 +1858,8 @@
   align-items: center;
   padding: 4px 8px;
   border-radius: 5px;
-  background: #86abff;
-  color: #212e4b;
+  background: #7c97bb;
+  color: #fff;
   font-family: var(--font-pretendard);
   font-size: 10px;
   font-weight: 500;
@@ -1950,7 +1959,7 @@
   user-select: none;
   -webkit-user-drag: none;
 }
-
+.home_team_card .txt{ text-align: center; }
 .home_team_card * {
   pointer-events: none;
   user-select: none;

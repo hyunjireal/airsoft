@@ -948,9 +948,9 @@ export function Home() {
         >
           <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
             <div className="bottom_text_group">
-              <p className="bottom_label">에어소프트 건 안전 튜토리얼</p>
+              <p className="bottom_label">안전 튜토리얼</p>
               <p className="bottom_title">
-                <span className="bottom_title_semibold">안전한 슈팅의</span> 첫 걸음
+                <span className="bottom_title_semibold">세이프 슈팅의</span><br/>첫 걸음
               </p>
             </div>
             <KeywordTag className="bottom_quiz_tag" style={{ padding: '5px 8px' }}>
@@ -961,8 +961,8 @@ export function Home() {
           </Link>
           <button className="right" type="button" onClick={() => navigate('/chat', { state: { returnTo: '/home' } })} aria-label="AI 가이에게 자주 묻는 질문 보기">
             <div className="right_faq_text">
-              <p className="right_faq_title">AI 가이에게<br />자주 묻는 질문</p>
-              <p className="right_faq_desc">가장 많이 물어본<br />질문을 모아봤어요.</p>
+              <p className="bottom_label">질문을 모아봤어요</p>
+              <p className=" bottom_title"><span className="bottom_title_semibold">AI GAI</span><br />FAQ</p>
             </div>
             <span className="right_faq_tag">자세히 보기</span>
             <img src={beginnerGuideQuestionImage} alt="" className="right_faq_img" aria-hidden="true" />
@@ -1001,8 +1001,10 @@ export function Home() {
                       <div className="home_team_card_logo">
                         <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
                       </div>
-                      <p className="home_team_card_name">{team.name}</p>
-                      <p className="home_team_card_region">{team.region}</p>
+                      <div className="txt">
+                         <p className="home_team_card_name">{team.name}</p>
+                         <p className="home_team_card_region">{team.region}</p>
+                      </div>
                     </article>
                   ))}
                 </div>
