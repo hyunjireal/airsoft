@@ -445,8 +445,8 @@
 }
 
 .home_album_confirm_btn--ok {
-  background: var(--color-khaki, #6b7c4e);
-  color: #fff;
+  background: var(--color-lime, #e2fd34);
+  color: var(--color-black, #111);
 }
 
 /* ── 카메라 풀스크린 UI ── */
@@ -2157,7 +2157,6 @@
   --home-mvp-button-text: var(--color-lime);
   --home-mvp-vs-clash-opacity: 0.72;
   width: 100%;
-  padding: 34px 0 56px;
   background: transparent;
   opacity: 0;
   transform: translate3d(0, 22px, 0);

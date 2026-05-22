@@ -2215,7 +2215,7 @@
 }
 
 .match_week_day.has_match i {
-  background: rgba(140, 152, 136, 0.7);
+  background: #fff;
 }
 
 .match_week_day strong {
@@ -2273,8 +2273,8 @@
   color: var(--color-gray03);
 }
 
-.match_week_day.is_selected i {
-  background: transparent;
+.match_week_day.is_selected.has_match i {
+  background: var(--color-lime, #e2fd34);
 }
 
 @keyframes match_week_slide_prev {
@@ -2912,8 +2912,9 @@
 .match_empty_recommend_card {
   position: relative;
   display: grid;
-  grid-template-rows: 1fr auto;
-  min-height: 207px;
+  grid-template-rows: auto auto;
+  height: fit-content;
+  min-height: 0;
   overflow: hidden;
   padding: 20px 15px 16px;
   border: 0;
@@ -2928,6 +2929,9 @@
   display: grid;
   gap: 10px;
   align-content: start;
+  align-self: start;
+  height: fit-content;
+  padding-block: 30px;
 }
 
 .match_empty_recommend_copy h3,
@@ -8235,7 +8239,11 @@
 }
 
 :root[data-theme='dark'] .match_week_day.has_match i {
-  background: rgba(226, 253, 52, 0.65);
+  background: #fff;
+}
+
+:root[data-theme='dark'] .match_week_day.is_selected.has_match i {
+  background: var(--color-lime);
 }
 
 :root[data-theme='dark'] .match_week_day.is_selected {

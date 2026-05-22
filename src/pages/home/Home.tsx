@@ -20,7 +20,6 @@ import buddyUsersIcon from '../../asset/icons/com_user.svg'
 import mainBuddyClockIcon from '../../asset/icons/main_buddy_clock.svg'
 import myPointIcon from '../../asset/icons/my_point.svg'
 import mainProfileIcon from '../../asset/icons/main_profile01.svg'
-import mainQuizRIcon from '../../asset/icons/main_quiz_r.svg'
 import mainStarIcon from '../../asset/icons/main_star.svg'
 import settingsIcon from '../../asset/icons/settings.svg'
 import { TournamentHero } from './TournamentHero'
@@ -33,8 +32,6 @@ import mainBuddy01 from '../../asset/images/main_buddy01.png'
 import mainBuddy02 from '../../asset/images/main_buddy02.png'
 import mainBuddy03 from '../../asset/images/main_buddy03.png'
 import mainBuddy04 from '../../asset/images/main_buddy04.png'
-import mainQuizImg from '../../asset/images/main_quizImg01.png'
-import beginnerGuideQuestionImage from '../../asset/images/com_beginner_card_question.png'
 import badge03 from '../../asset/images/badge03.png'
 import symbolBeginner from '../../asset/images/symbol_beginner.png'
 import mainTournament01 from '../../asset/images/main_tournament01.png'
@@ -303,7 +300,6 @@ export function Home() {
   const teamTrackRef = useRef<HTMLDivElement>(null)
   const matchSectionRef = useRef<HTMLDivElement>(null)
   const buddySectionRef = useRef<HTMLDivElement>(null)
-  const guideSectionRef = useRef<HTMLDivElement>(null)
   const teamSectionRef = useRef<HTMLElement>(null)
   const bannerSectionRef = useRef<HTMLElement>(null)
   const tournamentSectionRef = useRef<HTMLElement>(null)
@@ -342,7 +338,6 @@ export function Home() {
   const [visibleHomeSections, setVisibleHomeSections] = useState({
     match: false,
     buddy: false,
-    guide: false,
     team: false,
     banner: false,
   })
@@ -502,7 +497,6 @@ export function Home() {
     const revealTargets = [
       ['match', matchSectionRef.current],
       ['buddy', buddySectionRef.current],
-      ['guide', guideSectionRef.current],
       ['team', teamSectionRef.current],
       ['banner', bannerSectionRef.current],
     ] as const
@@ -941,78 +935,9 @@ export function Home() {
             </div>
           </div>
         </div>
-
-        <div
-          className={`banner_bottom home_reveal_section ${visibleHomeSections.guide ? 'is_visible' : ''}`}
-          ref={guideSectionRef}
-        >
-          <Link className="left safety_tutorial_card" to="/guide/quiz" aria-label="에어소프트 건 안전 튜토리얼 시작하기">
-            <div className="bottom_text_group">
-              <p className="bottom_label">안전 튜토리얼</p>
-              <p className="bottom_title">
-                <span className="bottom_title_semibold">세이프 슈팅의</span><br/>첫 걸음
-              </p>
-            </div>
-            <KeywordTag className="bottom_quiz_tag" style={{ padding: '5px 8px' }}>
-              <span>퀴즈 풀기</span>
-              <img src={mainQuizRIcon} alt="" className="bottom_quiz_tag_icon" aria-hidden="true" />
-            </KeywordTag>
-            <img src={mainQuizImg} alt="" className="bottom_quiz_img" aria-hidden="true" />
-          </Link>
-          <button className="right" type="button" onClick={() => navigate('/chat', { state: { returnTo: '/home' } })} aria-label="AI 가이에게 자주 묻는 질문 보기">
-            <div className="right_faq_text">
-              <p className="bottom_label">질문을 모아봤어요</p>
-              <p className=" bottom_title"><span className="bottom_title_semibold">AI GAI</span><br />FAQ</p>
-            </div>
-            <span className="right_faq_tag">자세히 보기</span>
-            <img src={beginnerGuideQuestionImage} alt="" className="right_faq_img" aria-hidden="true" />
-          </button>
-        </div>
       </section>
 
       <div className="bottom">
-        {/* ⑤ 팀 추천 섹션 */}
-        <section
-          className={`home_team home_reveal_section ${visibleHomeSections.team ? 'is_visible' : ''}`}
-          ref={teamSectionRef}
-        >
-          <div className="home_team_content_box">
-            <div className="home_team_header">
-              <h2 className="home_team_title">
-                <span className="home_team_title_user sub_kr">AI 맞춤 추천 팀</span>
-              </h2>
-            </div>
-            <div className="home_team_con">
-              <div
-                className="home_team_scroll"
-                onPointerDown={handleTeamPointerDown}
-                onPointerMove={handleTeamPointerMove}
-                onPointerUp={handleTeamPointerEnd}
-                onPointerCancel={handleTeamPointerEnd}
-                onPointerLeave={handleTeamPointerEnd}
-              >
-                <div className="home_team_track" ref={teamTrackRef}>
-                  {[...visibleTeamCards, ...visibleTeamCards].map((team, index) => (
-                    <article
-                      key={`${team.id}-${index}`}
-                      className={`home_team_card${index >= visibleTeamCards.length ? ' is_duplicate' : ''}`}
-                      aria-hidden={index >= visibleTeamCards.length}
-                    >
-                      <div className="home_team_card_logo">
-                        <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
-                      </div>
-                      <div className="txt">
-                         <p className="home_team_card_name">{team.name}</p>
-                         <p className="home_team_card_region">{team.region}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ⑥ 오바워치 배너 */}
         <section
           className={`home_banner home_reveal_section ${visibleHomeSections.banner ? 'is_visible' : ''}`}
@@ -1199,6 +1124,48 @@ export function Home() {
                 />
               ))}
               <span className="home_mvp_pg_count">{mvpActiveIndex + 1} / {mvpMatches.length}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* ⑧ 팀 추천 섹션 */}
+        <section
+          className={`home_team home_reveal_section ${visibleHomeSections.team ? 'is_visible' : ''}`}
+          ref={teamSectionRef}
+        >
+          <div className="home_team_content_box">
+            <div className="home_team_header">
+              <h2 className="home_team_title">
+                <span className="home_team_title_user sub_kr">AI 맞춤 추천 팀</span>
+              </h2>
+            </div>
+            <div className="home_team_con">
+              <div
+                className="home_team_scroll"
+                onPointerDown={handleTeamPointerDown}
+                onPointerMove={handleTeamPointerMove}
+                onPointerUp={handleTeamPointerEnd}
+                onPointerCancel={handleTeamPointerEnd}
+                onPointerLeave={handleTeamPointerEnd}
+              >
+                <div className="home_team_track" ref={teamTrackRef}>
+                  {[...visibleTeamCards, ...visibleTeamCards].map((team, index) => (
+                    <article
+                      key={`${team.id}-${index}`}
+                      className={`home_team_card${index >= visibleTeamCards.length ? ' is_duplicate' : ''}`}
+                      aria-hidden={index >= visibleTeamCards.length}
+                    >
+                      <div className="home_team_card_logo">
+                        <img src={team.logo} alt="" className="home_team_card_logo_img" draggable={false} />
+                      </div>
+                      <div className="txt">
+                         <p className="home_team_card_name">{team.name}</p>
+                         <p className="home_team_card_region">{team.region}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>

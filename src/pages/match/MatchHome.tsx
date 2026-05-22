@@ -300,7 +300,7 @@ export function MatchHome() {
   )
   const [matchTypeFilter, setMatchTypeFilter] = useState<MatchTypeFilter>('all')
   const [createdMatches] = useState<MatchSchedule[]>(readCreatedMatches)
-  const [registrationToastOpen, setRegistrationToastOpen] = useState(false)
+  const [registrationToastOpen, setRegistrationToastOpen] = useState(consumeMatchRegistrationToastPending)
   const [showPresetSheet, setShowPresetSheet] = useState(false)
   const [matchPresetOptions, setMatchPresetOptions] = useState(createMatchPresetOptions)
   const [appliedPresetId, setAppliedPresetId] = useState<MatchPresetId>(readAppliedMatchPresetId)
@@ -319,7 +319,10 @@ export function MatchHome() {
     ? `${appliedPreset.distance[0] ?? '거리 미정'} · ${appliedPreset.weekdays.join(', ') || '요일 미정'} · ${appliedPreset.level[0] ?? '숙련도 미정'}`
     : '프리셋을 만들어 추천 조건을 설정하세요'
   const availableAiRecommendedMatches = aiRecommendedMatches.filter((match) => !isPastAiRecommendedMatch(match))
-  const aiRecommendedMatch = availableAiRecommendedMatches[aiMatchIndex] ?? availableAiRecommendedMatches[0]
+  const safeAiMatchIndex = availableAiRecommendedMatches.length > 0
+    ? Math.min(aiMatchIndex, availableAiRecommendedMatches.length - 1)
+    : 0
+  const aiRecommendedMatch = availableAiRecommendedMatches[safeAiMatchIndex] ?? aiRecommendedMatches[0]
   const hiddenAiMemberCount = Math.max(aiRecommendedMatch.currentMembers - 3, 0)
   const selectedDay = String(selectedDate.getDate())
   const selectedDateLabel = `${selectedDate.getMonth() + 1}월 ${selectedDay}일`
@@ -344,12 +347,6 @@ export function MatchHome() {
   const filteredMatchDates = [...filteredCreatedMatchDates, ...filteredGeneratedMatchDates]
   const weekDates = getWeekDates(selectedDate)
   const selectedWeekDayIndex = Math.max(weekDates.findIndex((date) => isSameDay(date, selectedDate)), 0)
-
-  useEffect(() => {
-    if (availableAiRecommendedMatches.length > 0 && aiMatchIndex >= availableAiRecommendedMatches.length) {
-      setAiMatchIndex(0)
-    }
-  }, [aiMatchIndex, availableAiRecommendedMatches.length])
 
   const moveWeek = (direction: Exclude<WeekSlideDirection, null>) => {
     setWeekSlideDirection(direction)
@@ -425,13 +422,12 @@ export function MatchHome() {
   const [showTypeSheet, setShowTypeSheet] = useState(false)
 
   useEffect(() => {
-    if (consumeMatchRegistrationToastPending()) {
-      setRegistrationToastOpen(true)
+    if (registrationToastOpen) {
       window.setTimeout(() => {
         scheduleSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
       }, 180)
     }
-  }, [])
+  }, [registrationToastOpen])
 
   useEffect(() => {
     const syncPresets = () => {
@@ -503,9 +499,10 @@ export function MatchHome() {
       setAiMatchIndex((currentIndex) => {
         if (availableAiRecommendedMatches.length <= 1) return currentIndex
 
+        const currentSafeIndex = currentIndex >= availableAiRecommendedMatches.length ? 0 : currentIndex
         let nextIndex = currentIndex
 
-        while (nextIndex === currentIndex) {
+        while (nextIndex === currentSafeIndex) {
           nextIndex = Math.floor(Math.random() * availableAiRecommendedMatches.length)
         }
 
@@ -841,7 +838,7 @@ export function MatchHome() {
                   {isSelectedDatePast ? (
                     <>
                       <h3>지난 날짜예요</h3>
-                      <p>이 날짜에는<br />확인할 수 있는<br />일정이 없어요.</p>
+                      <p>이 날짜에는 확인할 수 있는<br />일정이 없어요.</p>
                     </>
                   ) : (
                     <>
